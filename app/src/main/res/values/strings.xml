@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">ShweMi-Admin</string>
+    <string name="daily_price">Daily Price</string>
+    <string name="sample_take_and_return">Sample Take and Return</string>
+    <string name="daily">Daily</string>
+    <string name="point">Point</string>
+    <string name="discount">Discount</string>
+    <string name="flash_sale">Flash Sale</string>
+    <string name="set_up_stock">Set up Stock</string>
+    <string name="collect_stock">Collect Stock</string>
+    <string name="edit_stock">Edit Stock</string>
+    <string name="stock">Stock</string>
+    <string name="order_stock">Order Stock</string>
+    <string name="box">Box</string>
+    <string name="check_box_fragment">Check Box Fragment</string>
+    <string name="repair_stock">Repair Stock</string>
+    <string name="give_gold">Give Gold</string>
+    <string name="check_box_weight">Check Box Weight</string>
+    <string name="arrange_box">Arrange Box</string>
+    <string name="goldsmith">Goldsmith</string>
+    <string name="transfer_checkup_stock">Transfer/Checkup Stock</string>
+    <string name="promotion">Promotion</string>
+    <string name="confirm_voucher">Confirm Voucher</string>
+
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
 </resources>
