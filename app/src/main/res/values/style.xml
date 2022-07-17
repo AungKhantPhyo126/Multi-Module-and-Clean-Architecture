@@ -15,5 +15,13 @@
         <item name="boxStrokeWidth">1dp</item>
         <item name="boxBackgroundColor">@color/edit_text_bg</item>
     </style>
+    <style name="ShapeAppearance.App.MediumComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="boxCornerRadiusTopEnd">15dp</item>
+        <item name="boxCornerRadiusTopStart">15dp</item>
+        <item name="boxCornerRadiusBottomStart">15dp</item>
+        <item name="boxCornerRadiusBottomEnd">15dp</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxBackgroundColor">@color/edit_text_bg</item>
+    </style>
 
 </resources>

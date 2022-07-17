@@ -22,4 +22,5 @@
 
     //for edit text colors
     <color name="edit_text_bg">#F1F6F9 </color>
+    <color name="edit_text_border">#999999</color>
 </resources>
