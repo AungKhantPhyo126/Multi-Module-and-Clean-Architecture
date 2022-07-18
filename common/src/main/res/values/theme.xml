@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Common" parent="Base.Theme.Common">
+        <!-- Primary brand color. -->
+
+        <!-- Customize your theme here. -->
+    </style>
+    <style name="Base.Theme.Common" parent="Based.Theme.MaterialThemeBuilder">
+        <item name="textAppearanceHeadline1">@style/TextAppearance.Common.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.Common.Headline2</item>
+        <item name="textAppearanceHeadline3">@style/TextAppearance.Common.Headline3</item>
+        <item name="textAppearanceHeadline4">@style/TextAppearance.Common.Headline4</item>
+        <item name="textAppearanceHeadline5">@style/TextAppearance.Common.Headline5</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.Common.Headline6</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.Common.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.Common.Subtitle2</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.Common.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.Common.Body2</item>
+        <item name="textAppearanceButton">@style/TextAppearance.Common.Button</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.Common.Caption</item>
+        <item name="textAppearanceOverline">@style/TextAppearance.Common.Overline</item>
+        <!--Material shape attributes-->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Common.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Common.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Common.LargeComponent</item>
+    </style>
+    <style name="Based.Theme.MaterialThemeBuilder" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="windowActionBar">false</item>
+    </style>
+</resources>

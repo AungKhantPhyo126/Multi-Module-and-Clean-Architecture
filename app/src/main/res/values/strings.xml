@@ -26,7 +26,6 @@
     <string name="nav_close">Close</string>
     <string name="logged_in_by">Logged in by</string>
     <string name="daily_gold_price">Daily Gold Price</string>
-    <string name="update">Update</string>
     <string name="gold_block_ac">Gold Block(AC)</string>
     <string name="_15p_gq">15P GQ</string>
     <string name="_22k_gq">22k GQ</string>
@@ -34,4 +33,14 @@
     <string name="wg_1_gm">WG[1 gm]</string>
     <string name="rebuy_100">Rebuy[100%]</string>
     <string name="by_table">By Table</string>
+    <string name="price_by_table">Price By Table</string>
+    <string name="small_items">Small Items</string>
+    <string name="x">X</string>
+    <string name="y">Y</string>
+    <string name="z">Z</string>
+    <string name="damage">Damage</string>
+    <string name="good">Good</string>
+    <string name="not_to_go">Not to Go</string>
+    <string name="large_items">Large Items</string>
+    <string name="update">Update</string>
 </resources>

@@ -23,5 +23,16 @@
         <argument
             android:name="token"
             app:argType="string" />
+        <action
+            android:id="@+id/action_dailyGoldPriceFragment_to_priceByTableFragment"
+            app:destination="@id/priceByTableFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
+    <fragment
+        android:id="@+id/priceByTableFragment"
+        android:name="com.critx.shwemiAdmin.screens.dailyGoldPrice.priceByTable.PriceByTableFragment"
+        tools:layout="@layout/fragment_price_by_table" />
 </navigation>
