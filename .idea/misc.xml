@@ -3,15 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Shwe Mi/app/src/main/res/drawable/chip_outline.xml" value="0.1165" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/drawable/chip_outline_selected.xml" value="0.1165" />
         <entry key="..\:/Shwe Mi/app/src/main/res/drawable/fragment_price_by_table.xml" value="0.1165" />
         <entry key="..\:/Shwe Mi/app/src/main/res/drawable/ic_daily_price.xml" value="0.1165" />
         <entry key="..\:/Shwe Mi/app/src/main/res/drawable/ic_sample_take_and_return.xml" value="0.1165" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/drawable/selector_tab_sample_take_and_return.xml" value="0.1165" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout-v26/include_price_by_table_small_items.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/custom_tab_item.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/drawer_header.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_daily_gold_price.xml" value="0.176" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_login.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_price_by_table.xml" value="0.22826086956521738" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_sample_take_and_return.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_daily_gold_price_input.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_price_by_table_small_items.xml" value="0.3465346534653465" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_price_table_large_items.xml" value="0.264" />

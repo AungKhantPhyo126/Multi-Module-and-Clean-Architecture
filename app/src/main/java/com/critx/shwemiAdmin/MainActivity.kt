@@ -40,6 +40,8 @@ class MainActivity : AppCompatActivity() {
         val appBarConfiguration = AppBarConfiguration(navController.graph, binding.drawerLayout)
         setSupportActionBar(binding.materialToolbar)
         binding.navigation.setupWithNavController(navController)
+//        binding.materialToolbar.setupWithNavController(navController,appBarConfiguration)
+//        NavigationUI.setupWithNavController(binding.materialToolbar, navController, binding.drawerLayout)
 
 
         navController.addOnDestinationChangedListener { nc: NavController, nd: NavDestination, _ ->
@@ -52,6 +54,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.dailyGoldPriceFragment->{
+
+            }
+            R.id.sampleTakeAndReturnFragment->{
+
+            }
+
+        }
         if (actionBarDrawerToggle.onOptionsItemSelected(item)){
             return true
         }

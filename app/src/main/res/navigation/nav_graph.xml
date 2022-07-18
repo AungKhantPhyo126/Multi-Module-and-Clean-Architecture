@@ -35,4 +35,8 @@
         android:id="@+id/priceByTableFragment"
         android:name="com.critx.shwemiAdmin.screens.dailyGoldPrice.priceByTable.PriceByTableFragment"
         tools:layout="@layout/fragment_price_by_table" />
+    <fragment
+        android:id="@+id/sampleTakeAndReturnFragment"
+        android:name="com.critx.shwemiAdmin.screens.sampleTakeAndReturn.SampleTakeAndReturn"
+        android:label="SampleTakeAndReturn" />
 </navigation>

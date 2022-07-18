@@ -36,4 +36,13 @@
         <item name="android:windowTranslucentStatus">false</item>
         <item name="windowActionBar">false</item>
     </style>
+    <style name="ChipTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@android:color/transparent</item>
+        <item name="tabBackground">@drawable/selector_tab_sample_take_and_return</item>
+        <item name="tabSelectedTextColor">?android:textColorPrimary</item>
+    </style>
+    <style name="Widget.App.TabLayout" parent="Widget.MaterialComponents.CardView">
+        <item name="cornerRadius">16dp</item>
+        <item name="elevation">15dp</item>
+    </style>
 </resources>

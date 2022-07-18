@@ -43,4 +43,9 @@
     <string name="not_to_go">Not to Go</string>
     <string name="large_items">Large Items</string>
     <string name="update">Update</string>
+    <string name="sample_take_amp_return"><![CDATA[Sample Take & Return]]></string>
+
+    <style name="voucher">Voucher</style>
+    <style name="text_new">New</style>
+    <style name="outsider">outsider</style>
 </resources>

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
     <group
         android:id="@+id/group1"
         android:checkableBehavior="single">
@@ -8,7 +11,7 @@
             android:title="@string/daily">
             <menu>
                 <item
-                    android:id="@+id/userProfileFragment"
+                    android:id="@+id/dailyGoldPriceFragment"
                     android:title="@string/daily_price"
                     android:icon="@drawable/ic_daily_price"/>
                 <item
