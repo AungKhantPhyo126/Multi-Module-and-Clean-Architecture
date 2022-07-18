@@ -4,11 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.critx.common.ui.showSuccessDialog
-import com.critx.shwemiAdmin.databinding.FragmentDailyGoldPriceBinding
 import com.critx.shwemiAdmin.databinding.FragmentPriceByTableBinding
+
 
 class PriceByTableFragment: Fragment() {
     private lateinit var binding: FragmentPriceByTableBinding
@@ -33,6 +34,9 @@ class PriceByTableFragment: Fragment() {
             requireContext().showSuccessDialog("Price Uploaded") {
                 findNavController().popBackStack()
             }
+        }
+        binding.ibBack.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 }

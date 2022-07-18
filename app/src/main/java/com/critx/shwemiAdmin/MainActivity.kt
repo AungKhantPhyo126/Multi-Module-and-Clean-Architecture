@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 //                if (nd.id == nc.graph.startDestinationId) DrawerLayout.LOCK_MODE_UNLOCKED else DrawerLayout.LOCK_MODE_LOCKED_CLOSED
 //            )
             binding.materialToolbar.visibility =
-                if (nd.id == R.id.loginFragment) View.GONE else View.VISIBLE
+                if (nd.id == R.id.dailyGoldPriceFragment) View.VISIBLE else View.GONE
         }
     }
 
