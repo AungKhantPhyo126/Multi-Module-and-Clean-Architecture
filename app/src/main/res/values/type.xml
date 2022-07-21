@@ -70,6 +70,7 @@
         <item name="fontFamily">@font/roboto</item>
         <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textSize">12sp</item>
+        <item name="lineHeight">14sp</item>
     </style>
 
     <style name="TextAppearance.ShweMi.Overline" parent="TextAppearance.MaterialComponents.Overline">

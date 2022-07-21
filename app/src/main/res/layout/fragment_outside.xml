@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@id/layout_btn_group"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_stock_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/stock_name"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                app:layout_constraintBottom_toBottomOf="@+id/til_stock_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/til_stock_name" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_stock_name"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:hint="@string/enter_stock_name"
+                android:padding="0dp"
+                app:boxCornerRadiusBottomEnd="15dp"
+                app:boxCornerRadiusBottomStart="15dp"
+                app:boxCornerRadiusTopEnd="15dp"
+                app:boxCornerRadiusTopStart="15dp"
+                app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
+                app:boxStrokeWidth="1dp"
+                app:errorEnabled="true"
+                app:hintTextAppearance="@style/TextAppearance.ShweMi.Caption"
+                app:hintTextColor="@color/edit_text_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_stock_name"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_stock_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="vertical"
+                    android:maxLines="3"
+                    android:minLines="2" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tv_label_weigh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/weight_gm"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                app:layout_constraintBottom_toBottomOf="@+id/til_weigh"
+                app:layout_constraintStart_toStartOf="@+id/tv_stock_name"
+                app:layout_constraintTop_toBottomOf="@+id/til_stock_name" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_weigh"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/enter_weight"
+                android:padding="0dp"
+                app:boxCornerRadiusBottomEnd="15dp"
+                app:boxCornerRadiusBottomStart="15dp"
+                app:boxCornerRadiusTopEnd="15dp"
+                app:boxCornerRadiusTopStart="15dp"
+                app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
+                app:boxStrokeWidth="1dp"
+                app:errorEnabled="true"
+                app:hintTextAppearance="@style/TextAppearance.ShweMi.Caption"
+                app:hintTextColor="@color/edit_text_color"
+                app:layout_constraintEnd_toEndOf="@+id/til_stock_name"
+                app:layout_constraintStart_toStartOf="@+id/til_stock_name"
+                app:layout_constraintTop_toBottomOf="@id/til_stock_name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_weigh"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="0dp"
+                    android:scrollbars="vertical"
+                    android:maxLines="3"
+                    android:minLines="2" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tv_label_specification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/specification"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                app:layout_constraintStart_toStartOf="@+id/tv_label_weigh"
+                app:layout_constraintTop_toTopOf="@id/til_specification" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_specification"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/enter_specification"
+                android:padding="0dp"
+                app:boxCornerRadiusBottomEnd="15dp"
+                app:boxCornerRadiusBottomStart="15dp"
+                app:boxCornerRadiusTopEnd="15dp"
+                app:boxCornerRadiusTopStart="15dp"
+                app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
+                app:boxStrokeWidth="1dp"
+                app:errorEnabled="true"
+                app:hintTextAppearance="@style/TextAppearance.ShweMi.Caption"
+                app:hintTextColor="@color/edit_text_color"
+                app:layout_constraintEnd_toEndOf="@id/til_weigh"
+                app:layout_constraintStart_toStartOf="@id/til_weigh"
+                app:layout_constraintTop_toBottomOf="@id/til_weigh">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_specification"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="0dp"
+                    android:gravity="top"
+                    android:maxLines="6"
+                    android:minLines="4"
+                    android:scrollbars="vertical"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tv_label_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/image"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                app:layout_constraintStart_toStartOf="@+id/tv_label_weigh"
+                app:layout_constraintTop_toTopOf="@id/iv_outside" />
+
+            <ImageView
+                android:id="@+id/iv_outside"
+                android:layout_width="0dp"
+                android:layout_height="220dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="@string/upload_image"
+                android:scaleType="fitXY"
+                android:src="@drawable/empty_picture"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/til_specification"
+                app:layout_constraintStart_toStartOf="@id/til_specification"
+                app:layout_constraintTop_toBottomOf="@id/til_specification" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <include
+        android:id="@+id/layout_btn_group"
+        layout="@layout/include_outside_button_group"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

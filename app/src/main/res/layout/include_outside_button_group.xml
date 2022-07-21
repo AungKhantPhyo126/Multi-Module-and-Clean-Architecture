@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardElevation="8dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:weightSum="2">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_give"
+            android:layout_width="142dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="@string/give"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="6dp"
+            android:textAllCaps="false"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_order"
+            android:layout_width="142dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="6dp"
+            android:text="@string/order"
+            android:textAllCaps="false"/>
+
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

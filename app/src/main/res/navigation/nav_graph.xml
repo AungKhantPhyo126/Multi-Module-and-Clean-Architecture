@@ -3,19 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/dailyGoldPriceFragment">
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.critx.shwemiAdmin.screens.auth.LoginFragment"
-        tools:layout="@layout/fragment_login">
-        <action
-            android:id="@+id/action_loginFragment_to_dailyGoldPriceFragment"
-            app:destination="@id/dailyGoldPriceFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
-    </fragment>
+        tools:layout="@layout/fragment_login"/>
     <fragment
         android:id="@+id/dailyGoldPriceFragment"
         android:name="com.critx.shwemiAdmin.screens.dailyGoldPrice.DailyGoldPriceFragment"
@@ -30,6 +22,9 @@
             app:exitAnim="@android:anim/slide_out_right"
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_dailyGoldPriceFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/priceByTableFragment"
@@ -39,4 +34,16 @@
         android:id="@+id/sampleTakeAndReturnFragment"
         android:name="com.critx.shwemiAdmin.screens.sampleTakeAndReturn.SampleTakeAndReturn"
         android:label="SampleTakeAndReturn" />
+    <fragment
+        android:id="@+id/confirmVoucherFragment"
+        android:name="com.critx.shwemiAdmin.screens.confirmVoucher.ConfirmVoucherFragment"
+        android:label="ConfirmVoucherFragment" >
+        <action
+            android:id="@+id/action_confirmVoucherFragment_to_unConfirmVoucherFragment"
+            app:destination="@id/unConfirmVoucherFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/unConfirmVoucherFragment"
+        android:name="com.critx.shwemiAdmin.screens.confirmVoucher.unconfirmVoucher.UnConfirmVoucherFragment"
+        android:label="UnConfirmVoucherFragment" />
 </navigation>

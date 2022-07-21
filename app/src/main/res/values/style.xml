@@ -24,4 +24,9 @@
         <item name="boxBackgroundColor">@color/edit_text_bg</item>
     </style>
 
+    <style name="MyTextInputLayout_overlay">
+        <item name="colorOnSurface">@color/primary_color</item>
+        <item name="colorPrimary">@color/edit_text_color</item>
+    </style>
+
 </resources>

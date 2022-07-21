@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.critx.common.databinding.ShwemiSuccessDialogBinding
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.CustomTabItemBinding
@@ -27,7 +28,9 @@ class SampleTakeAndReturn : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vpSampleTakeAndReturn.adapter = SampleTakeAndReturnPagerAdapter(this)
-
+        binding.ibBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
         TabLayoutMediator(
             binding.tlSampleTakeAndReturn,
             binding.vpSampleTakeAndReturn

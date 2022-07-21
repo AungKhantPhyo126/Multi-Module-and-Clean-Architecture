@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/root_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/base_pink"
+    android:weightSum="3">
+
+    <TextView
+        android:id="@+id/tv_invoice_code"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        tools:text="2904220001"
+        android:background="@color/base_pink"
+        android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
+        android:textColor="@color/edit_text_color" />
+    <View
+        android:id="@+id/divider_one"
+        android:layout_width="2dp"
+        android:layout_height="32dp"
+        android:background="@color/white"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/tv_deposit"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:background="@color/base_pink"
+        tools:text="2904220001"
+        android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
+        android:textColor="@color/edit_text_color" />
+   <View
+       android:id="@+id/divider_two"
+        android:layout_width="2dp"
+        android:layout_height="32dp"
+        android:background="@color/white"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
+    <TextView
+        android:id="@+id/tv_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        tools:text="2904220001"
+        android:background="@color/base_pink"
+        android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
+        android:textColor="@color/edit_text_color" />
+   <View
+       android:id="@+id/divider_three"
+       android:layout_width="2dp"
+        android:layout_height="32dp"
+        android:background="@color/white"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
+</LinearLayout>

@@ -28,4 +28,5 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideAuthService(retrofit: Retrofit) = retrofit.create<HomeService>()
+    
 }

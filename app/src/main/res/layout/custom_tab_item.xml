@@ -11,7 +11,7 @@
         android:elevation="16dp"
         android:padding="0dp"
         app:cardCornerRadius="16dp"
-        app:strokeColor="@color/edit_text_border"
+        app:strokeColor="@color/edit_text_color"
         app:strokeWidth="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
