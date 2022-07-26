@@ -22,9 +22,6 @@ class ConfirmVoucherFragment:Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.ibBack.setOnClickListener {
-            findNavController().popBackStack()
-        }
         binding.ibEdit.setOnClickListener {
             findNavController().navigate(ConfirmVoucherFragmentDirections.actionConfirmVoucherFragmentToUnConfirmVoucherFragment())
         }

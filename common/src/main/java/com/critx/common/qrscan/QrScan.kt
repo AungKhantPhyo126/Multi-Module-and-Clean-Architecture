@@ -17,10 +17,11 @@ fun Fragment.scanQrCode(context: Context,barlauncher:Any){
 //    intentIntegrator.initiateScan()
 
     val options = ScanOptions()
-    options.setPrompt("Volume Up to flash on")
-    options.setBeepEnabled(true)
+//    options.setPrompt("Volume Up to flash on")
+//    options.setBeepEnabled(true)
     options.setOrientationLocked(true)
-    options.captureActivity = CaptureAct::class.java
+
+    options.captureActivity =CaptureAct::class.java
 //    val barlauncher=this.getBarLauncher(context)
 
     val gg =barlauncher as ActivityResultLauncher<ScanOptions>

@@ -76,6 +76,11 @@
     <string name="enter_deposit_amount">Enter Deposit Amount</string>
     <string name="reason">Reason</string>
     <string name="unconfirmed_voucher">Unconfirmed Voucher</string>
+    <string name="customer_qr">Customer QR</string>
+    <string name="customer_name">Customer Name</string>
+    <string name="total_point">Total Point</string>
+    <string name="exchange_points">Exchange Points</string>
+    <string name="enter_point_amount">Enter Point Amount</string>
 
     <style name="voucher">Voucher</style>
     <style name="text_new">New</style>

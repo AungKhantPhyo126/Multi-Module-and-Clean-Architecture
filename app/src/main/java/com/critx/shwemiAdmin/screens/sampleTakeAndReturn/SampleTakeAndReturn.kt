@@ -4,14 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import com.critx.common.databinding.ShwemiSuccessDialogBinding
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.CustomTabItemBinding
 import com.critx.shwemiAdmin.databinding.FragmentSampleTakeAndReturnBinding
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.tabs.TabLayoutMediator
+
 
 class SampleTakeAndReturn : Fragment() {
     private lateinit var binding: FragmentSampleTakeAndReturnBinding
@@ -27,10 +30,16 @@ class SampleTakeAndReturn : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val toolbarCenterImage: ImageView = activity!!.findViewById<View>(R.id.center_image) as ImageView
+        val toolbarCenterText: TextView = activity!!.findViewById<View>(R.id.center_text_title) as TextView
+        val toolbarEndIcon: ImageView = activity!!.findViewById<View>(R.id.iv_end_icon) as ImageView
+        toolbarCenterText.isVisible=true
+        toolbarCenterText.text=getString(R.string.sample_take_amp_return)
+        toolbarCenterImage.isVisible =false
+        toolbarEndIcon.isVisible =false
+
         binding.vpSampleTakeAndReturn.adapter = SampleTakeAndReturnPagerAdapter(this)
-        binding.ibBack.setOnClickListener {
-            findNavController().popBackStack()
-        }
         TabLayoutMediator(
             binding.tlSampleTakeAndReturn,
             binding.vpSampleTakeAndReturn

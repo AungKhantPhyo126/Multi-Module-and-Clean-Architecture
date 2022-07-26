@@ -17,8 +17,9 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_daily_gold_price.xml" value="0.176" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_login.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_outside.xml" value="0.176" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_point.xml" value="0.2" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_price_by_table.xml" value="0.22826086956521738" />
-        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_sample_take_and_return.xml" value="0.22826086956521738" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_sample_take_and_return.xml" value="0.14767932489451477" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_unconfirmed_voucher.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_voucher.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_daily_gold_price_input.xml" value="0.22826086956521738" />
@@ -33,8 +34,11 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/new_sample_fragment.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/app/src/main/res/menu-v26/drawer_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Shwe Mi/app/src/main/res/menu/drawer_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Shwe Mi/common/src/main/res/drawable/circle_shape.xml" value="0.1165" />
         <entry key="..\:/Shwe Mi/common/src/main/res/drawable/ic_success.xml" value="0.1165" />
         <entry key="..\:/Shwe Mi/common/src/main/res/drawable/loading_img.xml" value="0.1165" />
+        <entry key="..\:/Shwe Mi/common/src/main/res/layout/activity_qr_scan.xml" value="0.264" />
+        <entry key="..\:/Shwe Mi/common/src/main/res/layout/custom_barcode_scanner.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/common/src/main/res/layout/shwemi_success_dialog.xml" value="0.22826086956521738" />
       </map>
     </option>

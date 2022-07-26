@@ -46,4 +46,8 @@
         android:id="@+id/unConfirmVoucherFragment"
         android:name="com.critx.shwemiAdmin.screens.confirmVoucher.unconfirmVoucher.UnConfirmVoucherFragment"
         android:label="UnConfirmVoucherFragment" />
+    <fragment
+        android:id="@+id/pointFragment"
+        android:name="com.critx.shwemiAdmin.screens.point.PointFragment"
+        android:label="PointFragment" />
 </navigation>

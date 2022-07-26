@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_label_customer_qr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/customer_qr"
+        android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+        app:layout_constraintBottom_toBottomOf="@+id/mcv_scan_here"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/mcv_scan_here" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/mcv_scan_here"
+        android:layout_width="220dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:weightSum="5">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:text="@string/scan_here"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                android:textColor="@color/primary_color" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_qr_scan" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_customer_name"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="@color/based_grey"
+        app:hintEnabled="false"
+        app:layout_constraintEnd_toEndOf="@+id/mcv_scan_here"
+        app:layout_constraintStart_toStartOf="@id/tv_label_customer_qr"
+        app:layout_constraintTop_toBottomOf="@id/mcv_scan_here">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_customer_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:focusable="false"
+            android:hint="@string/customer_name"
+            android:inputType="none"
+            android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_total_point"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="@color/based_grey"
+        app:hintEnabled="false"
+        app:layout_constraintEnd_toEndOf="@+id/mcv_scan_here"
+        app:layout_constraintStart_toStartOf="@id/tv_label_customer_qr"
+        app:layout_constraintTop_toBottomOf="@id/til_customer_name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_total_point"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:focusable="false"
+            android:hint="@string/total_point"
+            android:inputType="none"
+            android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/tv_label_exchange_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/exchange_points"
+        android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/til_total_point"
+        app:layout_constraintTop_toBottomOf="@+id/til_total_point" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:background="@color/primary_color"
+        app:layout_constraintBottom_toBottomOf="@id/tv_label_exchange_point"
+        app:layout_constraintEnd_toEndOf="@id/mcv_scan_here"
+        app:layout_constraintStart_toEndOf="@id/tv_label_exchange_point"
+        app:layout_constraintTop_toTopOf="@id/tv_label_exchange_point" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_total_point_amount"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="@color/based_grey"
+        app:hintEnabled="false"
+        app:layout_constraintEnd_toEndOf="@+id/mcv_scan_here"
+        app:layout_constraintStart_toEndOf="@id/tv_label_exchange_point"
+        app:layout_constraintTop_toBottomOf="@id/tv_label_exchange_point">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_total_point_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_point_amount"
+            android:inputType="number"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_reason"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="@color/based_grey"
+        app:hintEnabled="false"
+        app:layout_constraintEnd_toEndOf="@+id/mcv_scan_here"
+        app:layout_constraintStart_toEndOf="@id/tv_label_exchange_point"
+        app:layout_constraintTop_toBottomOf="@id/til_total_point_amount">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_reason"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:hint="@string/enter_reason"
+            android:maxLines="6"
+            android:minLines="3"
+            android:scrollbars="vertical"
+            android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/tv_label_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/point"
+        android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+        app:layout_constraintBottom_toBottomOf="@+id/til_total_point_amount"
+        app:layout_constraintStart_toStartOf="@+id/tv_label_exchange_point"
+        app:layout_constraintTop_toTopOf="@+id/til_total_point_amount" />
+
+    <TextView
+        android:id="@+id/tv_label_reason"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/reason"
+        android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+        app:layout_constraintStart_toStartOf="@+id/tv_label_exchange_point"
+        app:layout_constraintTop_toTopOf="@+id/til_reason" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_plus"
+        android:layout_width="142dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="8dp"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        app:cornerRadius="8dp"
+        app:icon="@drawable/ic_plus"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:layout_constraintEnd_toStartOf="@+id/btn_minus"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/til_reason" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_minus"
+        android:layout_width="142dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        app:cornerRadius="8dp"
+        app:icon="@drawable/ic_minus"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_plus"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btn_plus"
+        app:layout_constraintTop_toTopOf="@+id/btn_plus" />
+</androidx.constraintlayout.widget.ConstraintLayout>
