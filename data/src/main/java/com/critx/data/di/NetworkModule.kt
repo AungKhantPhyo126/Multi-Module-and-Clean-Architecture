@@ -6,6 +6,7 @@ import com.critx.data.network.api.HomeService
 import com.critx.data.network.datasource.AuthNetWorkDataSourceImpl
 import com.critx.data.repository.AuthRepositoryImpl
 import com.critx.domain.repository.AuthRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,12 +34,13 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideAuthRepository(
-        authNetWorkDataSourceImpl: AuthNetWorkDataSourceImpl
+        authNetWorkDataSource: AuthNetWorkDataSource
     ): AuthRepository{
         return AuthRepositoryImpl(
-            authNetWorkDataSourceImpl,
+            authNetWorkDataSource,
         )
     }
+
 
     @Provides
     @Singleton

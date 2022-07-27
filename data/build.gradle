@@ -19,10 +19,8 @@ dependencies {
 //    releaseImplementation 'com.readystatesoftware.chuck:library-no-op:1.1.0'
 //    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
 
-    implementation "com.google.dagger:hilt-core:2.38.1"
-    kapt "com.google.dagger:hilt-compiler:2.38.1"
-    implementation 'app.cash.inject:inflation-inject:1.0.1'
-    annotationProcessor 'app.cash.inject:inflation-inject-processor:1.0.1'
+    implementation "com.google.dagger:hilt-core:2.42"
+    kapt "com.google.dagger:hilt-compiler:2.42"
 
     // Coroutines
     def coroutine_version = "1.5.2"

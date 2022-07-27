@@ -9,11 +9,9 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_7
 }
 dependencies {
-    implementation "com.google.dagger:hilt-core:2.38.1"
-    kapt "com.google.dagger:hilt-compiler:2.38.1"
+    implementation "com.google.dagger:hilt-core:2.42"
+    kapt "com.google.dagger:hilt-compiler:2.42"
     implementation(project(":commonkotlin"))
-    implementation 'app.cash.inject:inflation-inject:1.0.1'
-    annotationProcessor 'app.cash.inject:inflation-inject-processor:1.0.1'
 
     // Coroutines
     def coroutine_version = "1.5.2"
