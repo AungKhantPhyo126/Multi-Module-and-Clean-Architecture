@@ -1,6 +1,11 @@
 package com.critx.data.di
 
+import com.critx.data.datasource.auth.AuthNetWorkDataSource
+import com.critx.data.network.api.AuthService
 import com.critx.data.network.api.HomeService
+import com.critx.data.network.datasource.AuthNetWorkDataSourceImpl
+import com.critx.data.repository.AuthRepositoryImpl
+import com.critx.domain.repository.AuthRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,7 +16,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 import javax.inject.Singleton
 
-const val BASE_URL = ""
+const val BASE_URL = "18.136.200.98"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -27,6 +32,20 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAuthService(retrofit: Retrofit) = retrofit.create<HomeService>()
-    
+    fun provideAuthRepository(
+        authNetWorkDataSourceImpl: AuthNetWorkDataSourceImpl
+    ): AuthRepository{
+        return AuthRepositoryImpl(
+            authNetWorkDataSourceImpl,
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideHomeService(retrofit: Retrofit) = retrofit.create<HomeService>()
+
+    @Provides
+    @Singleton
+    fun provideAuthService(retrofit: Retrofit) = retrofit.create<AuthService>()
+
 }

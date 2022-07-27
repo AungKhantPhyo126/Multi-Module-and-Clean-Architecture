@@ -85,4 +85,6 @@
     <style name="voucher">Voucher</style>
     <style name="text_new">New</style>
     <style name="outsider">outsider</style>
+
+    <string name="try_again">Try Again</string>
 </resources>
