@@ -2,6 +2,7 @@ package com.critx.shwemiAdmin.screens.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.critx.common.LocalDatabase
 import com.critx.commonkotlin.util.Resource
 import com.critx.domain.useCase.auth.LogInUseCase
 import com.critx.shwemiAdmin.UiEvent
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val logInUseCase: LogInUseCase
+    private val logInUseCase: LogInUseCase,
+    private val localDatabase: LocalDatabase
 ):ViewModel(){
     private val _state = MutableStateFlow(LoginUiState())
     val state = _state.asStateFlow()
@@ -35,6 +37,7 @@ class LoginViewModel @Inject constructor(
                             loading = false,
                             successMessage = "Login Success"
                         )
+                        localDatabase.saveToken(result.data!!.token)
                     }
                     is Resource.Error->{
                         _state.value =_state.value.copy(

@@ -17,7 +17,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 import javax.inject.Singleton
 
-const val BASE_URL = "18.136.200.98"
+const val BASE_URL = "https://18.136.200.98"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -30,16 +30,25 @@ class NetworkModule {
             .client(okHttpClient)
             .build()
     }
-
     @Provides
     @Singleton
-    fun provideAuthRepository(
-        authNetWorkDataSource: AuthNetWorkDataSource
-    ): AuthRepository{
-        return AuthRepositoryImpl(
-            authNetWorkDataSource,
-        )
+    fun provideAuthNetWorkDataSource(authService: AuthService):AuthNetWorkDataSource{
+        return AuthNetWorkDataSourceImpl(authService)
     }
+    @Provides
+    @Singleton
+    fun provideAuthRepo(authNetWorkDataSource: AuthNetWorkDataSource):AuthRepository{
+        return AuthRepositoryImpl(authNetWorkDataSource)
+    }
+//    @Provides
+//    @Singleton
+//    fun provideAuthRepository(
+//        authNetWorkDataSource: AuthNetWorkDataSource
+//    ): AuthRepository{
+//        return AuthRepositoryImpl(
+//            authNetWorkDataSource,
+//        )
+//    }
 
 
     @Provides
@@ -50,4 +59,9 @@ class NetworkModule {
     @Singleton
     fun provideAuthService(retrofit: Retrofit) = retrofit.create<AuthService>()
 
+    @Provides
+    @Singleton
+    fun provideUncheckOkHttpClient(): OkHttpClient {
+        return OkHttpClient()
+    }
 }

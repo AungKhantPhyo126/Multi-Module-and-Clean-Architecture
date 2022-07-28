@@ -19,9 +19,7 @@ class LocalDatabase @Inject constructor(@ApplicationContext context: Context) {
     }
 
     fun getToken(): String? {
-        return sharedPref.getString(TOKEN, null)?.let { "Bearer $it" } ?: kotlin.run {
-            throw UnsupportedOperationException("Token should not be null or empty")
-        }
+        return sharedPref.getString(TOKEN,"")
     }
 
     fun deleteToken() {

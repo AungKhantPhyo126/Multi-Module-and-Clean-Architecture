@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'androidx.navigation.safeargs'
     id 'kotlin-kapt'
-
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -50,7 +50,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":common"))
     implementation(project(":commonkotlin"))
-//    implementation(project(":data"))
+    implementation(project(":data"))
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.2'
@@ -71,6 +71,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 
     implementation "com.google.dagger:hilt-android:2.42"
-    kapt "com.google.dagger:hilt-compiler:2.42"
+    kapt "com.google.dagger:hilt-android-compiler:2.42"
 
 }

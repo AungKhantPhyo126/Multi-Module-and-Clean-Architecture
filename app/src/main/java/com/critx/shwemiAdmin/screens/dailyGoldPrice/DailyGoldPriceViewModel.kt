@@ -6,9 +6,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class DailyGoldPriceViewModel @Inject constructor() : ViewModel() {
+class DailyGoldPriceViewModel @Inject constructor(
+    private val localDatabase: LocalDatabase
+): ViewModel() {
     fun isLogin():Boolean{
-//        return localDatabase.isLogin()
-        return true
+        return localDatabase.isLogin()
+//        return true
     }
 }
