@@ -35,7 +35,9 @@ fun Fragment.getBarLauncher(context: Context):ActivityResultLauncher<ScanOptions
                 builder.setTitle("Result")
                 builder.setMessage(result.contents)
                 builder.setPositiveButton("OK",
-                    DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() })
+                    DialogInterface.OnClickListener { dialogInterface, i ->
+                        dialogInterface.dismiss()
+                    })
                     .show()
             }
         }

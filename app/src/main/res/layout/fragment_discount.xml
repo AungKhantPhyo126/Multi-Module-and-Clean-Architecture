@@ -53,21 +53,22 @@
                 android:src="@drawable/ic_qr_scan" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
-    <androidx.recyclerview.widget.RecyclerView
+    <include
         android:layout_marginTop="16dp"
-        android:id="@+id/rv_voucher_list"
+        android:id="@+id/layout_discount"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        layout="@layout/include_discount_list_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_voucher"
         android:background="@color/base_pink"
         app:layout_constraintTop_toBottomOf="@id/mcv_scan_here"
-       app:layout_constraintBottom_toTopOf="@id/layout_btn_group"/>
+        app:layout_constraintBottom_toTopOf="@id/layout_btn_group"/>
     <include
         android:id="@+id/layout_btn_group"
-        layout="@layout/include_outside_button_group"
+        layout="@layout/include_discount_outside_button"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -61,7 +61,7 @@
             app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
             app:boxStrokeWidth="1dp"
             android:layout_marginHorizontal="16dp"
-            android:hint="@string/enter_specification"
+            app:hintEnabled="false"
             app:boxBackgroundColor="@color/white"
             app:errorEnabled="true"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -75,6 +75,7 @@
                 android:layout_height="match_parent"
                 android:gravity="top"
                 android:inputType="textMultiLine"
+                android:hint="@string/enter_specification"
                 android:maxLines="7"
                 android:minLines="5"
                 android:scrollbars="vertical" />

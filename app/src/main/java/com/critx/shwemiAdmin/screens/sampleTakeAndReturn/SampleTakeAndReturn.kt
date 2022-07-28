@@ -27,9 +27,7 @@ class SampleTakeAndReturn : Fragment() {
             binding = it
         }.root
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun toolbarsetup(){
 
         val toolbarCenterImage: ImageView = activity!!.findViewById<View>(R.id.center_image) as ImageView
         val toolbarCenterText: TextView = activity!!.findViewById<View>(R.id.center_text_title) as TextView
@@ -38,6 +36,11 @@ class SampleTakeAndReturn : Fragment() {
         toolbarCenterText.text=getString(R.string.sample_take_amp_return)
         toolbarCenterImage.isVisible =false
         toolbarEndIcon.isVisible =false
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        toolbarsetup()
 
         binding.vpSampleTakeAndReturn.adapter = SampleTakeAndReturnPagerAdapter(this)
         TabLayoutMediator(

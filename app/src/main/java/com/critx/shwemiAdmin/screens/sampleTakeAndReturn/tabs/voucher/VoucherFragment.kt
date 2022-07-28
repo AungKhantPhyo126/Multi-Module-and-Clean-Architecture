@@ -36,7 +36,7 @@ class VoucherFragment:Fragment() {
 
         }
 
-        binding.layoutSampleLists.rvSample.adapter = voucherRecyclerAdapter
+        binding.rvVoucherList.adapter = voucherRecyclerAdapter
         voucherRecyclerAdapter.submitList(listOf(
             VoucherUIModel("1",1234566778,"test 1"),
             VoucherUIModel("2",1234566778,"test 2"),

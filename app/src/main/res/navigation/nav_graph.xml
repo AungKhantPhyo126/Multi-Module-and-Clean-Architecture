@@ -50,4 +50,8 @@
         android:id="@+id/pointFragment"
         android:name="com.critx.shwemiAdmin.screens.point.PointFragment"
         android:label="PointFragment" />
+    <fragment
+        android:id="@+id/discountFragment"
+        android:name="com.critx.shwemiAdmin.screens.discount.DiscountFragment"
+        android:label="DiscountFragment" />
 </navigation>

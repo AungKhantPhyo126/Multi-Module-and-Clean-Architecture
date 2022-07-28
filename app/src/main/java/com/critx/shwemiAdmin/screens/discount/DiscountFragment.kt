@@ -1,4 +1,4 @@
-package com.critx.shwemiAdmin.screens.point
+package com.critx.shwemiAdmin.screens.discount
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,10 +11,11 @@ import androidx.fragment.app.Fragment
 import com.critx.common.qrscan.getBarLauncher
 import com.critx.common.qrscan.scanQrCode
 import com.critx.shwemiAdmin.R
-import com.critx.shwemiAdmin.databinding.FragmentPointBinding
+import com.critx.shwemiAdmin.databinding.FragmentDiscountBinding
+import com.critx.shwemiAdmin.uiModel.discount.DiscountUIModel
 
-class PointFragment:Fragment() {
-    private lateinit var binding:FragmentPointBinding
+class DiscountFragment :Fragment(){
+    private lateinit var binding: FragmentDiscountBinding
     private lateinit var barlauncer:Any
 
     override fun onCreateView(
@@ -23,7 +24,8 @@ class PointFragment:Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         barlauncer = this.getBarLauncher(requireContext())
-        return FragmentPointBinding.inflate(inflater).also {
+
+        return FragmentDiscountBinding.inflate(inflater).also {
             binding = it
         }.root
     }
@@ -33,7 +35,7 @@ class PointFragment:Fragment() {
         val toolbarCenterText: TextView = activity!!.findViewById<View>(R.id.center_text_title) as TextView
         val toolbarEndIcon: ImageView = activity!!.findViewById<View>(R.id.iv_end_icon) as ImageView
         toolbarCenterText.isVisible=true
-        toolbarCenterText.text=getString(R.string.point)
+        toolbarCenterText.text=getString(R.string.discount)
         toolbarCenterImage.isVisible =false
         toolbarEndIcon.isVisible =false
     }
@@ -41,8 +43,31 @@ class PointFragment:Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
+        val adapter = DiscountRecyclerAdapter{
+
+        }
         binding.mcvScanHere.setOnClickListener {
             scanQrCode(requireContext(),barlauncer)
+
         }
+        binding.layoutDiscount.rvDiscount.adapter=adapter
+        adapter.submitList(listOf(
+            DiscountUIModel(
+                "1",
+                "123456788"
+            ),
+            DiscountUIModel(
+                "2",
+                "123456788"
+            ),
+            DiscountUIModel(
+                "3",
+                "123456788"
+            ),
+            DiscountUIModel(
+                "4",
+                "123456788"
+            )
+        ))
     }
 }
