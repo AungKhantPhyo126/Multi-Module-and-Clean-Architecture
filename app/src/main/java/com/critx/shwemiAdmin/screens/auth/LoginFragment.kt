@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
@@ -37,26 +39,34 @@ class LoginFragment :Fragment() {
         binding.loginButton.setOnClickListener {
             viewModel.login(binding.edtUserName.text.toString(),binding.edtPassword.text.toString())
         }
-        lifecycleScope.launchWhenStarted {
-            viewModel.state.collectLatest {
-               if (!it.successMessage.isNullOrEmpty()){
-                   findNavController().popBackStack()
-               }
-            }
-        }
-        lifecycleScope.launchWhenStarted {
-            viewModel.event.collectLatest {event->
-                when(event){
-                    is UiEvent.ShowErrorSnackBar ->{
-                        snackBar?.dismiss()
-                        snackBar = Snackbar.make(binding.root, event.message, Snackbar.LENGTH_INDEFINITE)
-                            .setAction(R.string.try_again){
-                                snackBar?.dismiss()
-                            }
-                        snackBar?.show()
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                //Login Action
+                launch {
+                    viewModel.state.collectLatest {
+                        if (!it.successMessage.isNullOrEmpty()){
+                            findNavController().popBackStack()
+                        }
                     }
                 }
+                //Error Event
+                launch {
+                    viewModel.event.collectLatest {event->
+                        when(event){
+                            is UiEvent.ShowErrorSnackBar ->{
+                                snackBar?.dismiss()
+                                snackBar = Snackbar.make(binding.root, event.message, Snackbar.LENGTH_INDEFINITE)
+                                    .setAction(R.string.try_again){
+                                        snackBar?.dismiss()
+                                    }
+                                snackBar?.show()
+                            }
+                        }
+                    }
+                }
+
             }
         }
+
     }
 }
