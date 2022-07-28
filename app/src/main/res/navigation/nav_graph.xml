@@ -54,4 +54,8 @@
         android:id="@+id/discountFragment"
         android:name="com.critx.shwemiAdmin.screens.discount.DiscountFragment"
         android:label="DiscountFragment" />
+    <fragment
+        android:id="@+id/flashSaleFragment"
+        android:name="com.critx.shwemiAdmin.screens.flashsale.FlashSaleFragment"
+        android:label="FlashSaleFragment" />
 </navigation>

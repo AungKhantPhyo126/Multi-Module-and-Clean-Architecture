@@ -1,4 +1,4 @@
-package com.critx.shwemiAdmin.screens.discount
+package com.critx.shwemiAdmin.screens.flashsale
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,30 +6,30 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.critx.shwemiAdmin.databinding.ItemDiscountBinding
-import com.critx.shwemiAdmin.screens.flashsale.NewSampleDiffUtil
+import com.critx.shwemiAdmin.databinding.ItemFlashSaleBinding
 import com.critx.shwemiAdmin.uiModel.discount.DiscountUIModel
 
-class DiscountRecyclerAdapter(private val onclick:()->Unit) : ListAdapter<DiscountUIModel, DiscountViewHolder>(
+class FlashSaleRecyclerAdapter(private val onclick:()->Unit) : ListAdapter<DiscountUIModel, FlashSaleViewHolder>(
     NewSampleDiffUtil
 )  {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiscountViewHolder {
-        return DiscountViewHolder(
-            ItemDiscountBinding.inflate(
-            LayoutInflater.from(parent.context),parent,false
-        ),onclick)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlashSaleViewHolder {
+        return FlashSaleViewHolder(
+            ItemFlashSaleBinding.inflate(
+                LayoutInflater.from(parent.context),parent,false
+            ),onclick)
     }
 
-    override fun onBindViewHolder(holder: DiscountViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: FlashSaleViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
 
 }
 
-class DiscountViewHolder(private val binding: ItemDiscountBinding,
-                          private val onclick: () -> Unit): RecyclerView.ViewHolder(binding.root){
+class FlashSaleViewHolder(private val binding: ItemFlashSaleBinding,
+                         private val onclick: () -> Unit): RecyclerView.ViewHolder(binding.root){
     fun bind(data: DiscountUIModel){
-        binding.tvInvoiceCodeNumber.text = data.invoiceCode
+        binding.tvStockCodeNumber.text = data.invoiceCode
     }
 }
 
