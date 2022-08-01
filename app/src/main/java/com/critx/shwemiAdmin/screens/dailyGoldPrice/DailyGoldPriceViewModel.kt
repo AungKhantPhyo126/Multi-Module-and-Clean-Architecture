@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
 import com.critx.commonkotlin.util.Resource
 import com.critx.domain.useCase.auth.LogoutUseCase
+import com.critx.domain.useCase.auth.RefreshTokenUseCase
 import com.critx.domain.useCase.dailygoldprice.GetProfileUsecase
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
@@ -21,7 +22,8 @@ import javax.inject.Inject
 class DailyGoldPriceViewModel @Inject constructor(
     private val localDatabase: LocalDatabase,
     private val logoutUseCase: LogoutUseCase,
-    private val getProfileUsecase: GetProfileUsecase
+    private val getProfileUsecase: GetProfileUsecase,
+    private val refreshTokenUseCase: RefreshTokenUseCase
 ): ViewModel() {
     private val _logoutState = MutableStateFlow(LogoutUiState())
     val logoutState = _logoutState.asStateFlow()
@@ -90,8 +92,22 @@ class DailyGoldPriceViewModel @Inject constructor(
                         _profileState.value =_profileState.value.copy(
                             loading = false,
                         )
-                        result.message?.let {
-                            _event.emit(UiEvent.ShowErrorSnackBar(it))
+                        result.message?.let {errorString->
+                            if (errorString == "You are not Authorized"){
+                                refreshTokenUseCase(localDatabase.getToken().orEmpty()).collect { result
+                                    when(result){
+                                        is Resource.Loading->{}
+                                        is Resource.Success->{
+                                            localDatabase.deleteToken()
+                                            localDatabase.saveToken(it.data?.token.orEmpty())
+                                        }
+                                        is Resource.Error->{
+                                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
+                                        }
+                                    }
+                                }
+                            }
+                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
                         }
                     }
                 }
