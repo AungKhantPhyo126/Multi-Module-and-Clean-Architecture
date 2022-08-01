@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.critx.common.databinding.LoadingDialogBinding
+import com.critx.common.ui.getAlertDialog
 import com.critx.common.ui.hideKeyboard
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
@@ -42,7 +43,7 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadingDialog = getAlertDialog()
+        loadingDialog = requireContext().getAlertDialog()
         binding.loginButton.setOnClickListener {
             hideKeyboard(requireActivity(),it)
             binding.tilUsername.error=null
@@ -95,14 +96,5 @@ class LoginFragment : Fragment() {
 
     }
 
-    fun getAlertDialog():AlertDialog{
-        val builder = MaterialAlertDialogBuilder(requireContext())
-        val inflater: LayoutInflater = LayoutInflater.from(builder.context)
-        val alertDialogBinding = LoadingDialogBinding.inflate(
-            inflater, ConstraintLayout(builder.context), false
-        )
-        builder.setView(alertDialogBinding.root)
-        val alertDialog = builder.create()
-            return alertDialog
-    }
+
 }

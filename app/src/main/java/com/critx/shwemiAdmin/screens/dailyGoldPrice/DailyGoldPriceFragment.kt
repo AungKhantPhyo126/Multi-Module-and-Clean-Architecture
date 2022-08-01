@@ -6,19 +6,32 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.critx.common.ui.getAlertDialog
 import com.critx.common.ui.showSuccessDialog
 import com.critx.shwemiAdmin.R
+import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.FragmentDailyGoldPriceBinding
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DailyGoldPriceFragment:Fragment() {
     private lateinit var binding:FragmentDailyGoldPriceBinding
     private val viewModel by viewModels<DailyGoldPriceViewModel>()
+    private lateinit var loadingDialog: AlertDialog
+    private var snackBar: Snackbar? = null
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,6 +56,43 @@ class DailyGoldPriceFragment:Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
+        loadingDialog = requireContext().getAlertDialog()
+
+        val toolbarEndIcon: ImageView = activity!!.findViewById<View>(R.id.iv_end_icon) as ImageView
+        toolbarEndIcon.setOnClickListener {
+            viewModel.logout()
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                launch {
+                    viewModel.logoutState.collectLatest {
+                        if (it.loading){
+                            loadingDialog.show()
+                        }else loadingDialog.dismiss()
+                        if (!it.successMessage.isNullOrEmpty()) {
+                            findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
+                        }
+                    }
+                }
+                launch {
+                    viewModel.event.collectLatest { event ->
+                        when (event) {
+                            is UiEvent.ShowErrorSnackBar -> {
+                                snackBar?.dismiss()
+                                snackBar = Snackbar.make(
+                                    binding.root,
+                                    event.message,
+                                    Snackbar.LENGTH_LONG
+                                )
+                                snackBar?.show()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         if (!viewModel.isLogin()){
             findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
         }

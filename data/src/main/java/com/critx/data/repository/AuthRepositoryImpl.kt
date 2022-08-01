@@ -4,8 +4,10 @@ import com.critx.commonkotlin.util.Resource
 import com.critx.data.GetErrorMessage
 import com.critx.data.datasource.auth.AuthNetWorkDataSource
 import com.critx.data.network.datasource.AuthNetWorkDataSourceImpl
+import com.critx.data.network.dto.asDomain
 import com.critx.data.network.dto.auth.asDomain
 import com.critx.domain.model.LogInSuccess
+import com.critx.domain.model.SimpleData
 import com.critx.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -25,6 +27,24 @@ class AuthRepositoryImpl @Inject constructor(private val authNetWorkDataSource: 
                     )
                 )
             } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            }catch (e: Exception) {
+                emit(Resource.Error(e.message?:"Unhandled Error"))
+            }
+        }
+
+    override fun logout(token: String): Flow<Resource<SimpleData>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        authNetWorkDataSource.logout(token).asDomain()
+                    )
+                )
+            }catch (e: HttpException) {
                 emit(Resource.Error(GetErrorMessage.fromException(e)))
             } catch (e: IOException) {
                 emit(Resource.Error(GetErrorMessage.fromException(e)))

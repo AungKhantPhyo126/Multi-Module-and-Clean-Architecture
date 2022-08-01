@@ -28,3 +28,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 //    }
 //
 //}
+fun Context.getAlertDialog():AlertDialog{
+    val builder = MaterialAlertDialogBuilder(this)
+    val inflater: LayoutInflater = LayoutInflater.from(builder.context)
+    val alertDialogBinding = LoadingDialogBinding.inflate(
+        inflater, ConstraintLayout(builder.context), false
+    )
+    builder.setView(alertDialogBinding.root)
+    val alertDialog = builder.create()
+    return alertDialog
+}
