@@ -40,18 +40,18 @@
         android:layout_margin="4dp"
         android:textStyle="bold"
         android:textAppearance="?attr/textAppearanceHeadline5"
-        app:layout_constraintBottom_toTopOf="@+id/phone_edit"
-        app:layout_constraintStart_toStartOf="@+id/phone_edit" />
+        app:layout_constraintBottom_toTopOf="@+id/til_username"
+        app:layout_constraintStart_toStartOf="@+id/til_username" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/phone_edit"
+        android:id="@+id/til_username"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:hint="Enter Name"
         app:errorEnabled="true"
-        app:layout_constraintBottom_toTopOf="@+id/password_edit"
+        app:layout_constraintBottom_toTopOf="@+id/til_password"
         app:layout_constraintEnd_toStartOf="@+id/guideline_right"
         app:layout_constraintStart_toStartOf="@+id/guideline_left"
         app:startIconDrawable="@drawable/ic_user">
@@ -65,12 +65,13 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/password_edit"
+        android:id="@+id/til_password"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="48dp"
         android:hint="Enter Password"
+        app:errorEnabled="true"
         app:layout_constraintBottom_toTopOf="@+id/login_button"
         app:layout_constraintEnd_toStartOf="@+id/guideline_right"
         app:layout_constraintStart_toStartOf="@+id/guideline_left"

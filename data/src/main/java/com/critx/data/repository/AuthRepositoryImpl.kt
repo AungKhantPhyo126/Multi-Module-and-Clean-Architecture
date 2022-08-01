@@ -1,6 +1,7 @@
 package com.critx.data.repository
 
 import com.critx.commonkotlin.util.Resource
+import com.critx.data.GetErrorMessage
 import com.critx.data.datasource.auth.AuthNetWorkDataSource
 import com.critx.data.network.datasource.AuthNetWorkDataSourceImpl
 import com.critx.data.network.dto.auth.asDomain
@@ -23,12 +24,12 @@ class AuthRepositoryImpl @Inject constructor(private val authNetWorkDataSource: 
                         authNetWorkDataSource.login(name, password).asDomain()
                     )
                 )
-            } catch (e: Exception) {
-                emit(Resource.Error(e.message))
             } catch (e: HttpException) {
-                emit(Resource.Error(e.message))
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
             } catch (e: IOException) {
-                emit(Resource.Error(e.message))
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            }catch (e: Exception) {
+                emit(Resource.Error(e.message?:"Unhandled Error"))
             }
         }
 }

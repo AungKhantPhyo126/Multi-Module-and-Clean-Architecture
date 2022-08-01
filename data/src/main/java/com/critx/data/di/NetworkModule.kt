@@ -17,7 +17,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 import javax.inject.Singleton
 
-const val BASE_URL = "https://18.136.200.98"
+const val BASE_URL = "http://18.136.200.98/"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -62,6 +62,6 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideUncheckOkHttpClient(): OkHttpClient {
-        return OkHttpClient()
+        return UnsafeOkHttpClient.getUnsafeOkHttpClient()
     }
 }

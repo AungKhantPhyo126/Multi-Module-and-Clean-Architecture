@@ -23,7 +23,18 @@ class AuthNetWorkDataSourceImpl @Inject constructor(
         return if (response.isSuccessful) {
             response.body() ?: throw Exception("Response body Null")
         } else {
-            throw Exception(response.errorBody()?.string())
+            throw  Exception(
+                when(response.code()){
+                    400 -> "Bad request"
+                    401 -> "Username or Password wrong"
+                    402 -> "Payment required!!!"
+                    403 -> "Forbidden"
+                    404 -> "You request not found"
+                    405 -> "Method is not allowed!!!"
+                    else -> "Unhandled error occurred!!!"
+                }
+            )
+
         }
     }
 

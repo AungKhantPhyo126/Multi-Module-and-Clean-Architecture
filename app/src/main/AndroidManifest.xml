@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.critx.shwemiAdmin">
 <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.CAMERA"/>
@@ -10,7 +11,9 @@
         android:name=".ShweMiAdmin"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ShweMiAdmin">
+        android:usesCleartextTraffic="true"
+        android:theme="@style/Theme.ShweMiAdmin"
+        tools:targetApi="n">
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustPan"
@@ -24,6 +27,11 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove" />
     </application>
 
 </manifest>
