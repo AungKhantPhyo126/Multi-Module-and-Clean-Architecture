@@ -2,7 +2,7 @@ package com.critx.data.network.datasource
 
 import com.critx.data.datasource.HomeNetWorkDatasource
 import com.critx.data.network.api.HomeService
-import com.critx.data.network.responseModel.HomeResponse
+import com.critx.data.network.dto.HomeResponse
 import javax.inject.Inject
 
 class HomeNetworkDatasourceImpl @Inject constructor(

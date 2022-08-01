@@ -1,4 +1,4 @@
-package com.critx.data.network.responseModel
+package com.critx.data.network.dto
 
 import com.critx.domain.model.Home
 
