@@ -6,6 +6,7 @@ import com.critx.data.network.api.AuthService
 import com.critx.data.network.apiParams.auth.LoginData
 import com.critx.data.network.dto.SimpleResponseDto
 import com.critx.data.network.dto.auth.LoginSuccessDto
+import com.critx.data.network.dto.auth.ProfileDto
 import com.critx.data.repository.AuthRepositoryImpl
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -60,6 +61,25 @@ class AuthNetWorkDataSourceImpl @Inject constructor(
 
     override suspend fun refreshToken(token: String): LoginSuccessDto {
         val response = authService.refreshToken(token)
+        return  if (response.isSuccessful){
+            response.body()?:throw Exception("Response body Null")
+        }else{
+            throw  Exception(
+                when(response.code()){
+                    400 -> "Bad request"
+                    401 -> "You are not Authorized"
+                    402 -> "Payment required!!!"
+                    403 -> "Forbidden"
+                    404 -> "You request not found"
+                    405 -> "Method is not allowed!!!"
+                    else -> "Unhandled error occurred!!!"
+                }
+            )
+        }
+    }
+
+    override suspend fun getProfile(token: String): ProfileDto {
+        val response = authService.getProfile(token)
         return  if (response.isSuccessful){
             response.body()?:throw Exception("Response body Null")
         }else{

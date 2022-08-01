@@ -33,7 +33,7 @@ class DailyGoldPriceFragment:Fragment() {
     private val viewModel by viewModels<DailyGoldPriceViewModel>()
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
-
+    lateinit var workManager:WorkManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,6 +59,7 @@ class DailyGoldPriceFragment:Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
+        workManager = WorkManager.getInstance(requireContext())
         loadingDialog = requireContext().getAlertDialog()
 
         val toolbarEndIcon: ImageView = activity!!.findViewById<View>(R.id.iv_end_icon) as ImageView
@@ -68,18 +69,22 @@ class DailyGoldPriceFragment:Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
+
+                //logout
                 launch {
                     viewModel.logoutState.collectLatest {
                         if (it.loading){
                             loadingDialog.show()
                         }else loadingDialog.dismiss()
                         if (!it.successMessage.isNullOrEmpty()) {
-                            val workManager = WorkManager.getInstance(requireContext())
+
                             workManager.cancelUniqueWork(RefreshTokenWorker.REFRESH_TOKEN_WORK)
                             findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
                         }
                     }
                 }
+
+                //Error Event
                 launch {
                     viewModel.event.collectLatest { event ->
                         when (event) {
@@ -95,6 +100,17 @@ class DailyGoldPriceFragment:Fragment() {
                         }
                     }
                 }
+
+                //getProfile
+                launch {
+                    viewModel.profileState.collectLatest {
+                        if (it.successLoading != null){
+                            binding.tvUserName.text= it.successLoading!!.name
+                            binding.tvTodayDate.text = it.successLoading!!.todayDate
+                            binding.tvTodayName.text = it.successLoading!!.todayName
+                        }
+                    }
+                }
             }
         }
 
@@ -104,6 +120,7 @@ class DailyGoldPriceFragment:Fragment() {
             if (viewModel.isRefreshTokenExpire()){
                 findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
             }else{
+                viewModel.getProfile()
                 enqueueRefreshTokenWork()
             }
         }
@@ -127,7 +144,7 @@ class DailyGoldPriceFragment:Fragment() {
                 .setConstraints(workConstraints)
                 .build()
 
-        WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
+        workManager.enqueueUniquePeriodicWork(
             RefreshTokenWorker.REFRESH_TOKEN_WORK,
             ExistingPeriodicWorkPolicy.KEEP,
             repeatingRequest

@@ -41,6 +41,7 @@ class LoginFragment : Fragment() {
         }.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadingDialog = requireContext().getAlertDialog()
@@ -95,6 +96,7 @@ class LoginFragment : Fragment() {
         }
 
     }
+
 
 
 }

@@ -23,6 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
     lateinit var actionBarDrawerToggle : ActionBarDrawerToggle
     private val startDestinationList = listOf<Int>(
         R.id.dailyGoldPriceFragment,
@@ -42,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
+        navController = navHostFragment.navController
         findViewById<NavigationView>(R.id.navigation)
 
         actionBarDrawerToggle =
@@ -80,5 +81,12 @@ class MainActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (navController.currentDestination!!.id == R.id.loginFragment){
+            finish()
+        }
     }
 }
