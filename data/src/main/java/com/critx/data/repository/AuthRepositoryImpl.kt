@@ -52,4 +52,22 @@ class AuthRepositoryImpl @Inject constructor(private val authNetWorkDataSource: 
                 emit(Resource.Error(e.message?:"Unhandled Error"))
             }
         }
+
+    override fun refreshToken(token: String): Flow<Resource<LogInSuccess>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        authNetWorkDataSource.refreshToken(token).asDomain()
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            }catch (e: Exception) {
+                emit(Resource.Error(e.message?:"Unhandled Error"))
+            }
+        }
 }

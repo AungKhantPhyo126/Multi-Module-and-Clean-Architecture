@@ -14,15 +14,18 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.work.*
 import com.critx.common.ui.getAlertDialog
 import com.critx.common.ui.showSuccessDialog
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.FragmentDailyGoldPriceBinding
+import com.critx.shwemiAdmin.workerManager.RefreshTokenWorker
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class DailyGoldPriceFragment:Fragment() {
@@ -71,6 +74,8 @@ class DailyGoldPriceFragment:Fragment() {
                             loadingDialog.show()
                         }else loadingDialog.dismiss()
                         if (!it.successMessage.isNullOrEmpty()) {
+                            val workManager = WorkManager.getInstance(requireContext())
+                            workManager.cancelUniqueWork(RefreshTokenWorker.REFRESH_TOKEN_WORK)
                             findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
                         }
                     }
@@ -95,6 +100,12 @@ class DailyGoldPriceFragment:Fragment() {
 
         if (!viewModel.isLogin()){
             findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
+        }else{
+            if (viewModel.isRefreshTokenExpire()){
+                findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
+            }else{
+                enqueueRefreshTokenWork()
+            }
         }
         binding.btnByTable.setOnClickListener {
             findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToPriceByTableFragment())
@@ -104,5 +115,22 @@ class DailyGoldPriceFragment:Fragment() {
                 findNavController().popBackStack()
             }
         }
+    }
+    private fun enqueueRefreshTokenWork() {
+        val workConstraints = Constraints
+            .Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val repeatingRequest =
+            PeriodicWorkRequestBuilder<RefreshTokenWorker>(15, TimeUnit.MINUTES)
+                .setConstraints(workConstraints)
+                .build()
+
+        WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
+            RefreshTokenWorker.REFRESH_TOKEN_WORK,
+            ExistingPeriodicWorkPolicy.KEEP,
+            repeatingRequest
+        )
     }
 }

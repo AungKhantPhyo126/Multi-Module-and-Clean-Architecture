@@ -2,10 +2,11 @@ package com.critx.shwemiAdmin.screens.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.critx.common.LocalDatabase
+import com.critx.shwemiAdmin.dateControllers.parseRefreshTokenExpire
 import com.critx.commonkotlin.util.Resource
 import com.critx.domain.useCase.auth.LogInUseCase
 import com.critx.shwemiAdmin.UiEvent
+import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.uistate.LoginUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -38,6 +39,7 @@ class LoginViewModel @Inject constructor(
                             successMessage = "Login Success"
                         )
                         localDatabase.saveToken(result.data!!.token)
+                        localDatabase.saveRefreshTokenExpireTime(parseRefreshTokenExpire(result.data!!.refreshTokenExpire))
                     }
                     is Resource.Error->{
                         _state.value =_state.value.copy(

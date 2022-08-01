@@ -2,10 +2,11 @@ package com.critx.shwemiAdmin.screens.dailyGoldPrice
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.critx.common.LocalDatabase
+import androidx.work.WorkManager
 import com.critx.commonkotlin.util.Resource
 import com.critx.domain.useCase.auth.LogoutUseCase
 import com.critx.shwemiAdmin.UiEvent
+import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.uistate.LoginUiState
 import com.critx.shwemiAdmin.uistate.LogoutUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,6 +30,10 @@ class DailyGoldPriceViewModel @Inject constructor(
 //        return true
     }
 
+    fun isRefreshTokenExpire():Boolean{
+        return localDatabase.isRefreshTokenExpire()
+    }
+
     fun logout(){
         viewModelScope.launch {
             logoutUseCase(localDatabase.getToken().orEmpty()).collect {  result->
@@ -43,7 +48,7 @@ class DailyGoldPriceViewModel @Inject constructor(
                             loading = false,
                             successMessage = "Login Success"
                         )
-                        localDatabase.deleteToken()
+                        localDatabase.clearuser()
                     }
                     is Resource.Error->{
                         _logoutState.value =_logoutState.value.copy(

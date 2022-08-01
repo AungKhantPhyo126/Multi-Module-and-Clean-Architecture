@@ -19,4 +19,9 @@ interface AuthService {
     suspend fun logout(
         @Header("Authorization") token:String
     ):Response<SimpleResponseDto>
+
+    @POST("api/auth/refresh")
+    suspend fun refreshToken(
+        @Header("Authorization") token:String
+    ):Response<LoginSuccessDto>
 }
