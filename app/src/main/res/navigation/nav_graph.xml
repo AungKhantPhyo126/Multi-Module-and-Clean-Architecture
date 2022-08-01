@@ -58,4 +58,16 @@
         android:id="@+id/flashSaleFragment"
         android:name="com.critx.shwemiAdmin.screens.flashsale.FlashSaleFragment"
         android:label="FlashSaleFragment" />
+    <fragment
+        android:id="@+id/collectStockFragment"
+        android:name="com.critx.shwemiAdmin.screens.collectstock.CollectStockFragment"
+        android:label="CollectStockFragment" >
+        <action
+            android:id="@+id/action_collectStockFragment_to_fillInfoCollectStockFragment"
+            app:destination="@id/fillInfoCollectStockFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/fillInfoCollectStockFragment"
+        android:name="com.critx.shwemiAdmin.screens.collectstock.fillinfo.FillInfoCollectStockFragment"
+        android:label="FillInfoCollectStockFragment" />
 </navigation>

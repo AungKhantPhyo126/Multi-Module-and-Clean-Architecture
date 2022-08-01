@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/single_selected_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="btn_confirm,tv_label_weigh,til_weight,tv_label_stock_with_label_weight"
+        android:visibility="gone"/>
+    <include
+        android:layout_marginTop="16dp"
+        android:id="@+id/layout_collect_stock_batch"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        layout="@layout/include_collect_stock_batch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_voucher"
+        android:background="@color/base_pink"
+        app:layout_constraintTop_toBottomOf="@id/mcv_scan_here"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+<!--    <com.google.android.material.card.MaterialCardView-->
+<!--        android:id="@+id/mcv_single"-->
+<!--        android:layout_width="150dp"-->
+<!--        android:layout_height="32dp"-->
+<!--        android:clickable="true"-->
+<!--        android:focusable="true"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginEnd="8dp"-->
+<!--        app:cardCornerRadius="20dp"-->
+<!--        app:cardElevation="16dp"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/mcv_batch"-->
+<!--        app:layout_constraintHorizontal_bias="0.5"-->
+<!--        app:layout_constraintHorizontal_chainStyle="packed"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:gravity="center">-->
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/single"-->
+<!--                android:layout_gravity="center"/>-->
+<!--        </LinearLayout>-->
+<!--    </com.google.android.material.card.MaterialCardView>-->
+
+<!--    <com.google.android.material.card.MaterialCardView-->
+<!--        android:id="@+id/mcv_batch"-->
+<!--        android:layout_width="150dp"-->
+<!--        android:layout_height="32dp"-->
+<!--        android:clickable="true"-->
+<!--        android:focusable="true"-->
+<!--        android:layout_marginStart="8dp"-->
+<!--        app:cardCornerRadius="20dp"-->
+<!--        app:cardElevation="16dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.5"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/mcv_single"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/mcv_single">-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:gravity="center">-->
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/batch"-->
+<!--                android:layout_gravity="center"/>-->
+<!--        </LinearLayout>-->
+<!--    </com.google.android.material.card.MaterialCardView>-->
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/chip_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:flexWrap="wrap"
+        app:justifyContent="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipt_gp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleLine="true"
+            app:singleSelection="true"
+            android:layout_marginTop="8dp">
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_single"
+                android:layout_width="150dp"
+                android:textAlignment="center"
+                android:textColor="@color/collect_stock_chip_text_color_selector"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_height="wrap_content"
+                android:text="@string/single"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_batch"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:checked="true"
+                android:layout_width="150dp"
+                android:textColor="@color/collect_stock_chip_text_color_selector"
+                android:textAlignment="center"
+                android:layout_height="wrap_content"
+                android:text="@string/batch"/>
+        </com.google.android.material.chip.ChipGroup>
+    </com.google.android.flexbox.FlexboxLayout>
+
+
+    <TextView
+        android:id="@+id/tv_label_stock_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stock_code"
+        android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+        app:layout_constraintBottom_toBottomOf="@+id/mcv_scan_here"
+        app:layout_constraintEnd_toStartOf="@+id/mcv_scan_here"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/mcv_scan_here" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/mcv_scan_here"
+        android:layout_width="220dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginEnd="16dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chip_layout"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:weightSum="5">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:text="@string/scan_here"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                android:textColor="@color/primary_color" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_qr_scan" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/tv_label_weigh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/weight"
+        android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+        app:layout_constraintBottom_toBottomOf="@+id/til_weight"
+        app:layout_constraintEnd_toStartOf="@+id/til_weight"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/til_weight" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_weight"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:boxCornerRadiusBottomEnd="15dp"
+        app:boxCornerRadiusBottomStart="15dp"
+        app:boxCornerRadiusTopEnd="15dp"
+        app:hintEnabled="false"
+        app:boxCornerRadiusTopStart="15dp"
+        app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
+        app:boxStrokeWidth="1dp"
+        app:layout_constraintEnd_toEndOf="@+id/mcv_scan_here"
+        app:layout_constraintStart_toStartOf="@+id/mcv_scan_here"
+        app:layout_constraintTop_toBottomOf="@id/mcv_scan_here"
+        app:strokeWidth="1dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_weight"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/enter_weight"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/tv_label_stock_with_label_weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/stock_with_label_weight"
+        android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
+        android:textColor="@color/primary_color"
+        app:layout_constraintStart_toStartOf="@+id/til_weight"
+        app:layout_constraintTop_toBottomOf="@+id/til_weight" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_confirm"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/confirm"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:textAppearance="@style/TextAppearance.ShweMi.Headline6"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

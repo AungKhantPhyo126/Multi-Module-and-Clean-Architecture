@@ -11,9 +11,7 @@ import androidx.fragment.app.Fragment
 import com.critx.common.qrscan.getBarLauncher
 import com.critx.common.qrscan.scanQrCode
 import com.critx.shwemiAdmin.R
-import com.critx.shwemiAdmin.databinding.FragmentDiscountBinding
 import com.critx.shwemiAdmin.databinding.FragmentFlashSaleBinding
-import com.critx.shwemiAdmin.screens.discount.DiscountRecyclerAdapter
 import com.critx.shwemiAdmin.uiModel.discount.DiscountUIModel
 
 class FlashSaleFragment: Fragment() {

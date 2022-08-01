@@ -36,9 +36,25 @@ fun Fragment.getBarLauncher(context: Context):ActivityResultLauncher<ScanOptions
                 builder.setMessage(result.contents)
                 builder.setPositiveButton("OK",
                     DialogInterface.OnClickListener { dialogInterface, i ->
+//                        scanAction(result.contents)
                         dialogInterface.dismiss()
                     })
                     .show()
             }
         }
+}
+fun Fragment.getBarLauncherTest(context: Context, scanAction:(gg:String)-> Unit):ActivityResultLauncher<ScanOptions>{
+    return registerForActivityResult(ScanContract()) { result ->
+        if (result.getContents() != null) {
+            val builder: MaterialAlertDialogBuilder =MaterialAlertDialogBuilder(context)
+            builder.setTitle("Result")
+            builder.setMessage(result.contents)
+            builder.setPositiveButton("OK",
+                DialogInterface.OnClickListener { dialogInterface, i ->
+                    scanAction(result.contents)
+                    dialogInterface.dismiss()
+                })
+                .show()
+        }
+    }
 }

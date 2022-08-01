@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import com.critx.common.qrscan.getBarLauncher
 import com.critx.common.qrscan.scanQrCode
 import com.critx.shwemiAdmin.databinding.FragmentVoucherBinding
-import com.critx.shwemiAdmin.databinding.NewSampleFragmentBinding
 import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.tabs.new.NewSampleRecyclerAdapter
 import com.critx.shwemiAdmin.uiModel.sampleTakeAndReturn.NewSampleUIModel
 import com.critx.shwemiAdmin.uiModel.sampleTakeAndReturn.VoucherUIModel

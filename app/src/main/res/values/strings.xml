@@ -8,6 +8,7 @@
     <string name="flash_sale">Flash Sale</string>
     <string name="set_up_stock">Set up Stock</string>
     <string name="collect_stock">Collect Stock</string>
+    <string name="collect_stock_and_give_data">Collect Stock And Give Data</string>
     <string name="edit_stock">Edit Stock</string>
     <string name="stock">Stock</string>
     <string name="order_stock">Order Stock</string>
@@ -83,6 +84,15 @@
     <string name="enter_point_amount">Enter Point Amount</string>
     <string name="date_range">Date Range</string>
     <string name="from_to">From - To</string>
+    <string name="single">Single</string>
+    <string name="batch">Batch</string>
+    <string name="weight">Weight</string>
+    <string name="stock_with_label_weight">* Stock with Label Weight</string>
+    <string name="next">Next</string>
+    <string name="wastage">Wastage</string>
+    <string name="bonus">Bonus</string>
+    <string name="size">Size</string>
+    <string name="amount">Amount</string>
 
     <style name="voucher">Voucher</style>
     <style name="text_new">New</style>
