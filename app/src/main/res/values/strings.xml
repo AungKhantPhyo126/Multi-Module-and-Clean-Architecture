@@ -84,6 +84,9 @@
     <string name="enter_point_amount">Enter Point Amount</string>
     <string name="date_range">Date Range</string>
     <string name="from_to">From - To</string>
+    <string name="item">Item</string>
+    <string name="jewellery_type">Jewellery Type</string>
+    <string name="next">Next</string>
     <string name="single">Single</string>
     <string name="batch">Batch</string>
     <string name="weight">Weight</string>

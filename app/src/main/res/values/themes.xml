@@ -45,4 +45,7 @@
         <item name="cornerRadius">16dp</item>
         <item name="elevation">15dp</item>
     </style>
+    <style name="ChipTextStyle" parent="TextAppearance.ShweMi.Body2">
+        <item name="android:textColor">@color/edit_text_color</item>
+    </style>
 </resources>

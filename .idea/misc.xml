@@ -13,6 +13,7 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/drawable/selector_tab_sample_take_and_return.xml" value="0.1165" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout-v26/include_price_by_table_small_items.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/choice_chip.xml" value="0.2013681060282172" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/custom_tab_item.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/drawer_header.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_collect_stock.xml" value="0.1" />
@@ -26,6 +27,7 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_point.xml" value="0.2" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_price_by_table.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_sample_take_and_return.xml" value="0.14767932489451477" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_set_up_stockl.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_unconfirmed_voucher.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_voucher.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_collect_stock_batch.xml" value="0.1" />

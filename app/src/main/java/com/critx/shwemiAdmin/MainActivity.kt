@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         R.id.discountFragment,
         R.id.flashSaleFragment,
         R.id.collectStockFragment
+        R.id.setupStockFragment
     )
 
     private val imgUrl =

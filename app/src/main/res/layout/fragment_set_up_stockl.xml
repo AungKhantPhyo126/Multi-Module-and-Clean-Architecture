@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_first_cat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/jewellery_type"
+        android:layout_marginTop="14dp"
+        android:layout_marginStart="16dp"
+        android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_first"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_first_cat"
+        app:layout_constraintStart_toEndOf="@+id/tv_first_cat"
+        app:layout_constraintTop_toTopOf="@+id/tv_first_cat"
+        app:srcCompat="@drawable/ic_right_arrow" />
+    <TextView
+        android:id="@+id/tv_second_cat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/item"
+        android:layout_marginTop="14dp"
+        android:layout_marginStart="4dp"
+        android:visibility="invisible"
+        android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
+        app:layout_constraintStart_toEndOf="@id/iv_first"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/iv_second"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_second_cat"
+        app:layout_constraintStart_toEndOf="@+id/tv_second_cat"
+        app:layout_constraintTop_toTopOf="@+id/tv_second_cat"
+        app:srcCompat="@drawable/ic_right_arrow" />
+    <TextView
+        android:id="@+id/tv_third_cat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/item"
+        android:visibility="invisible"
+        android:layout_marginTop="14dp"
+        android:layout_marginStart="4dp"
+        android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
+        app:layout_constraintStart_toEndOf="@id/iv_second"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/iv_third_cat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_third_cat"
+        app:layout_constraintStart_toEndOf="@+id/tv_third_cat"
+        app:layout_constraintTop_toTopOf="@+id/tv_third_cat"
+        app:srcCompat="@drawable/ic_right_arrow" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="12dp"
+        android:background="@color/divider_grey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_first_cat" />
+
+    <TextView
+        android:id="@+id/tv_label_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/jewellery_type"
+        android:textAppearance="@style/TextAppearance.ShweMi.Headline6"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chip_group_jewellery_type"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:chipSpacing="8dp"
+        app:singleLine="false"
+        app:singleSelection="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_label_item"
+        app:layout_constraintBottom_toTopOf="@id/btn_next">
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <Button
+        android:id="@+id/btn_next"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/next"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

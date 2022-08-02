@@ -70,4 +70,8 @@
         android:id="@+id/fillInfoCollectStockFragment"
         android:name="com.critx.shwemiAdmin.screens.collectstock.fillinfo.FillInfoCollectStockFragment"
         android:label="FillInfoCollectStockFragment" />
+    <fragment
+        android:id="@+id/setupStockFragment"
+        android:name="com.critx.shwemiAdmin.screens.setupStock.SetupStockFragment"
+        android:label="SetupStockFragment" />
 </navigation>
