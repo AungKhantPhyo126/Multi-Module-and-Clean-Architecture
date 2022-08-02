@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val TOKEN = "token"
-private const val REFRESH_TOKEN_EXPIRE = "token"
+private const val REFRESH_TOKEN_EXPIRE = "refresh_token_expire"
 
 
 @Singleton

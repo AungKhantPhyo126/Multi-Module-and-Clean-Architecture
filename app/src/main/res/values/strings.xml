@@ -101,4 +101,6 @@
     <style name="outsider">outsider</style>
 
     <string name="try_again">Try Again</string>
+    <string name="rebuy">Rebuy</string>
+    <string name="rebuy_price">Rebuy Price</string>
 </resources>

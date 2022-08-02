@@ -7,6 +7,7 @@ import com.critx.data.network.datasource.AuthNetWorkDataSourceImpl
 import com.critx.data.network.dto.asDomain
 import com.critx.data.network.dto.auth.asDomain
 import com.critx.domain.model.LogInSuccess
+import com.critx.domain.model.Profile
 import com.critx.domain.model.SimpleData
 import com.critx.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.Flow
@@ -60,6 +61,24 @@ class AuthRepositoryImpl @Inject constructor(private val authNetWorkDataSource: 
                 emit(
                     Resource.Success(
                         authNetWorkDataSource.refreshToken(token).asDomain()
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            }catch (e: Exception) {
+                emit(Resource.Error(e.message?:"Unhandled Error"))
+            }
+        }
+
+    override fun getProfile(token: String): Flow<Resource<Profile>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        authNetWorkDataSource.getProfile(token).data.asDomain()
                     )
                 )
             } catch (e: HttpException) {
