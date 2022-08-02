@@ -55,7 +55,7 @@
             android:title="@string/stock">
             <menu>
                 <item
-                    android:id="@+id/setUpStockFragment"
+                    android:id="@+id/setupStockFragment"
                     android:title="@string/set_up_stock"
                     android:icon="@drawable/ic_set_up_stock"/>
                 <item

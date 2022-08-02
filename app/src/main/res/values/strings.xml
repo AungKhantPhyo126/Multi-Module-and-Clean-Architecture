@@ -84,6 +84,8 @@
     <string name="date_range">Date Range</string>
     <string name="from_to">From - To</string>
     <string name="item">Item</string>
+    <string name="jewellery_type">Jewellery Type</string>
+    <string name="next">Next</string>
 
     <style name="voucher">Voucher</style>
     <style name="text_new">New</style>

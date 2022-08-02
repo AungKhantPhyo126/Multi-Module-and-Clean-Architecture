@@ -58,4 +58,8 @@
         android:id="@+id/flashSaleFragment"
         android:name="com.critx.shwemiAdmin.screens.flashsale.FlashSaleFragment"
         android:label="FlashSaleFragment" />
+    <fragment
+        android:id="@+id/setupStockFragment"
+        android:name="com.critx.shwemiAdmin.screens.setupStock.SetupStockFragment"
+        android:label="SetupStockFragment" />
 </navigation>
