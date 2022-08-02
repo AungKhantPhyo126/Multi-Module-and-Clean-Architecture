@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         R.id.pointFragment,
         R.id.discountFragment,
         R.id.flashSaleFragment,
-        R.id.collectStockFragment
+        R.id.collectStockFragment,
         R.id.setupStockFragment
     )
 
