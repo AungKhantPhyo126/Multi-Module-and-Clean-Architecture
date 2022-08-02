@@ -1,4 +1,4 @@
-package com.critx.shwemiAdmin.screens.setupStock
+package com.critx.shwemiAdmin.screens.setupStock.first
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.critx.common.ui.createChip
 import com.critx.shwemiAdmin.R
-import com.critx.shwemiAdmin.databinding.ChoiceChipBinding
 import com.critx.shwemiAdmin.databinding.FragmentSetUpStocklBinding
 import com.google.android.material.chip.Chip
 
@@ -41,30 +43,38 @@ class SetupStockFragment:Fragment() {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
         val nameList =
-            arrayListOf("Extra Soft", "Soft", "Medium", "Hard", "Extra Hard")
+            arrayListOf("Extra Soft", "Soft", "Medium", "Hard", "Extra Hard",
+                "Extra Soft", "Soft", "Medium", "Hard", "Extra Hard")
         val chipIdList = mutableListOf<Int>()
         for (name in nameList) {
-            val chip = createChip(name)
+            val chip = requireContext().createChip(name)
 
             binding.chipGroupJewelleryType.addView(chip)
         }
 
         binding.chipGroupJewelleryType.setOnCheckedStateChangeListener { group, checkedIds ->
-           for (index in 0 until group.childCount){
-               val chip = group[index] as Chip
-               if (chip.isChecked){
-                   binding.tvFirstCat.setTextColor(requireContext().getColor(R.color.primary_color))
-                   binding.tvFirstCat.text = chip.text
-               }
-           }
+            for (index in 0 until group.childCount){
+                val chip = group[index] as Chip
+                if (chip.isChecked){
+                    binding.tvFirstCat.setTextColor(requireContext().getColor(R.color.primary_color))
+                    binding.tvFirstCat.text = chip.text
+                    binding.ivFirst.isVisible = true
+                }
+            }
+        }
+        binding.btnNext.setOnClickListener {
+            if (binding.tvFirstCat.text != requireContext().getString(R.string.jewellery_type)){
+                findNavController().navigate(SetupStockFragmentDirections.actionSetupStockFragmentToChooseJewelleryQualityFragment(
+                    binding.tvFirstCat.text.toString()
+                ))
+            }else{
+                Toast.makeText(requireContext(),"Please choose at least one category",Toast.LENGTH_LONG).show()
+            }
+
         }
 
     }
-    private fun createChip(label: String): Chip {
-        val chip = ChoiceChipBinding.inflate(layoutInflater).root
-        chip.text = label
-        return chip
-    }
+
 
 }
 

@@ -27,13 +27,15 @@ class MainActivity : AppCompatActivity() {
     lateinit var actionBarDrawerToggle : ActionBarDrawerToggle
     private val startDestinationList = listOf<Int>(
         R.id.dailyGoldPriceFragment,
+
         R.id.sampleTakeAndReturnFragment,
         R.id.confirmVoucherFragment,
         R.id.pointFragment,
         R.id.discountFragment,
         R.id.flashSaleFragment,
         R.id.collectStockFragment,
-        R.id.setupStockFragment
+        R.id.setupStockFragment,
+        R.id.chooseJewelleryQualityFragment
     )
 
     private val imgUrl =

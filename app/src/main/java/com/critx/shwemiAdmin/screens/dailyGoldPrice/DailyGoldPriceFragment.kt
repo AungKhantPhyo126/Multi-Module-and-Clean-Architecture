@@ -62,6 +62,7 @@ class DailyGoldPriceFragment:Fragment() {
         workManager = WorkManager.getInstance(requireContext())
         loadingDialog = requireContext().getAlertDialog()
 
+
         val toolbarEndIcon: ImageView = activity!!.findViewById<View>(R.id.iv_end_icon) as ImageView
         toolbarEndIcon.setOnClickListener {
             viewModel.logout()
@@ -149,5 +150,12 @@ class DailyGoldPriceFragment:Fragment() {
             ExistingPeriodicWorkPolicy.KEEP,
             repeatingRequest
         )
+
+        workManager.getWorkInfoByIdLiveData(repeatingRequest.id).observeForever {
+            if (it.state == WorkInfo.State.SUCCEEDED){
+                viewModel.getProfile()
+            }
+        }
+
     }
 }

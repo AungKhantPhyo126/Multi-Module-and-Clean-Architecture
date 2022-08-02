@@ -72,6 +72,18 @@
         android:label="FillInfoCollectStockFragment" />
     <fragment
         android:id="@+id/setupStockFragment"
-        android:name="com.critx.shwemiAdmin.screens.setupStock.SetupStockFragment"
-        android:label="SetupStockFragment" />
+        android:name="com.critx.shwemiAdmin.screens.setupStock.first.SetupStockFragment"
+        android:label="SetupStockFragment" >
+        <action
+            android:id="@+id/action_setupStockFragment_to_chooseJewelleryQualityFragment"
+            app:destination="@id/chooseJewelleryQualityFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chooseJewelleryQualityFragment"
+        android:name="com.critx.shwemiAdmin.screens.setupStock.second.ChooseJewelleryQualityFragment"
+        android:label="ChooseJewelleryQualityFragment" >
+        <argument
+            android:name="firstCat"
+            app:argType="string" />
+    </fragment>
 </navigation>
