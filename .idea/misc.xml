@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Shwe Mi/app/src/main/res/drawable/background_with_corner_radius.xml" value="0.1115" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/drawable/bubble_background.xml" value="0.1115" />
         <entry key="..\:/Shwe Mi/app/src/main/res/drawable/chip_outline.xml" value="0.1165" />
         <entry key="..\:/Shwe Mi/app/src/main/res/drawable/chip_outline_selected.xml" value="0.1165" />
         <entry key="..\:/Shwe Mi/app/src/main/res/drawable/fragment_price_by_table.xml" value="0.1165" />
@@ -15,11 +16,12 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/layout-v23/item_image_selection.xml" value="0.17255434782608695" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout-v26/include_price_by_table_small_items.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/bubble_card.xml" value="0.2" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/choice_chip.xml" value="0.2013681060282172" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/custom_tab_item.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/drawer_header.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_choose_group.xml" value="0.3768844221105528" />
-        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_choose_jewellery_quality.xml" value="0.2013681060282172" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_choose_jewellery_quality.xml" value="0.2" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_collect_stock.xml" value="0.1" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_confirm_voucher.xml" value="0.25" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_daily_gold_price.xml" value="0.176" />
@@ -27,6 +29,7 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_fill_info_collect_stock.xml" value="0.2078804347826087" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_flash_sale.xml" value="0.20244565217391305" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_login.xml" value="0.22826086956521738" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_new_group.xml" value="0.20436083796494228" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_outside.xml" value="0.176" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_point.xml" value="0.2" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_price_by_table.xml" value="0.22826086956521738" />
@@ -56,11 +59,12 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/menu-v26/drawer_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Shwe Mi/app/src/main/res/menu/drawer_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Shwe Mi/app/src/main/res/xml/network_security_config.xml" value="0.1" />
+        <entry key="..\:/Shwe Mi/common/src/main/res/drawable/bubble_background.xml" value="0.12" />
         <entry key="..\:/Shwe Mi/common/src/main/res/drawable/circle_shape.xml" value="0.1165" />
         <entry key="..\:/Shwe Mi/common/src/main/res/drawable/ic_success.xml" value="0.1165" />
         <entry key="..\:/Shwe Mi/common/src/main/res/drawable/loading_img.xml" value="0.1165" />
         <entry key="..\:/Shwe Mi/common/src/main/res/layout/activity_qr_scan.xml" value="0.264" />
-        <entry key="..\:/Shwe Mi/common/src/main/res/layout/choice_chip.xml" value="0.2013681060282172" />
+        <entry key="..\:/Shwe Mi/common/src/main/res/layout/choice_chip.xml" value="0.4" />
         <entry key="..\:/Shwe Mi/common/src/main/res/layout/custom_barcode_scanner.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/common/src/main/res/layout/loading_dialog.xml" value="0.2013681060282172" />
         <entry key="..\:/Shwe Mi/common/src/main/res/layout/shwemi_success_dialog.xml" value="0.22826086956521738" />

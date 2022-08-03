@@ -1,10 +1,12 @@
 package com.critx.shwemiAdmin.screens.setupStock.second
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.get
@@ -14,9 +16,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.critx.common.ui.createChip
 import com.critx.shwemiAdmin.R
+import com.critx.shwemiAdmin.databinding.BubbleCardBinding
 import com.critx.shwemiAdmin.databinding.FragmentChooseJewelleryQualityBinding
-import com.critx.shwemiAdmin.screens.setupStock.first.SetupStockFragmentDirections
+import com.daasuu.bl.ArrowDirection
+import com.daasuu.bl.BubblePopupHelper
 import com.google.android.material.chip.Chip
+
 
 class ChooseJewelleryQualityFragment:Fragment() {
     private lateinit var binding: FragmentChooseJewelleryQualityBinding

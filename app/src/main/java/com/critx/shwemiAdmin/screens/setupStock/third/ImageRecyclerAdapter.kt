@@ -1,21 +1,30 @@
 package com.critx.shwemiAdmin.screens.setupStock.third
 
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.PopupWindow
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.critx.shwemiAdmin.R
+import com.critx.shwemiAdmin.databinding.BubbleCardBinding
 import com.critx.shwemiAdmin.databinding.ItemAddNewBinding
 import com.critx.shwemiAdmin.databinding.ItemFlashSaleBinding
 import com.critx.shwemiAdmin.databinding.ItemImageSelectionBinding
 import com.critx.shwemiAdmin.uiModel.setupStock.ChooseGroupUIModel
+import com.daasuu.bl.ArrowDirection
+import com.daasuu.bl.BubblePopupHelper
+import kotlinx.coroutines.NonDisposableHandle.parent
 
 class ImageRecyclerAdapter(
     private val onclick: (id: String) -> Unit,
-    private val addNewClick: () -> Unit
+    private val addNewClick: () -> Unit,
+    private val navigateToEditClick:()->Unit
+
 ) : ListAdapter<ChooseGroupUIModel, RecyclerView.ViewHolder>(
     ChooseGroupDiffUtil
 ) {
@@ -40,13 +49,13 @@ class ImageRecyclerAdapter(
             ImageViewHolder(
                 ItemImageSelectionBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
-                ), onclick, addNewClick
+                ), onclick,navigateToEditClick
             )
         } else {
             AddItemViewHolder(
                 ItemAddNewBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
-                ), onclick, addNewClick
+                ), addNewClick
             )
         }
     }
@@ -69,27 +78,56 @@ class ImageRecyclerAdapter(
 
 class AddItemViewHolder(
     private val binding: ItemAddNewBinding,
-    private val onclick: (id: String) -> Unit,
     private val addNewClick: () -> Unit
 ) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind() {
-
+        binding.root.setOnClickListener {
+            addNewClick()
+        }
     }
 }
 
 class ImageViewHolder(
     private val binding: ItemImageSelectionBinding,
     private val onclick: (id: String) -> Unit,
-    private val addNewClick: () -> Unit
+    private val navigateToEditClick:()->Unit
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(data: ChooseGroupUIModel) {
+
         binding.mcvImageCard.setOnClickListener {
             onclick(data.id)
         }
         binding.mcvImageCard.isChecked = data.isChecked
+        binding.mcvImageCard.setOnLongClickListener {
+            val bubble = BubbleCardBinding.inflate(
+                LayoutInflater.from(binding.root.context),
+                binding.root,
+                false
+            ).root
+            val editView = bubble.findViewById<ImageView>(R.id.iv_edit)
+
+            val popupWindow: PopupWindow = BubblePopupHelper.create(binding.root.context, bubble)
+            popupWindow.width = 300
+            popupWindow.height = 200
+
+            val location = IntArray(2)
+            binding.mcvImageCard.getLocationInWindow(location)
+            bubble.arrowDirection = ArrowDirection.BOTTOM
+            popupWindow.showAtLocation(
+                binding.mcvImageCard,
+                Gravity.NO_GRAVITY,
+                location[0],
+                location[1] - binding.mcvImageCard.height
+            )
+            editView.setOnClickListener {
+                popupWindow.dismiss()
+                navigateToEditClick()
+            }
+            return@setOnLongClickListener true
+        }
 
 //        if (data.isChecked){
 //            binding.imageView.setImageDrawable(binding.root.context.getDrawable(com.critx.common.R.drawable.profile_avatar))

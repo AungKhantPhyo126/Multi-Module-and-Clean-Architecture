@@ -98,5 +98,12 @@
         <argument
             android:name="secondCat"
             app:argType="string" />
+        <action
+            android:id="@+id/action_chooseGroupFragment_to_editGroupFragment"
+            app:destination="@id/editGroupFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/editGroupFragment"
+        android:name="com.critx.shwemiAdmin.screens.setupStock.third.edit.EditGroupFragment"
+        android:label="EditGroupFragment" />
 </navigation>

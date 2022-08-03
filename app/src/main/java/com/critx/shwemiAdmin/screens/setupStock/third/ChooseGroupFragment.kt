@@ -2,10 +2,12 @@ package com.critx.shwemiAdmin.screens.setupStock.third
 
 import com.critx.shwemiAdmin.screens.setupStock.first.SetupStockFragmentDirections
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.get
@@ -21,10 +23,13 @@ import androidx.recyclerview.selection.StorageStrategy
 import com.critx.common.databinding.ChoiceChipBinding
 import com.critx.common.ui.createChip
 import com.critx.shwemiAdmin.R
+import com.critx.shwemiAdmin.databinding.BubbleCardBinding
 import com.critx.shwemiAdmin.databinding.FragmentChooseGroupBinding
 import com.critx.shwemiAdmin.databinding.ItemImageSelectionBinding
 import com.critx.shwemiAdmin.uiModel.discount.DiscountUIModel
 import com.critx.shwemiAdmin.uiModel.setupStock.ChooseGroupUIModel
+import com.daasuu.bl.ArrowDirection
+import com.daasuu.bl.BubblePopupHelper
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,18 +43,22 @@ class ChooseGroupFragment:Fragment() {
         mutableListOf(
             ChooseGroupUIModel(
                 "1",
+                "Kaito",
                 false
             ),
             ChooseGroupUIModel(
                 "2",
+                "FateEZ",
                 false
             ),
             ChooseGroupUIModel(
                 "3",
+                "FairyTail",
                 false
             ),
             ChooseGroupUIModel(
                 "4",
+                "Leaf",
                 false
             )
         )
@@ -94,7 +103,7 @@ class ChooseGroupFragment:Fragment() {
         binding.tvFirstCat.text=args.firstCat
         binding.tvSecondCat.text=args.secondCat
         viewModel.setImageList(nameList)
-
+        setupChipView()
         binding.cbImageView.setOnCheckedChangeListener { compoundButton, isChecked ->
             if (isChecked){
                 setupRecyclerImage()
@@ -129,6 +138,8 @@ class ChooseGroupFragment:Fragment() {
             viewModel.selectImage(it)
         },{
 
+        },{
+            findNavController().navigate(ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment())
         })
         binding.rvImages.adapter = adapter
         viewModel.groupImages.observe(viewLifecycleOwner){
@@ -141,7 +152,23 @@ class ChooseGroupFragment:Fragment() {
         binding.rvImages.isVisible = false
         binding.chipGroupChooseGp.isVisible = true
         for (name in nameList) {
-            val chip = requireContext().createChip(name.id)
+            val chip = requireContext().createChip(name.name)
+            val bubble = BubbleCardBinding.inflate(layoutInflater).root
+            val editView = bubble.findViewById<ImageView>(R.id.iv_edit)
+
+            val popupWindow: PopupWindow = BubblePopupHelper.create(requireContext(), bubble)
+            popupWindow.width = 300
+            popupWindow.height = 200
+            chip.setOnClickListener {
+                val location = IntArray(2)
+                chip.getLocationInWindow(location)
+                bubble.arrowDirection = ArrowDirection.BOTTOM
+                popupWindow.showAtLocation(chip, Gravity.NO_GRAVITY,location[0], location[1]-chip.height);
+            }
+            editView.setOnClickListener {
+                popupWindow.dismiss()
+                findNavController().navigate(ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment())
+            }
 //            val chip = ItemImageSelectionBinding.inflate(layoutInflater).root
             binding.chipGroupChooseGp.addView(chip)
         }
@@ -157,6 +184,9 @@ class ChooseGroupFragment:Fragment() {
                     binding.ivThirdCat.isVisible = true
                 }
             }
+        }
+        binding.btnBack.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 

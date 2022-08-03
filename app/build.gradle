@@ -88,4 +88,6 @@ dependencies {
 
     implementation 'androidx.recyclerview:recyclerview-selection:1.1.0'
 
+    implementation 'com.github.MasayukiSuda:BubbleLayout:v1.2.1'
+
 }
