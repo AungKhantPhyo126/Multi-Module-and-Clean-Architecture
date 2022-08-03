@@ -45,7 +45,6 @@ class SetupStockFragment:Fragment() {
         val nameList =
             arrayListOf("Extra Soft", "Soft", "Medium", "Hard", "Extra Hard",
                 "Extra Soft", "Soft", "Medium", "Hard", "Extra Hard")
-        val chipIdList = mutableListOf<Int>()
         for (name in nameList) {
             val chip = requireContext().createChip(name)
 

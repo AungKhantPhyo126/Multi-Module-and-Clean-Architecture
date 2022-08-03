@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -14,6 +15,7 @@ import androidx.navigation.fragment.navArgs
 import com.critx.common.ui.createChip
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentChooseJewelleryQualityBinding
+import com.critx.shwemiAdmin.screens.setupStock.first.SetupStockFragmentDirections
 import com.google.android.material.chip.Chip
 
 class ChooseJewelleryQualityFragment:Fragment() {
@@ -67,6 +69,18 @@ class ChooseJewelleryQualityFragment:Fragment() {
 
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
+        }
+        binding.btnNext.setOnClickListener {
+            if (binding.tvSecondCat.isVisible){
+                findNavController().navigate(
+                    ChooseJewelleryQualityFragmentDirections.actionChooseJewelleryQualityFragmentToChooseGroupFragment(
+                    binding.tvFirstCat.text.toString(),
+                        binding.tvSecondCat.text.toString()
+                ))
+            }else{
+                Toast.makeText(requireContext(),"Please choose at least one category", Toast.LENGTH_LONG).show()
+            }
+
         }
 
     }

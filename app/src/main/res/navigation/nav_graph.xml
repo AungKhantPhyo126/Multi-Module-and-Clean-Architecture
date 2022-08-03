@@ -85,5 +85,18 @@
         <argument
             android:name="firstCat"
             app:argType="string" />
+        <action
+            android:id="@+id/action_chooseJewelleryQualityFragment_to_chooseGroupFragment"
+            app:destination="@id/chooseGroupFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chooseGroupFragment"
+        android:name="com.critx.shwemiAdmin.screens.setupStock.third.ChooseGroupFragment"
+        android:label="ChooseGroupFragment" >
+        <argument android:name="firstCat"
+            app:argType="string" />
+        <argument
+            android:name="secondCat"
+            app:argType="string" />
     </fragment>
 </navigation>

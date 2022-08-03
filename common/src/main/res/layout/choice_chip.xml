@@ -4,4 +4,4 @@
     android:textAppearance="@style/TextAppearance.Common.Body2"
     android:textColor="@color/collect_stock_chip_text_color_selector"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
+    android:layout_height="wrap_content"/>
