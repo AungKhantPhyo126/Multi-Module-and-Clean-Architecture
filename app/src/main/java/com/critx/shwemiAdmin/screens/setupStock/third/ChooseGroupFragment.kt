@@ -100,8 +100,8 @@ class ChooseGroupFragment:Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
-        binding.tvFirstCat.text=args.firstCat
-        binding.tvSecondCat.text=args.secondCat
+        binding.tvFirstCat.text=args.firstCat.name
+        binding.tvSecondCat.text=args.secondCat.name
         viewModel.setImageList(nameList)
         setupChipView()
         binding.cbImageView.setOnCheckedChangeListener { compoundButton, isChecked ->

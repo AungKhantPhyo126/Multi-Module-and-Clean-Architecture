@@ -19,11 +19,13 @@ import androidx.navigation.fragment.findNavController
 import com.critx.common.ui.createChip
 import com.critx.common.ui.getAlertDialog
 import com.critx.shwemiAdmin.R
+import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.FragmentSetUpStocklBinding
 import com.critx.shwemiAdmin.screens.dailyGoldPrice.DailyGoldPriceFragmentDirections
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryTypeUiModel
 import com.critx.shwemiAdmin.workerManager.RefreshTokenWorker
 import com.google.android.material.chip.Chip
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -32,6 +34,7 @@ import kotlinx.coroutines.launch
 class SetupStockFragment:Fragment() {
     private lateinit var binding: FragmentSetUpStocklBinding
     private lateinit var loadingDialog: AlertDialog
+    private var snackBar: Snackbar? = null
     private val viewModel by viewModels<SetupStockViewModel>()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,7 +61,6 @@ class SetupStockFragment:Fragment() {
         toolbarsetup()
         loadingDialog = requireContext().getAlertDialog()
 
-        viewModel.getJewelleryType()
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
@@ -74,6 +76,23 @@ class SetupStockFragment:Fragment() {
                                 val chip = requireContext().createChip(item.name)
                                 chip.id = item.id.toInt()
                                 binding.chipGroupJewelleryType.addView(chip)
+                            }
+                        }
+                    }
+                }
+
+                //Error Event
+                launch {
+                    viewModel.event.collectLatest { event ->
+                        when (event) {
+                            is UiEvent.ShowErrorSnackBar -> {
+                                snackBar?.dismiss()
+                                snackBar = Snackbar.make(
+                                    binding.root,
+                                    event.message,
+                                    Snackbar.LENGTH_LONG
+                                )
+                                snackBar?.show()
                             }
                         }
                     }

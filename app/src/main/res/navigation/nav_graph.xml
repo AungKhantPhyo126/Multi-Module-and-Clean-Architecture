@@ -94,10 +94,10 @@
         android:name="com.critx.shwemiAdmin.screens.setupStock.third.ChooseGroupFragment"
         android:label="ChooseGroupFragment" >
         <argument android:name="firstCat"
-            app:argType="string" />
+            app:argType="com.critx.shwemiAdmin.uiModel.setupStock.JewelleryTypeUiModel" />
         <argument
             android:name="secondCat"
-            app:argType="string" />
+            app:argType="com.critx.shwemiAdmin.uiModel.setupStock.JewelleryQualityUiModel" />
         <action
             android:id="@+id/action_chooseGroupFragment_to_editGroupFragment"
             app:destination="@id/editGroupFragment" />
