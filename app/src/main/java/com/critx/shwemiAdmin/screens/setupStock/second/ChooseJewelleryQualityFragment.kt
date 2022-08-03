@@ -49,7 +49,7 @@ class ChooseJewelleryQualityFragment:Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
-        binding.tvFirstCat.text = args.firstCat
+        binding.tvFirstCat.text = args.firstCat.name
         val nameList =
             arrayListOf("Extra Soft", "Soft", "Medium", "Hard", "Extra Hard",
                 "Extra Soft", "Soft", "Medium", "Hard", "Extra Hard")

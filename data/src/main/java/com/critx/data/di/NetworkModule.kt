@@ -1,11 +1,16 @@
 package com.critx.data.di
 
 import com.critx.data.datasource.auth.AuthNetWorkDataSource
+import com.critx.data.datasource.setupstock.SetupStockNetWorkDatasource
 import com.critx.data.network.api.AuthService
 import com.critx.data.network.api.HomeService
+import com.critx.data.network.api.SetUpStockService
 import com.critx.data.network.datasource.AuthNetWorkDataSourceImpl
+import com.critx.data.network.datasource.SetupStockNetWorkSourceImpl
 import com.critx.data.repository.AuthRepositoryImpl
+import com.critx.data.repository.SetupStockRepositoryImpl
 import com.critx.domain.repository.AuthRepository
+import com.critx.domain.repository.SetupStockRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -40,6 +45,17 @@ class NetworkModule {
     fun provideAuthRepo(authNetWorkDataSource: AuthNetWorkDataSource):AuthRepository{
         return AuthRepositoryImpl(authNetWorkDataSource)
     }
+
+    @Provides
+    @Singleton
+    fun provideSetupStockNetWorkDatasource(setupStockService: SetUpStockService):SetupStockNetWorkDatasource{
+        return SetupStockNetWorkSourceImpl(setupStockService)
+    }
+    @Provides
+    @Singleton
+    fun provideSetupStockRepo(setupStockNetWorkDatasource : SetupStockNetWorkDatasource):SetupStockRepository{
+        return SetupStockRepositoryImpl(setupStockNetWorkDatasource )
+    }
 //    @Provides
 //    @Singleton
 //    fun provideAuthRepository(
@@ -58,6 +74,10 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideAuthService(retrofit: Retrofit) = retrofit.create<AuthService>()
+
+    @Provides
+    @Singleton
+    fun provideSetUpStockService(retrofit: Retrofit) = retrofit.create<SetUpStockService>()
 
     @Provides
     @Singleton

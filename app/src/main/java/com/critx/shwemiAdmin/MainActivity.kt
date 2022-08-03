@@ -54,7 +54,6 @@ class MainActivity : AppCompatActivity() {
         actionBarDrawerToggle.syncState()
         binding.drawerLayout.addDrawerListener(actionBarDrawerToggle)
 
-        val appBarConfiguration = AppBarConfiguration(navController.graph, binding.drawerLayout)
         setSupportActionBar(binding.materialToolbar)
         binding.navigation.setupWithNavController(navController)
 //        binding.materialToolbar.setupWithNavController(navController,appBarConfiguration)

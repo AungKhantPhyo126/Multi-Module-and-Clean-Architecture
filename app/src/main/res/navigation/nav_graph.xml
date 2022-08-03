@@ -84,7 +84,7 @@
         android:label="ChooseJewelleryQualityFragment" >
         <argument
             android:name="firstCat"
-            app:argType="string" />
+            app:argType="com.critx.shwemiAdmin.uiModel.setupStock.JewelleryTypeUiModel" />
         <action
             android:id="@+id/action_chooseJewelleryQualityFragment_to_chooseGroupFragment"
             app:destination="@id/chooseGroupFragment" />
