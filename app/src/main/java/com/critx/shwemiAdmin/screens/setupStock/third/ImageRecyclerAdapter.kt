@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupWindow
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.DiffUtil
@@ -25,7 +26,7 @@ class ImageRecyclerAdapter(
     private val addNewClick: () -> Unit,
     private val navigateToEditClick:()->Unit
 
-) : ListAdapter<ChooseGroupUIModel, RecyclerView.ViewHolder>(
+) : PagingDataAdapter<ChooseGroupUIModel, RecyclerView.ViewHolder>(
     ChooseGroupDiffUtil
 ) {
     val addItemViewType = 2
@@ -40,9 +41,6 @@ class ImageRecyclerAdapter(
         else itemViewType;
     }
 
-    override fun getItemId(position: Int): Long {
-        return super.getItemId(position)
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == itemViewType) {
@@ -64,7 +62,7 @@ class ImageRecyclerAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ImageViewHolder -> {
-                holder.bind(getItem(position))
+                holder.bind(getItem(position)!!)
             }
             is AddItemViewHolder -> {
                 holder.bind()

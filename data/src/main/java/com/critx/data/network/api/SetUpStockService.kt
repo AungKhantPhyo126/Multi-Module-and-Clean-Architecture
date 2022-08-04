@@ -1,6 +1,7 @@
 package com.critx.data.network.api
 
 import com.critx.data.network.dto.auth.ProfileDto
+import com.critx.data.network.dto.setupStock.jewelleryGroup.JewelleryGroupDto
 import com.critx.data.network.dto.setupStock.jewelleryQuality.JewelleryQualityData
 import com.critx.data.network.dto.setupStock.jewelleryQuality.JewelleryQualityDto
 import com.critx.data.network.dto.setupStock.jewelleryType.JewelleryTypeDto
@@ -19,4 +20,9 @@ interface SetUpStockService {
     suspend fun getJewelleryQuality(
         @Header("Authorization") token:String
     ): Response<List<JewelleryQualityData>>
+
+    @GET("api/first_sub_categories")
+    suspend fun getJewelleryGroup(
+        @Header("Authorization") token: String
+    ):Response<JewelleryGroupDto>
 }

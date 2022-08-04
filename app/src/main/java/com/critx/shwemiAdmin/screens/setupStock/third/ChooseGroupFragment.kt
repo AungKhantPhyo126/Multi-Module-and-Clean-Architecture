@@ -14,6 +14,9 @@ import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.selection.SelectionPredicates
@@ -33,35 +36,13 @@ import com.daasuu.bl.BubblePopupHelper
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ChooseGroupFragment:Fragment() {
     private lateinit var binding: FragmentChooseGroupBinding
     private val args by navArgs<ChooseGroupFragmentArgs>()
     private val viewModel by viewModels<ChooseGroupViewModel>()
-    val nameList =
-        mutableListOf(
-            ChooseGroupUIModel(
-                "1",
-                "Kaito",
-                false
-            ),
-            ChooseGroupUIModel(
-                "2",
-                "FateEZ",
-                false
-            ),
-            ChooseGroupUIModel(
-                "3",
-                "FairyTail",
-                false
-            ),
-            ChooseGroupUIModel(
-                "4",
-                "Leaf",
-                false
-            )
-        )
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -102,13 +83,35 @@ class ChooseGroupFragment:Fragment() {
         toolbarsetup()
         binding.tvFirstCat.text=args.firstCat.name
         binding.tvSecondCat.text=args.secondCat.name
-        viewModel.setImageList(nameList)
-        setupChipView()
+
+        binding.rvImages.isVisible = true
+        binding.chipGroupChooseGp.isVisible = false
+        val adapter = ImageRecyclerAdapter({
+            viewModel.selectImage(it)
+        },{
+
+        },{
+            findNavController().navigate(ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment())
+        })
+        binding.rvImages.adapter = adapter
+        viewModel.jewelleryGroupLive.observe(viewLifecycleOwner){
+           viewLifecycleOwner.lifecycleScope.launch{
+                repeatOnLifecycle(Lifecycle.State.STARTED){
+                    launch {
+                        setupChipView(adapter.snapshot().items)
+                        adapter.submitData(it)
+
+                    }
+                }
+           }
+        }
         binding.cbImageView.setOnCheckedChangeListener { compoundButton, isChecked ->
             if (isChecked){
-                setupRecyclerImage()
+                binding.rvImages.isVisible = true
+                binding.chipGroupChooseGp.isVisible = false
             }else{
-                setupChipView()
+                binding.rvImages.isVisible = false
+                binding.chipGroupChooseGp.isVisible = true
             }
         }
 
@@ -132,27 +135,13 @@ class ChooseGroupFragment:Fragment() {
     }
 
     fun setupRecyclerImage(){
-        binding.rvImages.isVisible = true
-        binding.chipGroupChooseGp.isVisible = false
-        val adapter = ImageRecyclerAdapter({
-            viewModel.selectImage(it)
-        },{
 
-        },{
-            findNavController().navigate(ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment())
-        })
-        binding.rvImages.adapter = adapter
-        viewModel.groupImages.observe(viewLifecycleOwner){
-            adapter.submitList(it)
-            adapter.notifyDataSetChanged()
-        }
     }
 
-    fun setupChipView(){
-        binding.rvImages.isVisible = false
-        binding.chipGroupChooseGp.isVisible = true
-        for (name in nameList) {
-            val chip = requireContext().createChip(name.name)
+    fun setupChipView(list:List<ChooseGroupUIModel>){
+
+        for (item in list) {
+            val chip = requireContext().createChip(item.name)
             val bubble = BubbleCardBinding.inflate(layoutInflater).root
             val editView = bubble.findViewById<ImageView>(R.id.iv_edit)
 

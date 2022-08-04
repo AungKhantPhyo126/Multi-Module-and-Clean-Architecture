@@ -91,4 +91,7 @@ dependencies {
 
     implementation 'com.github.MasayukiSuda:BubbleLayout:v1.2.1'
 
+    def paging_version = "3.0.0"
+    implementation "androidx.paging:paging-runtime:$paging_version"
+
 }
