@@ -4,8 +4,11 @@ import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.critx.commonkotlin.util.Resource
+import com.critx.domain.useCase.SetUpStock.CreateJewelleryGroupUseCase
+import com.critx.domain.useCase.SetUpStock.GetJewelleryGroupUseCase
 import com.critx.shwemiAdmin.UiEvent
-import com.critx.shwemiAdmin.pagingDataSource.pagingRepo.JewelleryGroupPagingRepo
+import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.uiModel.setupStock.ChooseGroupUIModel
 import com.critx.shwemiAdmin.uiModel.setupStock.asUiModel
 import com.critx.shwemiAdmin.uistate.JewelleryGroupUiState
@@ -17,34 +20,65 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChooseGroupViewModel @Inject constructor(
-    private val jewelleryGroupPagingRepo: JewelleryGroupPagingRepo
+    private val localDatabase: LocalDatabase,
+    private val getJewelleryGroupUseCase: GetJewelleryGroupUseCase
 ) : ViewModel() {
-//    private var _groupImages= MutableLiveData<MutableList<ChooseGroupUIModel>>()
-//    val groupImages : LiveData<MutableList<ChooseGroupUIModel>>
-//        get() = _groupImages
-//    private val groupImageList = mutableListOf<ChooseGroupUIModel>()
-//
-//    fun setImageList(list:MutableList<ChooseGroupUIModel>){
+
+    private val _getGroupState = MutableStateFlow(JewelleryGroupUiState())
+    val getGroupState = _getGroupState.asStateFlow()
+
+    //    fun setImageList(list:MutableList<ChooseGroupUIModel>){
 //        groupImageList.addAll(list)
 //        _groupImages.value=groupImageList
 //    }
 //
-
-    private val _jewelleryGroupState = MutableStateFlow(JewelleryGroupUiState())
-    val jewelleryGroupState = _jewelleryGroupState.asStateFlow()
-
-
     private var _event = MutableSharedFlow<UiEvent>()
     val event = _event.asSharedFlow()
 
 
-    var jewelleryGroupLive:LiveData<PagingData<ChooseGroupUIModel>> =jewelleryGroupPagingRepo.getJewelleryGroupPaging().map { pagingData ->
-            pagingData.map {
-                it.asUiModel()
+//    var jewelleryGroupLive:LiveData<PagingData<ChooseGroupUIModel>> =jewelleryGroupPagingRepo.getJewelleryGroupPaging().map { pagingData ->
+//            pagingData.map {
+//                it.asUiModel()
+//            }
+//        }.cachedIn(viewModelScope).asLiveData()
+
+
+    fun getJewelleryGroup(isFrequentlyUse: Int,firstCatId:Int,secondCatId:Int) {
+        viewModelScope.launch {
+            getJewelleryGroupUseCase(
+                localDatabase.getToken().orEmpty(),
+                isFrequentlyUse,
+                firstCatId,
+                secondCatId
+            ).collectLatest { result ->
+                when (result) {
+                    is Resource.Loading -> {
+                        _getGroupState.value = _getGroupState.value.copy(
+                            loading = true
+                        )
+                    }
+                    is Resource.Success -> {
+                     _getGroupState.update { uiState ->
+                            uiState.copy(
+                             loading = false,
+                             successLoading = result.data?.data!!.map { it.asUiModel() }
+                         )
+                        }
+
+
+                    }
+                    is Resource.Error -> {
+                        _getGroupState.value = _getGroupState.value.copy(
+                            loading = false,
+                        )
+                        result.message?.let { errorString ->
+                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
+                        }
+                    }
+                }
             }
-        }.cachedIn(viewModelScope).asLiveData()
-
-
+        }
+    }
 
     fun selectImage(id: String) {
 //        groupImageList.find {

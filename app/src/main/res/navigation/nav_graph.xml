@@ -105,5 +105,12 @@
     <fragment
         android:id="@+id/editGroupFragment"
         android:name="com.critx.shwemiAdmin.screens.setupStock.third.edit.EditGroupFragment"
-        android:label="EditGroupFragment" />
+        android:label="EditGroupFragment" >
+        <argument
+            android:name="type"
+            app:argType="com.critx.shwemiAdmin.uiModel.setupStock.JewelleryTypeUiModel" />
+        <argument
+            android:name="quality"
+            app:argType="com.critx.shwemiAdmin.uiModel.setupStock.JewelleryQualityUiModel" />
+    </fragment>
 </navigation>

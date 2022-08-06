@@ -109,4 +109,5 @@
     <string name="group_name">Group name</string>
     <string name="add">Add</string>
     <string name="new_group">New Group</string>
+    <string name="enter_group_name">Enter Group Name</string>
 </resources>

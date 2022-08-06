@@ -26,9 +26,7 @@ class JewelleryQualityViewModel @Inject constructor(
     val event = _event.asSharedFlow()
 
 
-    init {
-        getJewelleryQuality()
-    }
+
     fun getJewelleryQuality(){
         viewModelScope.launch {
             getJewelleryQualityUseCase(localDatabase.getToken().orEmpty()).collectLatest { result->

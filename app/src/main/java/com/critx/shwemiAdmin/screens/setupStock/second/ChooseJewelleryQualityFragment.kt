@@ -67,7 +67,7 @@ class ChooseJewelleryQualityFragment:Fragment() {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
         loadingDialog = requireContext().getAlertDialog()
-
+        viewModel.getJewelleryQuality()
         binding.tvFirstCat.text = args.firstCat.name
 //        val nameList =
 //            arrayListOf("Extra Soft", "Soft", "Medium", "Hard", "Extra Hard",

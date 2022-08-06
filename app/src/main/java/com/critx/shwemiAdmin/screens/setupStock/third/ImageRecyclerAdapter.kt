@@ -11,6 +11,7 @@ import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.critx.common.ui.loadImageWithGlide
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.BubbleCardBinding
 import com.critx.shwemiAdmin.databinding.ItemAddNewBinding
@@ -26,7 +27,7 @@ class ImageRecyclerAdapter(
     private val addNewClick: () -> Unit,
     private val navigateToEditClick:()->Unit
 
-) : PagingDataAdapter<ChooseGroupUIModel, RecyclerView.ViewHolder>(
+) : ListAdapter<ChooseGroupUIModel, RecyclerView.ViewHolder>(
     ChooseGroupDiffUtil
 ) {
     val addItemViewType = 2
@@ -37,10 +38,14 @@ class ImageRecyclerAdapter(
 //    }
 //    var tracker: SelectionTracker<Long>? = null
     override fun getItemViewType(position: Int): Int {
-        return if (position == (itemCount - 1)) addItemViewType
+
+        return if (position == itemCount-1) addItemViewType
         else itemViewType;
     }
 
+    override fun getItemCount(): Int {
+        return super.getItemCount()+1
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == itemViewType) {
@@ -62,7 +67,7 @@ class ImageRecyclerAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ImageViewHolder -> {
-                holder.bind(getItem(position)!!)
+                holder.bind(getItem(position))
             }
             is AddItemViewHolder -> {
                 holder.bind()
@@ -94,7 +99,7 @@ class ImageViewHolder(
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(data: ChooseGroupUIModel) {
-
+        binding.ivImage.loadImageWithGlide(data.imageUrl)
         binding.mcvImageCard.setOnClickListener {
             onclick(data.id)
         }

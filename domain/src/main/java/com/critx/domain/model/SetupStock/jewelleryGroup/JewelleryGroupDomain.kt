@@ -5,6 +5,4 @@ import com.critx.domain.model.SetupStock.pagingRelated.Meta
 
 data class JewelleryGroupDomain(
     val data: List<JewelleryGroup>,
-    val links: Links,
-    val meta: Meta
 )
