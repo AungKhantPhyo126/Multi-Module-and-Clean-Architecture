@@ -1,10 +1,6 @@
 package com.critx.shwemiAdmin.screens.setupStock.third
 
-import android.Manifest
-import android.content.pm.PackageManager
-import com.critx.shwemiAdmin.screens.setupStock.first.SetupStockFragmentDirections
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -12,40 +8,29 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.core.view.children
-import androidx.core.view.get
 import androidx.core.view.isVisible
-import androidx.core.view.marginTop
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.selection.SelectionPredicates
-import androidx.recyclerview.selection.SelectionTracker
-import androidx.recyclerview.selection.StableIdKeyProvider
-import androidx.recyclerview.selection.StorageStrategy
-import androidx.recyclerview.widget.RecyclerView
-import com.critx.common.databinding.ChoiceChipBinding
 import com.critx.common.ui.createChip
 import com.critx.common.ui.getAlertDialog
-import com.critx.common.ui.showSuccessDialog
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.*
-import com.critx.shwemiAdmin.uiModel.discount.DiscountUIModel
 import com.critx.shwemiAdmin.uiModel.setupStock.ChooseGroupUIModel
 import com.daasuu.bl.ArrowDirection
 import com.daasuu.bl.BubblePopupHelper
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -56,7 +41,9 @@ class ChooseGroupFragment : Fragment() {
     private val viewModel by viewModels<ChooseGroupViewModel>()
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
-    private lateinit var adapter:ImageRecyclerAdapter
+    private lateinit var adapter: ImageRecyclerAdapter
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,10 +53,6 @@ class ChooseGroupFragment : Fragment() {
         return FragmentChooseGroupBinding.inflate(inflater).also {
             binding = it
         }.root
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
     }
 
     private fun toolbarsetup() {
@@ -84,30 +67,23 @@ class ChooseGroupFragment : Fragment() {
         toolbarCenterImage.isVisible = false
         toolbarEndIcon.isVisible = false
     }
-//     object CustomSelection: SelectionTracker.SelectionPredicate<K>() {
-//        override fun canSetStateForKey(key: K, nextState: Boolean):
-//                Boolean {
-//            return true
-//        }
-//
-//        override fun canSetStateAtPosition(position: Int, nextState:
-//        Boolean): Boolean {
-//            return true
-//        }
-//
-//        override fun canSelectMultiple(): Boolean {
-//            return false
-//        }
-//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
         var frequentUse = if (binding.cbFrequentlyUsed.isChecked) 1 else 0
-        viewModel.getJewelleryGroup(frequentUse,args.firstCat.id.toInt(),args.secondCat.id.toInt())
+        viewModel.getJewelleryGroup(
+            frequentUse,
+            args.firstCat.id.toInt(),
+            args.secondCat.id.toInt()
+        )
         binding.cbFrequentlyUsed.setOnCheckedChangeListener { compoundButton, ischecked ->
-             frequentUse = if (ischecked) 1 else 0
-            viewModel.getJewelleryGroup(frequentUse,args.firstCat.id.toInt(),args.secondCat.id.toInt())
+            frequentUse = if (ischecked) 1 else 0
+            viewModel.getJewelleryGroup(
+                frequentUse,
+                args.firstCat.id.toInt(),
+                args.secondCat.id.toInt()
+            )
         }
         loadingDialog = requireContext().getAlertDialog()
         binding.tvFirstCat.text = args.firstCat.name
@@ -118,12 +94,13 @@ class ChooseGroupFragment : Fragment() {
 
                 //getJewelleryGroup
                 launch {
-                    viewModel.getGroupState.collectLatest {
-                        if (it.loading){
+                    viewModel.getGroupState.collect {
+                        if (it.loading) {
                             loadingDialog.show()
-                        }else loadingDialog.dismiss()
-                        if (it.successLoading !=null) {
-                           adapter.submitList(it.successLoading)
+                        } else loadingDialog.dismiss()
+                        if (it.successLoading != null) {
+                            adapter.submitList(it.successLoading)
+                            adapter.notifyDataSetChanged()
                             setupChipView(it.successLoading.orEmpty())
                         }
                     }
@@ -147,39 +124,6 @@ class ChooseGroupFragment : Fragment() {
             }
         }
 
-//        viewModel.jewelleryGroupLive.observe(viewLifecycleOwner){
-//           viewLifecycleOwner.lifecycleScope.launch{
-//               adapter.submitData(it)
-//
-//               Log.i("gg","ggkahptioethpahwe")
-//               adapter.notifyDataSetChanged()
-//               adapter.snapshot().size
-//
-////               binding.mcvAddItem.isVisible = adapter.snapshot().items.isEmpty()
-////               setupChipView(adapter.snapshot().items)
-//           }
-//        }
-//       val adapterObserver = object: RecyclerView.AdapterDataObserver(){
-//           override fun onChanged() {
-//               super.onChanged()
-//               setupChipView(adapter.snapshot().items)
-//               binding.mcvAddItem.isVisible = adapter.snapshot().items.isEmpty()
-//           }
-//        }
-
-
-//        adapter.registerAdapterDataObserver(adapterObserver)
-
-
-        binding.mcvAddItem.setOnClickListener {
-            findNavController().navigate(
-                ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment(
-                    args.firstCat,
-                    args.secondCat
-                )
-            )
-        }
-
         binding.cbImageView.setOnCheckedChangeListener { compoundButton, isChecked ->
             if (isChecked) {
                 binding.rvImages.visibility = View.VISIBLE
@@ -189,40 +133,77 @@ class ChooseGroupFragment : Fragment() {
                 binding.chipGroupChooseGp.visibility = View.VISIBLE
             }
         }
+    }
 
-//
-//        val tracker = SelectionTracker.Builder(
-//            "mySelection",
-//            binding.rvImages,
-//            MyItemKeysProvider(binding.rvImages),
-//            ItemsDetailsLookup(binding.rvImages),
-//            StorageStrategy.createLongStorage()
-//        ).withSelectionPredicate(
-//            SelectionPredicates.createSelectSingleAnything()
-//        ).build()
-//        adapter.tracker=tracker
-//
+    fun navigateWithImageHoverClick(item:ChooseGroupUIModel){
+        findNavController().navigate(
+            ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment(
+                args.firstCat,
+                args.secondCat,
+                item
+            )
+        )
+    }
 
+    fun navigateWithEditView() {
+        findNavController().navigate(
+            ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment(
+                args.firstCat,
+                args.secondCat,
+                viewModel.selectedChooseGroupUIModel
+            )
+        )
+    }
 
+    fun navigateWithAddView() {
+        findNavController().navigate(
+            ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment(
+                args.firstCat,
+                args.secondCat,
+                null
+            )
+        )
     }
 
     fun setupRecyclerImage() {
         adapter = ImageRecyclerAdapter({
             viewModel.selectImage(it)
+            viewLifecycleOwner.lifecycleScope.launch {
+                lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+                    //getJewelleryGroup
+                    launch {
+                        viewModel.getGroupState.collect {uiState->
+                            if (uiState.loading) {
+                                loadingDialog.show()
+                            } else loadingDialog.dismiss()
+                            if (uiState.successLoading != null) {
+                                adapter.submitList(uiState.successLoading)
+                                adapter.notifyDataSetChanged()
+                                setupChipView(uiState.successLoading.orEmpty())
+                                uiState.successLoading?.find { uiModel->
+                                    uiModel.isChecked
+                                }?.name.let {checkedName->
+                                    if (checkedName != null){
+                                        binding.tvThirdCat.isVisible = true
+                                        binding.tvThirdCat.setTextColor(requireContext().getColor(R.color.primary_color))
+                                        binding.tvThirdCat.text = checkedName
+                                    }else{
+                                        binding.tvThirdCat.isVisible=false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }, {
-            findNavController().navigate(
-                ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment(
-                    args.firstCat,
-                    args.secondCat
-                )
-            )
+            //addNewClick
+            navigateWithAddView()
         }, {
-            findNavController().navigate(
-                ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment(
-                    args.firstCat,
-                    args.secondCat
-                )
-            )
+            //navigateToEditClick
+           navigateWithImageHoverClick(it)
+
         })
         binding.rvImages.adapter = adapter
     }
@@ -252,45 +233,61 @@ class ChooseGroupFragment : Fragment() {
             }
             editView.setOnClickListener {
                 popupWindow.dismiss()
-                findNavController().navigate(
-                    ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment(
-                        args.firstCat,
-                        args.secondCat
-                    )
+                viewModel.selectedChooseGroupUIModel = ChooseGroupUIModel(
+                    chip.id.toString(),item.name,item.imageUrl,chip.isChecked,
+                    item.isFrequentlyUse
                 )
+                navigateWithEditView()
             }
 //            val chip = ItemImageSelectionBinding.inflate(layoutInflater).root
-                binding.chipGroupChooseGp.addView(chip)
+            binding.chipGroupChooseGp.addView(chip)
         }
         val addChipView = requireContext().createChip("Add New")
         addChipView.chipIcon = requireContext().getDrawable(R.drawable.ic_plus)
         addChipView.isCheckable = false
         addChipView.isChipIconVisible = true
-        addChipView.setTextColor( requireContext().getColorStateList(R.color.primary_color))
+        addChipView.setTextColor(requireContext().getColorStateList(R.color.primary_color))
         addChipView.chipIconTint = requireContext().getColorStateList(R.color.primary_color)
         binding.chipGroupChooseGp.addView(addChipView)
 
 
-        addChipView.setOnClickListener{
-            findNavController().navigate(
-                ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment(
-                    args.firstCat,
-                    args.secondCat
-                )
-            )
+        addChipView.setOnClickListener {
+            navigateWithEditView()
+
         }
 
-
         binding.chipGroupChooseGp.setOnCheckedStateChangeListener { group, checkedIds ->
-            for (index in 0 until group.childCount) {
-                val chip = group[index] as Chip
-                if (chip.isChecked) {
+            binding.chipGroupChooseGp.children.toList().find {
+                (it as Chip).isChecked
+            }.let {
+                if (it != null) {
+                    val chip = it as Chip
+                    viewModel.selectedChooseGroupUIModel = ChooseGroupUIModel(
+                    chip.id.toString(),chip.text.toString(),
+                        list.find { it.id == chip.id.toString() }?.imageUrl?:"",
+                        chip.isChecked,
+                        list.find { it.id == chip.id.toString() }?.isFrequentlyUse?:false
+                )
                     binding.tvThirdCat.isVisible = true
                     binding.tvThirdCat.setTextColor(requireContext().getColor(R.color.primary_color))
                     binding.tvThirdCat.text = chip.text
-                    binding.ivThirdCat.isVisible = true
+                } else {
+                  viewModel.selectedChooseGroupUIModel = null
+                    binding.tvThirdCat.isVisible = false
                 }
+
             }
+
+//            for (index in 0 until group.childCount) {
+//                val chip = group[index] as Chip
+//                if (checkedIds.contains(chip.id)) {
+//                    checkedChipId = chip.id
+//                    imageUrl =list.find { it.id == chip.id.toString()}?.imageUrl
+//                    binding.tvThirdCat.isVisible = true
+//                    binding.tvThirdCat.setTextColor(requireContext().getColor(R.color.primary_color))
+//                    binding.tvThirdCat.text = chip.text
+//                }
+//            }
         }
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
@@ -298,8 +295,3 @@ class ChooseGroupFragment : Fragment() {
     }
 
 }
-
-data class CustomChip(
-    val id: String,
-    val name: String
-)

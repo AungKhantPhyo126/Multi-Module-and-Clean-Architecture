@@ -25,7 +25,7 @@ import kotlinx.coroutines.NonDisposableHandle.parent
 class ImageRecyclerAdapter(
     private val onclick: (id: String) -> Unit,
     private val addNewClick: () -> Unit,
-    private val navigateToEditClick:()->Unit
+    private val navigateToEditClick:(item:ChooseGroupUIModel)->Unit
 
 ) : ListAdapter<ChooseGroupUIModel, RecyclerView.ViewHolder>(
     ChooseGroupDiffUtil
@@ -94,7 +94,7 @@ class AddItemViewHolder(
 class ImageViewHolder(
     private val binding: ItemImageSelectionBinding,
     private val onclick: (id: String) -> Unit,
-    private val navigateToEditClick:()->Unit
+    private val navigateToEditClick:(item:ChooseGroupUIModel)->Unit
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
@@ -127,7 +127,7 @@ class ImageViewHolder(
             )
             editView.setOnClickListener {
                 popupWindow.dismiss()
-                navigateToEditClick()
+                navigateToEditClick(data)
             }
             return@setOnLongClickListener true
         }

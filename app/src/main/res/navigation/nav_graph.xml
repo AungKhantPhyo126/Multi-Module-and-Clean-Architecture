@@ -112,5 +112,9 @@
         <argument
             android:name="quality"
             app:argType="com.critx.shwemiAdmin.uiModel.setupStock.JewelleryQualityUiModel" />
+        <argument
+            android:name="groupInfo"
+            app:argType="com.critx.shwemiAdmin.uiModel.setupStock.ChooseGroupUIModel"
+            app:nullable="true" />
     </fragment>
 </navigation>

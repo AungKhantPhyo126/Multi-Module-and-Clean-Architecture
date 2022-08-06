@@ -23,25 +23,15 @@ class ChooseGroupViewModel @Inject constructor(
     private val localDatabase: LocalDatabase,
     private val getJewelleryGroupUseCase: GetJewelleryGroupUseCase
 ) : ViewModel() {
+    //forselection
+
+    var selectedChooseGroupUIModel : ChooseGroupUIModel? = null
 
     private val _getGroupState = MutableStateFlow(JewelleryGroupUiState())
     val getGroupState = _getGroupState.asStateFlow()
 
-    //    fun setImageList(list:MutableList<ChooseGroupUIModel>){
-//        groupImageList.addAll(list)
-//        _groupImages.value=groupImageList
-//    }
-//
     private var _event = MutableSharedFlow<UiEvent>()
     val event = _event.asSharedFlow()
-
-
-//    var jewelleryGroupLive:LiveData<PagingData<ChooseGroupUIModel>> =jewelleryGroupPagingRepo.getJewelleryGroupPaging().map { pagingData ->
-//            pagingData.map {
-//                it.asUiModel()
-//            }
-//        }.cachedIn(viewModelScope).asLiveData()
-
 
     fun getJewelleryGroup(isFrequentlyUse: Int,firstCatId:Int,secondCatId:Int) {
         viewModelScope.launch {
@@ -81,19 +71,36 @@ class ChooseGroupViewModel @Inject constructor(
     }
 
     fun selectImage(id: String) {
-//        groupImageList.find {
-//            it.id == id
-//        }?.isChecked = groupImageList.find {
-//            it.id == id
-//        }?.isChecked!!.not()
-//
-//        groupImageList.filter {
-//            it.id != id
-//        }.forEach {
-//            it.isChecked = false
-//        }
-//
-//        _groupImages.value = groupImageList
+        val groupImageList = _getGroupState.value.successLoading.orEmpty()
+        groupImageList.filter {
+            it.id != id
+        }.forEach {
+            it.isChecked = false
+        }
+
+        _getGroupState.update { uiState ->
+            groupImageList.find {
+                it.id == id
+            }?.isChecked = groupImageList.find {
+                it.id == id
+            }?.isChecked!!.not()
+
+            groupImageList.find {
+                it.id == id
+            }?.let {
+                selectedChooseGroupUIModel = if (it.isChecked){
+                    it
+                }else{
+                    null
+                }
+            }
+
+            uiState.copy(
+                successLoading = groupImageList
+            )
+
+        }
+
     }
 
 

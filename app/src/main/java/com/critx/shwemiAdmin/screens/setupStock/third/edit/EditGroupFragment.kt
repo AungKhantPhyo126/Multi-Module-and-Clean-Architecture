@@ -24,6 +24,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.critx.common.ui.getAlertDialog
+import com.critx.common.ui.loadImageWithGlide
 import com.critx.common.ui.showSuccessDialog
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.FragmentNewGroupBinding
@@ -93,6 +94,8 @@ class EditGroupFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadingDialog = requireContext().getAlertDialog()
+        checkEditOrAddnewAndBind()
+        binding.cbFrequentlyUsed.isChecked = args.groupInfo!!.isFrequentlyUse
         isFrequentlyUsed = if (binding.cbFrequentlyUsed.isChecked) 1 else 0
         binding.cbFrequentlyUsed.setOnCheckedChangeListener { compoundButton, ischecked ->
             isFrequentlyUsed = if (ischecked) 1 else 0
@@ -151,6 +154,12 @@ class EditGroupFragment : Fragment() {
         }
     }
 
+    fun checkEditOrAddnewAndBind(){
+        args.groupInfo?.let {
+            binding.edtGroupName.setText(it.name)
+            binding.ivGroupImage.loadImageWithGlide(it.imageUrl)
+        }
+    }
     fun uploadFile() {
         var photo: MultipartBody.Part? = null
         viewModel.selectedImgUri?.let {
