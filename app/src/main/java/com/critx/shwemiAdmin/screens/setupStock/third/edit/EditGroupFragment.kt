@@ -95,7 +95,10 @@ class EditGroupFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         loadingDialog = requireContext().getAlertDialog()
         checkEditOrAddnewAndBind()
+    if (args.groupInfo !=null){
         binding.cbFrequentlyUsed.isChecked = args.groupInfo!!.isFrequentlyUse
+
+    }
         isFrequentlyUsed = if (binding.cbFrequentlyUsed.isChecked) 1 else 0
         binding.cbFrequentlyUsed.setOnCheckedChangeListener { compoundButton, ischecked ->
             isFrequentlyUsed = if (ischecked) 1 else 0

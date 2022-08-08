@@ -10,6 +10,8 @@ import com.critx.data.network.dto.setupStock.jewelleryGroup.asDomain
 import com.critx.data.network.dto.setupStock.jewelleryQuality.asDomain
 import com.critx.data.network.dto.setupStock.jewelleryType.asDomain
 import com.critx.domain.model.SetupStock.JewelleryType.JewelleryType
+import com.critx.domain.model.SetupStock.jewelleryCategory.CalculateKPY
+import com.critx.domain.model.SetupStock.jewelleryCategory.DesignDomain
 import com.critx.domain.model.SetupStock.jewelleryCategory.JewelleryCategory
 import com.critx.domain.model.SetupStock.jewelleryGroup.JewelleryGroup
 import com.critx.domain.model.SetupStock.jewelleryGroup.JewelleryGroupDomain
@@ -122,6 +124,85 @@ class SetupStockRepositoryImpl @Inject constructor(
                 emit(
                     Resource.Success(
                         setupStockNetWorkDatasource.getJewelleryCategory(token,frequentUse,firstCatId,secondCatId,thirdCatId).data.map { it.asDomain() }
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
+
+    override fun createJewelleryCategory(
+        token: String,
+        jewellery_type_id: RequestBody,
+        jewellery_quality_id: RequestBody,
+        groupId: RequestBody,
+        is_frequently_used: RequestBody,
+        name: RequestBody,
+        avgWeigh: RequestBody,
+        avgWastage: RequestBody,
+        images: MutableList<MultipartBody.Part>,
+        video: MultipartBody.Part,
+        specification: RequestBody,
+        design: MutableList<RequestBody>,
+        orderToGs:RequestBody
+    ): Flow<Resource<SimpleData>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        setupStockNetWorkDatasource.createJewelleryCategory(
+                            token, jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used, name, avgWeigh, avgWastage, images, video, specification, design,orderToGs
+                        ).response.asDomain()
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
+
+    override fun calculateKPYtoGram(
+        token: String,
+        kyat: Double,
+        pae: Double,
+        ywae: Double
+    ): Flow<Resource<CalculateKPY>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        setupStockNetWorkDatasource.calculateKPYtoGram(
+                            token, kyat, pae, ywae
+                        ).asDomain()
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
+
+    override fun getDesignList(token: String): Flow<Resource<List<DesignDomain>>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        setupStockNetWorkDatasource.getDesign(
+                            token
+                        ).data.map { it.asDomain() }
                     )
                 )
             } catch (e: HttpException) {

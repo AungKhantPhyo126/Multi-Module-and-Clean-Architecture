@@ -3,6 +3,8 @@ package com.critx.data.datasource.setupstock
 import com.critx.commonkotlin.util.Resource
 import com.critx.data.network.dto.SimpleResponse
 import com.critx.data.network.dto.SimpleResponseDto
+import com.critx.data.network.dto.setupStock.jewelleryCategory.CalculateKPYDto
+import com.critx.data.network.dto.setupStock.jewelleryCategory.DesignDto
 import com.critx.data.network.dto.setupStock.jewelleryCategory.JewelleryCatDto
 import com.critx.data.network.dto.setupStock.jewelleryCategory.JewelleryCategoryData
 import com.critx.data.network.dto.setupStock.jewelleryGroup.JewelleryGroupDto
@@ -27,5 +29,33 @@ interface SetupStockNetWorkDatasource {
         name : RequestBody
     ):SimpleResponse
 
-    suspend fun getJewelleryCategory(token:String,frequentUse:Int,firstCatId:Int,secondCatId:Int,thirdCatId:Int):JewelleryCatDto
+    suspend fun getJewelleryCategory(token:String,frequentUse:Int,firstCatId:Int,secondCatId:Int,thirdCatId:Int)
+    :JewelleryCatDto
+
+    suspend fun createJewelleryCategory(
+        token: String,
+        jewellery_type_id : RequestBody,
+        jewellery_quality_id : RequestBody,
+        groupId:RequestBody,
+        is_frequently_used : RequestBody,
+        name : RequestBody,
+        avgWeigh:RequestBody,
+        avgWastage:RequestBody,
+        images:MutableList<MultipartBody.Part>,
+        video:MultipartBody.Part,
+        specification:RequestBody,
+        design:MutableList<RequestBody>,
+        orderToGs:RequestBody
+    ):SimpleResponse
+
+    suspend fun calculateKPYtoGram(
+        token:String,
+        kyat:Double,
+        pae:Double,
+        ywae:Double
+    ):CalculateKPYDto
+
+    suspend fun getDesign(
+        token: String
+    ):DesignDto
 }

@@ -2,6 +2,7 @@
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -96,7 +97,6 @@
             android:text="@string/confirm"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/mcv_choose_design"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
@@ -132,6 +132,7 @@
             tools:layout_editor_absoluteX="1dp">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_avg_weight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.ShweMi.Body2"
@@ -144,7 +145,6 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:enabled="false"
             app:hintEnabled="false"
             app:layout_constraintEnd_toEndOf="@id/til_category"
             app:layout_constraintTop_toBottomOf="@id/til_weight_in_gm">
@@ -163,7 +163,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:enabled="false"
             app:hintEnabled="false"
             app:layout_constraintEnd_toStartOf="@id/til_y"
             app:layout_constraintTop_toBottomOf="@id/til_weight_in_gm">
@@ -182,7 +181,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:enabled="false"
             app:hintEnabled="false"
             app:layout_constraintEnd_toStartOf="@id/til_p"
             app:layout_constraintStart_toStartOf="@id/til_category"

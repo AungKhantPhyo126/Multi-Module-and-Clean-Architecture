@@ -3,6 +3,8 @@ package com.critx.domain.repository
 import com.critx.commonkotlin.util.Resource
 import com.critx.domain.model.LogInSuccess
 import com.critx.domain.model.SetupStock.JewelleryType.JewelleryType
+import com.critx.domain.model.SetupStock.jewelleryCategory.CalculateKPY
+import com.critx.domain.model.SetupStock.jewelleryCategory.DesignDomain
 import com.critx.domain.model.SetupStock.jewelleryCategory.JewelleryCategory
 import com.critx.domain.model.SetupStock.jewelleryGroup.JewelleryGroup
 import com.critx.domain.model.SetupStock.jewelleryGroup.JewelleryGroupDomain
@@ -12,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Multipart
+import retrofit2.http.Part
 
 interface SetupStockRepository {
     fun getJewelleryType(token:String): Flow<Resource<List<JewelleryType>>>
@@ -28,4 +31,27 @@ interface SetupStockRepository {
 
     fun getJewelleryCategory(token:String,frequentUse:Int,firstCatId:Int,secondCatId:Int,thirdCatId:Int):
             Flow<Resource<List<JewelleryCategory>>>
+    fun createJewelleryCategory(
+        token: String,
+        jewellery_type_id : RequestBody,
+        jewellery_quality_id : RequestBody,
+        groupId:RequestBody,
+        is_frequently_used : RequestBody,
+        name : RequestBody,
+        avgWeigh:RequestBody,
+        avgWastage:RequestBody,
+        images:MutableList<MultipartBody.Part>,
+        video:MultipartBody.Part,
+        specification:RequestBody,
+        design:MutableList<RequestBody>,
+        orderToGs:RequestBody
+    ):Flow<Resource<SimpleData>>
+    fun calculateKPYtoGram(
+        token:String,
+        kyat:Double,
+        pae:Double,
+        ywae:Double
+    ): Flow<Resource<CalculateKPY>>
+
+    fun getDesignList(token: String):Flow<Resource<List<DesignDomain>>>
 }

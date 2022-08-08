@@ -151,11 +151,19 @@ class ChooseCategoryFragment : Fragment() {
     }
 
     fun navigateWithEditView() {
-        findNavController().navigate(ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToAddCategoryFragment())
+        findNavController().navigate(ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToAddCategoryFragment(
+            args.firstCat,
+            args.secondCat,
+            args.thirdCat
+        ))
     }
 
     fun navigateWithAddView() {
-        findNavController().navigate(ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToAddCategoryFragment())
+        findNavController().navigate(ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToAddCategoryFragment(
+            args.firstCat,
+            args.secondCat,
+            args.thirdCat
+        ))
     }
 
     fun setupRecyclerImage() {

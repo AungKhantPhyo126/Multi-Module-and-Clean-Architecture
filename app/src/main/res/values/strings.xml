@@ -120,4 +120,5 @@
     <string name="new_category">New Category</string>
     <string name="enter_category_name">Enter Category Name</string>
     <string name="enter_weight_in_gm">Enter Weight in gm</string>
+    <string name="ok">OK</string>
 </resources>

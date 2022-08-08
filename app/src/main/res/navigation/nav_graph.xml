@@ -140,5 +140,22 @@
     <fragment
         android:id="@+id/addCategoryFragment"
         android:name="com.critx.shwemiAdmin.screens.setupStock.fourth.edit.AddCategoryFragment"
-        android:label="AddCategoryFragment" />
+        android:label="AddCategoryFragment">
+        <argument
+            android:name="type"
+            app:argType="com.critx.shwemiAdmin.uiModel.setupStock.JewelleryTypeUiModel" />
+        <argument
+            android:name="quality"
+            app:argType="com.critx.shwemiAdmin.uiModel.setupStock.JewelleryQualityUiModel" />
+        <argument
+            android:name="groupInfo"
+            app:argType="com.critx.shwemiAdmin.uiModel.setupStock.ChooseGroupUIModel" />
+        <action
+            android:id="@+id/action_addCategoryFragment_to_designListFragment"
+            app:destination="@id/designListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/designListFragment"
+        android:name="com.critx.shwemiAdmin.screens.setupStock.fourth.design.DesignListFragment"
+        android:label="DesignListFragment" />
 </navigation>
