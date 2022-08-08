@@ -3,6 +3,7 @@ package com.critx.data.network.api
 import com.critx.data.network.dto.SimpleResponse
 import com.critx.data.network.dto.SimpleResponseDto
 import com.critx.data.network.dto.auth.ProfileDto
+import com.critx.data.network.dto.setupStock.jewelleryCategory.JewelleryCatDto
 import com.critx.data.network.dto.setupStock.jewelleryGroup.JewelleryGroupDto
 import com.critx.data.network.dto.setupStock.jewelleryQuality.JewelleryQualityData
 import com.critx.data.network.dto.setupStock.jewelleryQuality.JewelleryQualityDto
@@ -44,4 +45,13 @@ interface SetUpStockService {
         @Part("name") name:RequestBody?,
         @Part image:MultipartBody.Part?
         ):Response<SimpleResponse>
+
+    @GET("api/categories")
+    suspend fun getJewelleryCategory(
+        @Header("Authorization") token: String,
+        @Query("is_frequently_used") frequentUse:Int,
+        @Query("jewellery_type") firstCatId:Int,
+        @Query("jewellery_quality") secondCatId:Int,
+        @Query("group") group:Int
+    ):Response<JewelleryCatDto>
 }

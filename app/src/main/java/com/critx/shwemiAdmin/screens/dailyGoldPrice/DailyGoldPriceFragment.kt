@@ -50,9 +50,9 @@ class DailyGoldPriceFragment:Fragment() {
         val toolbarCenterImage: ImageView = activity!!.findViewById<View>(R.id.center_image) as ImageView
         val toolbarCenterText: TextView = activity!!.findViewById<View>(R.id.center_text_title) as TextView
         val toolbarEndIcon: ImageView = activity!!.findViewById<View>(R.id.iv_end_icon) as ImageView
-        toolbarCenterText.isVisible=true
-        toolbarCenterText.text=getString(R.string.daily_gold_price)
-        toolbarCenterImage.isVisible =false
+        toolbarCenterText.isVisible=false
+//        toolbarCenterText.text=getString(R.string.daily_gold_price)
+        toolbarCenterImage.isVisible =true
         toolbarEndIcon.setImageDrawable(requireContext().getDrawable(R.drawable.ic_logout))
     }
 
@@ -61,6 +61,7 @@ class DailyGoldPriceFragment:Fragment() {
         toolbarsetup()
         workManager = WorkManager.getInstance(requireContext())
         loadingDialog = requireContext().getAlertDialog()
+        viewModel.isloggedIn()
 
 
         val toolbarEndIcon: ImageView = activity!!.findViewById<View>(R.id.iv_end_icon) as ImageView
@@ -78,9 +79,8 @@ class DailyGoldPriceFragment:Fragment() {
                             loadingDialog.show()
                         }else loadingDialog.dismiss()
                         if (!it.successMessage.isNullOrEmpty()) {
-
                             workManager.cancelUniqueWork(RefreshTokenWorker.REFRESH_TOKEN_WORK)
-                            findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
+//                            findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
                         }
                     }
                 }
@@ -115,16 +115,29 @@ class DailyGoldPriceFragment:Fragment() {
             }
         }
 
-        if (!viewModel.isLogin()){
-            findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
-        }else{
-            if (viewModel.isRefreshTokenExpire()){
-                findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
+        viewModel.isLogin.observe(viewLifecycleOwner){
+            if (it){
+                if (viewModel.isRefreshTokenExpire()){
+                    findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
+                }else{
+                    viewModel.getProfile()
+                    enqueueRefreshTokenWork()
+                }
             }else{
-                viewModel.getProfile()
-                enqueueRefreshTokenWork()
+                findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
             }
         }
+
+//        if (!viewModel.isLogin()){
+//            findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
+//        }else{
+//            if (viewModel.isRefreshTokenExpire()){
+//                findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
+//            }else{
+//                viewModel.getProfile()
+//                enqueueRefreshTokenWork()
+//            }
+//        }
         binding.btnByTable.setOnClickListener {
             findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToPriceByTableFragment())
         }

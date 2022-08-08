@@ -5,10 +5,12 @@ import com.critx.data.GetErrorMessage
 import com.critx.data.datasource.setupstock.SetupStockNetWorkDatasource
 import com.critx.data.network.dto.asDomain
 import com.critx.data.network.dto.auth.asDomain
+import com.critx.data.network.dto.setupStock.jewelleryCategory.asDomain
 import com.critx.data.network.dto.setupStock.jewelleryGroup.asDomain
 import com.critx.data.network.dto.setupStock.jewelleryQuality.asDomain
 import com.critx.data.network.dto.setupStock.jewelleryType.asDomain
 import com.critx.domain.model.SetupStock.JewelleryType.JewelleryType
+import com.critx.domain.model.SetupStock.jewelleryCategory.JewelleryCategory
 import com.critx.domain.model.SetupStock.jewelleryGroup.JewelleryGroup
 import com.critx.domain.model.SetupStock.jewelleryGroup.JewelleryGroupDomain
 import com.critx.domain.model.SetupStock.jewelleryQuality.JewelleryQuality
@@ -96,6 +98,30 @@ class SetupStockRepositoryImpl @Inject constructor(
                             token,
                             image, jewellery_type_id, jewellery_quality_id, is_frequently_used, name
                         ).response.asDomain()
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
+
+    override fun getJewelleryCategory(
+        token: String,
+        frequentUse: Int,
+        firstCatId: Int,
+        secondCatId: Int,
+        thirdCatId: Int
+    ): Flow<Resource<List<JewelleryCategory>>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        setupStockNetWorkDatasource.getJewelleryCategory(token,frequentUse,firstCatId,secondCatId,thirdCatId).data.map { it.asDomain() }
                     )
                 )
             } catch (e: HttpException) {

@@ -36,9 +36,16 @@ class DailyGoldPriceViewModel @Inject constructor(
     private var _event = MutableSharedFlow<UiEvent>()
     val event = _event.asSharedFlow()
 
-    fun isLogin():Boolean{
-        return localDatabase.isLogin()
+    private val _isLogin = MutableLiveData<Boolean>()
+    val isLogin:LiveData<Boolean>
+    get() = _isLogin
+
+    fun isloggedIn(){
+        _isLogin.value=localDatabase.isLogin()
 //        return true
+    }
+    init {
+        isloggedIn()
     }
 
     fun isRefreshTokenExpire():Boolean{
@@ -60,6 +67,7 @@ class DailyGoldPriceViewModel @Inject constructor(
                             successMessage = "Login Success"
                         )
                         localDatabase.clearuser()
+                        isloggedIn()
                     }
                     is Resource.Error->{
                         _logoutState.value =_logoutState.value.copy(

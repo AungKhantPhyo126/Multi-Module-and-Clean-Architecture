@@ -1,6 +1,7 @@
 package com.critx.data.network.api
 
 import com.critx.data.network.apiParams.auth.LoginData
+import com.critx.data.network.dto.SimpleResponse
 import com.critx.data.network.dto.SimpleResponseDto
 import com.critx.data.network.dto.auth.LoginSuccessDto
 import com.critx.data.network.dto.auth.ProfileDto
@@ -20,7 +21,7 @@ interface AuthService {
     @POST("api/auth/logout")
     suspend fun logout(
         @Header("Authorization") token:String
-    ):Response<SimpleResponseDto>
+    ):Response<SimpleResponse>
 
     @GET("api/auth/refresh")
     suspend fun refreshToken(

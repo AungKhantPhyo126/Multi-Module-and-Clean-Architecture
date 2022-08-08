@@ -3,6 +3,7 @@ package com.critx.domain.repository
 import com.critx.commonkotlin.util.Resource
 import com.critx.domain.model.LogInSuccess
 import com.critx.domain.model.SetupStock.JewelleryType.JewelleryType
+import com.critx.domain.model.SetupStock.jewelleryCategory.JewelleryCategory
 import com.critx.domain.model.SetupStock.jewelleryGroup.JewelleryGroup
 import com.critx.domain.model.SetupStock.jewelleryGroup.JewelleryGroupDomain
 import com.critx.domain.model.SetupStock.jewelleryQuality.JewelleryQuality
@@ -24,4 +25,7 @@ interface SetupStockRepository {
         is_frequently_used : RequestBody,
         name : RequestBody
     ):Flow<Resource<SimpleData>>
+
+    fun getJewelleryCategory(token:String,frequentUse:Int,firstCatId:Int,secondCatId:Int,thirdCatId:Int):
+            Flow<Resource<List<JewelleryCategory>>>
 }

@@ -42,7 +42,7 @@ class AuthRepositoryImpl @Inject constructor(private val authNetWorkDataSource: 
             try {
                 emit(
                     Resource.Success(
-                        authNetWorkDataSource.logout(token).asDomain()
+                        authNetWorkDataSource.logout(token).response.asDomain()
                     )
                 )
             }catch (e: HttpException) {

@@ -4,6 +4,7 @@ import com.critx.commonkotlin.util.Resource
 import com.critx.data.datasource.auth.AuthNetWorkDataSource
 import com.critx.data.network.api.AuthService
 import com.critx.data.network.apiParams.auth.LoginData
+import com.critx.data.network.dto.SimpleResponse
 import com.critx.data.network.dto.SimpleResponseDto
 import com.critx.data.network.dto.auth.LoginSuccessDto
 import com.critx.data.network.dto.auth.ProfileDto
@@ -40,7 +41,7 @@ class AuthNetWorkDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun logout(token: String): SimpleResponseDto {
+    override suspend fun logout(token: String): SimpleResponse {
         val response = authService.logout(token)
         return  if (response.isSuccessful){
             response.body()?:throw Exception("Response body Null")
