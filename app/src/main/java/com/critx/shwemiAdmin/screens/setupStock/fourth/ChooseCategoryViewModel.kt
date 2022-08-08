@@ -30,8 +30,8 @@ class ChooseCategoryViewModel @Inject constructor(
 
     var selectedJewelleryCategory : JewelleryCategoryUiModel? = null
 
-    private val _getGroupState = MutableStateFlow(JewelleryCategoryUiState())
-    val getGroupState = _getGroupState.asStateFlow()
+    private val _getJewelleryCategory = MutableStateFlow(JewelleryCategoryUiState())
+    val getJewelleryCategory = _getJewelleryCategory.asStateFlow()
 
     private var _event = MutableSharedFlow<UiEvent>()
     val event = _event.asSharedFlow()
@@ -47,12 +47,12 @@ class ChooseCategoryViewModel @Inject constructor(
             ).collectLatest { result ->
                 when (result) {
                     is Resource.Loading -> {
-                        _getGroupState.value = _getGroupState.value.copy(
+                        _getJewelleryCategory.value = _getJewelleryCategory.value.copy(
                             loading = true
                         )
                     }
                     is Resource.Success -> {
-                        _getGroupState.update { uiState ->
+                        _getJewelleryCategory.update { uiState ->
                             uiState.copy(
                                 loading = false,
                                 successLoading = result.data!!.map { it.asUiModel() }
@@ -62,7 +62,7 @@ class ChooseCategoryViewModel @Inject constructor(
 
                     }
                     is Resource.Error -> {
-                        _getGroupState.value = _getGroupState.value.copy(
+                        _getJewelleryCategory.value = _getJewelleryCategory.value.copy(
                             loading = false,
                         )
                         result.message?.let { errorString ->
@@ -75,14 +75,14 @@ class ChooseCategoryViewModel @Inject constructor(
     }
 
     fun selectImage(id: String) {
-        val groupImageList = _getGroupState.value.successLoading.orEmpty()
+        val groupImageList = _getJewelleryCategory.value.successLoading.orEmpty()
         groupImageList.filter {
             it.id != id
         }.forEach {
             it.isChecked = false
         }
 
-        _getGroupState.update { uiState ->
+        _getJewelleryCategory.update { uiState ->
             groupImageList.find {
                 it.id == id
             }?.isChecked = groupImageList.find {

@@ -99,7 +99,7 @@ class ChooseCategoryFragment : Fragment() {
 
                 //getJewelleryGroup
                 launch {
-                    viewModel.getGroupState.collect {
+                    viewModel.getJewelleryCategory.collect {
                         if (it.loading) {
                             loadingDialog.show()
                         } else loadingDialog.dismiss()
@@ -151,32 +151,49 @@ class ChooseCategoryFragment : Fragment() {
     }
 
     fun navigateWithEditView() {
-//        findNavController().navigate(
-//            ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment(
-//                args.firstCat,
-//                args.secondCat,
-//                viewModel.selectedJewelleryCategory
-//            )
-//        )
+        findNavController().navigate(ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToAddCategoryFragment())
     }
 
     fun navigateWithAddView() {
-//        findNavController().navigate(
-//            ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment(
-//                args.firstCat,
-//                args.secondCat,
-//                null
-//            )
-//        )
+        findNavController().navigate(ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToAddCategoryFragment())
     }
 
     fun setupRecyclerImage() {
         adapter = JewelleryCategoryRecyclerAdapter({
+            viewModel.selectImage(it)
+            viewLifecycleOwner.lifecycleScope.launch {
+                lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
+                    //getJewelleryGroup
+                    launch {
+                        viewModel.getJewelleryCategory.collect {uiState->
+                            if (uiState.loading) {
+                                loadingDialog.show()
+                            } else loadingDialog.dismiss()
+                            if (uiState.successLoading != null) {
+                                adapter.submitList(uiState.successLoading)
+                                adapter.notifyDataSetChanged()
+                                setupChipView(uiState.successLoading.orEmpty())
+                                uiState.successLoading?.find { uiModel->
+                                    uiModel.isChecked
+                                }?.name.let {checkedName->
+                                    if (checkedName != null){
+                                        binding.tvFourthCat.isVisible = true
+                                        binding.tvFourthCat.setTextColor(requireContext().getColor(R.color.primary_color))
+                                        binding.tvFourthCat.text = checkedName
+                                    }else{
+                                        binding.tvFourthCat.isVisible=false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         },{
-
+            navigateWithAddView()
         },{
-
+            navigateWithEditView()
         })
         binding.rvImages.adapter = adapter
     }
@@ -241,26 +258,16 @@ class ChooseCategoryFragment : Fragment() {
                         chip.isChecked,
                         list.find { it.id == chip.id.toString() }?.isFrequentlyUse?:false
                     )
-                    binding.tvThirdCat.isVisible = true
-                    binding.tvThirdCat.setTextColor(requireContext().getColor(R.color.primary_color))
-                    binding.tvThirdCat.text = chip.text
+                    binding.tvFourthCat.isVisible = true
+                    binding.tvFourthCat.setTextColor(requireContext().getColor(R.color.primary_color))
+                    binding.tvFourthCat.text = chip.text
                 } else {
                     viewModel.selectedJewelleryCategory = null
-                    binding.tvThirdCat.isVisible = false
+                    binding.tvFourthCat.isVisible = false
                 }
 
             }
 
-//            for (index in 0 until group.childCount) {
-//                val chip = group[index] as Chip
-//                if (checkedIds.contains(chip.id)) {
-//                    checkedChipId = chip.id
-//                    imageUrl =list.find { it.id == chip.id.toString()}?.imageUrl
-//                    binding.tvThirdCat.isVisible = true
-//                    binding.tvThirdCat.setTextColor(requireContext().getColor(R.color.primary_color))
-//                    binding.tvThirdCat.text = chip.text
-//                }
-//            }
         }
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()

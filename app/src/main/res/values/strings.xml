@@ -111,4 +111,13 @@
     <string name="new_group">New Group</string>
     <string name="enter_group_name">Enter Group Name</string>
     <string name="category">Category</string>
+    <string name="per_unit">per unit</string>
+    <string name="avg_weight">Avg Weight</string>
+    <string name="avg_wastage">Avg Wastage</string>
+    <string name="video_gif"><![CDATA[Video & gif]]></string>
+    <string name="order_to_gs">Order to Gs</string>
+    <string name="reconmend_ahtal">တွဲဖက်ဝတ်ဆင်နိုင်သော အထည်များ</string>
+    <string name="new_category">New Category</string>
+    <string name="enter_category_name">Enter Category Name</string>
+    <string name="enter_weight_in_gm">Enter Weight in gm</string>
 </resources>

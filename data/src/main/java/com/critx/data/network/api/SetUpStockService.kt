@@ -54,4 +54,21 @@ interface SetUpStockService {
         @Query("jewellery_quality") secondCatId:Int,
         @Query("group") group:Int
     ):Response<JewelleryCatDto>
+
+    @Multipart
+    @POST("api/groups/store")
+    suspend fun createJewelleryCategory(
+        @Header ("Authorization") token: String,
+        @Part("jewellery_type_id") type:RequestBody?,
+        @Part("jewellery_quality_id") quality:RequestBody?,
+        @Part("group_id") group:RequestBody?,
+        @Part("is_frequently_used") isFrequentUsed:RequestBody?,
+        @Part("name") name:RequestBody?,
+        @Part("avg_weight_per_unit_gm") avgWeighPerUnitGm:RequestBody?,
+        @Part("avg_wastage_per_unit_kpy") avgWastagePerUnitKpy:RequestBody?,
+        @Part images:MutableList<MultipartBody.Part?>,
+        @Part video:MultipartBody.Part?,
+        @Part ("specification")specification:RequestBody?,
+        @Part design:MutableList<MultipartBody.Part?>,
+        ):Response<SimpleResponse>
 }

@@ -184,20 +184,7 @@ class EditGroupFragment : Fragment() {
         launchChooseImage.launch(pickIntent)
     }
 
-    fun getRealPathFromUri(context: Context, contentUri: Uri): String? {
-        var cursor: Cursor? = null
-        return try {
-            val proj = arrayOf(MediaStore.Images.Media.DATA)
-            cursor = context.contentResolver.query(contentUri, proj, null, null, null)
-            val column_index: Int = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            cursor?.moveToFirst()
-            cursor?.getString(column_index)
-        } finally {
-            if (cursor != null) {
-                cursor.close()
-            }
-        }
-    }
+
 
     private fun isReadExternalStoragePermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(
@@ -206,5 +193,20 @@ class EditGroupFragment : Fragment() {
     }
     fun requestPermission(){
         readStoragePermissionlauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+    }
+}
+
+fun getRealPathFromUri(context: Context, contentUri: Uri): String? {
+    var cursor: Cursor? = null
+    return try {
+        val proj = arrayOf(MediaStore.Images.Media.DATA)
+        cursor = context.contentResolver.query(contentUri, proj, null, null, null)
+        val column_index: Int = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        cursor?.moveToFirst()
+        cursor?.getString(column_index)
+    } finally {
+        if (cursor != null) {
+            cursor.close()
+        }
     }
 }

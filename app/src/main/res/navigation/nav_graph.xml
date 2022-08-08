@@ -133,5 +133,12 @@
         <argument
             android:name="thirdCat"
             app:argType="com.critx.shwemiAdmin.uiModel.setupStock.ChooseGroupUIModel" />
+        <action
+            android:id="@+id/action_chooseCategoryFragment_to_addCategoryFragment"
+            app:destination="@id/addCategoryFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/addCategoryFragment"
+        android:name="com.critx.shwemiAdmin.screens.setupStock.fourth.edit.AddCategoryFragment"
+        android:label="AddCategoryFragment" />
 </navigation>
