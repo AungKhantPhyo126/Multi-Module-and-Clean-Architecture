@@ -98,6 +98,9 @@ class DailyGoldPriceFragment:Fragment() {
                                     Snackbar.LENGTH_LONG
                                 )
                                 snackBar?.show()
+                                if (event.message == "refresh token fail"){
+                                    workManager.cancelUniqueWork(RefreshTokenWorker.REFRESH_TOKEN_WORK)
+                                }
                             }
                         }
                     }

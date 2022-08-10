@@ -15,6 +15,7 @@ import com.critx.shwemiAdmin.uiModel.dailygoldandprice.asUiModel
 import com.critx.shwemiAdmin.uistate.LoginUiState
 import com.critx.shwemiAdmin.uistate.LogoutUiState
 import com.critx.shwemiAdmin.uistate.ProfileUiState
+import com.critx.shwemiAdmin.workerManager.RefreshTokenWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -115,7 +116,7 @@ class DailyGoldPriceViewModel @Inject constructor(
                                         is Resource.Error->{
                                             localDatabase.clearuser()
                                             isloggedIn()
-                                            _event.emit(UiEvent.ShowErrorSnackBar(it.message!!))
+                                            _event.emit(UiEvent.ShowErrorSnackBar("refresh token fail"))
                                         }
                                     }
                                 }
