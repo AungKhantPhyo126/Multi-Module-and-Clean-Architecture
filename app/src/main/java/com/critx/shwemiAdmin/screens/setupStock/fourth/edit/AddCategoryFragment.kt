@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.media.ThumbnailUtils
 import android.net.Uri
 import android.os.Bundle
@@ -21,7 +23,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -36,12 +37,13 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.io.File
+import java.io.*
 
 
 @AndroidEntryPoint
@@ -64,54 +66,57 @@ class AddCategoryFragment : Fragment() {
         super.onCreate(savedInstanceState)
         launchChooseImage1 =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                var selectedImage : Bitmap?
                 if (result.resultCode == Activity.RESULT_OK) {
                     result.data?.data?.let {
-                        viewModel.selectedImgUri1 =
-                            getRealPathFromUri(requireContext(), it)?.let { it1 ->
+                        val imageStream: InputStream = requireContext().contentResolver?.openInputStream(it)!!
+                        selectedImage = BitmapFactory.decodeStream(imageStream)
+                        selectedImage = getResizedBitmap(selectedImage!!, 500);// 400 is for example, replace with desired size
+                        binding.ivImage1.setImageBitmap(selectedImage)
+                        val file =getRealPathFromUri(requireContext(), it)?.let { it1 ->
                                 File(
                                     it1
                                 )
                             }
-                    }
-                    if (result.data != null && result?.data?.data != null) {
-                        val selectedImageUri: Uri? = result.data!!.data
-                        binding.ivImage1.setImageURI(selectedImageUri)
+                        viewModel.selectedImgUri1 = SelectedImage(file!!,selectedImage!!)
                     }
                 }
 
             }
         launchChooseImage2 =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                var selectedImage : Bitmap?
                 if (result.resultCode == Activity.RESULT_OK) {
                     result.data?.data?.let {
-                        viewModel.selectedImgUri2 =
-                            getRealPathFromUri(requireContext(), it)?.let { it1 ->
-                                File(
-                                    it1
-                                )
-                            }
-                    }
-                    if (result.data != null && result?.data?.data != null) {
-                        val selectedImageUri: Uri? = result.data!!.data
-                        binding.ivImage2.setImageURI(selectedImageUri)
+                        val imageStream: InputStream = requireContext().contentResolver?.openInputStream(it)!!
+                        selectedImage = BitmapFactory.decodeStream(imageStream)
+                        selectedImage = getResizedBitmap(selectedImage!!, 500);// 400 is for example, replace with desired size
+                        binding.ivImage2.setImageBitmap(selectedImage)
+                        val file =getRealPathFromUri(requireContext(), it)?.let { it1 ->
+                            File(
+                                it1
+                            )
+                        }
+                        viewModel.selectedImgUri2 = SelectedImage(file!!,selectedImage!!)
                     }
                 }
 
             }
         launchChooseImage3 =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                var selectedImage : Bitmap?
                 if (result.resultCode == Activity.RESULT_OK) {
                     result.data?.data?.let {
-                        viewModel.selectedImgUri3 =
-                            getRealPathFromUri(requireContext(), it)?.let { it1 ->
-                                File(
-                                    it1
-                                )
-                            }
-                    }
-                    if (result.data != null && result?.data?.data != null) {
-                        val selectedImageUri: Uri? = result.data!!.data
-                        binding.ivImage3.setImageURI(selectedImageUri)
+                        val imageStream: InputStream = requireContext().contentResolver?.openInputStream(it)!!
+                        selectedImage = BitmapFactory.decodeStream(imageStream)
+                        selectedImage = getResizedBitmap(selectedImage!!, 500);// 400 is for example, replace with desired size
+                        binding.ivImage3.setImageBitmap(selectedImage)
+                        val file =getRealPathFromUri(requireContext(), it)?.let { it1 ->
+                            File(
+                                it1
+                            )
+                        }
+                        viewModel.selectedImgUri3 = SelectedImage(file!!,selectedImage!!)
                     }
                 }
 
@@ -244,13 +249,13 @@ class AddCategoryFragment : Fragment() {
                         if (it.createLoading) {
                             loadingDialog.show()
                         } else loadingDialog.dismiss()
-                        if (!it.createSuccessLoading.isNullOrEmpty()) {
-                            requireContext().showSuccessDialog("Group Created") {
-                                findNavController().popBackStack()
-                            }
-                        }
                         if (it.calculateKPYSuccessLoading != null) {
-                            viewModel.calculatedKPYtoGram = it.calculateKPYSuccessLoading
+                            if (!it.createSuccessLoading.isNullOrEmpty()) {
+                                requireContext().showSuccessDialog("Category Created") {
+                                    it.createSuccessLoading = null
+                                    findNavController().popBackStack()
+                                }
+                            }
                         }
                     }
                 }
@@ -332,11 +337,6 @@ class AddCategoryFragment : Fragment() {
     }
 
     fun uploadFile() {
-        viewModel.calculateKPYtoGram(
-            binding.edtK.text.toString().toDouble(),
-            binding.edtP.text.toString().toDouble(),
-            binding.edtY.text.toString().toDouble(),
-        )
         var photo1: MultipartBody.Part? = null
         var photo2: MultipartBody.Part? = null
         var photo3: MultipartBody.Part? = null
@@ -345,16 +345,16 @@ class AddCategoryFragment : Fragment() {
 
 
         viewModel.selectedImgUri1?.let {
-            val requestBody = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-            photo1 = MultipartBody.Part.createFormData("image", it.name, requestBody)
+            val requestBody = convertBitmapToFile(it.file.name,it.bitMap).asRequestBody("multipart/form-data".toMediaTypeOrNull())
+            photo1 = MultipartBody.Part.createFormData("images[]", it.file.name, requestBody)
         }
         viewModel.selectedImgUri2?.let {
-            val requestBody = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-            photo2 = MultipartBody.Part.createFormData("image", it.name, requestBody)
+            val requestBody = convertBitmapToFile(it.file.name,it.bitMap).asRequestBody("multipart/form-data".toMediaTypeOrNull())
+            photo2 = MultipartBody.Part.createFormData("images[]", it.file.name, requestBody)
         }
         viewModel.selectedImgUri3?.let {
-            val requestBody = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-            photo3 = MultipartBody.Part.createFormData("image", it.name, requestBody)
+            val requestBody = convertBitmapToFile(it.file.name,it.bitMap).asRequestBody("multipart/form-data".toMediaTypeOrNull())
+            photo3 = MultipartBody.Part.createFormData("images[]", it.file.name, requestBody)
         }
         viewModel.selectedVideoUri?.let {
             val requestBody = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
@@ -379,8 +379,7 @@ class AddCategoryFragment : Fragment() {
             .toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val avgWeigh = binding.edtAvgWeight.text.toString()
             .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        val avgWastage = viewModel.calculatedKPYtoGram.toString()
-            .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+
 
 
         viewModel.createJewelleryCategory(
@@ -390,13 +389,41 @@ class AddCategoryFragment : Fragment() {
             isFrequentlyUsed.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull()),
             name,
             avgWeigh,
-            avgWastage,
             photoList,
             video!!,
             specification,
             designList,
             orderToGs.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+            binding.edtK.text.toString().toDouble(),
+            binding.edtP.text.toString().toDouble(),
+            binding.edtY.text.toString().toDouble()
             )
+    }
+    private fun convertBitmapToFile(fileName: String, bitmap: Bitmap): File {
+        //create a file to write bitmap data
+        val file = File(requireContext().cacheDir, fileName)
+        file.createNewFile()
+
+        //Convert bitmap to byte array
+        val bos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 0 /*ignored for PNG*/, bos)
+        val bitMapData = bos.toByteArray()
+
+        //write the bytes in file
+        var fos: FileOutputStream? = null
+        try {
+            fos = FileOutputStream(file)
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        }
+        try {
+            fos?.write(bitMapData)
+            fos?.flush()
+            fos?.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return file
     }
 
 }
@@ -414,4 +441,20 @@ fun getRealVideoPathFromUri(context: Context, contentUri: Uri): String? {
             cursor.close()
         }
     }
+
 }
+
+fun getResizedBitmap(image: Bitmap, maxSize: Int): Bitmap? {
+    var width = 500
+    var height = 500
+//    val bitmapRatio = width.toFloat() / height.toFloat()
+//    if (bitmapRatio > 1) {
+//        width = maxSize
+//        height = (width / bitmapRatio).toInt()
+//    } else {
+//        height = maxSize
+//        width = (height * bitmapRatio).toInt()
+//    }
+    return Bitmap.createScaledBitmap(image, width, height, true)
+}
+

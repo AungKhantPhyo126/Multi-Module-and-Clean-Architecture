@@ -57,6 +57,7 @@ interface SetUpStockService {
         @Query("group") group: Int
     ): Response<JewelleryCatDto>
 
+    @JvmSuppressWildcards
     @Multipart
     @POST("api/categories/store")
     suspend fun createJewelleryCategory(
@@ -68,7 +69,7 @@ interface SetUpStockService {
         @Part("name") name: RequestBody,
         @Part("avg_weight_per_unit_gm") avgWeighPerUnitGm: RequestBody,
         @Part("avg_wastage_per_unit_kpy") avgWastagePerUnitKpy: RequestBody,
-        @Part images: MultipartBody.Part,
+        @Part images:List<MultipartBody.Part>,
         @Part video:MultipartBody.Part,
         @Part("specification") specification: RequestBody,
         @Part("designs[]") design: List<RequestBody>,
