@@ -73,6 +73,7 @@ class AuthNetWorkDataSourceImpl @Inject constructor(
                     403 -> "Forbidden"
                     404 -> "You request not found"
                     405 -> "Method is not allowed!!!"
+                    500 ->"Internal Server Error"
                     else -> "Unhandled error occurred!!!"
                 }
             )

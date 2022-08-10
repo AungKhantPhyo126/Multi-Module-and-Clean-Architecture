@@ -113,7 +113,9 @@ class DailyGoldPriceViewModel @Inject constructor(
                                             getProfile()
                                         }
                                         is Resource.Error->{
-                                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
+                                            localDatabase.clearuser()
+                                            isloggedIn()
+                                            _event.emit(UiEvent.ShowErrorSnackBar(it.message!!))
                                         }
                                     }
                                 }

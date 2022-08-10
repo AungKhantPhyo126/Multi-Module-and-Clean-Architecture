@@ -32,6 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/logged_in_by"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/tv_user_name"
         app:layout_constraintTop_toTopOf="@+id/tv_today_name" />
 

@@ -53,6 +53,7 @@ class DailyGoldPriceFragment:Fragment() {
         toolbarCenterText.isVisible=false
 //        toolbarCenterText.text=getString(R.string.daily_gold_price)
         toolbarCenterImage.isVisible =true
+        toolbarEndIcon.isVisible = true
         toolbarEndIcon.setImageDrawable(requireContext().getDrawable(R.drawable.ic_logout))
     }
 
@@ -106,6 +107,7 @@ class DailyGoldPriceFragment:Fragment() {
                 launch {
                     viewModel.profileState.collectLatest {
                         if (it.successLoading != null){
+                            binding.tvLogginedBy.isVisible=true
                             binding.tvUserName.text= it.successLoading!!.name
                             binding.tvTodayDate.text = it.successLoading!!.todayDate
                             binding.tvTodayName.text = it.successLoading!!.todayName
