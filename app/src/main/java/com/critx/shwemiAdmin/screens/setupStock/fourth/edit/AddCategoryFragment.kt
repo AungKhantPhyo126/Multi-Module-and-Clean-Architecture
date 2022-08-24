@@ -209,6 +209,12 @@ class AddCategoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadingDialog = requireContext().getAlertDialog()
+        if (args.category !=null){
+            binding.cbFrequentlyUsed.isChecked = args.groupInfo!!.isFrequentlyUse
+            binding.btnConfirm.text = "Save"
+        }else{
+            binding.btnConfirm.text = "Create & Select"
+        }
 
         binding.ivImage1.setOnClickListener {
             uploadImageClick("iv1")
@@ -345,15 +351,15 @@ class AddCategoryFragment : Fragment() {
 
 
         viewModel.selectedImgUri1?.let {
-            val requestBody = convertBitmapToFile(it.file.name,it.bitMap).asRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val requestBody = convertBitmapToFile(it.file.name,it.bitMap,requireContext()).asRequestBody("multipart/form-data".toMediaTypeOrNull())
             photo1 = MultipartBody.Part.createFormData("images[]", it.file.name, requestBody)
         }
         viewModel.selectedImgUri2?.let {
-            val requestBody = convertBitmapToFile(it.file.name,it.bitMap).asRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val requestBody = convertBitmapToFile(it.file.name,it.bitMap,requireContext()).asRequestBody("multipart/form-data".toMediaTypeOrNull())
             photo2 = MultipartBody.Part.createFormData("images[]", it.file.name, requestBody)
         }
         viewModel.selectedImgUri3?.let {
-            val requestBody = convertBitmapToFile(it.file.name,it.bitMap).asRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val requestBody = convertBitmapToFile(it.file.name,it.bitMap,requireContext()).asRequestBody("multipart/form-data".toMediaTypeOrNull())
             photo3 = MultipartBody.Part.createFormData("images[]", it.file.name, requestBody)
         }
         viewModel.selectedVideoUri?.let {
@@ -399,32 +405,7 @@ class AddCategoryFragment : Fragment() {
             binding.edtY.text.toString().toDouble()
             )
     }
-    private fun convertBitmapToFile(fileName: String, bitmap: Bitmap): File {
-        //create a file to write bitmap data
-        val file = File(requireContext().cacheDir, fileName)
-        file.createNewFile()
 
-        //Convert bitmap to byte array
-        val bos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 0 /*ignored for PNG*/, bos)
-        val bitMapData = bos.toByteArray()
-
-        //write the bytes in file
-        var fos: FileOutputStream? = null
-        try {
-            fos = FileOutputStream(file)
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        }
-        try {
-            fos?.write(bitMapData)
-            fos?.flush()
-            fos?.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        return file
-    }
 
 }
 
@@ -457,4 +438,29 @@ fun getResizedBitmap(image: Bitmap, maxSize: Int): Bitmap? {
 //    }
     return Bitmap.createScaledBitmap(image, width, height, true)
 }
+fun convertBitmapToFile(fileName: String, bitmap: Bitmap,context: Context): File {
+    //create a file to write bitmap data
+    val file = File(context.cacheDir, fileName)
+    file.createNewFile()
 
+    //Convert bitmap to byte array
+    val bos = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 0 /*ignored for PNG*/, bos)
+    val bitMapData = bos.toByteArray()
+
+    //write the bytes in file
+    var fos: FileOutputStream? = null
+    try {
+        fos = FileOutputStream(file)
+    } catch (e: FileNotFoundException) {
+        e.printStackTrace()
+    }
+    try {
+        fos?.write(bitMapData)
+        fos?.flush()
+        fos?.close()
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+    return file
+}

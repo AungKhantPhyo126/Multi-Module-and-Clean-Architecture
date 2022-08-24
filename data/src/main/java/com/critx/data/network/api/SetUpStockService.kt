@@ -88,4 +88,31 @@ interface SetUpStockService {
     suspend fun getDesignList(
         @Header("Authorization") token: String
         ):Response<DesignDto>
+
+
+    @JvmSuppressWildcards
+    @Multipart
+    @POST("api/products/store")
+    suspend fun createProduct(
+        @Header("Authorization") token: String,
+        @Part("name") name:RequestBody,
+        @Part("jewellery_type_id") type: RequestBody,
+        @Part("jewellery_quality_id") quality: RequestBody,
+        @Part("group_id") group: RequestBody,
+        @Part("category_id") categoryId:RequestBody,
+        @Part("gold_and_gem_weight_gm") goldAndGemWeight:RequestBody,
+        @Part("gem_weight_kyat") gemWeightKyat:RequestBody,
+        @Part("gem_weight_pae") gemWeightPae:RequestBody,
+        @Part("gem_weight_ywae") gemWeightYwae:RequestBody,
+        @Part("gem_value") gemValue:RequestBody?,
+        @Part("pt_and_clip_cost") ptAndClipCost:RequestBody?,
+        @Part("maintenance_cost") maintenanceCost:RequestBody?,
+        @Part("diamond[diamond_info]") diamondInfo:RequestBody?,
+        @Part("diamond[price_from_goldsmith]") diamondPriceFromGS:RequestBody?,
+        @Part("diamond[value_from_goldsmith]") diamondValueFromGS:RequestBody?,
+        @Part("diamond[price_for_sale]") diamondPriceForSale:RequestBody?,
+        @Part("diamond[value_for_sale]") diamondValueForSale:RequestBody?,
+        @Part images:List<MultipartBody.Part>,
+        @Part video:MultipartBody.Part,
+    ):Response<SimpleResponse>
 }

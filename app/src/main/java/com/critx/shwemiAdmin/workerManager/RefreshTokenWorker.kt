@@ -2,12 +2,14 @@ package com.critx.shwemiAdmin.workerManager
 
 import android.content.Context
 import android.util.Log
+import androidx.fragment.app.viewModels
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.critx.commonkotlin.util.Resource
 import com.critx.domain.useCase.auth.RefreshTokenUseCase
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
+import com.critx.shwemiAdmin.screens.dailyGoldPrice.DailyGoldPriceViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.collect
@@ -21,7 +23,7 @@ class RefreshTokenWorker @AssistedInject constructor(
 ) : CoroutineWorker(context, workerParams) {
 
     companion object {
-        const val REFRESH_TOKEN_WORK = "com.unity.cityhr:refresh-token-work"
+        const val REFRESH_TOKEN_WORK = "com.critx.shwemiAdmin:refresh-token-work"
     }
 
     override suspend fun doWork(): Result {

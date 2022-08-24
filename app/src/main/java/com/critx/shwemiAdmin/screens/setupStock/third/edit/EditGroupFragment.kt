@@ -17,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -28,6 +29,8 @@ import com.critx.common.ui.loadImageWithGlide
 import com.critx.common.ui.showSuccessDialog
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.FragmentNewGroupBinding
+import com.critx.shwemiAdmin.screens.setupStock.third.ChooseGroupViewModel
+import com.critx.shwemiAdmin.uiModel.setupStock.ChooseGroupUIModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -51,6 +54,8 @@ class EditGroupFragment : Fragment() {
     private var snackBar: Snackbar? = null
     private lateinit var launchChooseImage: ActivityResultLauncher<Intent>
     private lateinit var readStoragePermissionlauncher: ActivityResultLauncher<String>
+
+    private val sharedViewModel by activityViewModels<ChooseGroupViewModel>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,7 +102,9 @@ class EditGroupFragment : Fragment() {
         checkEditOrAddnewAndBind()
     if (args.groupInfo !=null){
         binding.cbFrequentlyUsed.isChecked = args.groupInfo!!.isFrequentlyUse
-
+        binding.btnAdd.text = "Save"
+    }else{
+        binding.btnAdd.text = "Create & Select"
     }
         isFrequentlyUsed = if (binding.cbFrequentlyUsed.isChecked) 1 else 0
         binding.cbFrequentlyUsed.setOnCheckedChangeListener { compoundButton, ischecked ->
@@ -113,7 +120,10 @@ class EditGroupFragment : Fragment() {
         }
 
         binding.btnAdd.setOnClickListener {
-            uploadFile()
+            if(binding.btnAdd.text == "Create & Select"){
+                uploadFile()
+            }
+
         }
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -126,6 +136,9 @@ class EditGroupFragment : Fragment() {
                         }else loadingDialog.dismiss()
                         if (!it.createSuccessLoading.isNullOrEmpty()) {
                             requireContext().showSuccessDialog("Group Created") {
+//                                sharedViewModel.selectedChooseGroupUIModel = ChooseGroupUIModel(
+//
+//                                )
                                 findNavController().popBackStack()
                             }
                         }

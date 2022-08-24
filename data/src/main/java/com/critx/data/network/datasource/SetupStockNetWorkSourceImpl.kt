@@ -232,6 +232,53 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
             )
         }
     }
+
+    override suspend fun createProduct(
+        token: String,
+        name: RequestBody,
+        type: RequestBody,
+        quality: RequestBody,
+        group: RequestBody,
+        categoryId: RequestBody,
+        goldAndGemWeight: RequestBody,
+        gemWeightKyat: RequestBody,
+        gemWeightPae: RequestBody,
+        gemWeightYwae: RequestBody,
+        gemValue: RequestBody?,
+        ptAndClipCost: RequestBody?,
+        maintenanceCost: RequestBody?,
+        diamondInfo: RequestBody?,
+        diamondPriceFromGS: RequestBody?,
+        diamondValueFromGS: RequestBody?,
+        diamondPriceForSale: RequestBody?,
+        diamondValueForSale: RequestBody?,
+        images: List<MultipartBody.Part>,
+        video: MultipartBody.Part
+    ):SimpleResponse {
+        val response = setUpStockService.createProduct(
+            token,
+            name, type, quality, group, categoryId, goldAndGemWeight, gemWeightKyat,
+            gemWeightPae, gemWeightYwae, gemValue, ptAndClipCost, maintenanceCost,
+            diamondInfo, diamondPriceFromGS, diamondValueFromGS, diamondPriceForSale, diamondValueForSale, images, video
+        )
+        return if (response.isSuccessful) {
+            response.body() ?: throw Exception("Response body Null")
+        } else {
+            throw  Exception(
+                when (response.code()) {
+                    400 -> {
+                        "Bad request"
+                    }
+                    401 -> "You are not Authorized"
+                    402 -> "Payment required!!!"
+                    403 -> "Forbidden"
+                    404 -> "You request not found"
+                    405 -> "Method is not allowed!!!"
+                    else -> "Unhandled error occurred!!!"
+                }
+            )
+        }
+    }
 }
 
 

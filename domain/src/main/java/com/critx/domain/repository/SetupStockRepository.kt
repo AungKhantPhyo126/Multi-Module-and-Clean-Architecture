@@ -54,4 +54,27 @@ interface SetupStockRepository {
     ): Flow<Resource<CalculateKPY>>
 
     fun getDesignList(token: String):Flow<Resource<List<DesignDomain>>>
+
+    fun createProduct(
+        token: String,
+        name: RequestBody,
+        type: RequestBody,
+        quality: RequestBody,
+        group: RequestBody,
+        categoryId: RequestBody,
+        goldAndGemWeight: RequestBody,
+        gemWeightKyat: RequestBody,
+        gemWeightPae: RequestBody,
+        gemWeightYwae: RequestBody,
+        gemValue: RequestBody?,
+        ptAndClipCost: RequestBody?,
+        maintenanceCost: RequestBody?,
+        diamondInfo: RequestBody?,
+        diamondPriceFromGS: RequestBody?,
+        diamondValueFromGS: RequestBody?,
+        diamondPriceForSale: RequestBody?,
+        diamondValueForSale: RequestBody?,
+        images: List<MultipartBody.Part>,
+        video: MultipartBody.Part,
+    ):Flow<Resource<SimpleData>>
 }

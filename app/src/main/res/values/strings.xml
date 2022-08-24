@@ -121,4 +121,19 @@
     <string name="enter_category_name">Enter Category Name</string>
     <string name="enter_weight_in_gm">Enter Weight in gm</string>
     <string name="ok">OK</string>
+    <string name="choose_design">Choose Design</string>
+    <string name="gold_gem_gm">Gold+Gem (gm)</string>
+    <string name="gem_gm">Gem (gm)</string>
+    <string name="pt_clip_price">PT/Clip Price</string>
+    <string name="service_fee">Service Fee</string>
+    <string name="enter_price">Enter Price</string>
+    <string name="create">Create</string>
+    <string name="add_gem_value">Add Gem Value</string>
+    <string name="enter_weight_and_shape_of_diamond">Enter Weight and Shape of Diamond</string>
+    <string name="weight_and_shape">Weight and Shape</string>
+    <string name="enter_diamond_price_for_gs">Enter Diamond Price For GS</string>
+    <string name="enter_diamond_value_from_gs">Enter Diamond Value from GS</string>
+    <string name="enter_sell_price_of_diamond">Enter Sell Price of Diamond</string>
+    <string name="diamond_actual_sell_value">Diamond Actual Sell Value</string>
+    <string name="enter_gold_gem_weight">Enter Gold + Gem Weight</string>
 </resources>

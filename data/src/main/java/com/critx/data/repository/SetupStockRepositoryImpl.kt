@@ -213,4 +213,45 @@ class SetupStockRepositoryImpl @Inject constructor(
                 emit(Resource.Error(e.message ?: "Unhandled Error"))
             }
         }
+
+    override fun createProduct(
+        token: String,
+        name: RequestBody,
+        type: RequestBody,
+        quality: RequestBody,
+        group: RequestBody,
+        categoryId: RequestBody,
+        goldAndGemWeight: RequestBody,
+        gemWeightKyat: RequestBody,
+        gemWeightPae: RequestBody,
+        gemWeightYwae: RequestBody,
+        gemValue: RequestBody?,
+        ptAndClipCost: RequestBody?,
+        maintenanceCost: RequestBody?,
+        diamondInfo: RequestBody?,
+        diamondPriceFromGS: RequestBody?,
+        diamondValueFromGS: RequestBody?,
+        diamondPriceForSale: RequestBody?,
+        diamondValueForSale: RequestBody?,
+        images: List<MultipartBody.Part>,
+        video: MultipartBody.Part
+    ): Flow<Resource<SimpleData>>  =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        setupStockNetWorkDatasource.createProduct(
+                            token,name, type, quality, group, categoryId, goldAndGemWeight, gemWeightKyat, gemWeightPae, gemWeightYwae, gemValue, ptAndClipCost, maintenanceCost, diamondInfo, diamondPriceFromGS, diamondValueFromGS, diamondPriceForSale, diamondValueForSale, images, video
+                        ).response.asDomain()
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
 }

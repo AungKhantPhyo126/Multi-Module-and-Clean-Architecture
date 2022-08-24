@@ -252,7 +252,7 @@ class ChooseGroupFragment : Fragment() {
 
 
         addChipView.setOnClickListener {
-            navigateWithEditView()
+            navigateWithAddView()
         }
 
         binding.chipGroupChooseGp.setOnCheckedStateChangeListener { group, checkedIds ->

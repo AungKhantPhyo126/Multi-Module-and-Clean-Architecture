@@ -94,7 +94,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:text="@string/confirm"
+            tools:text="@string/confirm"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -441,6 +441,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/reconmend_ahtal"
+                    android:textColor="@color/edit_text_color"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.ShweMi.Body2"
                     android:layout_weight="7"
                     />
                 <ImageView
@@ -470,7 +473,10 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/reconmend_ahtal"
+                    android:gravity="center"
+                    android:text="@string/choose_design"
+                    android:textColor="@color/edit_text_color"
+                    android:textAppearance="@style/TextAppearance.ShweMi.Body2"
                     android:layout_weight="7"
                     />
                 <ImageView

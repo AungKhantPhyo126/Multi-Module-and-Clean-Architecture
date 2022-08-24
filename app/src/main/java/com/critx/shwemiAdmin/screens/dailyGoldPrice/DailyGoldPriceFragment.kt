@@ -1,6 +1,7 @@
 package com.critx.shwemiAdmin.screens.dailyGoldPrice
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -34,6 +36,11 @@ class DailyGoldPriceFragment:Fragment() {
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
     lateinit var workManager:WorkManager
+    lateinit var repeatingRequest:PeriodicWorkRequest
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,6 +71,22 @@ class DailyGoldPriceFragment:Fragment() {
         loadingDialog = requireContext().getAlertDialog()
         viewModel.isloggedIn()
 
+        val workConstraints = Constraints
+            .Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+        repeatingRequest =
+            PeriodicWorkRequestBuilder<RefreshTokenWorker>(15, TimeUnit.MINUTES)
+                .setConstraints(workConstraints)
+                .build()
+
+        workManager.getWorkInfoByIdLiveData(repeatingRequest.id).observe(viewLifecycleOwner) {
+            Log.i("refresh success",it.state.toString())
+            if (it.state == WorkInfo.State.ENQUEUED){
+                viewModel.getProfile()
+                Log.i("refresh success","reached")
+            }
+        }
 
         val toolbarEndIcon: ImageView = activity!!.findViewById<View>(R.id.iv_end_icon) as ImageView
         toolbarEndIcon.setOnClickListener {
@@ -125,8 +148,8 @@ class DailyGoldPriceFragment:Fragment() {
                 if (viewModel.isRefreshTokenExpire()){
                     findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
                 }else{
-                    viewModel.getProfile()
                     enqueueRefreshTokenWork()
+                    viewModel.getProfile()
                 }
             }else{
                 findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
@@ -148,32 +171,17 @@ class DailyGoldPriceFragment:Fragment() {
         }
         binding.btnUpdate.setOnClickListener {
             requireContext().showSuccessDialog("Price Uploaded") {
-                findNavController().popBackStack()
+//                findNavController().popBackStack()
+//                findNavController().clearBackStack(R.id.dailyGoldPriceFragment)
             }
         }
     }
     private fun enqueueRefreshTokenWork() {
-        val workConstraints = Constraints
-            .Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
-
-        val repeatingRequest =
-            PeriodicWorkRequestBuilder<RefreshTokenWorker>(15, TimeUnit.MINUTES)
-                .setConstraints(workConstraints)
-                .build()
-
         workManager.enqueueUniquePeriodicWork(
             RefreshTokenWorker.REFRESH_TOKEN_WORK,
             ExistingPeriodicWorkPolicy.KEEP,
             repeatingRequest
         )
-
-        workManager.getWorkInfoByIdLiveData(repeatingRequest.id).observeForever {
-            if (it.state == WorkInfo.State.SUCCEEDED){
-                viewModel.getProfile()
-            }
-        }
-
     }
+
 }

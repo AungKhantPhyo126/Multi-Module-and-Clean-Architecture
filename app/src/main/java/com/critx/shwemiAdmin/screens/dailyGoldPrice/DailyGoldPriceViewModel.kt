@@ -103,26 +103,28 @@ class DailyGoldPriceViewModel @Inject constructor(
                         _profileState.value =_profileState.value.copy(
                             loading = false,
                         )
-                        result.message?.let {errorString->
-                            if (errorString == "You are not Authorized" || errorString == "Bad request"){
-                                refreshTokenUseCase(localDatabase.getToken().orEmpty()).collect { result
-                                    when(result){
-                                        is Resource.Loading->{}
-                                        is Resource.Success->{
-                                            localDatabase.deleteToken()
-                                            localDatabase.saveToken(it.data?.token.orEmpty())
-                                            getProfile()
-                                        }
-                                        is Resource.Error->{
-                                            localDatabase.clearuser()
-                                            isloggedIn()
-                                            _event.emit(UiEvent.ShowErrorSnackBar("refresh token fail"))
-                                        }
-                                    }
-                                }
-                            }
-                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
-                        }
+//                        result.message?.let {errorString->
+//                            if (errorString == "You are not Authorized" || errorString == "Bad request"){
+//                                refreshTokenUseCase(localDatabase.getToken().orEmpty()).collect { result
+//                                    when(result){
+//                                        is Resource.Loading->{
+//
+//                                        }
+//                                        is Resource.Success->{
+//                                            localDatabase.deleteToken()
+//                                            localDatabase.saveToken(it.data?.token.orEmpty())
+//                                            getProfile()
+//                                        }
+//                                        is Resource.Error->{
+//                                            localDatabase.clearuser()
+//                                            isloggedIn()
+//                                            _event.emit(UiEvent.ShowErrorSnackBar("refresh token fail"))
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
+//                        }
                     }
                 }
             }

@@ -15,7 +15,7 @@ fun ImageView.loadImageWithGlide(url:String?){
     url?.let {
         Glide.with(this).load(it).apply(
             RequestOptions.placeholderOf(R.drawable.loading_animation)
-                .override(500,500)
+                .override(100,100)
                 .error(R.drawable.profile_avatar)
         ).into(this)
     }

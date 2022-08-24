@@ -1,4 +1,4 @@
-package com.critx.shwemiAdmin.screens.setupStock.third
+package com.critx.shwemiAdmin.screens.setupStock.fourth
 
 import android.os.Bundle
 import android.view.Gravity
@@ -12,11 +12,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.*
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.critx.common.ui.createChip
@@ -24,7 +22,10 @@ import com.critx.common.ui.getAlertDialog
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.*
-import com.critx.shwemiAdmin.screens.setupStock.fourth.JewelleryCategoryRecyclerAdapter
+import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
+
+import com.critx.shwemiAdmin.screens.setupStock.third.ChooseCategoryViewModel
+import com.critx.shwemiAdmin.screens.setupStock.third.ChooseGroupFragmentDirections
 import com.critx.shwemiAdmin.uiModel.setupStock.ChooseGroupUIModel
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryCategoryUiModel
 import com.daasuu.bl.ArrowDirection
@@ -45,7 +46,7 @@ class ChooseCategoryFragment : Fragment() {
     private var snackBar: Snackbar? = null
     private lateinit var adapter: JewelleryCategoryRecyclerAdapter
 
-
+        private val sharedViewModel by activityViewModels<SharedViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -94,6 +95,13 @@ class ChooseCategoryFragment : Fragment() {
         binding.tvSecondCat.text = args.secondCat.name
         binding.tvThirdCat.text = args.thirdCat.name
         setupRecyclerImage()
+        binding.btnNext.setOnClickListener {
+            sharedViewModel.firstCat = args.firstCat
+            sharedViewModel.secondCat = args.secondCat
+            sharedViewModel.thirdCat = args.thirdCat
+            sharedViewModel.fourthCat = viewModel.selectedJewelleryCategory
+            findNavController().navigate(ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToProductCreateFragment())
+        }
         viewLifecycleOwner.lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
@@ -140,30 +148,36 @@ class ChooseCategoryFragment : Fragment() {
         }
     }
 
-    fun navigateWithImageHoverClick(item:ChooseGroupUIModel){
+//    fun navigateWithImageHoverClick(item: ChooseGroupUIModel) {
+//        findNavController().navigate(
+//            ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment(
+//                args.firstCat,
+//                args.secondCat,
+//                item
+//            )
+//        )
+//    }
+
+    fun navigateWithEditView() {
         findNavController().navigate(
-            ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment(
+            ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToAddCategoryFragment(
                 args.firstCat,
                 args.secondCat,
-                item
+                args.thirdCat,
+                viewModel.selectedJewelleryCategory
             )
         )
     }
 
-    fun navigateWithEditView() {
-        findNavController().navigate(ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToAddCategoryFragment(
-            args.firstCat,
-            args.secondCat,
-            args.thirdCat
-        ))
-    }
-
     fun navigateWithAddView() {
-        findNavController().navigate(ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToAddCategoryFragment(
-            args.firstCat,
-            args.secondCat,
-            args.thirdCat
-        ))
+        findNavController().navigate(
+            ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToAddCategoryFragment(
+                args.firstCat,
+                args.secondCat,
+                args.thirdCat,
+                null
+            )
+        )
     }
 
     fun setupRecyclerImage() {
@@ -172,9 +186,9 @@ class ChooseCategoryFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                    //getJewelleryGroup
+                    //getJewelleryCategory
                     launch {
-                        viewModel.getJewelleryCategory.collect {uiState->
+                        viewModel.getJewelleryCategory.collect { uiState ->
                             if (uiState.loading) {
                                 loadingDialog.show()
                             } else loadingDialog.dismiss()
@@ -182,15 +196,15 @@ class ChooseCategoryFragment : Fragment() {
                                 adapter.submitList(uiState.successLoading)
                                 adapter.notifyDataSetChanged()
                                 setupChipView(uiState.successLoading.orEmpty())
-                                uiState.successLoading?.find { uiModel->
+                                uiState.successLoading?.find { uiModel ->
                                     uiModel.isChecked
-                                }?.name.let {checkedName->
-                                    if (checkedName != null){
+                                }?.name.let { checkedName ->
+                                    if (checkedName != null) {
                                         binding.tvFourthCat.isVisible = true
                                         binding.tvFourthCat.setTextColor(requireContext().getColor(R.color.primary_color))
                                         binding.tvFourthCat.text = checkedName
-                                    }else{
-                                        binding.tvFourthCat.isVisible=false
+                                    } else {
+                                        binding.tvFourthCat.isVisible = false
                                     }
                                 }
                             }
@@ -198,9 +212,9 @@ class ChooseCategoryFragment : Fragment() {
                     }
                 }
             }
-        },{
+        }, {
             navigateWithAddView()
-        },{
+        }, {
             navigateWithEditView()
         })
         binding.rvImages.adapter = adapter
@@ -232,7 +246,7 @@ class ChooseCategoryFragment : Fragment() {
             editView.setOnClickListener {
                 popupWindow.dismiss()
                 viewModel.selectedJewelleryCategory = JewelleryCategoryUiModel(
-                    chip.id.toString(),item.name,item.imageUrl,chip.isChecked,
+                    chip.id.toString(), item.name, item.imageUrl, chip.isChecked,
                     item.isFrequentlyUse
                 )
 //                navigateWithEditView()
@@ -250,8 +264,7 @@ class ChooseCategoryFragment : Fragment() {
 
 
         addChipView.setOnClickListener {
-            navigateWithEditView()
-
+            navigateWithAddView()
         }
 
         binding.chipGroupChooseGp.setOnCheckedStateChangeListener { group, checkedIds ->
@@ -261,10 +274,10 @@ class ChooseCategoryFragment : Fragment() {
                 if (it != null) {
                     val chip = it as Chip
                     viewModel.selectedJewelleryCategory = JewelleryCategoryUiModel(
-                        chip.id.toString(),chip.text.toString(),
-                        list.find { it.id == chip.id.toString() }?.imageUrl?:"",
+                        chip.id.toString(), chip.text.toString(),
+                        list.find { it.id == chip.id.toString() }?.imageUrl ?: "",
                         chip.isChecked,
-                        list.find { it.id == chip.id.toString() }?.isFrequentlyUse?:false
+                        list.find { it.id == chip.id.toString() }?.isFrequentlyUse ?: false
                     )
                     binding.tvFourthCat.isVisible = true
                     binding.tvFourthCat.setTextColor(requireContext().getColor(R.color.primary_color))
