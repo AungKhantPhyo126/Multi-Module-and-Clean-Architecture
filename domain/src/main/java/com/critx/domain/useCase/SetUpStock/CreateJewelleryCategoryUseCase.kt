@@ -22,7 +22,9 @@ class CreateJewelleryCategoryUseCase @Inject constructor(
         video:MultipartBody.Part,
         specification:RequestBody,
         design:MutableList<RequestBody>,
-        orderToGs:RequestBody
+        orderToGs:RequestBody,
+        recommendCat:MutableList<RequestBody>
+
     )=setupStockRepository.createJewelleryCategory(
-        token, jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used, name, avgWeigh, avgWastage, images, video, specification, design,orderToGs)
+        token, jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used, name, avgWeigh, avgWastage, images, video, specification, design,orderToGs,recommendCat)
 }

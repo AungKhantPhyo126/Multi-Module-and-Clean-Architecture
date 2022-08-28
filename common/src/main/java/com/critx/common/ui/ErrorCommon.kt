@@ -13,10 +13,12 @@ fun Context.showErrorCommonUI(errorMessage:String){
 
 fun ImageView.loadImageWithGlide(url:String?){
     url?.let {
-        Glide.with(this).load(it).apply(
+        Glide.with(this).asBitmap().load(it).apply(
             RequestOptions.placeholderOf(R.drawable.loading_animation)
                 .override(100,100)
                 .error(R.drawable.profile_avatar)
         ).into(this)
     }
 }
+
+fun getBitMapWithGlide(url: String?,context: Context) =Glide.with(context).asBitmap().load(url).submit().get()

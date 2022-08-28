@@ -85,6 +85,7 @@ class DailyGoldPriceViewModel @Inject constructor(
     }
 
     fun getProfile(){
+         var count = 0
         viewModelScope.launch {
             getProfileUsecase(localDatabase.getToken().orEmpty()).collect { result->
                 when(result){
@@ -100,6 +101,10 @@ class DailyGoldPriceViewModel @Inject constructor(
                         )
                     }
                     is Resource.Error->{
+                        if (count == 0){
+                            getProfile()
+                            count++
+                        }
                         _profileState.value =_profileState.value.copy(
                             loading = false,
                         )

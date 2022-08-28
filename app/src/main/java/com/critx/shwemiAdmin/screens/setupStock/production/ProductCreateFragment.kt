@@ -367,6 +367,7 @@ class ProductCreateFragment : Fragment() {
         builder.setView(successBinding.root)
         val alertDialog = builder.create()
         alertDialog.setCancelable(false)
+        alertDialog.show()
         successBinding.btnCreateAnotherStock.setOnClickListener {
             alertDialog.dismiss()
         }

@@ -6,6 +6,10 @@ import com.critx.data.network.dto.setupStock.jewelleryType.JewelleryTypeData
 import com.critx.data.network.dto.setupStock.jewelleryType.asDomain
 import com.critx.domain.model.SetupStock.jewelleryGroup.JewelleryGroup
 
+data class CreateGroupDto(
+    val data:Data
+)
+
 data class Data(
     val id: Int?,
     val image: Image?,

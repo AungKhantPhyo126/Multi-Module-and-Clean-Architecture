@@ -9,6 +9,7 @@ import com.critx.data.network.dto.setupStock.jewelleryCategory.CalculateKPYDto
 import com.critx.data.network.dto.setupStock.jewelleryCategory.DesignDto
 import com.critx.data.network.dto.setupStock.jewelleryCategory.JewelleryCatDto
 import com.critx.data.network.dto.setupStock.jewelleryCategory.error.CreateCategoryError
+import com.critx.data.network.dto.setupStock.jewelleryGroup.Data
 import com.critx.data.network.dto.setupStock.jewelleryGroup.JewelleryGroupDto
 import com.critx.data.network.dto.setupStock.jewelleryQuality.JewelleryQualityData
 import com.critx.data.network.dto.setupStock.jewelleryQuality.JewelleryQualityDto
@@ -94,9 +95,43 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         jewellery_quality_id: RequestBody,
         is_frequently_used: RequestBody,
         name: RequestBody
-    ): SimpleResponse {
+    ): Data {
         val response = setUpStockService.createJewelleryGroup(
             token,
+            jewellery_type_id, jewellery_quality_id, is_frequently_used, name, image
+        )
+        return if (response.isSuccessful) {
+            response.body()?.data ?: throw Exception("Response body Null")
+        } else {
+            throw  Exception(
+                when (response.code()) {
+                    400 -> {
+                        response.errorBody()?.parseError<CreateCategoryError>()
+                        "Bad request"
+                    }
+                    401 -> "You are not Authorized"
+                    402 -> "Payment required!!!"
+                    403 -> "Forbidden"
+                    404 -> "You request not found"
+                    405 -> "Method is not allowed!!!"
+                    else -> "Unhandled error occurred!!!"
+                }
+            )
+        }
+    }
+
+    override suspend fun editJewelleryGroup(
+        token: String,
+        method:RequestBody,
+        groupId:String,
+        image: MultipartBody.Part,
+        jewellery_type_id: RequestBody,
+        jewellery_quality_id: RequestBody,
+        is_frequently_used: RequestBody,
+        name: RequestBody
+    ): SimpleResponse {
+        val response = setUpStockService.editJewelleryGroup(
+            token,method,groupId,
             jewellery_type_id, jewellery_quality_id, is_frequently_used, name, image
         )
         return if (response.isSuccessful) {
@@ -104,7 +139,10 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> "Bad request"
+                    400 -> {
+                        response.errorBody()?.parseError<CreateCategoryError>()
+                        "Bad request"
+                    }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
                     403 -> "Forbidden"
@@ -118,10 +156,10 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
 
     override suspend fun getJewelleryCategory(
         token: String,
-        frequentUse: Int,
-        firstCatId: Int,
-        secondCatId: Int,
-        thirdCatId: Int
+        frequentUse: Int?,
+        firstCatId: Int?,
+        secondCatId: Int?,
+        thirdCatId: Int?
     ): JewelleryCatDto {
         val response = setUpStockService.getJewelleryCategory(
             token,
@@ -160,12 +198,13 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         video: MultipartBody.Part,
         specification: RequestBody,
         design: MutableList<RequestBody>,
-        orderToGs: RequestBody
+        orderToGs: RequestBody,
+        recommendCat:MutableList<RequestBody>
     ): SimpleResponse {
         val response = setUpStockService.createJewelleryCategory(
             token,
             jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used, name, avgWeigh,
-            avgWastage, images.toList(), video, specification, design.toList(), orderToGs
+            avgWastage, images.toList(), video, specification, design.toList(), orderToGs,recommendCat
         )
         return if (response.isSuccessful) {
             response.body() ?: throw Exception("Response body Null")

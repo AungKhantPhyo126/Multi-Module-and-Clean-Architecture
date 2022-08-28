@@ -8,6 +8,10 @@ data class JewelleryGroupUiState(
     var successLoading: List<ChooseGroupUIModel>? = null,
     var errorMessage:String? =null,
     var createGroupLoading:Boolean = false,
-    var createSuccessLoading:String? = null,
-    var createErrorMessage:String? = null
+    var createSuccessLoading:ChooseGroupUIModel? = null,
+    var createErrorMessage:String? = null,
+
+    var editGroupLoading:Boolean = false,
+    var editSuccessLoading:String? = null,
+    var editErrorMessage:String? = null
 )

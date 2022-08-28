@@ -39,7 +39,7 @@ class ImageRecyclerAdapter(
 //    var tracker: SelectionTracker<Long>? = null
     override fun getItemViewType(position: Int): Int {
 
-        return if (position == itemCount-1) addItemViewType
+        return if (position == 0) addItemViewType
         else itemViewType;
     }
 
@@ -67,7 +67,7 @@ class ImageRecyclerAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ImageViewHolder -> {
-                holder.bind(getItem(position))
+                holder.bind(getItem(position-1))
             }
             is AddItemViewHolder -> {
                 holder.bind()

@@ -247,9 +247,9 @@ class ChooseCategoryFragment : Fragment() {
                 popupWindow.dismiss()
                 viewModel.selectedJewelleryCategory = JewelleryCategoryUiModel(
                     chip.id.toString(), item.name, item.imageUrl, chip.isChecked,
-                    item.isFrequentlyUse
+                    item.isFrequentlyUse,item.specification,item.avgWeightPerUnitGm,item.avgWastagePerUnitKpy
                 )
-//                navigateWithEditView()
+                navigateWithEditView()
             }
 //            val chip = ItemImageSelectionBinding.inflate(layoutInflater).root
             binding.chipGroupChooseGp.addView(chip)
@@ -273,12 +273,7 @@ class ChooseCategoryFragment : Fragment() {
             }.let {
                 if (it != null) {
                     val chip = it as Chip
-                    viewModel.selectedJewelleryCategory = JewelleryCategoryUiModel(
-                        chip.id.toString(), chip.text.toString(),
-                        list.find { it.id == chip.id.toString() }?.imageUrl ?: "",
-                        chip.isChecked,
-                        list.find { it.id == chip.id.toString() }?.isFrequentlyUse ?: false
-                    )
+                    viewModel.selectedJewelleryCategory = list.find { it.id == chip.id.toString() }
                     binding.tvFourthCat.isVisible = true
                     binding.tvFourthCat.setTextColor(requireContext().getColor(R.color.primary_color))
                     binding.tvFourthCat.text = chip.text

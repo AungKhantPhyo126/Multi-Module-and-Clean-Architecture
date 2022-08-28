@@ -85,6 +85,7 @@ class ChooseJewelleryQualityFragment:Fragment() {
                         }else loadingDialog.dismiss()
                         if (!it.successLoading.isNullOrEmpty()) {
                             for (item in it.successLoading!!) {
+                                binding.chipGroupJewelleryQuality.removeAllViews()
                                 val chip = requireContext().createChip(item.name)
                                 chip.id = item.id.toInt()
                                 binding.chipGroupJewelleryQuality.addView(chip)

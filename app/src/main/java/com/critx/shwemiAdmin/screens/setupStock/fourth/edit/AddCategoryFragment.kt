@@ -32,6 +32,7 @@ import com.critx.common.ui.getAlertDialog
 import com.critx.common.ui.showSuccessDialog
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.FragmentAddCategoryBinding
+import com.critx.shwemiAdmin.screens.setupStock.fourth.recommendSTock.RecommendStockViewModel
 import com.critx.shwemiAdmin.screens.setupStock.third.edit.getRealPathFromUri
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -66,57 +67,69 @@ class AddCategoryFragment : Fragment() {
         super.onCreate(savedInstanceState)
         launchChooseImage1 =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                var selectedImage : Bitmap?
+                var selectedImage: Bitmap?
                 if (result.resultCode == Activity.RESULT_OK) {
                     result.data?.data?.let {
-                        val imageStream: InputStream = requireContext().contentResolver?.openInputStream(it)!!
+                        val imageStream: InputStream =
+                            requireContext().contentResolver?.openInputStream(it)!!
                         selectedImage = BitmapFactory.decodeStream(imageStream)
-                        selectedImage = getResizedBitmap(selectedImage!!, 500);// 400 is for example, replace with desired size
+                        selectedImage = getResizedBitmap(
+                            selectedImage!!,
+                            500
+                        );// 400 is for example, replace with desired size
                         binding.ivImage1.setImageBitmap(selectedImage)
-                        val file =getRealPathFromUri(requireContext(), it)?.let { it1 ->
-                                File(
-                                    it1
-                                )
-                            }
-                        viewModel.selectedImgUri1 = SelectedImage(file!!,selectedImage!!)
+                        val file = getRealPathFromUri(requireContext(), it)?.let { it1 ->
+                            File(
+                                it1
+                            )
+                        }
+                        viewModel.selectedImgUri1 = SelectedImage(file!!, selectedImage!!)
                     }
                 }
 
             }
         launchChooseImage2 =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                var selectedImage : Bitmap?
+                var selectedImage: Bitmap?
                 if (result.resultCode == Activity.RESULT_OK) {
                     result.data?.data?.let {
-                        val imageStream: InputStream = requireContext().contentResolver?.openInputStream(it)!!
+                        val imageStream: InputStream =
+                            requireContext().contentResolver?.openInputStream(it)!!
                         selectedImage = BitmapFactory.decodeStream(imageStream)
-                        selectedImage = getResizedBitmap(selectedImage!!, 500);// 400 is for example, replace with desired size
+                        selectedImage = getResizedBitmap(
+                            selectedImage!!,
+                            500
+                        );// 400 is for example, replace with desired size
                         binding.ivImage2.setImageBitmap(selectedImage)
-                        val file =getRealPathFromUri(requireContext(), it)?.let { it1 ->
+                        val file = getRealPathFromUri(requireContext(), it)?.let { it1 ->
                             File(
                                 it1
                             )
                         }
-                        viewModel.selectedImgUri2 = SelectedImage(file!!,selectedImage!!)
+                        viewModel.selectedImgUri2 = SelectedImage(file!!, selectedImage!!)
                     }
                 }
 
             }
         launchChooseImage3 =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                var selectedImage : Bitmap?
+                var selectedImage: Bitmap?
                 if (result.resultCode == Activity.RESULT_OK) {
                     result.data?.data?.let {
-                        val imageStream: InputStream = requireContext().contentResolver?.openInputStream(it)!!
+                        val imageStream: InputStream =
+                            requireContext().contentResolver?.openInputStream(it)!!
                         selectedImage = BitmapFactory.decodeStream(imageStream)
-                        selectedImage = getResizedBitmap(selectedImage!!, 500);// 400 is for example, replace with desired size
+                        selectedImage = getResizedBitmap(
+                            selectedImage!!,
+                            500
+                        );// 400 is for example, replace with desired size
                         binding.ivImage3.setImageBitmap(selectedImage)
-                        val file =getRealPathFromUri(requireContext(), it)?.let { it1 ->
+                        val file = getRealPathFromUri(requireContext(), it)?.let { it1 ->
                             File(
                                 it1
                             )
                         }
-                        viewModel.selectedImgUri3 = SelectedImage(file!!,selectedImage!!)
+                        viewModel.selectedImgUri3 = SelectedImage(file!!, selectedImage!!)
                     }
                 }
 
@@ -209,10 +222,14 @@ class AddCategoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadingDialog = requireContext().getAlertDialog()
-        if (args.category !=null){
+        if (args.category != null) {
             binding.cbFrequentlyUsed.isChecked = args.groupInfo!!.isFrequentlyUse
             binding.btnConfirm.text = "Save"
-        }else{
+            binding.edtEnterCategory.setText(args.category!!.name)
+            binding.edtAvgWeight.setText(args.category!!.avgWeightPerUnitGm.toString())
+            binding.edtSpecification.setText(args.category!!.specification)
+            binding.edtK.setText(args.category!!.specification)
+        } else {
             binding.btnConfirm.text = "Create & Select"
         }
 
@@ -242,6 +259,9 @@ class AddCategoryFragment : Fragment() {
 
         binding.btnConfirm.setOnClickListener {
             uploadFile()
+        }
+        binding.mcvRecommendAhtal.setOnClickListener {
+            findNavController().navigate(AddCategoryFragmentDirections.actionAddCategoryFragmentToRecommendStockFragment())
         }
         binding.mcvChooseDesign.setOnClickListener {
             findNavController().navigate(AddCategoryFragmentDirections.actionAddCategoryFragmentToDesignListFragment())
@@ -349,61 +369,114 @@ class AddCategoryFragment : Fragment() {
         var video: MultipartBody.Part? = null
         var gif: MultipartBody.Part? = null
 
-
-        viewModel.selectedImgUri1?.let {
-            val requestBody = convertBitmapToFile(it.file.name,it.bitMap,requireContext()).asRequestBody("multipart/form-data".toMediaTypeOrNull())
-            photo1 = MultipartBody.Part.createFormData("images[]", it.file.name, requestBody)
-        }
-        viewModel.selectedImgUri2?.let {
-            val requestBody = convertBitmapToFile(it.file.name,it.bitMap,requireContext()).asRequestBody("multipart/form-data".toMediaTypeOrNull())
-            photo2 = MultipartBody.Part.createFormData("images[]", it.file.name, requestBody)
-        }
-        viewModel.selectedImgUri3?.let {
-            val requestBody = convertBitmapToFile(it.file.name,it.bitMap,requireContext()).asRequestBody("multipart/form-data".toMediaTypeOrNull())
-            photo3 = MultipartBody.Part.createFormData("images[]", it.file.name, requestBody)
-        }
-        viewModel.selectedVideoUri?.let {
-            val requestBody = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-            video = MultipartBody.Part.createFormData("video", it.name, requestBody)
-        }
-        viewModel.selectedGifUri?.let {
-            val requestBody = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-            gif = MultipartBody.Part.createFormData("video", it.name, requestBody)
-        }
-        val photoList = mutableListOf(photo1!!, photo2!!, photo3!!)
-//        val videoList = mutableListOf(video!!)
-        val designList = mutableListOf<RequestBody>()
-        viewModel.selectedDesignIds?.let { list ->
-            list.forEach {
-               designList.add(it.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull()))
-            }
-        }
-
-        val name = binding.edtEnterCategory.text.toString()
-            .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        val specification = binding.edtSpecification.text.toString()
-            .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        val avgWeigh = binding.edtAvgWeight.text.toString()
-            .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-
-
-
-        viewModel.createJewelleryCategory(
-            args.type.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-            args.quality.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-            args.groupInfo.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-            isFrequentlyUsed.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-            name,
-            avgWeigh,
-            photoList,
-            video!!,
-            specification,
-            designList,
-            orderToGs.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-            binding.edtK.text.toString().toDouble(),
-            binding.edtP.text.toString().toDouble(),
-            binding.edtY.text.toString().toDouble()
+        if (binding.edtEnterCategory.text.isNullOrEmpty() ||
+            binding.edtSpecification.text.isNullOrEmpty() ||
+            binding.edtAvgWeight.text.isNullOrEmpty() ||
+            binding.edtK.text.isNullOrEmpty() ||
+            binding.edtP.text.isNullOrEmpty() ||
+            binding.edtY.text.isNullOrEmpty() ||
+            viewModel.selectedImgUri1 == null ||
+            viewModel.selectedImgUri1 == null ||
+            viewModel.selectedImgUri2 == null ||
+            viewModel.selectedImgUri3 == null ||
+//            viewModel.selectedGifUri == null ||
+            viewModel.selectedVideoUri == null ||
+            viewModel.selectedDesignIds == null
+        ){
+            snackBar = Snackbar.make(
+                binding.root,
+                "Fill The Required Fields",
+                Snackbar.LENGTH_LONG
             )
+            snackBar?.show()
+        }else {
+            val photoList = mutableListOf<MultipartBody.Part>()
+            viewModel.selectedImgUri1?.let {
+                val requestBody = convertBitmapToFile(
+                    it.file.name,
+                    it.bitMap,
+                    requireContext()
+                ).asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                photo1 = MultipartBody.Part.createFormData("images[]", it.file.name, requestBody)
+                photo1?.let {img->
+                    photoList.add(img)
+                }
+            }
+            viewModel.selectedImgUri2?.let {
+                val requestBody = convertBitmapToFile(
+                    it.file.name,
+                    it.bitMap,
+                    requireContext()
+                ).asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                photo2 = MultipartBody.Part.createFormData("images[]", it.file.name, requestBody)
+                photo2?.let {img->
+                    photoList.add(img)
+                }
+            }
+            viewModel.selectedImgUri3?.let {
+                val requestBody = convertBitmapToFile(
+                    it.file.name,
+                    it.bitMap,
+                    requireContext()
+                ).asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                photo3 = MultipartBody.Part.createFormData("images[]", it.file.name, requestBody)
+                photo3?.let {img->
+                    photoList.add(img)
+                }
+            }
+            viewModel.selectedVideoUri?.let {
+                val requestBody = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                video = MultipartBody.Part.createFormData("video", it.name, requestBody)
+            }
+            viewModel.selectedGifUri?.let {
+                val requestBody = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                gif = MultipartBody.Part.createFormData("video", it.name, requestBody)
+            }
+//        val videoList = mutableListOf(video!!)
+            val designList = mutableListOf<RequestBody>()
+            viewModel.selectedDesignIds?.let { list ->
+                list.forEach {
+                    designList.add(
+                        it.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                    )
+                }
+            }
+
+            val name = binding.edtEnterCategory.text.toString()
+                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val specification = binding.edtSpecification.text.toString()
+                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val avgWeigh = binding.edtAvgWeight.text.toString()
+                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+
+            val recommendCat = mutableListOf<RequestBody>()
+            viewModel.selectedRecommendCat?.let { list ->
+                list.forEach {
+                    recommendCat.add(it.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull()))
+                }
+            }
+
+
+
+            viewModel.createJewelleryCategory(
+                args.type.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                args.quality.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                args.groupInfo.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                isFrequentlyUsed.toString()
+                    .toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                name,
+                avgWeigh,
+                photoList,
+                video!!,
+                specification,
+                designList,
+                orderToGs.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                binding.edtK.text.toString().toDouble(),
+                binding.edtP.text.toString().toDouble(),
+                binding.edtY.text.toString().toDouble(),
+                recommendCat
+            )
+        }
     }
 
 
@@ -418,9 +491,7 @@ fun getRealVideoPathFromUri(context: Context, contentUri: Uri): String? {
         cursor?.moveToFirst()
         cursor?.getString(column_index)
     } finally {
-        if (cursor != null) {
-            cursor.close()
-        }
+        cursor?.close()
     }
 
 }
@@ -438,7 +509,8 @@ fun getResizedBitmap(image: Bitmap, maxSize: Int): Bitmap? {
 //    }
     return Bitmap.createScaledBitmap(image, width, height, true)
 }
-fun convertBitmapToFile(fileName: String, bitmap: Bitmap,context: Context): File {
+
+fun convertBitmapToFile(fileName: String, bitmap: Bitmap, context: Context): File {
     //create a file to write bitmap data
     val file = File(context.cacheDir, fileName)
     file.createNewFile()

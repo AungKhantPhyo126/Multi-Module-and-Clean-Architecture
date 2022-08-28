@@ -6,10 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
 import com.critx.domain.model.SetupStock.jewelleryCategory.CalculateKPY
-import com.critx.domain.useCase.SetUpStock.CalculateKPYUseCase
-import com.critx.domain.useCase.SetUpStock.CreateJewelleryCategoryUseCase
-import com.critx.domain.useCase.SetUpStock.CreateJewelleryGroupUseCase
-import com.critx.domain.useCase.SetUpStock.GetDesignListUseCase
+import com.critx.domain.useCase.SetUpStock.*
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.uiModel.setupStock.DesignUiModel
@@ -41,9 +38,12 @@ class AddCategoryViewModel @Inject constructor(
     var selectedGifUri: File? = null
     var calculatedKPYtoGram: Double? = null
     var selectedDesignIds:MutableList<Int>? = null
+    var selectedRecommendCat:MutableList<Int>? = null
 
     private val _createJewelleryCategory = MutableStateFlow(JewelleryCategoryUiState())
     val createJewelleryCategoryState = _createJewelleryCategory.asStateFlow()
+
+
 
     private val _getDesign = MutableStateFlow(DesignUiState())
     val getDesign = _getDesign.asStateFlow()
@@ -65,7 +65,9 @@ class AddCategoryViewModel @Inject constructor(
         specification:RequestBody,
         design:MutableList<RequestBody>,
         orderToGs:RequestBody,
-        kyat:Double,pae:Double,ywae:Double
+        kyat:Double,pae:Double,ywae:Double,
+        recommendCat:MutableList<RequestBody>
+
     ){
         viewModelScope.launch {
             //calculate kyp
@@ -85,7 +87,7 @@ class AddCategoryViewModel @Inject constructor(
                             .toRequestBody("multipart/form-data".toMediaTypeOrNull())
                         createJewelleryCategoryUseCase(
                             localDatabase.getToken().orEmpty(),
-                            jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used, name, avgWeigh, avgWastage, images, video, specification, design,orderToGs
+                            jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used, name, avgWeigh, avgWastage, images, video, specification, design,orderToGs,recommendCat
                         ).collectLatest {
                             when(it){
                                 is Resource.Loading->{

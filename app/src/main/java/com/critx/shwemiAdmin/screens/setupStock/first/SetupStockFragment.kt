@@ -72,6 +72,7 @@ class SetupStockFragment:Fragment() {
                             loadingDialog.show()
                         }else loadingDialog.dismiss()
                         if (!it.successLoading.isNullOrEmpty()) {
+                            binding.chipGroupJewelleryType.removeAllViews()
                             for (item in it.successLoading!!) {
                                 val chip = requireContext().createChip(item.name)
                                 chip.id = item.id.toInt()

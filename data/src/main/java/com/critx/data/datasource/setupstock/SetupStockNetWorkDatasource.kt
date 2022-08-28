@@ -7,6 +7,7 @@ import com.critx.data.network.dto.setupStock.jewelleryCategory.CalculateKPYDto
 import com.critx.data.network.dto.setupStock.jewelleryCategory.DesignDto
 import com.critx.data.network.dto.setupStock.jewelleryCategory.JewelleryCatDto
 import com.critx.data.network.dto.setupStock.jewelleryCategory.JewelleryCategoryData
+import com.critx.data.network.dto.setupStock.jewelleryGroup.Data
 import com.critx.data.network.dto.setupStock.jewelleryGroup.JewelleryGroupDto
 import com.critx.data.network.dto.setupStock.jewelleryQuality.JewelleryQualityData
 import com.critx.data.network.dto.setupStock.jewelleryQuality.JewelleryQualityDto
@@ -35,14 +36,25 @@ interface SetupStockNetWorkDatasource {
         jewellery_quality_id: RequestBody,
         is_frequently_used: RequestBody,
         name: RequestBody
-    ): SimpleResponse
+    ): Data
+
+    suspend fun  editJewelleryGroup(
+        token: String,
+        method:RequestBody,
+        groupId:String,
+        image: MultipartBody.Part,
+        jewellery_type_id: RequestBody,
+        jewellery_quality_id: RequestBody,
+        is_frequently_used: RequestBody,
+        name: RequestBody
+    ):SimpleResponse
 
     suspend fun getJewelleryCategory(
         token: String,
-        frequentUse: Int,
-        firstCatId: Int,
-        secondCatId: Int,
-        thirdCatId: Int
+        frequentUse: Int?,
+        firstCatId: Int?,
+        secondCatId: Int?,
+        thirdCatId: Int?
     )
             : JewelleryCatDto
 
@@ -59,7 +71,9 @@ interface SetupStockNetWorkDatasource {
         video: MultipartBody.Part,
         specification: RequestBody,
         design: MutableList<RequestBody>,
-        orderToGs: RequestBody
+        orderToGs: RequestBody,
+        recommendCat:MutableList<RequestBody>
+
     ): SimpleResponse
 
     suspend fun calculateKPYtoGram(

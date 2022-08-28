@@ -27,9 +27,20 @@ interface SetupStockRepository {
         jewellery_quality_id : RequestBody,
         is_frequently_used : RequestBody,
         name : RequestBody
+    ):Flow<Resource<JewelleryGroup>>
+    fun editJewelleryGroup(
+        token: String,
+        method:RequestBody,
+        groupId: String,
+        image:MultipartBody.Part,
+        jewellery_type_id : RequestBody,
+        jewellery_quality_id : RequestBody,
+        is_frequently_used : RequestBody,
+        name : RequestBody
     ):Flow<Resource<SimpleData>>
 
-    fun getJewelleryCategory(token:String,frequentUse:Int,firstCatId:Int,secondCatId:Int,thirdCatId:Int):
+
+    fun getJewelleryCategory(token:String,frequentUse:Int?,firstCatId:Int?,secondCatId:Int?,thirdCatId:Int?):
             Flow<Resource<List<JewelleryCategory>>>
     fun createJewelleryCategory(
         token: String,
@@ -44,7 +55,8 @@ interface SetupStockRepository {
         video:MultipartBody.Part,
         specification:RequestBody,
         design:MutableList<RequestBody>,
-        orderToGs:RequestBody
+        orderToGs:RequestBody,
+        recommendCat:MutableList<RequestBody>
     ):Flow<Resource<SimpleData>>
     fun calculateKPYtoGram(
         token:String,

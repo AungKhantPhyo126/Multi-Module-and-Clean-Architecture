@@ -24,6 +24,7 @@ import com.critx.common.ui.getAlertDialog
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.*
+import com.critx.shwemiAdmin.screens.setupStock.third.edit.CREATEED_GROUP_ID
 import com.critx.shwemiAdmin.uiModel.setupStock.ChooseGroupUIModel
 import com.daasuu.bl.ArrowDirection
 import com.daasuu.bl.BubblePopupHelper
@@ -71,6 +72,7 @@ class ChooseGroupFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
+
         var frequentUse = if (binding.cbFrequentlyUsed.isChecked) 1 else 0
         viewModel.getJewelleryGroup(
             frequentUse,
@@ -101,6 +103,12 @@ class ChooseGroupFragment : Fragment() {
                         if (it.successLoading != null) {
                             adapter.submitList(it.successLoading)
                             adapter.notifyDataSetChanged()
+                            findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
+                                CREATEED_GROUP_ID)
+                                ?.observe(viewLifecycleOwner) {
+                                    viewModel.selectImage(it)
+                                    collectDataForRecyclerView()
+                                }
                             setupChipView(it.successLoading.orEmpty())
                         }
                     }
@@ -166,37 +174,10 @@ class ChooseGroupFragment : Fragment() {
     }
 
     fun setupRecyclerImage() {
+
         adapter = ImageRecyclerAdapter({
             viewModel.selectImage(it)
-            viewLifecycleOwner.lifecycleScope.launch {
-                lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-
-                    //getJewelleryGroup
-                    launch {
-                        viewModel.getGroupState.collect {uiState->
-                            if (uiState.loading) {
-                                loadingDialog.show()
-                            } else loadingDialog.dismiss()
-                            if (uiState.successLoading != null) {
-                                adapter.submitList(uiState.successLoading)
-                                adapter.notifyDataSetChanged()
-                                setupChipView(uiState.successLoading.orEmpty())
-                                uiState.successLoading?.find { uiModel->
-                                    uiModel.isChecked
-                                }?.name.let {checkedName->
-                                    if (checkedName != null){
-                                        binding.tvThirdCat.isVisible = true
-                                        binding.tvThirdCat.setTextColor(requireContext().getColor(R.color.primary_color))
-                                        binding.tvThirdCat.text = checkedName
-                                    }else{
-                                        binding.tvThirdCat.isVisible=false
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            collectDataForRecyclerView()
         }, {
             //addNewClick
             navigateWithAddView()
@@ -206,10 +187,18 @@ class ChooseGroupFragment : Fragment() {
 
         })
         binding.rvImages.adapter = adapter
+
     }
 
     fun setupChipView(list: List<ChooseGroupUIModel>) {
         binding.chipGroupChooseGp.removeAllViews()
+        val addChipView = requireContext().createChip("Add New")
+        addChipView.chipIcon = requireContext().getDrawable(R.drawable.ic_plus)
+        addChipView.isCheckable = false
+        addChipView.isChipIconVisible = true
+        addChipView.setTextColor(requireContext().getColorStateList(R.color.primary_color))
+        addChipView.chipIconTint = requireContext().getColorStateList(R.color.primary_color)
+        binding.chipGroupChooseGp.addView(addChipView)
         for (item in list.toSet()) {
             val chip = requireContext().createChip(item.name)
             val bubble = BubbleCardBinding.inflate(layoutInflater).root
@@ -239,21 +228,22 @@ class ChooseGroupFragment : Fragment() {
                 )
                 navigateWithEditView()
             }
+
 //            val chip = ItemImageSelectionBinding.inflate(layoutInflater).root
             binding.chipGroupChooseGp.addView(chip)
         }
-        val addChipView = requireContext().createChip("Add New")
-        addChipView.chipIcon = requireContext().getDrawable(R.drawable.ic_plus)
-        addChipView.isCheckable = false
-        addChipView.isChipIconVisible = true
-        addChipView.setTextColor(requireContext().getColorStateList(R.color.primary_color))
-        addChipView.chipIconTint = requireContext().getColorStateList(R.color.primary_color)
-        binding.chipGroupChooseGp.addView(addChipView)
 
+
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
+            CREATEED_GROUP_ID)
+            ?.observe(viewLifecycleOwner) {
+                binding.chipGroupChooseGp.check(it.toInt())
+            }
 
         addChipView.setOnClickListener {
             navigateWithAddView()
         }
+
 
         binding.chipGroupChooseGp.setOnCheckedStateChangeListener { group, checkedIds ->
             binding.chipGroupChooseGp.children.toList().find {
@@ -286,6 +276,38 @@ class ChooseGroupFragment : Fragment() {
         }
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
+        }
+    }
+
+    fun collectDataForRecyclerView(){
+        viewLifecycleOwner.lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+                //getJewelleryGroup
+                launch {
+                    viewModel.getGroupState.collect {uiState->
+                        if (uiState.loading) {
+                            loadingDialog.show()
+                        } else loadingDialog.dismiss()
+                        if (uiState.successLoading != null) {
+                            adapter.submitList(uiState.successLoading)
+                            adapter.notifyDataSetChanged()
+                            setupChipView(uiState.successLoading.orEmpty())
+                            uiState.successLoading?.find { uiModel->
+                                uiModel.isChecked
+                            }?.name.let {checkedName->
+                                if (checkedName != null){
+                                    binding.tvThirdCat.isVisible = true
+                                    binding.tvThirdCat.setTextColor(requireContext().getColor(R.color.primary_color))
+                                    binding.tvThirdCat.text = checkedName
+                                }else{
+                                    binding.tvThirdCat.isVisible=false
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

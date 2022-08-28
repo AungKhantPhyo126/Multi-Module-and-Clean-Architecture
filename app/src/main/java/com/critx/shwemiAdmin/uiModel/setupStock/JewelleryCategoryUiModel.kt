@@ -10,7 +10,10 @@ data class JewelleryCategoryUiModel(
     val name:String,
     val imageUrl:String,
     var isChecked:Boolean,
-    var isFrequentlyUse:Boolean
+    var isFrequentlyUse:Boolean,
+    val specification : String?,
+    val avgWeightPerUnitGm:Double?,
+    val avgWastagePerUnitKpy:Double?,
 ):Parcelable
 
 fun JewelleryCategory.asUiModel():JewelleryCategoryUiModel{
@@ -19,6 +22,9 @@ fun JewelleryCategory.asUiModel():JewelleryCategoryUiModel{
         name=name,
         imageUrl = fileList[0].url,
         isChecked = false,
-        isFrequentlyUse = isFrequentlyUse != "0"
+        isFrequentlyUse = isFrequentlyUse != "0",
+        specification = specification,
+        avgWeightPerUnitGm =avgWeightPerUnitGm,
+        avgWastagePerUnitKpy =avgWastagePerUnitKpy
     )
 }

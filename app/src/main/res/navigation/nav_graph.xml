@@ -160,6 +160,9 @@
             android:name="category"
             app:argType="com.critx.shwemiAdmin.uiModel.setupStock.JewelleryCategoryUiModel"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_addCategoryFragment_to_recommendStockFragment"
+            app:destination="@id/recommendStockFragment" />
     </fragment>
     <fragment
         android:id="@+id/designListFragment"
@@ -173,4 +176,8 @@
             android:id="@+id/action_productCreateFragment_to_setupStockFragment"
             app:destination="@id/setupStockFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/recommendStockFragment"
+        android:name="com.critx.shwemiAdmin.screens.setupStock.fourth.recommendSTock.RecommendStockFragment"
+        android:label="RecommendStockFragment" />
 </navigation>

@@ -24,6 +24,12 @@ class LocalDatabase @Inject constructor(@ApplicationContext context: Context) {
         sharedPref.edit { putString(TOKEN,token) }
     }
 
+    fun updateToken(updatedToken: String){
+        val editor = sharedPref.edit()
+        editor.putString(TOKEN,updatedToken)
+        editor.apply()
+    }
+
     fun getToken(): String? {
         return sharedPref.getString(TOKEN,"")
     }
