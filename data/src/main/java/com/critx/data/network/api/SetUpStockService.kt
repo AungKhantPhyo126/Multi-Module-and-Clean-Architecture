@@ -3,9 +3,7 @@ package com.critx.data.network.api
 import com.critx.data.network.dto.SimpleResponse
 import com.critx.data.network.dto.SimpleResponseDto
 import com.critx.data.network.dto.auth.ProfileDto
-import com.critx.data.network.dto.setupStock.jewelleryCategory.CalculateKPYDto
-import com.critx.data.network.dto.setupStock.jewelleryCategory.DesignDto
-import com.critx.data.network.dto.setupStock.jewelleryCategory.JewelleryCatDto
+import com.critx.data.network.dto.setupStock.jewelleryCategory.*
 import com.critx.data.network.dto.setupStock.jewelleryGroup.CreateGroupDto
 import com.critx.data.network.dto.setupStock.jewelleryGroup.Data
 import com.critx.data.network.dto.setupStock.jewelleryGroup.JewelleryGroupDto
@@ -37,6 +35,12 @@ interface SetUpStockService {
         @Query("jewellery_quality") secondCatId: Int
     ): Response<JewelleryGroupDto>
 
+    @GET("api/categories/{catId}/related_categories")
+    suspend fun getRelatedCat(
+        @Header("Authorization") token: String,
+        @Path("catId")categoryId: String
+    ):Response<JewelleryCatDto>
+
 
     //Create Methods
     @Multipart
@@ -63,6 +67,14 @@ interface SetUpStockService {
         @Part image: MultipartBody.Part?
     ): Response<SimpleResponse>
 
+    @Multipart
+    @POST("api/groups/delete/{groupId}")
+    suspend fun deleteJewelleryGroup(
+        @Header("Authorization") token: String,
+        @Part("_method")methodName:RequestBody,
+        @Path("groupId")groupId:String,
+    ):Response<SimpleResponse>
+
     @GET("api/categories")
     suspend fun getJewelleryCategory(
         @Header("Authorization") token: String,
@@ -83,13 +95,38 @@ interface SetUpStockService {
         @Part("is_frequently_used") isFrequentUsed: RequestBody,
         @Part("name") name: RequestBody,
         @Part("avg_weight_per_unit_gm") avgWeighPerUnitGm: RequestBody,
-        @Part("avg_wastage_per_unit_kpy") avgWastagePerUnitKpy: RequestBody,
+        @Part("avg_wastage_kyat") avgWastageKyat: RequestBody,
+        @Part("avg_wastage_pae") avgWastagePae: RequestBody,
+        @Part("avg_wastage_ywae") avgWastagYwae: RequestBody,
         @Part images:List<MultipartBody.Part>,
         @Part video:MultipartBody.Part,
         @Part("specification") specification: RequestBody,
         @Part("designs[]") design: List<RequestBody>,
         @Part("order_to_goldsmith") orderToGs: RequestBody,
         @Part("related_categories[]") recommendCat:List<RequestBody>
+    ): Response<JewelleryCatCreatedData>
+
+    @JvmSuppressWildcards
+    @Multipart
+    @POST("api/categories/update/{catId}")
+    suspend fun editJewelleryCategory(
+        @Header("Authorization") token: String,
+        @Path("catId") categoryId: String,
+        @Part("_method")methodName:RequestBody,
+        @Part("jewellery_type_id") type: RequestBody,
+        @Part("jewellery_quality_id") quality: RequestBody,
+        @Part("group_id") group: RequestBody,
+        @Part("is_frequently_used") isFrequentUsed: RequestBody,
+        @Part("name") name: RequestBody,
+        @Part("avg_weight_per_unit_gm") avgWeighPerUnitGm: RequestBody,
+        @Part("avg_wastage_kyat") avgWastageKyat: RequestBody,
+        @Part("avg_wastage_pae") avgWastagePae: RequestBody,
+        @Part("avg_wastage_ywae") avgWastagYwae: RequestBody,        @Part images:List<MultipartBody.Part>,
+        @Part video:MultipartBody.Part,
+        @Part("specification") specification: RequestBody,
+        @Part("designs[]") design: List<RequestBody>,
+        @Part("order_to_goldsmith") orderToGs: RequestBody,
+        @Part("related_categories[]") recommendCat:List<RequestBody>?
     ): Response<SimpleResponse>
 
     @POST("api/kpy/calculate")

@@ -23,6 +23,7 @@ import com.critx.shwemiAdmin.databinding.FragmentRecommendStockBinding
 import com.critx.shwemiAdmin.screens.setupStock.fourth.JewelleryCategoryRecyclerAdapter
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.AddCategoryViewModel
 import com.critx.shwemiAdmin.screens.setupStock.third.ChooseCategoryViewModel
+import com.critx.shwemiAdmin.screens.setupStock.third.edit.CREATEED_GROUP_ID
 import com.critx.shwemiAdmin.uiModel.setupStock.asUiModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,6 +39,7 @@ class RecommendStockFragment:Fragment() {
     private lateinit var adapter: RecommendStockAdapter
     private val  viewModel by viewModels<RecommendStockViewModel> ()
     private val  sharedViewModel by activityViewModels<AddCategoryViewModel> ()
+    private val args by navArgs<RecommendStockFragmentArgs>()
 
 
     override fun onCreateView(
@@ -68,18 +70,50 @@ class RecommendStockFragment:Fragment() {
         toolbarsetup()
         loadingDialog = requireContext().getAlertDialog()
         viewModel.getJewelleryCategory(null,null,null,null)
+
         adapter = RecommendStockAdapter({
             viewModel.selectImage(it)
-            collectData()
+            collectSelectedImage()
         },{
 
         })
         binding.rvRecommendStock.adapter =adapter
         collectData()
+
         binding.btnOk.setOnClickListener {
             findNavController().popBackStack()
         }
     }
+    fun collectSelectedImage(){
+        viewLifecycleOwner.lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+                //getJewelleryGroup
+                launch {
+                    viewModel.getRecommendCategory.collect {
+                        if (it.loading) {
+                            loadingDialog.show()
+                        } else loadingDialog.dismiss()
+                        if (it.successLoading != null) {
+                            adapter.submitList(it.successLoading)
+//                            sharedViewModel.selectedRecommendCat?.addAll(it.successLoading!!.filter {
+//                                it.isChecked
+//                            }.map { it.id.toInt() })
+                            findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                                "selected recommend categories",
+                                it.successLoading!!.filter {
+                                    it.isChecked
+                                }.map { it.id.toInt() }
+                            )
+                            adapter.notifyDataSetChanged()
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
     fun collectData(){
         viewLifecycleOwner.lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -92,13 +126,40 @@ class RecommendStockFragment:Fragment() {
                         } else loadingDialog.dismiss()
                         if (it.successLoading != null) {
                             adapter.submitList(it.successLoading)
-                            sharedViewModel.selectedRecommendCat?.addAll(it.successLoading!!.filter {
-                                it.isChecked
-                            }.map { it.id.toInt() })
+                            args.catId?.let {
+                                viewModel.getRelatedCat(it)
+                            }
+//                            sharedViewModel.selectedRecommendCat?.addAll(it.successLoading!!.filter {
+//                                it.isChecked
+//                            }.map { it.id.toInt() })
+                            findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                                "selected recommend categories",
+                                it.successLoading!!.filter {
+                                    it.isChecked
+                                }.map { it.id.toInt() }
+                            )
                             adapter.notifyDataSetChanged()
+                        }
+
+                    }
+                }
+
+                launch {
+                    viewModel.getRelatedCats.collectLatest {
+                        if(it.getRelatedCatsLoading){
+                            loadingDialog.show()
+                        }else loadingDialog.dismiss()
+
+                        if (it.getRelatedCatsSuccessLoading != null){
+                            it.getRelatedCatsSuccessLoading?.forEach {
+                                viewModel.selectImage(it.id)
+                                collectSelectedImage()
+                            }
                         }
                     }
                 }
+
+
 
                 launch {
                     viewModel.event.collectLatest { event ->

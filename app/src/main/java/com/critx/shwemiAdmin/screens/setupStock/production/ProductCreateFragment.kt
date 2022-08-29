@@ -372,19 +372,21 @@ class ProductCreateFragment : Fragment() {
             alertDialog.dismiss()
         }
         successBinding.btnCreateNewItem.setOnClickListener {
+            alertDialog.dismiss()
             findNavController().navigate(ProductCreateFragmentDirections.actionProductCreateFragmentToSetupStockFragment())
 //            findNavController().navigate(ProductSetupFragmentDirections.actionProductSetupFragmentToSetupStockFragment())
-            alertDialog.dismiss()
+
         }
         successBinding.btnPrintLabel.setOnClickListener {
+            alertDialog.dismiss()
             findNavController().navigate(ProductCreateFragmentDirections.actionProductCreateFragmentToSetupStockFragment())
 //            findNavController().navigate(ProductSetupFragmentDirections.actionProductSetupFragmentToSetupStockFragment())
-            alertDialog.dismiss()
         }
         successBinding.btnDone.setOnClickListener {
 //            findNavController().navigate(ProductSetupFragment.)
-            findNavController().navigate(ProductCreateFragmentDirections.actionProductCreateFragmentToSetupStockFragment())
             alertDialog.dismiss()
+            findNavController().navigate(ProductCreateFragmentDirections.actionProductCreateFragmentToSetupStockFragment())
+
         }
     }
 

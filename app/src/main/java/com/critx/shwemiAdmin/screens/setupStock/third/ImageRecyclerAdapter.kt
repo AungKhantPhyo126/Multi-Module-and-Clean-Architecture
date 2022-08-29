@@ -23,6 +23,7 @@ import com.daasuu.bl.BubblePopupHelper
 import kotlinx.coroutines.NonDisposableHandle.parent
 
 class ImageRecyclerAdapter(
+    private val deleteClick:(id:String)->Unit,
     private val onclick: (id: String) -> Unit,
     private val addNewClick: () -> Unit,
     private val navigateToEditClick:(item:ChooseGroupUIModel)->Unit
@@ -52,7 +53,7 @@ class ImageRecyclerAdapter(
             ImageViewHolder(
                 ItemImageSelectionBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
-                ), onclick,navigateToEditClick
+                ),deleteClick, onclick,navigateToEditClick
             )
         } else {
             AddItemViewHolder(
@@ -93,6 +94,7 @@ class AddItemViewHolder(
 
 class ImageViewHolder(
     private val binding: ItemImageSelectionBinding,
+    private val deleteClick: (id: String) -> Unit,
     private val onclick: (id: String) -> Unit,
     private val navigateToEditClick:(item:ChooseGroupUIModel)->Unit
 ) :
@@ -111,6 +113,7 @@ class ImageViewHolder(
                 false
             ).root
             val editView = bubble.findViewById<ImageView>(R.id.iv_edit)
+            val deleteView = bubble.findViewById<ImageView>(R.id.iv_trash)
 
             val popupWindow: PopupWindow = BubblePopupHelper.create(binding.root.context, bubble)
             popupWindow.width = 300
@@ -128,6 +131,10 @@ class ImageViewHolder(
             editView.setOnClickListener {
                 popupWindow.dismiss()
                 navigateToEditClick(data)
+            }
+            deleteView.setOnClickListener {
+                popupWindow.dismiss()
+                deleteClick(data.id)
             }
             return@setOnLongClickListener true
         }

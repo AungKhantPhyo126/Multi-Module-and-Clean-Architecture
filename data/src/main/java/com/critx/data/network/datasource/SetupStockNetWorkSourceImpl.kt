@@ -5,15 +5,15 @@ import com.critx.data.datasource.setupstock.SetupStockNetWorkDatasource
 import com.critx.data.network.api.SetUpStockService
 import com.critx.data.network.dto.SimpleResponse
 import com.critx.data.network.dto.SimpleResponseDto
-import com.critx.data.network.dto.setupStock.jewelleryCategory.CalculateKPYDto
-import com.critx.data.network.dto.setupStock.jewelleryCategory.DesignDto
-import com.critx.data.network.dto.setupStock.jewelleryCategory.JewelleryCatDto
+import com.critx.data.network.dto.setupStock.jewelleryCategory.*
 import com.critx.data.network.dto.setupStock.jewelleryCategory.error.CreateCategoryError
 import com.critx.data.network.dto.setupStock.jewelleryGroup.Data
 import com.critx.data.network.dto.setupStock.jewelleryGroup.JewelleryGroupDto
 import com.critx.data.network.dto.setupStock.jewelleryQuality.JewelleryQualityData
 import com.critx.data.network.dto.setupStock.jewelleryQuality.JewelleryQualityDto
 import com.critx.data.network.dto.setupStock.jewelleryType.JewelleryTypeDto
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.flow.Flow
@@ -154,6 +154,33 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun deleteJewelleryGroup(
+        token: String,
+        method: RequestBody,
+        groupId: String
+    ): SimpleResponse {
+        val response = setUpStockService.deleteJewelleryGroup(
+            token,method,groupId,
+        )
+        return if (response.isSuccessful) {
+            response.body() ?: throw Exception("Response body Null")
+        } else {
+            throw  Exception(
+                when (response.code()) {
+                    400 -> {
+                        response.errorBody()?.parseError<CreateCategoryError>()
+                        "Bad request"
+                    }
+                    401 -> "You are not Authorized"
+                    402 -> "Payment required!!!"
+                    403 -> "Forbidden"
+                    404 -> "You request not found"
+                    405 -> "Method is not allowed!!!"
+                    else -> "Unhandled error occurred!!!"
+                }
+            )
+        }    }
+
     override suspend fun getJewelleryCategory(
         token: String,
         frequentUse: Int?,
@@ -185,6 +212,29 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun getRelatedJewelleryCategories(
+        token: String,
+        categoryId: String
+    ): JewelleryCatDto {
+        val response =
+            setUpStockService.getRelatedCat(token,categoryId)
+        return if (response.isSuccessful) {
+            response.body() ?: throw Exception("Response body Null")
+        } else {
+            throw  Exception(
+                when (response.code()) {
+                    400 -> "Bad request"
+                    401 -> "You are not Authorized"
+                    402 -> "Payment required!!!"
+                    403 -> "Forbidden"
+                    404 -> "You request not found"
+                    405 -> "Method is not allowed!!!"
+                    else -> "Unhandled error occurred!!!"
+                }
+            )
+        }
+    }
+
     override suspend fun createJewelleryCategory(
         token: String,
         jewellery_type_id: RequestBody,
@@ -193,23 +243,73 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         is_frequently_used: RequestBody,
         name: RequestBody,
         avgWeigh: RequestBody,
-        avgWastage: RequestBody,
+        avgKyat:RequestBody,
+        avgPae:RequestBody,
+        avgYwae:RequestBody,
         images: MutableList<MultipartBody.Part>,
         video: MultipartBody.Part,
         specification: RequestBody,
         design: MutableList<RequestBody>,
         orderToGs: RequestBody,
         recommendCat:MutableList<RequestBody>
-    ): SimpleResponse {
+    ): JewelleryCatCreatedData {
         val response = setUpStockService.createJewelleryCategory(
             token,
             jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used, name, avgWeigh,
-            avgWastage, images.toList(), video, specification, design.toList(), orderToGs,recommendCat
+            avgKyat,avgPae,avgYwae, images.toList(), video, specification, design.toList(), orderToGs,recommendCat
         )
         return if (response.isSuccessful) {
             response.body() ?: throw Exception("Response body Null")
         } else {
             throw  Exception(
+                when (response.code()) {
+                    400 -> {
+                        response.errorBody()?.parseError<CreateCategoryError>()
+                        "Bad request"
+                    }
+                    401 -> "You are not Authorized"
+                    402 -> "Payment required!!!"
+                    403 -> "Forbidden"
+                    404 -> "You request not found"
+                    405 -> "Method is not allowed!!!"
+                    else -> "Unhandled error occurred!!!"
+                }
+            )
+        }
+    }
+
+    override suspend fun editJewelleryCategory(
+        token: String,
+        method: RequestBody,
+        categoryId: String,
+        jewellery_type_id: RequestBody,
+        jewellery_quality_id: RequestBody,
+        groupId: RequestBody,
+        is_frequently_used: RequestBody,
+        name: RequestBody,
+        avgWeigh: RequestBody,
+        avgKyat:RequestBody,
+        avgPae:RequestBody,
+        avgYwae:RequestBody,        images: MutableList<MultipartBody.Part>,
+        video: MultipartBody.Part,
+        specification: RequestBody,
+        design: MutableList<RequestBody>,
+        orderToGs: RequestBody,
+        recommendCat: MutableList<RequestBody>
+    ): SimpleResponse {
+        val response = setUpStockService.editJewelleryCategory(
+            token,categoryId,method,
+            jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used, name, avgWeigh,
+            avgKyat,avgPae,avgYwae, images.toList(), video, specification, design.toList(), orderToGs,recommendCat
+        )
+        return if (response.isSuccessful) {
+            response.body() ?: throw Exception("Response body Null")
+        } else {
+            val gson = Gson()
+            val type = object : TypeToken<CreateCategoryError>() {}.type
+            var errorResponse: CreateCategoryError? = gson.fromJson(response.errorBody()!!.charStream(), type)
+            throw  Exception(
+
                 when (response.code()) {
                     400 -> {
                         response.errorBody()?.parseError<CreateCategoryError>()
@@ -306,6 +406,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
+                        response.errorBody()?.parseError<CreateCategoryError>()
                         "Bad request"
                     }
                     401 -> "You are not Authorized"

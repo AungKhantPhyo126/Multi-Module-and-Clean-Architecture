@@ -58,7 +58,7 @@
 
             <TextView
                 android:id="@+id/tv_label_stock_code"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/stock_code"
@@ -78,7 +78,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/tv_label_stock_code"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/tv_label_stock_code"
+                app:layout_constraintStart_toStartOf="@+id/guideline2"
                 app:layout_constraintTop_toTopOf="@+id/tv_label_stock_code"
                 tools:text="1231241234" />
 
@@ -226,6 +226,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="GemValue"
+                android:buttonTint="@color/primary_color"
                 app:layout_constraintEnd_toStartOf="@+id/guideline2"
                 app:layout_constraintStart_toStartOf="@+id/tv_label_avg_wastage"
                 app:layout_constraintTop_toBottomOf="@+id/til_k" />

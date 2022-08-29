@@ -39,6 +39,12 @@ interface SetupStockRepository {
         name : RequestBody
     ):Flow<Resource<SimpleData>>
 
+    fun deleteJewelleryGroup(
+        token: String,
+        method:RequestBody,
+        groupId: String,
+    ):Flow<Resource<SimpleData>>
+
 
     fun getJewelleryCategory(token:String,frequentUse:Int?,firstCatId:Int?,secondCatId:Int?,thirdCatId:Int?):
             Flow<Resource<List<JewelleryCategory>>>
@@ -50,14 +56,42 @@ interface SetupStockRepository {
         is_frequently_used : RequestBody,
         name : RequestBody,
         avgWeigh:RequestBody,
-        avgWastage:RequestBody,
+        avgKyat:RequestBody,
+        avgPae:RequestBody,
+        avgYwae:RequestBody,
         images:MutableList<MultipartBody.Part>,
         video:MultipartBody.Part,
         specification:RequestBody,
         design:MutableList<RequestBody>,
         orderToGs:RequestBody,
         recommendCat:MutableList<RequestBody>
+    ):Flow<Resource<JewelleryCategory>>
+
+    fun editJewelleryCategory(
+        token: String,
+        method:RequestBody,
+        categoryId: String,
+        jewellery_type_id : RequestBody,
+        jewellery_quality_id : RequestBody,
+        groupId:RequestBody,
+        is_frequently_used : RequestBody,
+        name : RequestBody,
+        avgWeigh:RequestBody,
+        avgKyat:RequestBody,
+        avgPae:RequestBody,
+        avgYwae:RequestBody,        images:MutableList<MultipartBody.Part>,
+        video:MultipartBody.Part,
+        specification:RequestBody,
+        design:MutableList<RequestBody>,
+        orderToGs:RequestBody,
+        recommendCat:MutableList<RequestBody>
     ):Flow<Resource<SimpleData>>
+
+    fun getRelatedCategories(
+        token:String,
+        categoryId: String
+    ):Flow<Resource<List<JewelleryCategory>>>
+
     fun calculateKPYtoGram(
         token:String,
         kyat:Double,

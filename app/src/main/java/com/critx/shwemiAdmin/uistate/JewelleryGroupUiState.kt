@@ -13,5 +13,9 @@ data class JewelleryGroupUiState(
 
     var editGroupLoading:Boolean = false,
     var editSuccessLoading:String? = null,
-    var editErrorMessage:String? = null
+    var editErrorMessage:String? = null,
+
+    var deleteGroupLoading:Boolean = false,
+    var deleteSuccessLoading:String? = null,
+    var deleteErrorMessage:String? = null
 )

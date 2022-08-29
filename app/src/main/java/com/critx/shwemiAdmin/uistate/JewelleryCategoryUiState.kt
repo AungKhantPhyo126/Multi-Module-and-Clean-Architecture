@@ -8,8 +8,16 @@ data class JewelleryCategoryUiState(
     var successLoading: List<JewelleryCategoryUiModel>? = null,
     var errorMessage:String? =null,
     var createLoading:Boolean = false,
-    var createSuccessLoading:String? = null,
+    var createSuccessLoading:JewelleryCategoryUiModel? = null,
     var createErrorMessage:String? = null,
+
+    var editLoading:Boolean = false,
+    var editSuccessLoading:String? = null,
+    var editErrorMessage:String? = null,
+
+    var getRelatedCatsLoading:Boolean = false,
+    var getRelatedCatsSuccessLoading:List<JewelleryCategoryUiModel>? = null,
+    var getRelatedCatsErrorMessage:String? = null,
 
     var calculateKPYLoading:Boolean =false,
     var calculateKPYSuccessLoading:Double? =null,

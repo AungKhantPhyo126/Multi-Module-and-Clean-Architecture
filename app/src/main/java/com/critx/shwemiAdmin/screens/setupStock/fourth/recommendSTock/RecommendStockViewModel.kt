@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
 import com.critx.domain.useCase.SetUpStock.GetJewelleryCategoryUseCase
+import com.critx.domain.useCase.SetUpStock.GetRelatedCategoryUseCase
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryCategoryUiModel
@@ -17,12 +18,16 @@ import javax.inject.Inject
 @HiltViewModel
 class RecommendStockViewModel @Inject constructor(
     private val localDatabase: LocalDatabase,
-    private val getJewelleryCategoryUseCase: GetJewelleryCategoryUseCase
+    private val getJewelleryCategoryUseCase: GetJewelleryCategoryUseCase,
+    private val getRelatedCategoryUseCase: GetRelatedCategoryUseCase
 ) : ViewModel() {
 
 
     private val _getRecommendCategory = MutableStateFlow(JewelleryCategoryUiState())
     val getRecommendCategory = _getRecommendCategory.asStateFlow()
+
+    private val _getRelatedCats = MutableStateFlow(JewelleryCategoryUiState())
+    val getRelatedCats = _getRelatedCats.asStateFlow()
 
     private var _event = MutableSharedFlow<UiEvent>()
     val event = _event.asSharedFlow()
@@ -81,6 +86,42 @@ class RecommendStockViewModel @Inject constructor(
 
         }
 
+    }
+
+    fun getRelatedCat(id:String){
+        viewModelScope.launch {
+            getRelatedCategoryUseCase(localDatabase.getToken().orEmpty(),id).collectLatest { result ->
+                when (result) {
+                    is Resource.Loading -> {
+                        _getRelatedCats.value = _getRelatedCats.value.copy(
+                            getRelatedCatsLoading = true
+                        )
+                    }
+                    is Resource.Success -> {
+                        _getRelatedCats.update { uiState ->
+
+                            uiState.copy(
+                                getRelatedCatsLoading = false,
+                                getRelatedCatsSuccessLoading = result.data!!.map { it.asUiModel() }
+                            )
+                        }
+
+//                        result.data?.forEach {
+//                            selectImage(it.id)
+//                        }
+                    }
+                    is Resource.Error -> {
+                        _getRelatedCats.value = _getRelatedCats.value.copy(
+                            getRelatedCatsLoading = false,
+                        )
+                        result.message?.let { errorString ->
+                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
+                        }
+                    }
+                }
+
+            }
+        }
     }
 
 

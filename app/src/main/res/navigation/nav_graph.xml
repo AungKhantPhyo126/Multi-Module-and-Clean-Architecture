@@ -179,5 +179,14 @@
     <fragment
         android:id="@+id/recommendStockFragment"
         android:name="com.critx.shwemiAdmin.screens.setupStock.fourth.recommendSTock.RecommendStockFragment"
-        android:label="RecommendStockFragment" />
+        android:label="RecommendStockFragment" >
+        <argument
+            android:name="recommendStockId"
+            app:argType="string[]"
+            app:nullable="true" />
+        <argument
+            android:name="catId"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
 </navigation>

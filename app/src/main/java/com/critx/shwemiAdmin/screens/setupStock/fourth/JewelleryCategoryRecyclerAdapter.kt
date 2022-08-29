@@ -39,7 +39,7 @@ class JewelleryCategoryRecyclerAdapter(
 //    var tracker: SelectionTracker<Long>? = null
     override fun getItemViewType(position: Int): Int {
 
-        return if (position == itemCount-1) addItemViewType
+        return if (position == 0) addItemViewType
         else itemViewType;
     }
 
@@ -67,7 +67,7 @@ class JewelleryCategoryRecyclerAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ImageViewHolder -> {
-                holder.bind(getItem(position))
+                holder.bind(getItem(position-1))
             }
             is AddItemViewHolder -> {
                 holder.bind()
@@ -99,7 +99,7 @@ class ImageViewHolder(
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(data: JewelleryCategoryUiModel) {
-        binding.ivImage.loadImageWithGlide(data.imageUrl)
+        binding.ivImage.loadImageWithGlide(data.imageUrlList[0])
         binding.mcvImageCard.setOnClickListener {
             onclick(data.id)
         }

@@ -135,6 +135,7 @@
                 android:id="@+id/edt_avg_weight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="number"
                 android:textAppearance="@style/TextAppearance.ShweMi.Body2"
                 android:hint="@string/enter_weight_in_gm" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -153,6 +154,8 @@
                 android:id="@+id/edt_y"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="number"
+
                 android:hint="@string/y" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -171,6 +174,7 @@
                 android:id="@+id/edt_p"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="number"
                 android:hint="P" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -190,6 +194,7 @@
                 android:id="@+id/edt_k"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="number"
                 android:hint="K" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -264,8 +269,8 @@
 
                 <ImageView
                     android:id="@+id/iv_image1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:scaleType="fitXY"
                     android:src="@drawable/empty_picture" />
             </LinearLayout>
@@ -291,8 +296,8 @@
 
                 <ImageView
                     android:id="@+id/iv_image2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:scaleType="fitXY"
                     android:src="@drawable/empty_picture" />
             </LinearLayout>
@@ -316,8 +321,8 @@
 
                 <ImageView
                     android:id="@+id/iv_image3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:scaleType="fitXY"
                     android:src="@drawable/empty_picture" />
             </LinearLayout>
@@ -353,8 +358,8 @@
 
                 <ImageView
                     android:id="@+id/iv_video"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:background="@drawable/empty_picture"
                     android:scaleType="fitXY"
                      />
@@ -382,8 +387,8 @@
 
                 <ImageView
                     android:id="@+id/iv_gif"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:scaleType="fitXY"
                     android:src="@drawable/empty_picture" />
             </LinearLayout>

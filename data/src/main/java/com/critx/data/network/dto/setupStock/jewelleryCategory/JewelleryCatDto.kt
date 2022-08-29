@@ -11,6 +11,10 @@ data class JewelleryCatDto(
     val data:List<JewelleryCategoryData>
 )
 
+data class JewelleryCatCreatedData(
+    val data:JewelleryCategoryData
+)
+
 data class JewelleryCategoryData(
     val id:String,
     val name:String,

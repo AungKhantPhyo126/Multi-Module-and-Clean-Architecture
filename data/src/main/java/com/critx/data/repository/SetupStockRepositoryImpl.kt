@@ -5,6 +5,7 @@ import com.critx.data.GetErrorMessage
 import com.critx.data.datasource.setupstock.SetupStockNetWorkDatasource
 import com.critx.data.network.dto.asDomain
 import com.critx.data.network.dto.auth.asDomain
+import com.critx.data.network.dto.setupStock.jewelleryCategory.JewelleryCategoryData
 import com.critx.data.network.dto.setupStock.jewelleryCategory.asDomain
 import com.critx.data.network.dto.setupStock.jewelleryGroup.asDomain
 import com.critx.data.network.dto.setupStock.jewelleryQuality.asDomain
@@ -141,6 +142,32 @@ class SetupStockRepositoryImpl @Inject constructor(
                 emit(Resource.Error(e.message ?: "Unhandled Error"))
             }
         }
+
+    override fun deleteJewelleryGroup(
+        token: String,
+        method: RequestBody,
+        groupId: String
+    ): Flow<Resource<SimpleData>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        setupStockNetWorkDatasource.deleteJewelleryGroup(
+                            token,method,
+                            groupId,
+                        ).response.asDomain()
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
+
     override fun getJewelleryCategory(
         token: String,
         frequentUse: Int?,
@@ -173,7 +200,9 @@ class SetupStockRepositoryImpl @Inject constructor(
         is_frequently_used: RequestBody,
         name: RequestBody,
         avgWeigh: RequestBody,
-        avgWastage: RequestBody,
+        avgKyat:RequestBody,
+        avgPae:RequestBody,
+        avgYwae:RequestBody,
         images: MutableList<MultipartBody.Part>,
         video: MultipartBody.Part,
         specification: RequestBody,
@@ -181,15 +210,74 @@ class SetupStockRepositoryImpl @Inject constructor(
         orderToGs:RequestBody,
         recommendCat:MutableList<RequestBody>
 
-    ): Flow<Resource<SimpleData>> =
+    ): Flow<Resource<JewelleryCategory>> =
         flow {
             emit(Resource.Loading())
             try {
                 emit(
                     Resource.Success(
                         setupStockNetWorkDatasource.createJewelleryCategory(
-                            token, jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used, name, avgWeigh, avgWastage, images, video, specification, design,orderToGs
-                        ,recommendCat).response.asDomain()
+                            token, jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used, name, avgWeigh, avgKyat,avgPae,avgYwae, images, video, specification, design,orderToGs
+                        ,recommendCat).data.asDomain()
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
+
+    override fun editJewelleryCategory(
+        token: String,
+        method: RequestBody,
+        categoryId: String,
+        jewellery_type_id: RequestBody,
+        jewellery_quality_id: RequestBody,
+        groupId: RequestBody,
+        is_frequently_used: RequestBody,
+        name: RequestBody,
+        avgWeigh: RequestBody,
+        avgKyat:RequestBody,
+        avgPae:RequestBody,
+        avgYwae:RequestBody,        images: MutableList<MultipartBody.Part>,
+        video: MultipartBody.Part,
+        specification: RequestBody,
+        design: MutableList<RequestBody>,
+        orderToGs: RequestBody,
+        recommendCat: MutableList<RequestBody>
+    ): Flow<Resource<SimpleData>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        setupStockNetWorkDatasource.editJewelleryCategory(
+                            token, method,categoryId,jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used, name, avgWeigh, avgKyat,avgPae,avgYwae, images, video, specification, design,orderToGs
+                            ,recommendCat).response.asDomain()
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
+
+    override fun getRelatedCategories(
+        token: String,
+        categoryId: String
+    ): Flow<Resource<List<JewelleryCategory>>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        setupStockNetWorkDatasource.getRelatedJewelleryCategories(token,categoryId).data.map { it.asDomain() }
                     )
                 )
             } catch (e: HttpException) {

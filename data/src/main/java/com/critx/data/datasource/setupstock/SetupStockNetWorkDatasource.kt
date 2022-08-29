@@ -3,10 +3,7 @@ package com.critx.data.datasource.setupstock
 import com.critx.commonkotlin.util.Resource
 import com.critx.data.network.dto.SimpleResponse
 import com.critx.data.network.dto.SimpleResponseDto
-import com.critx.data.network.dto.setupStock.jewelleryCategory.CalculateKPYDto
-import com.critx.data.network.dto.setupStock.jewelleryCategory.DesignDto
-import com.critx.data.network.dto.setupStock.jewelleryCategory.JewelleryCatDto
-import com.critx.data.network.dto.setupStock.jewelleryCategory.JewelleryCategoryData
+import com.critx.data.network.dto.setupStock.jewelleryCategory.*
 import com.critx.data.network.dto.setupStock.jewelleryGroup.Data
 import com.critx.data.network.dto.setupStock.jewelleryGroup.JewelleryGroupDto
 import com.critx.data.network.dto.setupStock.jewelleryQuality.JewelleryQualityData
@@ -38,16 +35,22 @@ interface SetupStockNetWorkDatasource {
         name: RequestBody
     ): Data
 
-    suspend fun  editJewelleryGroup(
+    suspend fun editJewelleryGroup(
         token: String,
-        method:RequestBody,
-        groupId:String,
+        method: RequestBody,
+        groupId: String,
         image: MultipartBody.Part,
         jewellery_type_id: RequestBody,
         jewellery_quality_id: RequestBody,
         is_frequently_used: RequestBody,
         name: RequestBody
-    ):SimpleResponse
+    ): SimpleResponse
+
+    suspend fun deleteJewelleryGroup(
+        token: String,
+        method: RequestBody,
+        groupId: String,
+    ): SimpleResponse
 
     suspend fun getJewelleryCategory(
         token: String,
@@ -55,8 +58,12 @@ interface SetupStockNetWorkDatasource {
         firstCatId: Int?,
         secondCatId: Int?,
         thirdCatId: Int?
-    )
-            : JewelleryCatDto
+    ): JewelleryCatDto
+
+    suspend fun getRelatedJewelleryCategories(
+        token: String,
+        categoryId: String
+    ):JewelleryCatDto
 
     suspend fun createJewelleryCategory(
         token: String,
@@ -66,14 +73,36 @@ interface SetupStockNetWorkDatasource {
         is_frequently_used: RequestBody,
         name: RequestBody,
         avgWeigh: RequestBody,
-        avgWastage: RequestBody,
+        avgKyat:RequestBody,
+        avgPae:RequestBody,
+        avgYwae:RequestBody,
         images: MutableList<MultipartBody.Part>,
         video: MultipartBody.Part,
         specification: RequestBody,
         design: MutableList<RequestBody>,
         orderToGs: RequestBody,
-        recommendCat:MutableList<RequestBody>
+        recommendCat: MutableList<RequestBody>
+    ): JewelleryCatCreatedData
 
+    suspend fun editJewelleryCategory(
+        token: String,
+        method: RequestBody,
+        categoryId: String,
+        jewellery_type_id: RequestBody,
+        jewellery_quality_id: RequestBody,
+        groupId: RequestBody,
+        is_frequently_used: RequestBody,
+        name: RequestBody,
+        avgWeigh: RequestBody,
+        avgKyat:RequestBody,
+        avgPae:RequestBody,
+        avgYwae:RequestBody,
+        images: MutableList<MultipartBody.Part>,
+        video: MultipartBody.Part,
+        specification: RequestBody,
+        design: MutableList<RequestBody>,
+        orderToGs: RequestBody,
+        recommendCat: MutableList<RequestBody>
     ): SimpleResponse
 
     suspend fun calculateKPYtoGram(
@@ -108,5 +137,5 @@ interface SetupStockNetWorkDatasource {
         diamondValueForSale: RequestBody?,
         images: List<MultipartBody.Part>,
         video: MultipartBody.Part,
-    ):SimpleResponse
+    ): SimpleResponse
 }

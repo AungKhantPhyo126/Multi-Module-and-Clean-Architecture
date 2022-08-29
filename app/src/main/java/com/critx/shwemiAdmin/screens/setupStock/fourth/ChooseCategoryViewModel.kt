@@ -5,6 +5,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.critx.commonkotlin.util.Resource
+import com.critx.domain.model.SetupStock.jewelleryCategory.JewelleryCategory
 import com.critx.domain.useCase.SetUpStock.CreateJewelleryGroupUseCase
 import com.critx.domain.useCase.SetUpStock.GetJewelleryCategoryUseCase
 import com.critx.domain.useCase.SetUpStock.GetJewelleryGroupUseCase
@@ -28,7 +29,13 @@ class ChooseCategoryViewModel @Inject constructor(
 ) : ViewModel() {
     //forselection
 
-    var selectedJewelleryCategory : JewelleryCategoryUiModel? = null
+    var selectedJewelleryCategory = MutableLiveData<JewelleryCategoryUiModel?>(null)
+    val _selectedJewelleryCategory:LiveData<JewelleryCategoryUiModel?>
+    get() = selectedJewelleryCategory
+
+    fun setSelectedCategory(item:JewelleryCategoryUiModel?){
+        selectedJewelleryCategory.value = item
+    }
 
     private val _getJewelleryCategory = MutableStateFlow(JewelleryCategoryUiState())
     val getJewelleryCategory = _getJewelleryCategory.asStateFlow()
@@ -92,7 +99,7 @@ class ChooseCategoryViewModel @Inject constructor(
             groupImageList.find {
                 it.id == id
             }?.let {
-                selectedJewelleryCategory = if (it.isChecked){
+                selectedJewelleryCategory.value = if (it.isChecked){
                     it
                 }else{
                     null

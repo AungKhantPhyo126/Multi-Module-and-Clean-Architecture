@@ -8,7 +8,8 @@ import kotlinx.android.parcel.Parcelize
 data class JewelleryCategoryUiModel(
     val id:String,
     val name:String,
-    val imageUrl:String,
+    val imageUrlList:List<String>,
+    val video:String?,
     var isChecked:Boolean,
     var isFrequentlyUse:Boolean,
     val specification : String?,
@@ -20,11 +21,12 @@ fun JewelleryCategory.asUiModel():JewelleryCategoryUiModel{
     return JewelleryCategoryUiModel(
         id = id,
         name=name,
-        imageUrl = fileList[0].url,
+        imageUrlList = fileList.filter { it.type == "image" }.map { it.url },
         isChecked = false,
         isFrequentlyUse = isFrequentlyUse != "0",
         specification = specification,
         avgWeightPerUnitGm =avgWeightPerUnitGm,
-        avgWastagePerUnitKpy =avgWastagePerUnitKpy
+        avgWastagePerUnitKpy =avgWastagePerUnitKpy,
+        video = fileList.find { it.type == "video" }?.url
     )
 }

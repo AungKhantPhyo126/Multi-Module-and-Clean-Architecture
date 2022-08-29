@@ -93,7 +93,7 @@ class ImageViewHolder(
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(data: JewelleryCategoryUiModel) {
-        binding.ivImage.loadImageWithGlide(data.imageUrl)
+        binding.ivImage.loadImageWithGlide(data.imageUrlList[0])
         binding.mcvImageCard.setOnClickListener {
             onclick(data.id)
         }

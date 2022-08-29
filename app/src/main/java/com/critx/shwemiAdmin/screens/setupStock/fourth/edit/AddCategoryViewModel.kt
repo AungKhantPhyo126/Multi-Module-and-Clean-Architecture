@@ -2,6 +2,7 @@ package com.critx.shwemiAdmin.screens.setupStock.fourth.edit
 
 import android.graphics.Bitmap
 import android.net.Uri
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
@@ -27,22 +28,46 @@ import javax.inject.Inject
 @HiltViewModel
 class AddCategoryViewModel @Inject constructor(
     private val createJewelleryCategoryUseCase: CreateJewelleryCategoryUseCase,
+    private val editJewelleryCategoryUseCase: EditJewelleryCategoryUseCase,
     private val calculateKPYUseCase: CalculateKPYUseCase,
     private val getDesignListUseCase: GetDesignListUseCase,
     private val localDatabase: LocalDatabase
-):ViewModel() {
-    var selectedImgUri1: SelectedImage? = null
-    var selectedImgUri2: SelectedImage? = null
-    var selectedImgUri3: SelectedImage? = null
-    var selectedVideoUri: File? = null
-    var selectedGifUri: File? = null
+) : ViewModel() {
+    var selectedImgUri1 = MutableLiveData<SelectedImage?>(null)
+    var selectedImgUri2 = MutableLiveData<SelectedImage?>(null)
+    var selectedImgUri3 = MutableLiveData<SelectedImage?>(null)
+    var selectedVideoUri = MutableLiveData<File>()
+    var selectedGifUri = MutableLiveData<SelectedImage?>(null)
     var calculatedKPYtoGram: Double? = null
-    var selectedDesignIds:MutableList<Int>? = null
-    var selectedRecommendCat:MutableList<Int>? = null
+    var selectedDesignIds: MutableList<Int>? = null
+    var selectedRecommendCat = MutableLiveData<List<Int>?>()
+
+    fun setSelectedImgUri1(selectedImage: SelectedImage?) {
+        selectedImgUri1.value = selectedImage
+    }
+
+    fun setSelectedImgUri2(selectedImage: SelectedImage?) {
+        selectedImgUri2?.value = selectedImage
+    }
+
+    fun setSelectedImgUri3(selectedImage: SelectedImage?) {
+        selectedImgUri3?.value = selectedImage
+    }
+
+    fun setSelectedGif(selectedImage: SelectedImage?) {
+        selectedGifUri?.value = selectedImage
+    }
+
+    fun setSelectedVideo(selectedVideo: File) {
+        selectedVideoUri?.value = selectedVideo
+    }
+
+    fun setSelectedRecommendCat(selectedCats: List<Int>) {
+        selectedRecommendCat?.value = selectedCats
+    }
 
     private val _createJewelleryCategory = MutableStateFlow(JewelleryCategoryUiState())
     val createJewelleryCategoryState = _createJewelleryCategory.asStateFlow()
-
 
 
     private val _getDesign = MutableStateFlow(DesignUiState())
@@ -52,99 +77,167 @@ class AddCategoryViewModel @Inject constructor(
     private var _event = MutableSharedFlow<UiEvent>()
     val event = _event.asSharedFlow()
 
+    private val _editJewelleryCategoryState = MutableStateFlow(JewelleryCategoryUiState())
+    val editJewelleryCategoryState = _editJewelleryCategoryState.asStateFlow()
+
 
     fun createJewelleryCategory(
-        jewellery_type_id : RequestBody,
-        jewellery_quality_id : RequestBody,
-        groupId:RequestBody,
-        is_frequently_used : RequestBody,
-        name : RequestBody,
-        avgWeigh:RequestBody,
-        images:MutableList<MultipartBody.Part>,
-        video:MultipartBody.Part,
-        specification:RequestBody,
-        design:MutableList<RequestBody>,
-        orderToGs:RequestBody,
-        kyat:Double,pae:Double,ywae:Double,
-        recommendCat:MutableList<RequestBody>
+        jewellery_type_id: RequestBody,
+        jewellery_quality_id: RequestBody,
+        groupId: RequestBody,
+        is_frequently_used: RequestBody,
+        name: RequestBody,
+        avgWeigh: RequestBody,
+        images: MutableList<MultipartBody.Part>,
+        video: MultipartBody.Part,
+        specification: RequestBody,
+        design: MutableList<RequestBody>,
+        orderToGs: RequestBody,
+        avgKyat: RequestBody,
+        avgPae: RequestBody,
+        avgYwae: RequestBody,
+        recommendCat: MutableList<RequestBody>
 
-    ){
+    ) {
         viewModelScope.launch {
             //calculate kyp
-            calculateKPYUseCase(localDatabase.getToken().orEmpty(),kyat,pae,ywae).collectLatest {
-                when(it){
-                    is Resource.Loading->{
-                        _createJewelleryCategory.value =_createJewelleryCategory.value.copy(
-                            calculateKPYLoading = true
+            createJewelleryCategoryUseCase(
+                localDatabase.getToken().orEmpty(),
+                jewellery_type_id,
+                jewellery_quality_id,
+                groupId,
+                is_frequently_used,
+                name,
+                avgWeigh,
+                avgKyat,
+                avgPae,
+                avgYwae,
+                images,
+                video,
+                specification,
+                design,
+                orderToGs,
+                recommendCat
+            ).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _createJewelleryCategory.value = _createJewelleryCategory.value.copy(
+                            createLoading = true
                         )
                     }
-                    is Resource.Success->{
-                        _createJewelleryCategory.value =_createJewelleryCategory.value.copy(
-                            calculateKPYLoading = false,
-                            calculateKPYSuccessLoading = it.data?.gram?:0.0
+                    is Resource.Success -> {
+                        _createJewelleryCategory.value = _createJewelleryCategory.value.copy(
+                            createLoading = false,
+                            createSuccessLoading = it.data!!.asUiModel()
                         )
-                        val avgWastage = it.data?.gram.toString()
-                            .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-                        createJewelleryCategoryUseCase(
-                            localDatabase.getToken().orEmpty(),
-                            jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used, name, avgWeigh, avgWastage, images, video, specification, design,orderToGs,recommendCat
-                        ).collectLatest {
-                            when(it){
-                                is Resource.Loading->{
-                                    _createJewelleryCategory.value =_createJewelleryCategory.value.copy(
-                                        createLoading = true
-                                    )
-                                }
-                                is Resource.Success->{
-                                    _createJewelleryCategory.value =_createJewelleryCategory.value.copy(
-                                        createLoading = false,
-                                        createSuccessLoading = "Category Created"
-                                    )
-                                }
-                                is Resource.Error->{
-                                    _createJewelleryCategory.value =_createJewelleryCategory.value.copy(
-                                        createLoading = false,
-                                    )
-                                    it.message?.let {errorString->
-                                        _event.emit(UiEvent.ShowErrorSnackBar(errorString))
-                                    }
-                                }
-                            }
-                        }
                     }
-                    is Resource.Error->{
-                        _createJewelleryCategory.value =_createJewelleryCategory.value.copy(
-                            calculateKPYLoading = false,
+                    is Resource.Error -> {
+                        _createJewelleryCategory.value = _createJewelleryCategory.value.copy(
+                            createLoading = false
                         )
-                        it.message?.let {errorString->
+                        it.message?.let { errorString ->
                             _event.emit(UiEvent.ShowErrorSnackBar(errorString))
                         }
                     }
                 }
             }
         }
+
     }
 
-    fun getDesign(){
+    fun editJewelleryCategory(
+        categoryId: String,
+        jewellery_type_id: RequestBody,
+        jewellery_quality_id: RequestBody,
+        groupId: RequestBody,
+        is_frequently_used: RequestBody,
+        name: RequestBody,
+        avgWeigh: RequestBody,
+        images: MutableList<MultipartBody.Part>,
+        video: MultipartBody.Part,
+        specification: RequestBody,
+        design: MutableList<RequestBody>,
+        orderToGs: RequestBody,
+        avgKyat: RequestBody,
+        avgPae: RequestBody,
+        avgYwae: RequestBody,
+        recommendCat: MutableList<RequestBody>
+    ) {
+        val method = "PUT"
+        val methodRequestBody = method.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        viewModelScope.launch {
+            //calculate kyp
+            editJewelleryCategoryUseCase(
+                localDatabase.getToken().orEmpty(),
+                methodRequestBody,
+                categoryId,
+                jewellery_type_id,
+                jewellery_quality_id,
+                groupId,
+                is_frequently_used,
+                name,
+                avgWeigh,
+                avgKyat,
+                avgPae,
+                avgYwae,
+                images,
+                video,
+                specification,
+                design,
+                orderToGs,
+                recommendCat
+            ).collectLatest { result ->
+                when (result) {
+                    is Resource.Loading -> {
+                        _editJewelleryCategoryState.value =
+                            _editJewelleryCategoryState.value.copy(
+                                editLoading = true
+                            )
+                    }
+                    is Resource.Success -> {
+                        _editJewelleryCategoryState.value =
+                            _editJewelleryCategoryState.value.copy(
+                                editLoading = false,
+                                editSuccessLoading = "Category Updated"
+                            )
+                    }
+                    is Resource.Error -> {
+                        _editJewelleryCategoryState.value =
+                            _editJewelleryCategoryState.value.copy(
+                                editLoading = false
+                            )
+                        result.message?.let { errorString ->
+                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
+                        }
+                    }
+                }
+            }
+        }
+
+
+    }
+
+
+    fun getDesign() {
         viewModelScope.launch {
             getDesignListUseCase(localDatabase.getToken().orEmpty()).collectLatest {
-                when(it){
-                    is Resource.Loading->{
-                        _getDesign.value =_getDesign.value.copy(
+                when (it) {
+                    is Resource.Loading -> {
+                        _getDesign.value = _getDesign.value.copy(
                             loading = true
                         )
                     }
-                    is Resource.Success->{
-                        _getDesign.value =_getDesign.value.copy(
+                    is Resource.Success -> {
+                        _getDesign.value = _getDesign.value.copy(
                             loading = false,
                             success = it.data!!.map { it.asUiModel() }
                         )
                     }
-                    is Resource.Error->{
-                        _getDesign.value =_getDesign.value.copy(
+                    is Resource.Error -> {
+                        _getDesign.value = _getDesign.value.copy(
                             loading = false,
                         )
-                        it.message?.let {errorString->
+                        it.message?.let { errorString ->
                             _event.emit(UiEvent.ShowErrorSnackBar(errorString))
                         }
                     }
@@ -157,6 +250,6 @@ class AddCategoryViewModel @Inject constructor(
 }
 
 data class SelectedImage(
-    val file:File,
-    val bitMap:Bitmap
+    val file: File,
+    val bitMap: Bitmap
 )

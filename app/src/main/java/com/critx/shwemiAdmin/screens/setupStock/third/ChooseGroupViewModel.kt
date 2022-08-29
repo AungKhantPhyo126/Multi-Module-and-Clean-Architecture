@@ -6,6 +6,7 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.critx.commonkotlin.util.Resource
 import com.critx.domain.useCase.SetUpStock.CreateJewelleryGroupUseCase
+import com.critx.domain.useCase.SetUpStock.DeleteJewelleryGroupUseCase
 import com.critx.domain.useCase.SetUpStock.GetJewelleryGroupUseCase
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
@@ -16,12 +17,15 @@ import com.critx.shwemiAdmin.uistate.JewelleryQualityUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
 
 @HiltViewModel
 class ChooseGroupViewModel @Inject constructor(
     private val localDatabase: LocalDatabase,
-    private val getJewelleryGroupUseCase: GetJewelleryGroupUseCase
+    private val getJewelleryGroupUseCase: GetJewelleryGroupUseCase,
+    private val deleteJewelleryGroupUseCase: DeleteJewelleryGroupUseCase
 ) : ViewModel() {
     //forselection
 
@@ -29,6 +33,9 @@ class ChooseGroupViewModel @Inject constructor(
 
     private val _getGroupState = MutableStateFlow(JewelleryGroupUiState())
     val getGroupState = _getGroupState.asStateFlow()
+
+    private val _deleteGroupState = MutableStateFlow(JewelleryGroupUiState())
+    val deleteGroupState = _deleteGroupState.asStateFlow()
 
     private var _event = MutableSharedFlow<UiEvent>()
     val event = _event.asSharedFlow()
@@ -60,6 +67,41 @@ class ChooseGroupViewModel @Inject constructor(
                     is Resource.Error -> {
                         _getGroupState.value = _getGroupState.value.copy(
                             loading = false,
+                        )
+                        result.message?.let { errorString ->
+                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun deleteJewelleryGroup(id:String){
+        val method = "DELETE"
+        val methodRequestBody =method.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        viewModelScope.launch {
+            deleteJewelleryGroupUseCase(localDatabase.getToken().orEmpty(),methodRequestBody,id
+            ).collectLatest {result->
+                when (result) {
+                    is Resource.Loading -> {
+                        _deleteGroupState.value = _deleteGroupState.value.copy(
+                            deleteGroupLoading = true
+                        )
+                    }
+                    is Resource.Success -> {
+                        _deleteGroupState.update { uiState ->
+                            uiState.copy(
+                                deleteGroupLoading = false,
+                                deleteSuccessLoading = "Successfully Deleted"
+                            )
+                        }
+
+
+                    }
+                    is Resource.Error -> {
+                        _deleteGroupState.value = _deleteGroupState.value.copy(
+                            deleteGroupLoading = false,
                         )
                         result.message?.let { errorString ->
                             _event.emit(UiEvent.ShowErrorSnackBar(errorString))

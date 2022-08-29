@@ -85,11 +85,12 @@ class EditGroupFragment : Fragment() {
                         val imageStream: InputStream =
                             requireContext().contentResolver?.openInputStream(it)!!
                         selectedImage = BitmapFactory.decodeStream(imageStream)
-                        selectedImage = getResizedBitmap(
-                            selectedImage!!,
-                            500
-                        );// 400 is for example, replace with desired size
+//                        selectedImage = getResizedBitmap(
+//                            selectedImage!!,
+//                            500
+//                        );// 400 is for example, replace with desired size
                         binding.ivGroupImage.setImageBitmap(selectedImage)
+                        Log.i("imageResize",selectedImage?.width.toString())
                         val file = getRealPathFromUri(requireContext(), it)?.let { it1 ->
                             File(
                                 it1
@@ -163,7 +164,7 @@ class EditGroupFragment : Fragment() {
                         withContext(Dispatchers.IO) {
                             val originalImage = getBitMapWithGlide(it, requireContext())
                             val fileName: String = it.substring(it.lastIndexOf('/') + 1)
-                            val file = persistImage(originalImage, fileName, requireContext())
+                            val file = convertBitmapToFile( fileName,originalImage, requireContext())
                             val requestBody =
                                 file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
                             photo =
@@ -305,13 +306,11 @@ fun getRealPathFromUri(context: Context, contentUri: Uri): String? {
         cursor?.moveToFirst()
         cursor?.getString(column_index)
     } finally {
-        if (cursor != null) {
-            cursor.close()
-        }
+        cursor?.close()
     }
 }
 
-private fun persistImage(bitmap: Bitmap, name: String, context: Context): File {
+fun persistImage(bitmap: Bitmap, name: String, context: Context): File {
     val filesDir: File = context.filesDir
     val imageFile = File(filesDir, "$name.jpg")
     val os: OutputStream
