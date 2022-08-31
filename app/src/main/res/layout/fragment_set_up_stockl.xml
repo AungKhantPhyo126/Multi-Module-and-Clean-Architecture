@@ -99,8 +99,8 @@
         app:layout_constraintBottom_toTopOf="@id/btn_next">
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group_jewellery_type"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:chipSpacing="8dp"
             app:singleLine="false"
             app:singleSelection="true"

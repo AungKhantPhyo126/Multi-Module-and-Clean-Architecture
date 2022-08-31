@@ -27,6 +27,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -352,6 +353,7 @@ class AddCategoryFragment : Fragment() {
                     requestBody
                 )
             }
+            binding.ivRemove1.isVisible = selectedItem != null
 
 
         }
@@ -369,6 +371,8 @@ class AddCategoryFragment : Fragment() {
                     requestBody
                 )
             }
+            binding.ivRemove2.isVisible = selectedItem != null
+
         }
         viewModel.selectedImgUri3?.observe(viewLifecycleOwner) { selectedItem ->
             selectedItem?.let {
@@ -384,6 +388,8 @@ class AddCategoryFragment : Fragment() {
                     requestBody
                 )
             }
+            binding.ivRemove3.isVisible = selectedItem != null
+
         }
 
         viewModel.selectedGifUri?.observe(viewLifecycleOwner) { selectedItem ->
@@ -400,9 +406,12 @@ class AddCategoryFragment : Fragment() {
                     requestBody
                 )
             }
+            binding.ivRemoveGif.isVisible = selectedItem != null
+
 
         }
         viewModel.selectedVideoUri?.observe(viewLifecycleOwner) { selectedItem ->
+            binding.ivRemoveGif.isVisible = selectedItem != null
             val thumbnail = ThumbnailUtils.createVideoThumbnail(
                 selectedItem,
                 Size(500, 500), CancellationSignal()

@@ -131,7 +131,12 @@ class ChooseGroupFragment : Fragment() {
                                 CREATEED_GROUP_ID
                             )
                                 ?.observe(viewLifecycleOwner) {
-                                    viewModel.setSelectGroup(it)
+                                    if(
+                                        findNavController().previousBackStackEntry?.destination?.id == R.id.editGroupFragment ||
+                                        findNavController().previousBackStackEntry?.destination?.id == R.id.chooseCategoryFragment
+                                    ){
+                                        viewModel.setSelectGroup(it)
+                                    }
                                 }
                             setupChipView(it.successLoading.orEmpty())
                         }
@@ -145,8 +150,10 @@ class ChooseGroupFragment : Fragment() {
                         } else loadingDialog.dismiss()
 
                         if (it.deleteSuccessLoading != null) {
+                            viewModel.setSelectGroup(null)
                             requireContext().showSuccessDialog("Group Deleted") {
-                                viewModel.setSelectGroup(null)
+
+                                it.deleteSuccessLoading = null
                                 refreshData()
                             }
                         }
@@ -297,6 +304,8 @@ class ChooseGroupFragment : Fragment() {
 
         if (viewModel.selectedChooseGroupUIModel.value != null){
             binding.chipGroupChooseGp.check(viewModel.selectedChooseGroupUIModel.value!!.id.toInt())
+        }else{
+            binding.tvThirdCat.isVisible=false
         }
 
         addChipView.setOnClickListener {
