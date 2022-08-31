@@ -87,21 +87,30 @@
         android:textAppearance="@style/TextAppearance.ShweMi.Headline6"
         app:layout_constraintStart_toStartOf="@+id/view"
         app:layout_constraintTop_toBottomOf="@+id/view" />
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chip_group_jewellery_type"
+    <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        app:chipSpacing="8dp"
-        app:singleLine="false"
-        app:singleSelection="true"
+        android:orientation="vertical"
+        android:fillViewport="true"
+        android:layout_margin="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_label_item"
         app:layout_constraintBottom_toTopOf="@id/btn_next">
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group_jewellery_type"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:chipSpacing="8dp"
+            app:singleLine="false"
+            app:singleSelection="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_label_item"
+            app:layout_constraintBottom_toTopOf="@id/btn_next">
 
-    </com.google.android.material.chip.ChipGroup>
+        </com.google.android.material.chip.ChipGroup>
+    </ScrollView>
 
     <Button
         android:id="@+id/btn_next"
@@ -111,6 +120,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:text="@string/next"
+        android:paddingVertical="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
