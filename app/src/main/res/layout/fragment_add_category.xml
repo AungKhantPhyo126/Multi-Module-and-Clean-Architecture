@@ -262,18 +262,31 @@
             app:layout_constraintStart_toStartOf="@+id/til_specification"
             app:layout_constraintTop_toBottomOf="@+id/til_specification">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center">
+                android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/iv_image1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
-                    android:src="@drawable/empty_picture" />
-            </LinearLayout>
+                    android:src="@drawable/empty_picture"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/iv_remove1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_trash_can"
+                    android:layout_margin="8dp"
+                    app:layout_constraintEnd_toEndOf="@id/iv_image1"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/primary_color" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
@@ -289,18 +302,31 @@
             app:layout_constraintStart_toEndOf="@+id/mcv_img_3"
             app:layout_constraintTop_toTopOf="@+id/mcv_img_3">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center">
+                android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/iv_image2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
-                    android:src="@drawable/empty_picture" />
-            </LinearLayout>
+                    android:src="@drawable/empty_picture"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/iv_remove2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_trash_can"
+                    android:layout_margin="8dp"
+                    app:layout_constraintEnd_toEndOf="@id/iv_image2"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/primary_color" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
@@ -314,18 +340,31 @@
             app:layout_constraintStart_toEndOf="@+id/mcv_img_1"
             app:layout_constraintTop_toTopOf="@+id/mcv_img_1">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center">
+                android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/iv_image3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
-                    android:src="@drawable/empty_picture" />
-            </LinearLayout>
+                    android:src="@drawable/empty_picture"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/iv_remove3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_trash_can"
+                    android:layout_margin="8dp"
+                    app:layout_constraintEnd_toEndOf="@id/iv_image3"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/primary_color" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
         <TextView
             android:id="@+id/tv_label_image"
@@ -351,19 +390,31 @@
             app:layout_constraintStart_toStartOf="@+id/til_specification"
             app:layout_constraintTop_toBottomOf="@+id/mcv_img_1">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center">
+                android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/iv_video"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/empty_picture"
                     android:scaleType="fitXY"
-                     />
-            </LinearLayout>
+                    android:src="@drawable/empty_picture"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/iv_remove_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_trash_can"
+                    android:layout_margin="8dp"
+                    app:layout_constraintEnd_toEndOf="@id/iv_video"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/primary_color" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
@@ -380,18 +431,31 @@
             app:layout_constraintStart_toStartOf="@+id/mcv_img_3"
             app:layout_constraintTop_toTopOf="@+id/mcv_video">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center">
+                android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/iv_gif"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
-                    android:src="@drawable/empty_picture" />
-            </LinearLayout>
+                    android:src="@drawable/empty_picture"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/iv_remove_gif"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_trash_can"
+                    android:layout_margin="8dp"
+                    app:layout_constraintEnd_toEndOf="@id/iv_gif"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/primary_color" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
         <TextView
             android:id="@+id/tv_label_video_gif"

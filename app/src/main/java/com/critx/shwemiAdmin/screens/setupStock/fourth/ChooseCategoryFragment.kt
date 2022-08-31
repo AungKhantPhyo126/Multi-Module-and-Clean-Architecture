@@ -51,9 +51,7 @@ class ChooseCategoryFragment : Fragment() {
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
     private lateinit var adapter: JewelleryCategoryRecyclerAdapter
-
-        private val sharedViewModel by activityViewModels<SharedViewModel>()
-    private val forBackPressViewModel by activityViewModels<ChooseGroupViewModel>()
+    private val sharedViewModel by activityViewModels<SharedViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
