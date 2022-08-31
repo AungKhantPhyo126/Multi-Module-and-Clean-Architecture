@@ -29,7 +29,10 @@ class ChooseGroupViewModel @Inject constructor(
 ) : ViewModel() {
     //forselection
 
-    var selectedChooseGroupUIModel : ChooseGroupUIModel? = null
+    var selectedChooseGroupUIModel = MutableLiveData<ChooseGroupUIModel?>(null)
+    fun setSelectGroup(selecctedGroup:ChooseGroupUIModel?){
+        selectedChooseGroupUIModel.value=selecctedGroup
+    }
 
     private val _getGroupState = MutableStateFlow(JewelleryGroupUiState())
     val getGroupState = _getGroupState.asStateFlow()
@@ -95,6 +98,7 @@ class ChooseGroupViewModel @Inject constructor(
                                 deleteGroupLoading = false,
                                 deleteSuccessLoading = "Successfully Deleted"
                             )
+
                         }
 
 
@@ -112,7 +116,7 @@ class ChooseGroupViewModel @Inject constructor(
         }
     }
 
-    fun selectImage(id: String) {
+    fun selectImage(id: String,forImageView:Boolean) {
         val groupImageList = _getGroupState.value.successLoading.orEmpty()
         groupImageList.filter {
             it.id != id
@@ -127,15 +131,15 @@ class ChooseGroupViewModel @Inject constructor(
                 it.id == id
             }?.isChecked!!.not()
 
-            groupImageList.find {
-                it.id == id
-            }?.let {
-                selectedChooseGroupUIModel = if (it.isChecked){
-                    it
-                }else{
-                    null
-                }
-            }
+//            groupImageList.find {
+//                it.id == id
+//            }?.let {
+//                selectedChooseGroupUIModel.value = if (it.isChecked){
+//                    it
+//                }else{
+//                    null
+//                }
+//            }
 
             uiState.copy(
                 successLoading = groupImageList

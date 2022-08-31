@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
 import androidx.core.view.isVisible
@@ -29,6 +30,7 @@ import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.CREATED_CATEGORY_ID
 
 import com.critx.shwemiAdmin.screens.setupStock.third.ChooseCategoryViewModel
 import com.critx.shwemiAdmin.screens.setupStock.third.ChooseGroupFragmentDirections
+import com.critx.shwemiAdmin.screens.setupStock.third.ChooseGroupViewModel
 import com.critx.shwemiAdmin.screens.setupStock.third.edit.CREATEED_GROUP_ID
 import com.critx.shwemiAdmin.uiModel.setupStock.ChooseGroupUIModel
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryCategoryUiModel
@@ -51,7 +53,11 @@ class ChooseCategoryFragment : Fragment() {
     private lateinit var adapter: JewelleryCategoryRecyclerAdapter
 
         private val sharedViewModel by activityViewModels<SharedViewModel>()
+    private val forBackPressViewModel by activityViewModels<ChooseGroupViewModel>()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -84,6 +90,10 @@ class ChooseCategoryFragment : Fragment() {
             args.firstCat.id.toInt(),
             args.secondCat.id.toInt(),
             args.thirdCat.id.toInt()
+        )
+        findNavController().previousBackStackEntry?.savedStateHandle?.set(
+            CREATEED_GROUP_ID,
+            args.thirdCat
         )
         viewModel._selectedJewelleryCategory.observe(viewLifecycleOwner){
             sharedViewModel.fourthCat = it

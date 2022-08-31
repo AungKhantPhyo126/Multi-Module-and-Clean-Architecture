@@ -5,8 +5,7 @@ data class CreateProductUiState(
     var success:String? = null,
     var error:String? = null,
 
-
-    var calculateKPYLoading:Boolean =false,
-    var calculateKPYSuccessLoading:Double? =null,
-    var calculateKPYErrorMessage:String? =null
+    var getProductCodeLoading:Boolean =false,
+    var getProductCodeSuccess:String? =null,
+    var getProductCodeError:String? =null
 )

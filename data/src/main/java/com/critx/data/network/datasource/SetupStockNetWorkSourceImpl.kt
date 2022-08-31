@@ -5,6 +5,7 @@ import com.critx.data.datasource.setupstock.SetupStockNetWorkDatasource
 import com.critx.data.network.api.SetUpStockService
 import com.critx.data.network.dto.SimpleResponse
 import com.critx.data.network.dto.SimpleResponseDto
+import com.critx.data.network.dto.setupStock.ProductCodeResponse
 import com.critx.data.network.dto.setupStock.jewelleryCategory.*
 import com.critx.data.network.dto.setupStock.jewelleryCategory.error.CreateCategoryError
 import com.critx.data.network.dto.setupStock.jewelleryGroup.Data
@@ -375,6 +376,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
     override suspend fun createProduct(
         token: String,
         name: RequestBody,
+        productCode:RequestBody,
         type: RequestBody,
         quality: RequestBody,
         group: RequestBody,
@@ -396,9 +398,33 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
     ):SimpleResponse {
         val response = setUpStockService.createProduct(
             token,
-            name, type, quality, group, categoryId, goldAndGemWeight, gemWeightKyat,
+            name,productCode, type, quality, group, categoryId, goldAndGemWeight, gemWeightKyat,
             gemWeightPae, gemWeightYwae, gemValue, ptAndClipCost, maintenanceCost,
             diamondInfo, diamondPriceFromGS, diamondValueFromGS, diamondPriceForSale, diamondValueForSale, images, video
+        )
+        return if (response.isSuccessful) {
+            response.body() ?: throw Exception("Response body Null")
+        } else {
+            throw  Exception(
+                when (response.code()) {
+                    400 -> {
+                        response.errorBody()?.parseError<CreateCategoryError>()
+                        "Bad request"
+                    }
+                    401 -> "You are not Authorized"
+                    402 -> "Payment required!!!"
+                    403 -> "Forbidden"
+                    404 -> "You request not found"
+                    405 -> "Method is not allowed!!!"
+                    else -> "Unhandled error occurred!!!"
+                }
+            )
+        }
+    }
+
+    override suspend fun getProductCode(token: String): ProductCodeResponse {
+        val response = setUpStockService.getProductCode(
+            token
         )
         return if (response.isSuccessful) {
             response.body() ?: throw Exception("Response body Null")

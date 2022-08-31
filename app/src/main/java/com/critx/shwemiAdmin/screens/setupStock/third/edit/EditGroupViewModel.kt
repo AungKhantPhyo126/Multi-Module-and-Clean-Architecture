@@ -1,5 +1,6 @@
 package com.critx.shwemiAdmin.screens.setupStock.third.edit
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
@@ -26,7 +27,10 @@ class EditGroupViewModel @Inject constructor(
     private val editJewelleryGroupUseCase: EditJewelleryGroupUseCase,
     private val localDatabase: LocalDatabase
 ):ViewModel() {
-    var selectedImgUri: SelectedImage? = null
+    var selectedImgUri= MutableLiveData<SelectedImage?>(null)
+    fun setSelectedImgUri(selectedImage: SelectedImage?){
+        selectedImgUri.value = selectedImage
+    }
 
 
     private val _createJewelleryGroupState = MutableStateFlow(JewelleryGroupUiState())

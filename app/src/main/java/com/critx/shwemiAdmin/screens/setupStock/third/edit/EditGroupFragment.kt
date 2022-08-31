@@ -19,6 +19,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -31,6 +32,7 @@ import com.critx.common.ui.getAlertDialog
 import com.critx.common.ui.getBitMapWithGlide
 import com.critx.common.ui.loadImageWithGlide
 import com.critx.common.ui.showSuccessDialog
+import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.FragmentNewGroupBinding
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.SelectedImage
@@ -96,7 +98,7 @@ class EditGroupFragment : Fragment() {
                                 it1
                             )
                         }
-                        viewModel.selectedImgUri = SelectedImage(file!!, selectedImage!!)
+                        viewModel.setSelectedImgUri(SelectedImage(file!!, selectedImage!!))
                     }
                 }
 
@@ -125,7 +127,9 @@ class EditGroupFragment : Fragment() {
         loadingDialog = requireContext().getAlertDialog()
         checkEditOrAddnewAndBind()
 
-
+        binding.ivRemove.setOnClickListener {
+            viewModel.setSelectedImgUri(null)
+        }
 
         if (args.groupInfo != null) {
             binding.cbFrequentlyUsed.isChecked = args.groupInfo!!.isFrequentlyUse
@@ -160,15 +164,20 @@ class EditGroupFragment : Fragment() {
 
                 //image original
                 launch {
+                    var file:File? =null
+                    var bm :Bitmap? = null
                     args.groupInfo?.imageUrl?.let {
                         withContext(Dispatchers.IO) {
-                            val originalImage = getBitMapWithGlide(it, requireContext())
+                             bm = getBitMapWithGlide(it, requireContext())
                             val fileName: String = it.substring(it.lastIndexOf('/') + 1)
-                            val file = convertBitmapToFile( fileName,originalImage, requireContext())
+                             file = convertBitmapToFile( fileName,bm!!, requireContext())
                             val requestBody =
-                                file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                                file!!.asRequestBody("multipart/form-data".toMediaTypeOrNull())
                             photo =
-                                MultipartBody.Part.createFormData("image", file.name, requestBody)
+                                MultipartBody.Part.createFormData("image", file!!.name, requestBody)
+                        }
+                        if (viewModel.selectedImgUri.value == null){
+                            viewModel.setSelectedImgUri(SelectedImage(file!!,bm!!))
                         }
                     }
                 }
@@ -199,11 +208,12 @@ class EditGroupFragment : Fragment() {
                         } else loadingDialog.dismiss()
                         if (it.createSuccessLoading != null) {
                             requireContext().showSuccessDialog("Group Created") {
-                                sharedViewModel.selectedChooseGroupUIModel = it.createSuccessLoading
+//                                sharedViewModel.setSelectGroup(it.createSuccessLoading)
                                 findNavController().previousBackStackEntry?.savedStateHandle?.set(
                                     CREATEED_GROUP_ID,
-                                    it.createSuccessLoading!!.id
+                                    it.createSuccessLoading
                                 )
+                                it.createSuccessLoading = null
                                 findNavController().popBackStack()
                             }
                         }
@@ -228,6 +238,22 @@ class EditGroupFragment : Fragment() {
             }
         }
 
+        viewModel.selectedImgUri.observe(viewLifecycleOwner){
+            binding.ivRemove.isVisible = it != null
+            if (it !=null){
+                val requestBody = convertBitmapToFile(
+                    it.file.name,
+                    it.bitMap,
+                    requireContext()
+                ).asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                binding.ivGroupImage.setImageBitmap(it.bitMap)
+                photo = MultipartBody.Part.createFormData("image", it.file.name, requestBody)
+            }else{
+                photo = null
+                binding.ivGroupImage.setImageResource(R.drawable.empty_picture)
+            }
+        }
+
 
 
         binding.ibBack.setOnClickListener {
@@ -238,19 +264,13 @@ class EditGroupFragment : Fragment() {
     fun checkEditOrAddnewAndBind() {
         args.groupInfo?.let {
             binding.edtGroupName.setText(it.name)
-            binding.ivGroupImage.loadImageWithGlide(it.imageUrl)
         }
     }
 
     fun uploadFile(actionType: String) {
 
         viewModel.selectedImgUri?.let {
-            val requestBody = convertBitmapToFile(
-                it.file.name,
-                it.bitMap,
-                requireContext()
-            ).asRequestBody("multipart/form-data".toMediaTypeOrNull())
-            photo = MultipartBody.Part.createFormData("image", it.file.name, requestBody)
+
         }
 
         val name = binding.edtGroupName.text.toString()

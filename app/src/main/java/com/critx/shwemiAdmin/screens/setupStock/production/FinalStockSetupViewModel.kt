@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
 import com.critx.domain.useCase.SetUpStock.CreateProductUseCase
+import com.critx.domain.useCase.SetUpStock.GetProductCodeUseCase
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.SelectedImage
@@ -19,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class FinalStockSetupViewModel @Inject constructor(
     private val localDatabase: LocalDatabase,
-    private val createProductUseCase: CreateProductUseCase
+    private val createProductUseCase: CreateProductUseCase,
+    private val getProductCodeUseCase: GetProductCodeUseCase
 ) :ViewModel(){
 
     var selectedImgUri1: SelectedImage? = null
@@ -52,6 +54,7 @@ class FinalStockSetupViewModel @Inject constructor(
 
     fun createProduct(
         name: RequestBody,
+        productCode:RequestBody,
         type: RequestBody,
         quality: RequestBody,
         group: RequestBody,
@@ -73,7 +76,7 @@ class FinalStockSetupViewModel @Inject constructor(
     ){
         viewModelScope.launch {
             createProductUseCase(localDatabase.getToken().orEmpty(),
-            name, type, quality, group, categoryId, goldAndGemWeight,
+            name,productCode, type, quality, group, categoryId, goldAndGemWeight,
                 gemWeightKyat, gemWeightPae, gemWeightYwae, gemValue,
                 ptAndClipCost, maintenanceCost, diamondInfo, diamondPriceFromGS,
                 diamondValueFromGS, diamondPriceForSale, diamondValueForSale, images, video).collectLatest {
@@ -97,6 +100,36 @@ class FinalStockSetupViewModel @Inject constructor(
                             }
                         }
                     }
+            }
+        }
+    }
+
+    init {
+        getProductCode()
+    }
+    fun getProductCode(){
+        viewModelScope.launch {
+            getProductCodeUseCase(localDatabase.getToken().orEmpty()).collectLatest {
+                when(it){
+                    is Resource.Loading->{
+                        _createProductUiState.update { uiState->
+                            uiState.copy(getProductCodeLoading = true)
+                        }
+                    }
+                    is Resource.Success->{
+                        _createProductUiState.update { uiState->
+                            uiState.copy(getProductCodeLoading = false, getProductCodeSuccess = it.data?.code)
+                        }
+                    }
+                    is Resource.Error->{
+                        _createProductUiState.update { uiState->
+                            uiState.copy(getProductCodeLoading = false, getProductCodeError = it.message, getProductCodeSuccess = null)
+                        }
+                        it.message?.let {errorString->
+                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
+                        }
+                    }
+                }
             }
         }
     }

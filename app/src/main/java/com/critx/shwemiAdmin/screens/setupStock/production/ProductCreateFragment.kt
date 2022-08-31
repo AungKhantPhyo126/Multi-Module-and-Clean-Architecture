@@ -270,7 +270,11 @@ class ProductCreateFragment : Fragment() {
                             loadingDialog.show()
                         } else loadingDialog.dismiss()
                         if (it.success !=null){
+                            it.success = null
                             showSuccesDialog()
+                        }
+                        if (it.getProductCodeSuccess != null){
+                            binding.tvStockCodeNumber.text = it.getProductCodeSuccess
                         }
                     }
                 }
@@ -480,9 +484,12 @@ class ProductCreateFragment : Fragment() {
             ).asRequestBody("multipart/form-data".toMediaTypeOrNull())
             gif = MultipartBody.Part.createFormData("images[]", it.file.name, requestBody)
         }
-        val photoList = mutableListOf(photo1!!, photo2!!, photo3!!, gif!!)
+        val photoList = mutableListOf<MultipartBody.Part?>(photo1, photo2, photo3, gif)
+        val photoToUpload = photoList.filterNotNull() as MutableList
 //        val videoList = mutableListOf(video!!)
 
+        val productCode = binding.tvStockCodeNumber.text.toString()
+            .toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val name = binding.edtEnterStockName.text.toString()
             .toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val goldGemWeight = binding.edtGoldGemGm.text.toString()
@@ -519,6 +526,7 @@ class ProductCreateFragment : Fragment() {
 
         viewModel.createProduct(
             name,
+            productCode,
             type,
             quality,
             group,
@@ -535,7 +543,7 @@ class ProductCreateFragment : Fragment() {
             diamondValueFromGS,
             diamondPriceForSale,
             diamondValueForSale,
-            photoList,
+            photoToUpload,
             video!!
         )
 

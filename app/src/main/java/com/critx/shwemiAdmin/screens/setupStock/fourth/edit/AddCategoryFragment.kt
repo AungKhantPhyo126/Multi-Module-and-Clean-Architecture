@@ -553,6 +553,7 @@ class AddCategoryFragment : Fragment() {
                                     CREATED_CATEGORY_ID,
                                     it.createSuccessLoading!!.id
                                 )
+                                it.createSuccessLoading= null
                                 findNavController().popBackStack()
                             }
                         }

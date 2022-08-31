@@ -3,6 +3,7 @@ package com.critx.data.network.api
 import com.critx.data.network.dto.SimpleResponse
 import com.critx.data.network.dto.SimpleResponseDto
 import com.critx.data.network.dto.auth.ProfileDto
+import com.critx.data.network.dto.setupStock.ProductCodeResponse
 import com.critx.data.network.dto.setupStock.jewelleryCategory.*
 import com.critx.data.network.dto.setupStock.jewelleryGroup.CreateGroupDto
 import com.critx.data.network.dto.setupStock.jewelleryGroup.Data
@@ -149,6 +150,7 @@ interface SetUpStockService {
     suspend fun createProduct(
         @Header("Authorization") token: String,
         @Part("name") name:RequestBody,
+        @Part("product_code") productCode:RequestBody,
         @Part("jewellery_type_id") type: RequestBody,
         @Part("jewellery_quality_id") quality: RequestBody,
         @Part("group_id") group: RequestBody,
@@ -168,4 +170,9 @@ interface SetUpStockService {
         @Part images:List<MultipartBody.Part>,
         @Part video:MultipartBody.Part,
     ):Response<SimpleResponse>
+
+    @GET("api/products/code")
+    suspend fun getProductCode(
+        @Header("Authorization") token: String
+        ):Response<ProductCodeResponse>
 }

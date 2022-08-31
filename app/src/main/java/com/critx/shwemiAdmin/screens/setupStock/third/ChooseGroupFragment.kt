@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.asLiveData
@@ -41,12 +43,19 @@ import kotlinx.coroutines.launch
 class ChooseGroupFragment : Fragment() {
     private lateinit var binding: FragmentChooseGroupBinding
     private val args by navArgs<ChooseGroupFragmentArgs>()
-    private val viewModel by viewModels<ChooseGroupViewModel>()
+    private val viewModel by activityViewModels<ChooseGroupViewModel>()
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
     private lateinit var adapter: ImageRecyclerAdapter
     private var frequentUse = 0
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+            viewModel.setSelectGroup(null)
+            findNavController().popBackStack()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,6 +102,19 @@ class ChooseGroupFragment : Fragment() {
         binding.tvFirstCat.text = args.firstCat.name
         binding.tvSecondCat.text = args.secondCat.name
         setupRecyclerImage()
+        viewModel.selectedChooseGroupUIModel.observe(viewLifecycleOwner){
+            if (it != null){
+                binding.tvThirdCat.isVisible = true
+                binding.tvThirdCat.setTextColor(requireContext().getColor(R.color.primary_color))
+                binding.tvThirdCat.text = it.name
+                binding.chipGroupChooseGp.check(it.id.toInt())
+                viewModel.selectImage(it.id,true)
+                collectDataForRecyclerView()
+            }else{
+                binding.tvThirdCat.isVisible = false
+            }
+            binding.btnNext.isEnabled = it != null
+        }
         viewLifecycleOwner.lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
@@ -105,12 +127,11 @@ class ChooseGroupFragment : Fragment() {
                         if (it.successLoading != null) {
                             adapter.submitList(it.successLoading)
                             adapter.notifyDataSetChanged()
-                            findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
+                            findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<ChooseGroupUIModel>(
                                 CREATEED_GROUP_ID
                             )
                                 ?.observe(viewLifecycleOwner) {
-                                    viewModel.selectImage(it)
-                                    collectDataForRecyclerView()
+                                    viewModel.setSelectGroup(it)
                                 }
                             setupChipView(it.successLoading.orEmpty())
                         }
@@ -125,6 +146,7 @@ class ChooseGroupFragment : Fragment() {
 
                         if (it.deleteSuccessLoading != null) {
                             requireContext().showSuccessDialog("Group Deleted") {
+                                viewModel.setSelectGroup(null)
                                 refreshData()
                             }
                         }
@@ -175,12 +197,13 @@ class ChooseGroupFragment : Fragment() {
             ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment(
                 args.firstCat,
                 args.secondCat,
-                viewModel.selectedChooseGroupUIModel
+                viewModel.selectedChooseGroupUIModel.value
             )
         )
     }
 
     fun navigateWithAddView() {
+        viewModel.setSelectGroup(null)
         findNavController().navigate(
             ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment(
                 args.firstCat,
@@ -200,14 +223,14 @@ class ChooseGroupFragment : Fragment() {
             }
         },
             {
-                viewModel.selectImage(it)
-                collectDataForRecyclerView()
+                viewModel.setSelectGroup(it)
             }, {
                 //addNewClick
                 navigateWithAddView()
             }, {
                 //navigateToEditClick
-                navigateWithImageHoverClick(it)
+                viewModel.setSelectGroup(it)
+                navigateWithEditView()
 
             })
         binding.rvImages.adapter = adapter
@@ -245,12 +268,15 @@ class ChooseGroupFragment : Fragment() {
                 )
                 return@setOnLongClickListener true
             }
+            chip.isChecked = item.isChecked
             editView.setOnClickListener {
                 popupWindow.dismiss()
-                viewModel.selectedChooseGroupUIModel = ChooseGroupUIModel(
-                    chip.id.toString(), item.name, item.imageUrl, chip.isChecked,
-                    item.isFrequentlyUse
-                )
+                if (!binding.rvImages.isVisible){
+                    viewModel.setSelectGroup( ChooseGroupUIModel(
+                        chip.id.toString(), item.name, item.imageUrl, chip.isChecked,
+                        item.isFrequentlyUse
+                    ))
+                }
                 navigateWithEditView()
             }
 
@@ -268,12 +294,10 @@ class ChooseGroupFragment : Fragment() {
         }
 
 
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
-            CREATEED_GROUP_ID
-        )
-            ?.observe(viewLifecycleOwner) {
-                binding.chipGroupChooseGp.check(it.toInt())
-            }
+
+        if (viewModel.selectedChooseGroupUIModel.value != null){
+            binding.chipGroupChooseGp.check(viewModel.selectedChooseGroupUIModel.value!!.id.toInt())
+        }
 
         addChipView.setOnClickListener {
             navigateWithAddView()
@@ -286,18 +310,15 @@ class ChooseGroupFragment : Fragment() {
             }.let {
                 if (it != null) {
                     val chip = it as Chip
-                    viewModel.selectedChooseGroupUIModel = ChooseGroupUIModel(
-                        chip.id.toString(), chip.text.toString(),
-                        list.find { it.id == chip.id.toString() }?.imageUrl ?: "",
-                        chip.isChecked,
-                        list.find { it.id == chip.id.toString() }?.isFrequentlyUse ?: false
-                    )
-                    binding.tvThirdCat.isVisible = true
-                    binding.tvThirdCat.setTextColor(requireContext().getColor(R.color.primary_color))
-                    binding.tvThirdCat.text = chip.text
+                    if (!binding.rvImages.isVisible){
+                        viewModel.setSelectGroup(list.find { it.id ==chip.id.toString() })
+                    }
+//                    binding.tvThirdCat.isVisible = true
+//                    binding.tvThirdCat.setTextColor(requireContext().getColor(R.color.primary_color))
+//                    binding.tvThirdCat.text = chip.text
                 } else {
-                    viewModel.selectedChooseGroupUIModel = null
-                    binding.tvThirdCat.isVisible = false
+                    viewModel.setSelectGroup(null)
+//                    binding.tvThirdCat.isVisible = false
                 }
 
             }
@@ -307,11 +328,12 @@ class ChooseGroupFragment : Fragment() {
                 ChooseGroupFragmentDirections.actionChooseGroupFragmentToChooseCategoryFragment(
                     args.firstCat,
                     args.secondCat,
-                    viewModel.selectedChooseGroupUIModel!!
+                    viewModel.selectedChooseGroupUIModel.value!!
                 )
             )
         }
         binding.btnBack.setOnClickListener {
+            viewModel.setSelectGroup(null)
             findNavController().popBackStack()
         }
     }
@@ -337,14 +359,14 @@ class ChooseGroupFragment : Fragment() {
                         if (uiState.successLoading != null) {
                             adapter.submitList(uiState.successLoading)
                             adapter.notifyDataSetChanged()
-                            setupChipView(uiState.successLoading.orEmpty())
+//                            setupChipView(uiState.successLoading.orEmpty())
                             uiState.successLoading?.find { uiModel ->
                                 uiModel.isChecked
-                            }?.name.let { checkedName ->
-                                if (checkedName != null) {
+                            }?.let { checkedModel ->
+                                if (checkedModel != null) {
                                     binding.tvThirdCat.isVisible = true
                                     binding.tvThirdCat.setTextColor(requireContext().getColor(R.color.primary_color))
-                                    binding.tvThirdCat.text = checkedName
+                                    binding.tvThirdCat.text = checkedModel.name
                                 } else {
                                     binding.tvThirdCat.isVisible = false
                                 }

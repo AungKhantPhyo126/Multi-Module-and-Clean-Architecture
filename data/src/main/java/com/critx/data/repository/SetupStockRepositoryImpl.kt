@@ -5,12 +5,14 @@ import com.critx.data.GetErrorMessage
 import com.critx.data.datasource.setupstock.SetupStockNetWorkDatasource
 import com.critx.data.network.dto.asDomain
 import com.critx.data.network.dto.auth.asDomain
+import com.critx.data.network.dto.setupStock.asDomain
 import com.critx.data.network.dto.setupStock.jewelleryCategory.JewelleryCategoryData
 import com.critx.data.network.dto.setupStock.jewelleryCategory.asDomain
 import com.critx.data.network.dto.setupStock.jewelleryGroup.asDomain
 import com.critx.data.network.dto.setupStock.jewelleryQuality.asDomain
 import com.critx.data.network.dto.setupStock.jewelleryType.asDomain
 import com.critx.domain.model.SetupStock.JewelleryType.JewelleryType
+import com.critx.domain.model.SetupStock.ProductCodeDomain
 import com.critx.domain.model.SetupStock.jewelleryCategory.CalculateKPY
 import com.critx.domain.model.SetupStock.jewelleryCategory.DesignDomain
 import com.critx.domain.model.SetupStock.jewelleryCategory.JewelleryCategory
@@ -337,6 +339,9 @@ class SetupStockRepositoryImpl @Inject constructor(
     override fun createProduct(
         token: String,
         name: RequestBody,
+        productCode:RequestBody,
+
+
         type: RequestBody,
         quality: RequestBody,
         group: RequestBody,
@@ -362,8 +367,28 @@ class SetupStockRepositoryImpl @Inject constructor(
                 emit(
                     Resource.Success(
                         setupStockNetWorkDatasource.createProduct(
-                            token,name, type, quality, group, categoryId, goldAndGemWeight, gemWeightKyat, gemWeightPae, gemWeightYwae, gemValue, ptAndClipCost, maintenanceCost, diamondInfo, diamondPriceFromGS, diamondValueFromGS, diamondPriceForSale, diamondValueForSale, images, video
+                            token,name,productCode, type, quality, group, categoryId, goldAndGemWeight, gemWeightKyat, gemWeightPae, gemWeightYwae, gemValue, ptAndClipCost, maintenanceCost, diamondInfo, diamondPriceFromGS, diamondValueFromGS, diamondPriceForSale, diamondValueForSale, images, video
                         ).response.asDomain()
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
+
+    override fun getProductCode(token: String): Flow<Resource<ProductCodeDomain>>  =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        setupStockNetWorkDatasource.getProductCode(
+                            token
+                        ).data.asDomain()
                     )
                 )
             } catch (e: HttpException) {

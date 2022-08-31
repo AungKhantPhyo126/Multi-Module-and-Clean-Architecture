@@ -23,6 +23,7 @@ fun Context.showSuccessDialog( message: String, onClick: () -> Unit) {
     )
     builder.setView(alertDialogBinding.root)
     val alertDialog = builder.create()
+    alertDialog.setCancelable(false)
     alertDialogBinding.tvMessage.text = message
     alertDialogBinding.btnOk.setOnClickListener {
         alertDialog.dismiss()
@@ -39,6 +40,7 @@ fun Context.showDeleteSuccessDialog(message:String,okClick:()->Unit){
     )
     builder.setView(alertDialogBinding.root)
     val alertDialog = builder.create()
+    alertDialog.setCancelable(false)
     alertDialogBinding.tvMessage.text = message
     alertDialogBinding.btnOk.setOnClickListener {
         alertDialog.dismiss()

@@ -24,7 +24,7 @@ import kotlinx.coroutines.NonDisposableHandle.parent
 
 class ImageRecyclerAdapter(
     private val deleteClick:(id:String)->Unit,
-    private val onclick: (id: String) -> Unit,
+    private val onclick: (id: ChooseGroupUIModel) -> Unit,
     private val addNewClick: () -> Unit,
     private val navigateToEditClick:(item:ChooseGroupUIModel)->Unit
 
@@ -95,7 +95,7 @@ class AddItemViewHolder(
 class ImageViewHolder(
     private val binding: ItemImageSelectionBinding,
     private val deleteClick: (id: String) -> Unit,
-    private val onclick: (id: String) -> Unit,
+    private val onclick: (id: ChooseGroupUIModel) -> Unit,
     private val navigateToEditClick:(item:ChooseGroupUIModel)->Unit
 ) :
     RecyclerView.ViewHolder(binding.root) {
@@ -103,7 +103,7 @@ class ImageViewHolder(
     fun bind(data: ChooseGroupUIModel) {
         binding.ivImage.loadImageWithGlide(data.imageUrl)
         binding.mcvImageCard.setOnClickListener {
-            onclick(data.id)
+            onclick(data)
         }
         binding.mcvImageCard.isChecked = data.isChecked
         binding.mcvImageCard.setOnLongClickListener {

@@ -3,6 +3,7 @@ package com.critx.data.datasource.setupstock
 import com.critx.commonkotlin.util.Resource
 import com.critx.data.network.dto.SimpleResponse
 import com.critx.data.network.dto.SimpleResponseDto
+import com.critx.data.network.dto.setupStock.ProductCodeResponse
 import com.critx.data.network.dto.setupStock.jewelleryCategory.*
 import com.critx.data.network.dto.setupStock.jewelleryGroup.Data
 import com.critx.data.network.dto.setupStock.jewelleryGroup.JewelleryGroupDto
@@ -119,6 +120,7 @@ interface SetupStockNetWorkDatasource {
     suspend fun createProduct(
         token: String,
         name: RequestBody,
+        productCode:RequestBody,
         type: RequestBody,
         quality: RequestBody,
         group: RequestBody,
@@ -138,4 +140,8 @@ interface SetupStockNetWorkDatasource {
         images: List<MultipartBody.Part>,
         video: MultipartBody.Part,
     ): SimpleResponse
+
+    suspend fun getProductCode(
+        token: String
+    ):ProductCodeResponse
 }
