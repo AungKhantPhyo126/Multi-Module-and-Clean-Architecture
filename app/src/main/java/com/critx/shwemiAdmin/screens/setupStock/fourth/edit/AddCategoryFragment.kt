@@ -283,6 +283,7 @@ class AddCategoryFragment : Fragment() {
                     requestBody
                 )
             }
+            if (selectedItem==null) binding.ivImage1.setImageResource(com.critx.shwemiAdmin.R.drawable.empty_picture)
             binding.ivRemove1.isVisible = selectedItem != null
 
 
@@ -301,6 +302,8 @@ class AddCategoryFragment : Fragment() {
                     requestBody
                 )
             }
+            if (selectedItem==null) binding.ivImage2.setImageResource(com.critx.shwemiAdmin.R.drawable.empty_picture)
+
             binding.ivRemove2.isVisible = selectedItem != null
 
         }
@@ -318,6 +321,8 @@ class AddCategoryFragment : Fragment() {
                     requestBody
                 )
             }
+            if (selectedItem==null) binding.ivImage3.setImageResource(com.critx.shwemiAdmin.R.drawable.empty_picture)
+
             binding.ivRemove3.isVisible = selectedItem != null
 
         }
@@ -336,8 +341,8 @@ class AddCategoryFragment : Fragment() {
                     requestBody
                 )
             }
+            if (selectedItem==null) binding.ivGif.setImageResource(com.critx.shwemiAdmin.R.drawable.empty_picture)
             binding.ivRemoveGif.isVisible = selectedItem != null
-
 
         }
         viewModel.selectedVideoUri?.observe(viewLifecycleOwner) { selectedItem ->
@@ -381,6 +386,18 @@ class AddCategoryFragment : Fragment() {
                 requestPermission()
             }
         }
+        binding.ivRemove1.setOnClickListener {
+            viewModel.setSelectedImgUri1(null)
+        }
+        binding.ivRemove2.setOnClickListener {
+            viewModel.setSelectedImgUri2(null)
+        }
+        binding.ivRemove3.setOnClickListener {
+            viewModel.setSelectedImgUri3(null)
+        }
+        binding.ivRemoveGif.setOnClickListener {
+            viewModel.setSelectedGif(null)
+        }
 
         binding.btnConfirm.setOnClickListener {
             if (binding.btnConfirm.text == "Create & Select") {
@@ -412,11 +429,16 @@ class AddCategoryFragment : Fragment() {
                             1 -> {
                                 if (viewModel.selectedImgUri1.value == null) {
                                     binding.ivImage1.loadImageWithGlide(args.category!!.imageUrlList[0])
+                                    var bm:Bitmap?
                                     withContext(Dispatchers.IO) {
-                                        val bm = getBitMapWithGlide(imageList[0], requireContext())
-                                        setPhoto(imageList, 0, binding.ivImage1, bm)
+                                        bm = getBitMapWithGlide(imageList[0], requireContext())
+                                        val fileName: String =
+                                            imageList[0].substring(imageList[0].lastIndexOf('/') + 1)
+                                        val resizedBitmap = getResizedBitmap(bm!!, 600)
+                                        file1 = persistImage(resizedBitmap!!, fileName, requireContext())
+//                                        setPhoto(imageList, 0, binding.ivImage1, bm)
                                     }
-
+                                    viewModel.setSelectedImgUri1(SelectedImage(file1!!,bm!!))
                                 }
                             }
                             2 -> {
@@ -468,33 +490,53 @@ class AddCategoryFragment : Fragment() {
                             4 -> {
                                 if (viewModel.selectedImgUri1.value == null) {
 
-                                    binding.ivImage1.loadImageWithGlide(args.category!!.imageUrlList[0])
+                                    var bm:Bitmap?
                                     withContext(Dispatchers.IO) {
-                                        val bm = getBitMapWithGlide(imageList[0], requireContext())
-                                        setPhoto(imageList, 0, binding.ivImage1, bm)
+                                        bm = getBitMapWithGlide(imageList[0], requireContext())
+                                        val fileName: String =
+                                            imageList[0].substring(imageList[0].lastIndexOf('/') + 1)
+                                        val resizedBitmap = getResizedBitmap(bm!!, 600)
+                                        file1 = persistImage(resizedBitmap!!, fileName, requireContext())
+//                                        setPhoto(imageList, 0, binding.ivImage1, bm)
                                     }
+                                    viewModel.setSelectedImgUri1(SelectedImage(file1!!,bm!!))
                                 }
                                 if (viewModel.selectedImgUri2.value == null) {
-                                    binding.ivImage2.loadImageWithGlide(args.category!!.imageUrlList[1])
+                                    var bm:Bitmap?
                                     withContext(Dispatchers.IO) {
-                                        val bm = getBitMapWithGlide(imageList[1], requireContext())
-                                        setPhoto(imageList, 1, binding.ivImage2, bm)
+                                        bm = getBitMapWithGlide(imageList[1], requireContext())
+                                        val fileName: String =
+                                            imageList[1].substring(imageList[1].lastIndexOf('/') + 1)
+                                        val resizedBitmap = getResizedBitmap(bm!!, 600)
+                                        file2 = persistImage(resizedBitmap!!, fileName, requireContext())
+//                                        setPhoto(imageList, 0, binding.ivImage1, bm)
                                     }
+                                    viewModel.setSelectedImgUri2(SelectedImage(file2!!,bm!!))
                                 }
                                 if (viewModel.selectedImgUri3.value == null) {
-                                    binding.ivImage3.loadImageWithGlide(args.category!!.imageUrlList[2])
+                                    var bm:Bitmap?
                                     withContext(Dispatchers.IO) {
-                                        val bm = getBitMapWithGlide(imageList[2], requireContext())
-                                        setPhoto(imageList, 2, binding.ivImage3, bm)
+                                        bm = getBitMapWithGlide(imageList[2], requireContext())
+                                        val fileName: String =
+                                            imageList[2].substring(imageList[2].lastIndexOf('/') + 1)
+                                        val resizedBitmap = getResizedBitmap(bm!!, 600)
+                                        file3 = persistImage(resizedBitmap!!, fileName, requireContext())
+//                                        setPhoto(imageList, 0, binding.ivImage1, bm)
                                     }
+                                    viewModel.setSelectedImgUri3(SelectedImage(file3!!,bm!!))
                                 }
                                 if (viewModel.selectedGifUri.value == null) {
 
-                                    binding.ivGif.loadImageWithGlide(args.category!!.imageUrlList[3])
+                                    var bm:Bitmap?
                                     withContext(Dispatchers.IO) {
-                                        val bm = getBitMapWithGlide(imageList[3], requireContext())
-                                        setPhoto(imageList, 3, binding.ivGif, bm)
+                                        bm = getBitMapWithGlide(imageList[3], requireContext())
+                                        val fileName: String =
+                                            imageList[3].substring(imageList[3].lastIndexOf('/') + 1)
+                                        val resizedBitmap = getResizedBitmap(bm!!, 600)
+                                        fileGif = persistImage(resizedBitmap!!, fileName, requireContext())
+//                                        setPhoto(imageList, 0, binding.ivImage1, bm)
                                     }
+                                    viewModel.setSelectedGif(SelectedImage(fileGif!!,bm!!))
                                 }
 //                    }
                             }

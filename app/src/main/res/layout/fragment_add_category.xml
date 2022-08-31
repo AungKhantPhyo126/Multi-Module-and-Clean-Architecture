@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
     android:fillViewport="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/materialToolbar"
             android:layout_width="0dp"
@@ -24,17 +27,19 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <ImageButton
                     android:id="@+id/ib_back"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_back"
-                    app:tint="?attr/colorPrimary"
                     android:scaleType="fitCenter"
+                    android:src="@drawable/ic_back"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="?attr/colorPrimary" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -83,8 +88,8 @@
                 android:id="@+id/edt_enter_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
-                android:hint="@string/enter_category_name" />
+                android:hint="@string/enter_category_name"
+                android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
@@ -94,10 +99,10 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            tools:text="@string/confirm"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="@string/confirm" />
 
         <TextView
             android:id="@+id/tv_label_avg_weight"
@@ -135,9 +140,9 @@
                 android:id="@+id/edt_avg_weight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="@string/enter_weight_in_gm"
                 android:inputType="number"
-                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
-                android:hint="@string/enter_weight_in_gm" />
+                android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -154,9 +159,9 @@
                 android:id="@+id/edt_y"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
+                android:hint="@string/y"
 
-                android:hint="@string/y" />
+                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -174,8 +179,8 @@
                 android:id="@+id/edt_p"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
-                android:hint="P" />
+                android:hint="P"
+                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -194,8 +199,8 @@
                 android:id="@+id/edt_k"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
-                android:hint="K" />
+                android:hint="K"
+                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -234,9 +239,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="top"
                 android:hint="Enter Specification"
-                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
                 android:maxLines="5"
-                android:minLines="3" />
+                android:minLines="3"
+                android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -272,17 +277,17 @@
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
                     android:src="@drawable/empty_picture"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/iv_remove1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_trash_can"
                     android:layout_margin="8dp"
+                    android:src="@drawable/ic_trash_can"
                     app:layout_constraintEnd_toEndOf="@id/iv_image1"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tint="@color/primary_color" />
@@ -312,17 +317,17 @@
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
                     android:src="@drawable/empty_picture"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/iv_remove2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_trash_can"
                     android:layout_margin="8dp"
+                    android:src="@drawable/ic_trash_can"
                     app:layout_constraintEnd_toEndOf="@id/iv_image2"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tint="@color/primary_color" />
@@ -350,22 +355,23 @@
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
                     android:src="@drawable/empty_picture"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/iv_remove3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_trash_can"
                     android:layout_margin="8dp"
+                    android:src="@drawable/ic_trash_can"
                     app:layout_constraintEnd_toEndOf="@id/iv_image3"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tint="@color/primary_color" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
+
         <TextView
             android:id="@+id/tv_label_image"
             android:layout_width="wrap_content"
@@ -375,15 +381,16 @@
             android:textAppearance="@style/TextAppearance.ShweMi.Body2"
             app:layout_constraintStart_toStartOf="@+id/tv_label_category"
             app:layout_constraintTop_toTopOf="@+id/mcv_img_1" />
+
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/mcv_video"
             android:layout_width="0dp"
             android:layout_height="65dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
-            app:cardCornerRadius="8dp"
             android:clickable="true"
             android:focusable="true"
+            app:cardCornerRadius="8dp"
             app:cardElevation="8dp"
             app:layout_constraintEnd_toStartOf="@+id/mcv_img_3"
             app:layout_constraintHorizontal_bias="0.5"
@@ -400,17 +407,17 @@
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
                     android:src="@drawable/empty_picture"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/iv_remove_video"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_trash_can"
                     android:layout_margin="8dp"
+                    android:src="@drawable/ic_trash_can"
                     app:layout_constraintEnd_toEndOf="@id/iv_video"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tint="@color/primary_color" />
@@ -421,9 +428,9 @@
             android:id="@+id/mcv_gif"
             android:layout_width="0dp"
             android:layout_height="65dp"
+            android:layout_marginEnd="8dp"
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp"
-            android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="@+id/mcv_img_3"
             app:layout_constraintEnd_toStartOf="@+id/mcv_img_2"
             app:layout_constraintHorizontal_bias="0.5"
@@ -441,22 +448,23 @@
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
                     android:src="@drawable/empty_picture"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/iv_remove_gif"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_trash_can"
                     android:layout_margin="8dp"
+                    android:src="@drawable/ic_trash_can"
                     app:layout_constraintEnd_toEndOf="@id/iv_gif"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tint="@color/primary_color" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
+
         <TextView
             android:id="@+id/tv_label_video_gif"
             android:layout_width="wrap_content"
@@ -483,76 +491,89 @@
             android:id="@+id/cb_order_to_gs"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/order_to_gs"
             android:buttonTint="@color/primary_color"
+            android:text="@string/order_to_gs"
             app:layout_constraintBottom_toBottomOf="@+id/cb_frequently_used"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/cb_frequently_used"
             app:layout_constraintTop_toTopOf="@+id/cb_frequently_used" />
+
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/mcv_recommend_ahtal"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            app:cardCornerRadius="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            app:cardCornerRadius="16dp"
             app:cardElevation="16dp"
-            app:layout_constraintStart_toStartOf="@id/cb_frequently_used"
+            app:layout_constraintBottom_toTopOf="@+id/mcv_choose_design"
             app:layout_constraintEnd_toEndOf="@id/cb_order_to_gs"
-            app:layout_constraintTop_toBottomOf="@id/cb_frequently_used">
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@id/cb_frequently_used"
+            app:layout_constraintTop_toBottomOf="@+id/cb_frequently_used">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:weightSum="8"
                 android:gravity="center"
-                >
+                android:weightSum="8">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/reconmend_ahtal"
-                    android:textColor="@color/edit_text_color"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.ShweMi.Body2"
                     android:layout_weight="7"
-                    />
+                    android:gravity="center"
+                    android:text="@string/reconmend_ahtal"
+                    android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                    android:textColor="@color/edit_text_color" />
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_right_arrow"
                     android:layout_gravity="end|center"
+                    android:src="@drawable/ic_right_arrow"
                     app:tint="@color/primary_color" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/mcv_choose_design"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            app:cardCornerRadius="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="16dp"
             app:cardElevation="16dp"
-            app:layout_constraintStart_toStartOf="@id/cb_frequently_used"
+            app:layout_constraintBottom_toTopOf="@+id/btn_confirm"
             app:layout_constraintEnd_toEndOf="@id/cb_order_to_gs"
-            app:layout_constraintTop_toBottomOf="@id/mcv_recommend_ahtal">
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@id/cb_frequently_used"
+            app:layout_constraintTop_toBottomOf="@+id/mcv_recommend_ahtal">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:weightSum="8"
                 android:gravity="center"
-                >
+                android:weightSum="8">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="7"
                     android:gravity="center"
                     android:text="@string/choose_design"
-                    android:textColor="@color/edit_text_color"
                     android:textAppearance="@style/TextAppearance.ShweMi.Body2"
-                    android:layout_weight="7"
-                    />
+                    android:textColor="@color/edit_text_color" />
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_right_arrow"
                     android:layout_gravity="end|center"
+                    android:src="@drawable/ic_right_arrow"
                     app:tint="@color/primary_color" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
