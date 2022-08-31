@@ -265,76 +265,6 @@ class AddCategoryFragment : Fragment() {
             binding.edtEnterCategory.setText(args.category!!.name)
             binding.edtAvgWeight.setText(args.category!!.avgWeightPerUnitGm.toString())
             binding.edtSpecification.setText(args.category!!.specification)
-            val imageList = args.category!!.imageUrlList
-//            if ( findNavController().previousBackStackEntry?.destination?.id == R.id.chooseCategoryFragment){
-//                when(args.category!!.imageUrlList.size){
-//
-//                    1->{
-//                        if (viewModel.selectedImgUri1.value == null){
-//                            binding.ivImage1.loadImageWithGlide(args.category!!.imageUrlList[0])
-//
-//                        }
-//                    }
-//                    2->{
-//                        if(viewModel.selectedImgUri1.value == null) {
-//
-//                            binding.ivImage1.loadImageWithGlide(args.category!!.imageUrlList[0])
-//
-//                        }
-//                        if(viewModel.selectedImgUri2.value == null) {
-//
-//                            binding.ivImage2.loadImageWithGlide(args.category!!.imageUrlList[1])
-//
-//                        }
-//
-//                        }
-//                    3->{
-//                        if(viewModel.selectedImgUri1.value == null) {
-//                            binding.ivImage1.loadImageWithGlide(args.category!!.imageUrlList[0])
-//                        }
-//                        if(viewModel.selectedImgUri2.value == null) {
-//
-//                            binding.ivImage2.loadImageWithGlide(args.category!!.imageUrlList[1])
-//                        }
-//                        if(viewModel.selectedImgUri3.value == null) {
-//
-//                            binding.ivImage3.loadImageWithGlide(args.category!!.imageUrlList[2])
-//                        }
-//                    }
-//                    4->{
-//                        if(viewModel.selectedImgUri1.value == null) {
-//
-//                            binding.ivImage1.loadImageWithGlideReady(args.category!!.imageUrlList[0])
-//
-//                            val bm = getBitMapWithGlide(imageList[0],requireContext())
-//                            setPhoto(imageList,0,binding.ivImage1,bm)
-//                        }
-//                        if(viewModel.selectedImgUri2.value == null) {
-//                            binding.ivImage2.loadImageWithGlide(args.category!!.imageUrlList[1])
-//
-//                            val bm = binding.ivImage2.drawable.toBitmap()
-//                            setPhoto(imageList,1,binding.ivImage2,bm)
-//
-//                        }
-//                        if(viewModel.selectedImgUri3.value == null) {
-//
-//                            binding.ivImage3.loadImageWithGlide(args.category!!.imageUrlList[2])
-//                            val bm = binding.ivImage3.drawable.toBitmap()
-//                            setPhoto(imageList,2,binding.ivImage3,bm)
-//
-//                        }
-//                        if(viewModel.selectedGifUri.value == null){
-//
-//                            binding.ivGif.loadImageWithGlide(args.category!!.imageUrlList[3])
-//                            val bm = binding.ivGif.drawable.toBitmap()
-//
-//                            setPhoto(imageList,3,binding.ivGif,bm)
-//
-//                        }
-////                    }
-//                }
-//
-//            }
         } else {
             binding.btnConfirm.text = "Create & Select"
         }
@@ -482,6 +412,10 @@ class AddCategoryFragment : Fragment() {
                             1 -> {
                                 if (viewModel.selectedImgUri1.value == null) {
                                     binding.ivImage1.loadImageWithGlide(args.category!!.imageUrlList[0])
+                                    withContext(Dispatchers.IO) {
+                                        val bm = getBitMapWithGlide(imageList[0], requireContext())
+                                        setPhoto(imageList, 0, binding.ivImage1, bm)
+                                    }
 
                                 }
                             }
@@ -489,11 +423,19 @@ class AddCategoryFragment : Fragment() {
                                 if (viewModel.selectedImgUri1.value == null) {
 
                                     binding.ivImage1.loadImageWithGlide(args.category!!.imageUrlList[0])
+                                    withContext(Dispatchers.IO) {
+                                        val bm = getBitMapWithGlide(imageList[0], requireContext())
+                                        setPhoto(imageList, 0, binding.ivImage1, bm)
+                                    }
 
                                 }
                                 if (viewModel.selectedImgUri2.value == null) {
 
                                     binding.ivImage2.loadImageWithGlide(args.category!!.imageUrlList[1])
+                                    withContext(Dispatchers.IO) {
+                                        val bm = getBitMapWithGlide(imageList[1], requireContext())
+                                        setPhoto(imageList, 1, binding.ivImage2, bm)
+                                    }
 
                                 }
 
@@ -501,14 +443,26 @@ class AddCategoryFragment : Fragment() {
                             3 -> {
                                 if (viewModel.selectedImgUri1.value == null) {
                                     binding.ivImage1.loadImageWithGlide(args.category!!.imageUrlList[0])
+                                    withContext(Dispatchers.IO) {
+                                        val bm = getBitMapWithGlide(imageList[0], requireContext())
+                                        setPhoto(imageList, 0, binding.ivImage1, bm)
+                                    }
                                 }
                                 if (viewModel.selectedImgUri2.value == null) {
 
                                     binding.ivImage2.loadImageWithGlide(args.category!!.imageUrlList[1])
+                                    withContext(Dispatchers.IO) {
+                                        val bm = getBitMapWithGlide(imageList[1], requireContext())
+                                        setPhoto(imageList, 1, binding.ivImage2, bm)
+                                    }
                                 }
                                 if (viewModel.selectedImgUri3.value == null) {
 
                                     binding.ivImage3.loadImageWithGlide(args.category!!.imageUrlList[2])
+                                    withContext(Dispatchers.IO) {
+                                        val bm = getBitMapWithGlide(imageList[2], requireContext())
+                                        setPhoto(imageList, 2, binding.ivImage3, bm)
+                                    }
                                 }
                             }
                             4 -> {
