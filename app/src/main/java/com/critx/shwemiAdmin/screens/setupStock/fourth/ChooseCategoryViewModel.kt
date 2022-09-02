@@ -96,15 +96,15 @@ class ChooseCategoryViewModel @Inject constructor(
                 it.id == id
             }?.isChecked!!.not()
 
-            groupImageList.find {
-                it.id == id
-            }?.let {
-                selectedJewelleryCategory.value = if (it.isChecked){
-                    it
-                }else{
-                    null
-                }
-            }
+//            groupImageList.find {
+//                it.id == id
+//            }?.let {
+//                selectedJewelleryCategory.value = if (it.isChecked){
+//                    it
+//                }else{
+//                    null
+//                }
+//            }
 
             uiState.copy(
                 successLoading = groupImageList

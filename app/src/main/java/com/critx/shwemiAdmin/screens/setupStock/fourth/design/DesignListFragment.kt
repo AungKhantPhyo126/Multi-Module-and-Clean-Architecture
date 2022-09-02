@@ -50,6 +50,7 @@ class DesignListFragment:Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getDesign()
         loadingDialog = requireContext().getAlertDialog()
+
         binding.chipGroupDesign.setOnCheckedStateChangeListener { group, checkedIds ->
             viewModel.selectedDesignIds = checkedIds
         }
@@ -98,6 +99,12 @@ class DesignListFragment:Fragment() {
             val chip = requireContext().createChip(item.name)
             chip.id = item.id.toInt()
             binding.chipGroupDesign.addView(chip)
+
+        }
+        if (!viewModel.selectedDesignIds.isNullOrEmpty()){
+            viewModel.selectedDesignIds!!.forEach {
+                binding.chipGroupDesign.check(it)
+            }
         }
     }
 

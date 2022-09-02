@@ -279,10 +279,7 @@ class ChooseGroupFragment : Fragment() {
             editView.setOnClickListener {
                 popupWindow.dismiss()
                 if (!binding.rvImages.isVisible){
-                    viewModel.setSelectGroup( ChooseGroupUIModel(
-                        chip.id.toString(), item.name, item.imageUrl, chip.isChecked,
-                        item.isFrequentlyUse
-                    ))
+                    viewModel.setSelectGroup(item)
                 }
                 navigateWithEditView()
             }

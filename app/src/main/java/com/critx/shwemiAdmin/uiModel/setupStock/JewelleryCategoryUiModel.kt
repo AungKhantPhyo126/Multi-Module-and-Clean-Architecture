@@ -1,6 +1,7 @@
 package com.critx.shwemiAdmin.uiModel.setupStock
 
 import android.os.Parcelable
+import com.critx.domain.model.SetupStock.jewelleryCategory.AverageKPYDomain
 import com.critx.domain.model.SetupStock.jewelleryCategory.JewelleryCategory
 import kotlinx.android.parcel.Parcelize
 
@@ -15,6 +16,15 @@ data class JewelleryCategoryUiModel(
     val specification : String?,
     val avgWeightPerUnitGm:Double?,
     val avgWastagePerUnitKpy:Double?,
+    val avgKPYUiModel:AvgKPYUiModel,
+    val designsList:List<Int>
+):Parcelable
+
+@Parcelize
+data class AvgKPYUiModel(
+    val kyat:Double,
+    val pae:Double,
+    val ywae:Double
 ):Parcelable
 
 fun JewelleryCategory.asUiModel():JewelleryCategoryUiModel{
@@ -27,6 +37,17 @@ fun JewelleryCategory.asUiModel():JewelleryCategoryUiModel{
         specification = specification,
         avgWeightPerUnitGm =avgWeightPerUnitGm,
         avgWastagePerUnitKpy =avgWastagePerUnitKpy,
-        video = fileList.find { it.type == "video" }?.url
+        video = fileList.find { it.type == "video" }?.url,
+        avgKPYUiModel = avgKPY.asUiModel(),
+        designsList = designs
     )
 }
+
+fun AverageKPYDomain.asUiModel():AvgKPYUiModel{
+    return AvgKPYUiModel(
+        kyat= kyat,
+        pae = pae,
+        ywae = ywae
+    )
+}
+

@@ -32,6 +32,7 @@ import com.critx.shwemiAdmin.screens.setupStock.third.ChooseCategoryViewModel
 import com.critx.shwemiAdmin.screens.setupStock.third.ChooseGroupFragmentDirections
 import com.critx.shwemiAdmin.screens.setupStock.third.ChooseGroupViewModel
 import com.critx.shwemiAdmin.screens.setupStock.third.edit.CREATEED_GROUP_ID
+import com.critx.shwemiAdmin.uiModel.setupStock.AvgKPYUiModel
 import com.critx.shwemiAdmin.uiModel.setupStock.ChooseGroupUIModel
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryCategoryUiModel
 import com.daasuu.bl.ArrowDirection
@@ -55,6 +56,10 @@ class ChooseCategoryFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+            viewModel.setSelectedCategory(null)
+            findNavController().popBackStack()
+        }
     }
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,10 +98,25 @@ class ChooseCategoryFragment : Fragment() {
             CREATEED_GROUP_ID,
             args.thirdCat
         )
+//        viewModel._selectedJewelleryCategory.observe(viewLifecycleOwner){
+//            sharedViewModel.fourthCat = it
+//            binding.btnNext.isEnabled = it != null
+//        }
         viewModel._selectedJewelleryCategory.observe(viewLifecycleOwner){
             sharedViewModel.fourthCat = it
+            if (it != null){
+                binding.tvFourthCat.isVisible = true
+                binding.tvFourthCat.setTextColor(requireContext().getColor(R.color.primary_color))
+                binding.tvFourthCat.text = it.name
+                binding.chipGroupChooseGp.check(it.id.toInt())
+                viewModel.selectImage(it.id)
+                collectDataForRecyclerView()
+            }else{
+                binding.tvFourthCat.isVisible = false
+            }
             binding.btnNext.isEnabled = it != null
         }
+
         binding.cbFrequentlyUsed.setOnCheckedChangeListener { compoundButton, ischecked ->
             frequentUse = if (ischecked) 1 else 0
             viewModel.getJewelleryCategory(
@@ -130,12 +150,17 @@ class ChooseCategoryFragment : Fragment() {
                         if (it.successLoading != null) {
                             adapter.submitList(it.successLoading)
                             adapter.notifyDataSetChanged()
-                            findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
+                            findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<JewelleryCategoryUiModel>(
                                 CREATED_CATEGORY_ID
                             )
                                 ?.observe(viewLifecycleOwner) {
-                                    viewModel.selectImage(it)
-                                    collectDataForRecyclerView()
+                                    if(
+                                        findNavController().previousBackStackEntry?.destination?.id == R.id.editGroupFragment ||
+                                        findNavController().previousBackStackEntry?.destination?.id == R.id.chooseCategoryFragment
+                                    ){
+                                        viewModel.setSelectedCategory(it)
+                                    }
+
                                 }
                             setupChipView(it.successLoading.orEmpty())
                         }
@@ -193,6 +218,7 @@ class ChooseCategoryFragment : Fragment() {
     }
 
     fun navigateWithAddView() {
+        viewModel.setSelectedCategory(null)
         findNavController().navigate(
             ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToAddCategoryFragment(
                 args.firstCat,
@@ -205,11 +231,11 @@ class ChooseCategoryFragment : Fragment() {
 
     fun setupRecyclerImage() {
         adapter = JewelleryCategoryRecyclerAdapter({
-            viewModel.selectImage(it)
-            collectDataForRecyclerView()
+            viewModel.setSelectedCategory(it)
         }, {
             navigateWithAddView()
         }, {
+            viewModel.setSelectedCategory(it)
             navigateWithEditView()
         })
         binding.rvImages.adapter = adapter
@@ -233,6 +259,7 @@ class ChooseCategoryFragment : Fragment() {
             popupWindow.width = 300
             popupWindow.height = 200
             chip.id = item.id.toInt()
+            chip.isChecked = item.isChecked
             chip.setOnLongClickListener {
                 val location = IntArray(2)
                 chip.getLocationInWindow(location)
@@ -247,21 +274,20 @@ class ChooseCategoryFragment : Fragment() {
             }
             editView.setOnClickListener {
                 popupWindow.dismiss()
-                viewModel.setSelectedCategory(JewelleryCategoryUiModel(
-                    chip.id.toString(), item.name, item.imageUrlList,item.video, chip.isChecked,
-                    item.isFrequentlyUse,item.specification,item.avgWeightPerUnitGm,item.avgWastagePerUnitKpy,
-                ))
+                if (!binding.rvImages.isVisible){
+                    viewModel.setSelectedCategory(item)
+                }
                 navigateWithEditView()
             }
 //            val chip = ItemImageSelectionBinding.inflate(layoutInflater).root
             binding.chipGroupChooseGp.addView(chip)
         }
 
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<JewelleryCategoryUiModel>(
             CREATED_CATEGORY_ID
         )
             ?.observe(viewLifecycleOwner) {
-                binding.chipGroupChooseGp.check(it.toInt())
+                binding.chipGroupChooseGp.check(it.id.toInt())
             }
         addChipView.setOnClickListener {
             navigateWithAddView()
@@ -273,19 +299,23 @@ class ChooseCategoryFragment : Fragment() {
             }.let {
                 if (it != null) {
                     val chip = it as Chip
-                    viewModel.setSelectedCategory(list.find { it.id == chip.id.toString() })
-                    binding.tvFourthCat.isVisible = true
-                    binding.tvFourthCat.setTextColor(requireContext().getColor(R.color.primary_color))
-                    binding.tvFourthCat.text = chip.text
+                    if (!binding.rvImages.isVisible){
+                        viewModel.setSelectedCategory(list.find { it.id ==chip.id.toString() })
+                    }
                 } else {
                     viewModel.setSelectedCategory(null)
-                    binding.tvFourthCat.isVisible = false
                 }
 
             }
 
         }
+        if (viewModel.selectedJewelleryCategory.value != null){
+            binding.chipGroupChooseGp.check(viewModel.selectedJewelleryCategory.value!!.id.toInt())
+        }else{
+            binding.tvFourthCat.isVisible=false
+        }
         binding.btnBack.setOnClickListener {
+            viewModel.setSelectedCategory(null)
             findNavController().popBackStack()
         }
     }
@@ -302,7 +332,7 @@ class ChooseCategoryFragment : Fragment() {
                         if (uiState.successLoading != null) {
                             adapter.submitList(uiState.successLoading)
                             adapter.notifyDataSetChanged()
-                            setupChipView(uiState.successLoading.orEmpty())
+//                            setupChipView(uiState.successLoading.orEmpty())
                             uiState.successLoading?.find { uiModel ->
                                 uiModel.isChecked
                             }?.name.let { checkedName ->

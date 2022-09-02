@@ -2,7 +2,6 @@ package com.critx.common.ui
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -58,6 +57,16 @@ fun ImageView.loadImageWithGlideReady(url:String?):Bitmap?{
             .into(this)
     }
     return bm
+}
+
+fun ImageView.getThumbnail(url: String){
+    val requestOptions = RequestOptions()
+    Glide.with(context)
+        .load(url)
+        .dontAnimate()
+        .apply(requestOptions)
+        .thumbnail(Glide.with(context).load(url))
+        .into(this)
 }
 
 fun getBitMapWithGlide(url: String?,context: Context) =Glide.with(context).asBitmap().load(url).submit().get()

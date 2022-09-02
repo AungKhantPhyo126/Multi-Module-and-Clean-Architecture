@@ -11,10 +11,17 @@ data class JewelleryCategory(
     val specification : String,
     val avgWeightPerUnitGm:Double,
     val avgWastagePerUnitKpy:Double,
+    val avgKPY:AverageKPYDomain,
     val jewelleryType: JewelleryType,
     val jewelleryQuality: JewelleryQuality,
     val jewelleryGroup:JewelleryGroup,
-    val fileList:List<CategoryFile>
+    val fileList:List<CategoryFile>,
+    val designs:List<Int>
+)
+data class AverageKPYDomain(
+    val kyat:Double,
+    val pae:Double,
+    val ywae:Double
 )
 data class CategoryFile(
     val id:String,

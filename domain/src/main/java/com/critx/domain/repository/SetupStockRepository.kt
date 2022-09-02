@@ -95,7 +95,7 @@ interface SetupStockRepository {
         avgKyat: RequestBody,
         avgPae: RequestBody,
         avgYwae: RequestBody, images: MutableList<MultipartBody.Part>,
-        video: MultipartBody.Part,
+        video: MultipartBody.Part?,
         specification: RequestBody,
         design: MutableList<RequestBody>,
         orderToGs: RequestBody,

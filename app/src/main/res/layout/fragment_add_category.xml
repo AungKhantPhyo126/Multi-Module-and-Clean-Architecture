@@ -521,6 +521,7 @@
                 android:weightSum="8">
 
                 <TextView
+                    android:id="@+id/tv_recommend_cat"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="7"
@@ -561,6 +562,7 @@
                 android:weightSum="8">
 
                 <TextView
+                    android:id="@+id/tv_choose_design"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="7"

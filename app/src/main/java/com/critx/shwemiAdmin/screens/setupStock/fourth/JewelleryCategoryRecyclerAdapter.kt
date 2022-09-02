@@ -23,7 +23,7 @@ import com.daasuu.bl.BubblePopupHelper
 import kotlinx.coroutines.NonDisposableHandle.parent
 
 class JewelleryCategoryRecyclerAdapter(
-    private val onclick: (id: String) -> Unit,
+    private val onclick: (id: JewelleryCategoryUiModel) -> Unit,
     private val addNewClick: () -> Unit,
     private val navigateToEditClick:(item:JewelleryCategoryUiModel)->Unit
 
@@ -93,7 +93,7 @@ class AddItemViewHolder(
 
 class ImageViewHolder(
     private val binding: ItemImageSelectionBinding,
-    private val onclick: (id: String) -> Unit,
+    private val onclick: (id: JewelleryCategoryUiModel) -> Unit,
     private val navigateToEditClick:(item:JewelleryCategoryUiModel)->Unit
 ) :
     RecyclerView.ViewHolder(binding.root) {
@@ -101,7 +101,7 @@ class ImageViewHolder(
     fun bind(data: JewelleryCategoryUiModel) {
         binding.ivImage.loadImageWithGlide(data.imageUrlList[0])
         binding.mcvImageCard.setOnClickListener {
-            onclick(data.id)
+            onclick(data)
         }
         binding.mcvImageCard.isChecked = data.isChecked
         binding.mcvImageCard.setOnLongClickListener {
