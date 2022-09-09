@@ -33,7 +33,9 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> "Bad request"
+                    400 -> {
+                        response.errorBody()?.string()?:"Bad request"
+                    }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
                     403 -> "Forbidden"
@@ -52,7 +54,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> "Bad request"
+                    400 -> response.errorBody()?.string()?:"Bad request"
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
                     403 -> "Forbidden"
@@ -77,7 +79,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> "Bad request"
+                    400 -> response.errorBody()?.string()?:"Bad request"
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
                     403 -> "Forbidden"
@@ -108,7 +110,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
                 when (response.code()) {
                     400 -> {
                         response.errorBody()?.parseError<CreateCategoryError>()
-                        "Bad request"
+                        response.errorBody()?.string()?:"Bad request"
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -123,8 +125,8 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
 
     override suspend fun editJewelleryGroup(
         token: String,
-        method:RequestBody,
-        groupId:String,
+        method: RequestBody,
+        groupId: String,
         image: MultipartBody.Part,
         jewellery_type_id: RequestBody,
         jewellery_quality_id: RequestBody,
@@ -132,7 +134,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         name: RequestBody
     ): SimpleResponse {
         val response = setUpStockService.editJewelleryGroup(
-            token,method,groupId,
+            token, method, groupId,
             jewellery_type_id, jewellery_quality_id, is_frequently_used, name, image
         )
         return if (response.isSuccessful) {
@@ -142,7 +144,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
                 when (response.code()) {
                     400 -> {
                         response.errorBody()?.parseError<CreateCategoryError>()
-                        "Bad request"
+                        response.errorBody()?.string()?:"Bad request"
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -161,7 +163,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         groupId: String
     ): SimpleResponse {
         val response = setUpStockService.deleteJewelleryGroup(
-            token,method,groupId,
+            token, method, groupId,
         )
         return if (response.isSuccessful) {
             response.body() ?: throw Exception("Response body Null")
@@ -170,7 +172,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
                 when (response.code()) {
                     400 -> {
                         response.errorBody()?.parseError<CreateCategoryError>()
-                        "Bad request"
+                        response.errorBody()?.string()?:"Bad request"
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -180,7 +182,35 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
                     else -> "Unhandled error occurred!!!"
                 }
             )
-        }    }
+        }
+    }
+
+    override suspend fun deleteJewelleryCategory(
+        token: String,
+        method: RequestBody,
+        catId: String
+    ): SimpleResponse {
+        val response = setUpStockService.deleteJewelleryCategory(
+            token, method, catId
+        )
+        return if (response.isSuccessful) {
+            response.body() ?: throw Exception("Response body Null")
+        } else {
+            throw  Exception(
+                when (response.code()) {
+                    400 -> {
+                        response.errorBody()?.string()?:"Bad Request"
+                    }
+                    401 -> "You are not Authorized"
+                    402 -> "Payment required!!!"
+                    403 -> "Forbidden"
+                    404 -> "You request not found"
+                    405 -> "Method is not allowed!!!"
+                    else -> "Unhandled error occurred!!!"
+                }
+            )
+        }
+    }
 
     override suspend fun getJewelleryCategory(
         token: String,
@@ -201,7 +231,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> "Bad request"
+                    400 -> response.errorBody()?.string()?:"Bad request"
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
                     403 -> "Forbidden"
@@ -218,13 +248,13 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         categoryId: String
     ): JewelleryCatDto {
         val response =
-            setUpStockService.getRelatedCat(token,categoryId)
+            setUpStockService.getRelatedCat(token, categoryId)
         return if (response.isSuccessful) {
             response.body() ?: throw Exception("Response body Null")
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> "Bad request"
+                    400 -> response.errorBody()?.string()?:"Bad request"
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
                     403 -> "Forbidden"
@@ -244,20 +274,33 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         is_frequently_used: RequestBody,
         name: RequestBody,
         avgWeigh: RequestBody,
-        avgKyat:RequestBody,
-        avgPae:RequestBody,
-        avgYwae:RequestBody,
+        avgKyat: RequestBody,
+        avgPae: RequestBody,
+        avgYwae: RequestBody,
         images: MutableList<MultipartBody.Part>,
-        video: MultipartBody.Part,
+        video: MultipartBody.Part?,
         specification: RequestBody,
         design: MutableList<RequestBody>,
         orderToGs: RequestBody,
-        recommendCat:MutableList<RequestBody>
+        recommendCat: MutableList<RequestBody>
     ): JewelleryCatCreatedData {
         val response = setUpStockService.createJewelleryCategory(
             token,
-            jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used, name, avgWeigh,
-            avgKyat,avgPae,avgYwae, images.toList(), video, specification, design.toList(), orderToGs,recommendCat
+            jewellery_type_id,
+            jewellery_quality_id,
+            groupId,
+            is_frequently_used,
+            name,
+            avgWeigh,
+            avgKyat,
+            avgPae,
+            avgYwae,
+            images.toList(),
+            video,
+            specification,
+            design.toList(),
+            orderToGs,
+            recommendCat
         )
         return if (response.isSuccessful) {
             response.body() ?: throw Exception("Response body Null")
@@ -265,8 +308,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.parseError<CreateCategoryError>()
-                        "Bad request"
+                        response.errorBody()?.string()?:"Bad request"
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -289,9 +331,9 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         is_frequently_used: RequestBody,
         name: RequestBody,
         avgWeigh: RequestBody,
-        avgKyat:RequestBody,
-        avgPae:RequestBody,
-        avgYwae:RequestBody,        images: MutableList<MultipartBody.Part>,
+        avgKyat: RequestBody,
+        avgPae: RequestBody,
+        avgYwae: RequestBody, images: MutableList<MultipartBody.Part>,
         video: MultipartBody.Part?,
         specification: RequestBody,
         design: MutableList<RequestBody>,
@@ -299,22 +341,37 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         recommendCat: MutableList<RequestBody>
     ): SimpleResponse {
         val response = setUpStockService.editJewelleryCategory(
-            token,categoryId,method,
-            jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used, name, avgWeigh,
-            avgKyat,avgPae,avgYwae, images.toList(), video, specification, design.toList(), orderToGs,recommendCat
+            token,
+            categoryId,
+            method,
+            jewellery_type_id,
+            jewellery_quality_id,
+            groupId,
+            is_frequently_used,
+            name,
+            avgWeigh,
+            avgKyat,
+            avgPae,
+            avgYwae,
+            images.toList(),
+            video,
+            specification,
+            design.toList(),
+            orderToGs,
+            recommendCat
         )
         return if (response.isSuccessful) {
             response.body() ?: throw Exception("Response body Null")
         } else {
             val gson = Gson()
             val type = object : TypeToken<CreateCategoryError>() {}.type
-            var errorResponse: CreateCategoryError? = gson.fromJson(response.errorBody()!!.charStream(), type)
+            var errorResponse: CreateCategoryError? =
+                gson.fromJson(response.errorBody()!!.charStream(), type)
             throw  Exception(
 
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.parseError<CreateCategoryError>()
-                        "Bad request"
+                        response.errorBody()?.string()?:"Bad request"
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -341,7 +398,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> "Bad request"
+                    400 -> response.errorBody()?.string()?:"Bad request"
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
                     403 -> "Forbidden"
@@ -355,13 +412,14 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
 
     override suspend fun getDesign(token: String): DesignDto {
         val response = setUpStockService.getDesignList(
-            token)
+            token
+        )
         return if (response.isSuccessful) {
             response.body() ?: throw Exception("Response body Null")
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> "Bad request"
+                    400 -> response.errorBody()?.string()?:"Bad request"
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
                     403 -> "Forbidden"
@@ -376,7 +434,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
     override suspend fun createProduct(
         token: String,
         name: RequestBody,
-        productCode:RequestBody,
+        productCode: RequestBody,
         type: RequestBody,
         quality: RequestBody,
         group: RequestBody,
@@ -394,13 +452,30 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         diamondPriceForSale: RequestBody?,
         diamondValueForSale: RequestBody?,
         images: List<MultipartBody.Part>,
-        video: MultipartBody.Part
-    ):SimpleResponse {
+        video: MultipartBody.Part?
+    ): SimpleResponse {
         val response = setUpStockService.createProduct(
             token,
-            name,productCode, type, quality, group, categoryId, goldAndGemWeight, gemWeightKyat,
-            gemWeightPae, gemWeightYwae, gemValue, ptAndClipCost, maintenanceCost,
-            diamondInfo, diamondPriceFromGS, diamondValueFromGS, diamondPriceForSale, diamondValueForSale, images, video
+            name,
+            productCode,
+            type,
+            quality,
+            group,
+            categoryId,
+            goldAndGemWeight,
+            gemWeightKyat,
+            gemWeightPae,
+            gemWeightYwae,
+            gemValue,
+            ptAndClipCost,
+            maintenanceCost,
+            diamondInfo,
+            diamondPriceFromGS,
+            diamondValueFromGS,
+            diamondPriceForSale,
+            diamondValueForSale,
+            images,
+            video
         )
         return if (response.isSuccessful) {
             response.body() ?: throw Exception("Response body Null")
@@ -408,8 +483,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.parseError<CreateCategoryError>()
-                        "Bad request"
+                        response.errorBody()?.string()?:"Bad request"
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -433,7 +507,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
                 when (response.code()) {
                     400 -> {
                         response.errorBody()?.parseError<CreateCategoryError>()
-                        "Bad request"
+                        response.errorBody()?.string()?:"Bad request"
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"

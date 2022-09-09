@@ -25,7 +25,8 @@ import kotlinx.coroutines.NonDisposableHandle.parent
 class JewelleryCategoryRecyclerAdapter(
     private val onclick: (id: JewelleryCategoryUiModel) -> Unit,
     private val addNewClick: () -> Unit,
-    private val navigateToEditClick:(item:JewelleryCategoryUiModel)->Unit
+    private val navigateToEditClick:(item:JewelleryCategoryUiModel)->Unit,
+    private val deleteClick:(id:String)->Unit
 
 ) : ListAdapter<JewelleryCategoryUiModel, RecyclerView.ViewHolder>(
     ChooseGroupDiffUtil
@@ -52,7 +53,7 @@ class JewelleryCategoryRecyclerAdapter(
             ImageViewHolder(
                 ItemImageSelectionBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
-                ), onclick,navigateToEditClick
+                ), onclick,navigateToEditClick,deleteClick
             )
         } else {
             AddItemViewHolder(
@@ -94,7 +95,9 @@ class AddItemViewHolder(
 class ImageViewHolder(
     private val binding: ItemImageSelectionBinding,
     private val onclick: (id: JewelleryCategoryUiModel) -> Unit,
-    private val navigateToEditClick:(item:JewelleryCategoryUiModel)->Unit
+    private val navigateToEditClick:(item:JewelleryCategoryUiModel)->Unit,
+    private val deleteClick:(id:String)->Unit
+
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
@@ -111,6 +114,7 @@ class ImageViewHolder(
                 false
             ).root
             val editView = bubble.findViewById<ImageView>(R.id.iv_edit)
+            val deleteView = bubble.findViewById<ImageView>(R.id.iv_trash)
 
             val popupWindow: PopupWindow = BubblePopupHelper.create(binding.root.context, bubble)
             popupWindow.width = 300
@@ -128,6 +132,10 @@ class ImageViewHolder(
             editView.setOnClickListener {
                 popupWindow.dismiss()
                 navigateToEditClick(data)
+            }
+            deleteView.setOnClickListener {
+                popupWindow.dismiss()
+                deleteClick(data.id)
             }
             return@setOnLongClickListener true
         }

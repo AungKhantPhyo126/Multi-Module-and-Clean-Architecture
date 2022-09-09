@@ -16,12 +16,12 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/layout-v23/item_image_selection.xml" value="0.17255434782608695" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout-v26/include_price_by_table_small_items.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
-        <entry key="..\:/Shwe Mi/app/src/main/res/layout/add_gem_value_dialog.xml" value="0.20436083796494228" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/add_gem_value_dialog.xml" value="0.16" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/bubble_card.xml" value="0.2" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/choice_chip.xml" value="0.2013681060282172" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/custom_tab_item.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/drawer_header.xml" value="0.22826086956521738" />
-        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_add_category.xml" value="0.2" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_add_category.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_choose_category.xml" value="0.20436083796494228" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_choose_group.xml" value="0.2" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_choose_jewellery_quality.xml" value="0.2" />
@@ -30,7 +30,7 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_daily_gold_price.xml" value="0.176" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_design_list.xml" value="0.1" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_discount.xml" value="0.24895833333333334" />
-        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_fill_info_collect_stock.xml" value="0.2078804347826087" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_fill_info_collect_stock.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_final_stock_setup.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_flash_sale.xml" value="0.20244565217391305" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_login.xml" value="0.22826086956521738" />

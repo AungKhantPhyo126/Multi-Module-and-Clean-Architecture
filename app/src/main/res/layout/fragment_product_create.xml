@@ -11,7 +11,9 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
+        android:paddingVertical="14dp"
         app:icon="@drawable/ic_turn_up_left"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_next"
         app:layout_constraintEnd_toStartOf="@+id/btn_next"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,6 +28,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:text="@string/create"
+        android:paddingVertical="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -146,6 +149,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:hint="@string/enter_gold_gem_weight"
+                    android:inputType="numberDecimal"
                     android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -170,7 +174,9 @@
                     android:id="@+id/edt_y"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/y" />
+                    android:hint="@string/y"
+                    android:inputType="numberDecimal"
+                    />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -179,16 +185,17 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
                 app:hintEnabled="false"
                 app:layout_constraintEnd_toStartOf="@id/til_y"
+                app:layout_constraintStart_toEndOf="@+id/til_k"
                 app:layout_constraintTop_toBottomOf="@id/til_gold_gem_gm">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_p"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="P" />
+                    android:hint="P"
+                    android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -197,9 +204,7 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
                 app:hintEnabled="false"
-                app:layout_constraintEnd_toStartOf="@id/til_p"
                 app:layout_constraintStart_toStartOf="@id/guideline2"
                 app:layout_constraintTop_toBottomOf="@id/til_gold_gem_gm">
 
@@ -207,7 +212,8 @@
                     android:id="@+id/edt_k"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="K" />
+                    android:hint="K"
+                    android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -245,6 +251,7 @@
                     android:id="@+id/edt_gem_value"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:inputType="numberDecimal"
                     android:hint="Enter Gem Value"
                     android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -278,6 +285,7 @@
                     android:id="@+id/edt_pt_clip_price"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:inputType="numberDecimal"
                     android:hint="@string/enter_price"
                     android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -312,6 +320,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:hint="Enter Price"
+                    android:inputType="numberDecimal"
                     android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -329,18 +338,31 @@
                 app:layout_constraintStart_toStartOf="@+id/til_service_fee"
                 app:layout_constraintTop_toBottomOf="@+id/til_service_fee">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
+                    android:layout_height="match_parent">
 
                     <ImageView
                         android:id="@+id/iv_image1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/empty_picture"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/iv_remove1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/empty_picture" />
-                </LinearLayout>
+                        android:layout_margin="8dp"
+                        android:src="@drawable/ic_trash_can"
+                        app:layout_constraintEnd_toEndOf="@id/iv_image1"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/primary_color" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
@@ -356,18 +378,31 @@
                 app:layout_constraintStart_toEndOf="@+id/mcv_img_3"
                 app:layout_constraintTop_toTopOf="@+id/mcv_img_3">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
+                    android:layout_height="match_parent">
 
                     <ImageView
                         android:id="@+id/iv_image2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/empty_picture"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/iv_remove2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/empty_picture" />
-                </LinearLayout>
+                        android:layout_margin="8dp"
+                        android:src="@drawable/ic_trash_can"
+                        app:layout_constraintEnd_toEndOf="@id/iv_image2"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/primary_color" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
@@ -381,18 +416,31 @@
                 app:layout_constraintStart_toEndOf="@+id/mcv_img_1"
                 app:layout_constraintTop_toTopOf="@+id/mcv_img_1">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
+                    android:layout_height="match_parent">
 
                     <ImageView
                         android:id="@+id/iv_image3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/empty_picture"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/iv_remove3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/empty_picture" />
-                </LinearLayout>
+                        android:layout_margin="8dp"
+                        android:src="@drawable/ic_trash_can"
+                        app:layout_constraintEnd_toEndOf="@id/iv_image3"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/primary_color" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
@@ -421,18 +469,31 @@
                 app:layout_constraintStart_toStartOf="@+id/til_service_fee"
                 app:layout_constraintTop_toBottomOf="@+id/mcv_img_1">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
+                    android:layout_height="match_parent">
 
                     <ImageView
                         android:id="@+id/iv_video"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/empty_video"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/iv_remove_video"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/empty_picture"
-                        android:scaleType="fitXY" />
-                </LinearLayout>
+                        android:layout_margin="8dp"
+                        android:src="@drawable/ic_trash_can"
+                        app:layout_constraintEnd_toEndOf="@id/iv_video"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/primary_color" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
@@ -448,19 +509,31 @@
                 app:layout_constraintStart_toEndOf="@+id/mcv_img_1"
                 app:layout_constraintStart_toStartOf="@+id/mcv_img_3"
                 app:layout_constraintTop_toTopOf="@+id/mcv_video">
-
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
+                    android:layout_height="match_parent">
 
                     <ImageView
                         android:id="@+id/iv_gif"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/empty_gif"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/iv_remove_gif"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/empty_picture" />
-                </LinearLayout>
+                        android:layout_margin="8dp"
+                        android:src="@drawable/ic_trash_can"
+                        app:layout_constraintEnd_toEndOf="@id/iv_gif"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/primary_color" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <TextView

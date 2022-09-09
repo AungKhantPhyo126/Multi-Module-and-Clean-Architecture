@@ -76,6 +76,14 @@ interface SetUpStockService {
         @Path("groupId")groupId:String,
     ):Response<SimpleResponse>
 
+    @Multipart
+    @POST("api/categories/delete/{catId}")
+    suspend fun deleteJewelleryCategory(
+        @Header("Authorization") token: String,
+        @Part("_method")methodName:RequestBody,
+        @Path("catId")groupId:String,
+    ):Response<SimpleResponse>
+
     @GET("api/categories")
     suspend fun getJewelleryCategory(
         @Header("Authorization") token: String,
@@ -100,7 +108,7 @@ interface SetUpStockService {
         @Part("avg_wastage_pae") avgWastagePae: RequestBody,
         @Part("avg_wastage_ywae") avgWastagYwae: RequestBody,
         @Part images:List<MultipartBody.Part>,
-        @Part video:MultipartBody.Part,
+        @Part video:MultipartBody.Part?,
         @Part("specification") specification: RequestBody,
         @Part("designs[]") design: List<RequestBody>,
         @Part("order_to_goldsmith") orderToGs: RequestBody,
@@ -169,7 +177,7 @@ interface SetUpStockService {
         @Part("diamond[price_for_sale]") diamondPriceForSale:RequestBody?,
         @Part("diamond[value_for_sale]") diamondValueForSale:RequestBody?,
         @Part images:List<MultipartBody.Part>,
-        @Part video:MultipartBody.Part,
+        @Part video:MultipartBody.Part?,
     ):Response<SimpleResponse>
 
     @GET("api/products/code")

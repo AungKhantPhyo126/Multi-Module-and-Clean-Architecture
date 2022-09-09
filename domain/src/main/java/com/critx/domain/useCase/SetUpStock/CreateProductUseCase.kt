@@ -29,6 +29,6 @@ class CreateProductUseCase @Inject constructor(
         diamondPriceForSale: RequestBody?,
         diamondValueForSale: RequestBody?,
         images: List<MultipartBody.Part>,
-        video: MultipartBody.Part
+        video: MultipartBody.Part?
     )=setupStockRepository.createProduct(token, name,productCode, type, quality, group, categoryId, goldAndGemWeight, gemWeightKyat, gemWeightPae, gemWeightYwae, gemValue, ptAndClipCost, maintenanceCost, diamondInfo, diamondPriceFromGS, diamondValueFromGS, diamondPriceForSale, diamondValueForSale, images, video)
 }

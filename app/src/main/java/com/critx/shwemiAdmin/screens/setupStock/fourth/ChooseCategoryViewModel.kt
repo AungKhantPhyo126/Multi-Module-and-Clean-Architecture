@@ -7,6 +7,7 @@ import androidx.paging.map
 import com.critx.commonkotlin.util.Resource
 import com.critx.domain.model.SetupStock.jewelleryCategory.JewelleryCategory
 import com.critx.domain.useCase.SetUpStock.CreateJewelleryGroupUseCase
+import com.critx.domain.useCase.SetUpStock.DeleteJewelleryCategoryUseCase
 import com.critx.domain.useCase.SetUpStock.GetJewelleryCategoryUseCase
 import com.critx.domain.useCase.SetUpStock.GetJewelleryGroupUseCase
 import com.critx.shwemiAdmin.UiEvent
@@ -20,12 +21,15 @@ import com.critx.shwemiAdmin.uistate.JewelleryQualityUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
 
 @HiltViewModel
 class ChooseCategoryViewModel @Inject constructor(
     private val localDatabase: LocalDatabase,
-    private val getJewelleryCategoryUseCase: GetJewelleryCategoryUseCase
+    private val getJewelleryCategoryUseCase: GetJewelleryCategoryUseCase,
+    private val deleteJewelleryCategoryUseCase: DeleteJewelleryCategoryUseCase
 ) : ViewModel() {
     //forselection
 
@@ -40,8 +44,47 @@ class ChooseCategoryViewModel @Inject constructor(
     private val _getJewelleryCategory = MutableStateFlow(JewelleryCategoryUiState())
     val getJewelleryCategory = _getJewelleryCategory.asStateFlow()
 
+    private val _deleteCategoryState = MutableStateFlow(JewelleryCategoryUiState())
+    val deleteCategoryState = _deleteCategoryState.asStateFlow()
+
     private var _event = MutableSharedFlow<UiEvent>()
     val event = _event.asSharedFlow()
+
+    fun deleteJewelleryCategory(id:String){
+        val method = "DELETE"
+        val methodRequestBody =method.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        viewModelScope.launch {
+            deleteJewelleryCategoryUseCase(localDatabase.getToken().orEmpty(),methodRequestBody,id
+            ).collectLatest {result->
+                when (result) {
+                    is Resource.Loading -> {
+                        _deleteCategoryState.value = _deleteCategoryState.value.copy(
+                            deleteLoading = true
+                        )
+                    }
+                    is Resource.Success -> {
+                        _deleteCategoryState.update { uiState ->
+                            uiState.copy(
+                                deleteLoading = false,
+                                deleteSuccessLoading = "Successfully Deleted"
+                            )
+
+                        }
+
+
+                    }
+                    is Resource.Error -> {
+                        _deleteCategoryState.value = _deleteCategoryState.value.copy(
+                            deleteLoading = false,
+                        )
+                        result.message?.let { errorString ->
+                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     fun getJewelleryCategory(isFrequentlyUse: Int,firstCatId:Int,secondCatId:Int,thirdCatId:Int) {
         viewModelScope.launch {

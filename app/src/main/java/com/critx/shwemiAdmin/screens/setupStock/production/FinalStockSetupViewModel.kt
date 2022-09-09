@@ -1,5 +1,6 @@
 package com.critx.shwemiAdmin.screens.setupStock.production
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
@@ -24,11 +25,31 @@ class FinalStockSetupViewModel @Inject constructor(
     private val getProductCodeUseCase: GetProductCodeUseCase
 ) :ViewModel(){
 
-    var selectedImgUri1: SelectedImage? = null
-    var selectedImgUri2: SelectedImage? = null
-    var selectedImgUri3: SelectedImage? = null
-    var selectedVideoUri: File? = null
-    var selectedGifUri: SelectedImage? = null
+    var selectedImgUri1 = MutableLiveData<SelectedImage?>(null)
+    var selectedImgUri2 = MutableLiveData<SelectedImage?>(null)
+    var selectedImgUri3 = MutableLiveData<SelectedImage?>(null)
+    var selectedVideoUri = MutableLiveData<File?>(null)
+    var selectedGifUri= MutableLiveData<SelectedImage?>(null)
+
+    fun setSelectedImgUri1(selectedImage: SelectedImage?) {
+        selectedImgUri1.value = selectedImage
+    }
+
+    fun setSelectedImgUri2(selectedImage: SelectedImage?) {
+        selectedImgUri2?.value = selectedImage
+    }
+
+    fun setSelectedImgUri3(selectedImage: SelectedImage?) {
+        selectedImgUri3?.value = selectedImage
+    }
+
+    fun setSelectedGif(selectedImage: SelectedImage?) {
+        selectedGifUri?.value = selectedImage
+    }
+
+    fun setSelectedVideo(selectedVideo: File?) {
+        selectedVideoUri?.value = selectedVideo
+    }
 
     var diamondInfo:String? = null
     var diamondPriceFromGS:String? = null
@@ -72,7 +93,7 @@ class FinalStockSetupViewModel @Inject constructor(
         diamondPriceForSale: RequestBody?,
         diamondValueForSale: RequestBody?,
         images: List<MultipartBody.Part>,
-        video: MultipartBody.Part
+        video: MultipartBody.Part?
     ){
         viewModelScope.launch {
             createProductUseCase(localDatabase.getToken().orEmpty(),

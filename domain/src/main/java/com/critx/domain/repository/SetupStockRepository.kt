@@ -53,6 +53,12 @@ interface SetupStockRepository {
         groupId: String,
     ): Flow<Resource<SimpleData>>
 
+    fun deleteJewelleryCategory(
+        token: String,
+        method: RequestBody,
+        catId: String,
+    ): Flow<Resource<SimpleData>>
+
 
     fun getJewelleryCategory(
         token: String,
@@ -75,7 +81,7 @@ interface SetupStockRepository {
         avgPae: RequestBody,
         avgYwae: RequestBody,
         images: MutableList<MultipartBody.Part>,
-        video: MultipartBody.Part,
+        video: MultipartBody.Part?,
         specification: RequestBody,
         design: MutableList<RequestBody>,
         orderToGs: RequestBody,
@@ -137,7 +143,7 @@ interface SetupStockRepository {
         diamondPriceForSale: RequestBody?,
         diamondValueForSale: RequestBody?,
         images: List<MultipartBody.Part>,
-        video: MultipartBody.Part,
+        video: MultipartBody.Part?,
     ): Flow<Resource<SimpleData>>
 
     fun getProductCode(

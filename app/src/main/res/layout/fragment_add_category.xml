@@ -75,13 +75,13 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             app:hintEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/tv_label_category"
+            app:layout_constraintStart_toEndOf="@+id/tv_label_avg_wastage"
             app:layout_constraintTop_toBottomOf="@id/materialToolbar">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -132,16 +132,15 @@
             android:layout_marginTop="16dp"
             app:hintEnabled="false"
             app:layout_constraintEnd_toEndOf="@id/til_category"
-            app:layout_constraintStart_toStartOf="@id/til_category"
-            app:layout_constraintTop_toBottomOf="@+id/til_category"
-            tools:layout_editor_absoluteX="1dp">
+            app:layout_constraintStart_toStartOf="@+id/til_category"
+            app:layout_constraintTop_toBottomOf="@+id/til_category">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edt_avg_weight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/enter_weight_in_gm"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -161,7 +160,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/y"
 
-                android:inputType="number" />
+                android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -170,9 +169,9 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
             app:hintEnabled="false"
             app:layout_constraintEnd_toStartOf="@id/til_y"
+            app:layout_constraintStart_toEndOf="@+id/til_k"
             app:layout_constraintTop_toBottomOf="@id/til_weight_in_gm">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -180,7 +179,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="P"
-                android:inputType="number" />
+                android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -189,9 +188,7 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
             app:hintEnabled="false"
-            app:layout_constraintEnd_toStartOf="@id/til_p"
             app:layout_constraintStart_toStartOf="@id/til_category"
             app:layout_constraintTop_toBottomOf="@id/til_weight_in_gm">
 
@@ -200,7 +197,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="K"
-                android:inputType="number" />
+                android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -406,7 +403,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
-                    android:src="@drawable/empty_picture"
+                    android:src="@drawable/empty_video"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -447,7 +444,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
-                    android:src="@drawable/empty_picture"
+                    android:src="@drawable/empty_gif"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

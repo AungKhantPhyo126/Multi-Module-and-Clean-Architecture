@@ -22,6 +22,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.critx.common.ui.createChip
 import com.critx.common.ui.getAlertDialog
+import com.critx.common.ui.showDeleteSuccessDialog
+import com.critx.common.ui.showSuccessDialog
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.*
@@ -53,6 +55,7 @@ class ChooseCategoryFragment : Fragment() {
     private var snackBar: Snackbar? = null
     private lateinit var adapter: JewelleryCategoryRecyclerAdapter
     private val sharedViewModel by activityViewModels<SharedViewModel>()
+    private var frequentUse = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,10 +87,19 @@ class ChooseCategoryFragment : Fragment() {
         toolbarEndIcon.isVisible = false
     }
 
+
+    fun refreshData(){
+        viewModel.getJewelleryCategory(
+            frequentUse,
+            args.firstCat.id.toInt(),
+            args.secondCat.id.toInt(),
+            args.thirdCat.id.toInt()
+        )
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
-        var frequentUse = if (binding.cbFrequentlyUsed.isChecked) 1 else 0
+        frequentUse = if (binding.cbFrequentlyUsed.isChecked) 1 else 0
         viewModel.getJewelleryCategory(
             frequentUse,
             args.firstCat.id.toInt(),
@@ -140,6 +152,22 @@ class ChooseCategoryFragment : Fragment() {
         }
         viewLifecycleOwner.lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+                //deleteCategory
+                launch {
+                    viewModel.deleteCategoryState.collectLatest {
+                        if (it.deleteLoading){
+                            loadingDialog.show()
+                        }else loadingDialog.dismiss()
+                        if (it.deleteSuccessLoading != null){
+                            viewModel.setSelectedCategory(null)
+                            requireContext().showSuccessDialog("Category Deleted") {
+                                it.deleteSuccessLoading = null
+                                refreshData()
+                            }
+                        }
+                    }
+                }
 
                 //getJewelleryGroup
                 launch {
@@ -237,6 +265,12 @@ class ChooseCategoryFragment : Fragment() {
         }, {
             viewModel.setSelectedCategory(it)
             navigateWithEditView()
+        },{
+            //deleteclick
+            requireContext().showDeleteSuccessDialog("All items related to this Category will be deleted"
+            ) {
+                viewModel.deleteJewelleryCategory(it)
+            }
         })
         binding.rvImages.adapter = adapter
     }
@@ -254,6 +288,7 @@ class ChooseCategoryFragment : Fragment() {
             val chip = requireContext().createChip(item.name)
             val bubble = BubbleCardBinding.inflate(layoutInflater).root
             val editView = bubble.findViewById<ImageView>(R.id.iv_edit)
+            val deleteView = bubble.findViewById<ImageView>(R.id.iv_trash)
 
             val popupWindow: PopupWindow = BubblePopupHelper.create(requireContext(), bubble)
             popupWindow.width = 300
@@ -278,6 +313,14 @@ class ChooseCategoryFragment : Fragment() {
                     viewModel.setSelectedCategory(item)
                 }
                 navigateWithEditView()
+            }
+
+            deleteView.setOnClickListener {
+                popupWindow.dismiss()
+                requireContext().showDeleteSuccessDialog("All items related to this Category will be deleted"
+                ) {
+                    viewModel.deleteJewelleryCategory(item.id)
+                }
             }
 //            val chip = ItemImageSelectionBinding.inflate(layoutInflater).root
             binding.chipGroupChooseGp.addView(chip)

@@ -192,21 +192,21 @@ class AddCategoryFragment : Fragment() {
                             )
                         }
                     }
-                    if (result.data != null && result?.data?.data != null) {
-                        val selectedImageUri: Uri? = result.data!!.data
-//                        binding.ivVideo.setVideoURI(selectedImageUri)
-//                        binding.ivVideo.pause()
-                        getRealVideoPathFromUri(
-                            requireContext(),
-                            result.data!!.data!!
-                        ).let {
-                            val thumbnail = ThumbnailUtils.createVideoThumbnail(
-                                File(it!!),
-                                Size(500, 500), CancellationSignal()
-                            )
-//                            binding.ivVideo.setImageBitmap(thumbnail)
-                        }
-                    }
+//                    if (result.data != null && result?.data?.data != null) {
+//                        val selectedImageUri: Uri? = result.data!!.data
+////                        binding.ivVideo.setVideoURI(selectedImageUri)
+////                        binding.ivVideo.pause()
+//                        getRealVideoPathFromUri(
+//                            requireContext(),
+//                            result.data!!.data!!
+//                        ).let {
+//                            val thumbnail = ThumbnailUtils.createVideoThumbnail(
+//                                File(it!!),
+//                                Size(500, 500), CancellationSignal()
+//                            )
+////                            binding.ivVideo.setImageBitmap(thumbnail)
+//                        }
+//                    }
                 }
             }
 
@@ -387,19 +387,19 @@ class AddCategoryFragment : Fragment() {
         }
         viewModel.selectedVideoUri?.observe(viewLifecycleOwner) { selectedItem ->
             binding.ivRemoveVideo.isVisible = selectedItem != null
-            if (binding.ivVideo.drawable == requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_picture)
-            ) {
-                binding.ivRemoveVideo.isVisible = false
-            }
+//            binding.ivRemoveVideo.isVisible = binding.ivVideo.drawable != requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_picture)
             if (selectedItem != null) {
-                val thumbnail = ThumbnailUtils.createVideoThumbnail(
-                    selectedItem,
-                    Size(500, 500), CancellationSignal()
-                )
-                binding.ivVideo.setImageBitmap(thumbnail)
+//                val thumbnail = ThumbnailUtils.createVideoThumbnail(
+//                    selectedItem,
+//                    Size(500, 500), CancellationSignal()
+//                )
+                binding.ivVideo.getThumbnail(selectedItem.path)
                 val requestBody =
                     selectedItem.asRequestBody("multipart/form-data".toMediaTypeOrNull())
                 video = MultipartBody.Part.createFormData("video", selectedItem.name, requestBody)
+            }else{
+                video = null
+                binding.ivVideo.setImageDrawable(requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_picture))
             }
 
         }
@@ -842,7 +842,7 @@ class AddCategoryFragment : Fragment() {
                     name,
                     avgWeigh,
                     photoToUpload,
-                    video!!,
+                    video,
                     specification,
                     designList,
                     orderToGs.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull()),

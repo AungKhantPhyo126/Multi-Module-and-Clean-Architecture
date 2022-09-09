@@ -170,6 +170,31 @@ class SetupStockRepositoryImpl @Inject constructor(
             }
         }
 
+    override fun deleteJewelleryCategory(
+        token: String,
+        method: RequestBody,
+        catId: String
+    ): Flow<Resource<SimpleData>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        setupStockNetWorkDatasource.deleteJewelleryCategory(
+                            token,method,
+                            catId,
+                        ).response.asDomain()
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
+
     override fun getJewelleryCategory(
         token: String,
         frequentUse: Int?,
@@ -206,7 +231,7 @@ class SetupStockRepositoryImpl @Inject constructor(
         avgPae:RequestBody,
         avgYwae:RequestBody,
         images: MutableList<MultipartBody.Part>,
-        video: MultipartBody.Part,
+        video: MultipartBody.Part?,
         specification: RequestBody,
         design: MutableList<RequestBody>,
         orderToGs:RequestBody,
@@ -360,7 +385,7 @@ class SetupStockRepositoryImpl @Inject constructor(
         diamondPriceForSale: RequestBody?,
         diamondValueForSale: RequestBody?,
         images: List<MultipartBody.Part>,
-        video: MultipartBody.Part
+        video: MultipartBody.Part?
     ): Flow<Resource<SimpleData>>  =
         flow {
             emit(Resource.Loading())

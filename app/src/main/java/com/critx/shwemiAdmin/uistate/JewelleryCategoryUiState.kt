@@ -21,5 +21,10 @@ data class JewelleryCategoryUiState(
 
     var calculateKPYLoading:Boolean =false,
     var calculateKPYSuccessLoading:Double? =null,
-    var calculateKPYErrorMessage:String? =null
+    var calculateKPYErrorMessage:String? =null,
+
+
+    var deleteLoading:Boolean = false,
+    var deleteSuccessLoading:String? = null,
+    var deleteErrorMessage:String? = null
 )

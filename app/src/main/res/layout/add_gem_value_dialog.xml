@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     app:cardCornerRadius="8dp"
     app:cardElevation="16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -58,7 +58,7 @@
                 android:id="@+id/edt_diamond_price"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:hint="@string/enter_diamond_price_for_gs"
                 android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -90,7 +90,7 @@
                 android:id="@+id/edt_diamond_value"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:hint="@string/enter_diamond_value_from_gs"
                 android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -122,7 +122,7 @@
                 android:id="@+id/edt_diamond_actual_price"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:hint="@string/enter_sell_price_of_diamond"
                 android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -165,8 +165,8 @@
             android:id="@+id/tv_label_add_gem_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:text="@string/add_gem_value"
             android:textAppearance="@style/TextAppearance.ShweMi.Headline6"
             android:textStyle="bold"
@@ -187,10 +187,9 @@
             android:id="@+id/btn_calculate"
             android:layout_width="0dp"
             android:layout_height="70dp"
-            android:layout_marginTop="64dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
             android:text="Calculate"
-            android:layout_marginBottom="32dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tv_reset"
@@ -200,10 +199,11 @@
             android:id="@+id/tv_reset"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
+            android:layout_marginStart="16dp"
             android:text="Reset"
-            android:textColor="@color/edit_text_color"
+            android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+            android:textColor="@color/edit_text_color"
             app:layout_constraintBottom_toBottomOf="@+id/btn_calculate"
             app:layout_constraintEnd_toStartOf="@+id/btn_calculate"
             app:layout_constraintHorizontal_bias="0.5"

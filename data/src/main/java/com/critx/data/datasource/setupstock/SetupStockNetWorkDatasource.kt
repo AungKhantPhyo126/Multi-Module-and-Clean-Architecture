@@ -53,6 +53,12 @@ interface SetupStockNetWorkDatasource {
         groupId: String,
     ): SimpleResponse
 
+    suspend fun deleteJewelleryCategory(
+        token: String,
+        method: RequestBody,
+        catId: String,
+    ):SimpleResponse
+
     suspend fun getJewelleryCategory(
         token: String,
         frequentUse: Int?,
@@ -78,7 +84,7 @@ interface SetupStockNetWorkDatasource {
         avgPae:RequestBody,
         avgYwae:RequestBody,
         images: MutableList<MultipartBody.Part>,
-        video: MultipartBody.Part,
+        video: MultipartBody.Part?,
         specification: RequestBody,
         design: MutableList<RequestBody>,
         orderToGs: RequestBody,
@@ -138,7 +144,7 @@ interface SetupStockNetWorkDatasource {
         diamondPriceForSale: RequestBody?,
         diamondValueForSale: RequestBody?,
         images: List<MultipartBody.Part>,
-        video: MultipartBody.Part,
+        video: MultipartBody.Part?,
     ): SimpleResponse
 
     suspend fun getProductCode(

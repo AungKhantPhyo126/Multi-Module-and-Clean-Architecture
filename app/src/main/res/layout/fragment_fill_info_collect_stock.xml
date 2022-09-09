@@ -12,7 +12,6 @@
         android:layout_marginStart="8dp"
         android:text="@string/wastage"
         app:layout_constraintBottom_toBottomOf="@+id/til_k"
-        app:layout_constraintEnd_toStartOf="@+id/til_k"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/til_k"
         app:layout_constraintVertical_chainStyle="spread" />
@@ -23,7 +22,6 @@
         android:layout_height="wrap_content"
         android:text="@string/goldsmith"
         app:layout_constraintBottom_toBottomOf="@+id/til_choose_one_gold_smith"
-        app:layout_constraintEnd_toStartOf="@+id/til_choose_one_gold_smith"
         app:layout_constraintStart_toStartOf="@+id/cb_wastage"
         app:layout_constraintTop_toTopOf="@+id/til_choose_one_gold_smith" />
 
@@ -33,7 +31,6 @@
         android:layout_height="wrap_content"
         android:text="@string/bonus"
         app:layout_constraintBottom_toBottomOf="@+id/til_enter_bonus_amount"
-        app:layout_constraintEnd_toStartOf="@+id/til_enter_bonus_amount"
         app:layout_constraintStart_toStartOf="@+id/cb_goldsmith"
         app:layout_constraintTop_toTopOf="@+id/til_enter_bonus_amount" />
 
@@ -43,7 +40,6 @@
         android:layout_height="wrap_content"
         android:text="@string/size"
         app:layout_constraintBottom_toBottomOf="@+id/til_size1"
-        app:layout_constraintEnd_toStartOf="@+id/til_size1"
         app:layout_constraintStart_toStartOf="@+id/cb_bonus"
         app:layout_constraintTop_toTopOf="@+id/til_size1" />
 
@@ -70,6 +66,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_y"
+            android:inputType="numberDecimal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/y" />
@@ -88,6 +85,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_p"
+            android:inputType="numberDecimal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="P" />
@@ -100,13 +98,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        app:hintEnabled="false"
         android:enabled="false"
+        app:hintEnabled="false"
         app:layout_constraintEnd_toStartOf="@id/til_p"
+        app:layout_constraintStart_toEndOf="@+id/cb_wastage"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_k"
+            android:inputType="numberDecimal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="K" />
@@ -120,8 +120,8 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/rounded_corner_dropdown_background"
         android:elevation="2dp"
-        app:boxStrokeWidth="0dp"
         android:enabled="false"
+        app:boxStrokeWidth="0dp"
         app:endIconDrawable="@drawable/ic_expand_more"
         app:endIconMode="custom"
         app:endIconTint="?attr/editTextColor"
@@ -134,9 +134,9 @@
             android:id="@+id/edt_choose_one_gold_smith"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none"
             android:focusable="false"
-            android:hint="Choose one GoldSmith" />
+            android:hint="Choose one GoldSmith"
+            android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_enter_bonus_amount"
