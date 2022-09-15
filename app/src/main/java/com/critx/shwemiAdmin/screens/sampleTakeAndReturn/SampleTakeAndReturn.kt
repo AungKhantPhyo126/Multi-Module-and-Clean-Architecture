@@ -60,7 +60,7 @@ class SampleTakeAndReturn : Fragment() {
                         layoutInflater, ConstraintLayout(requireContext()), false
                     )
                     tab.customView = customTab.root
-                    customTab.tvTabItem.text = "New"
+                    customTab.tvTabItem.text = "Inventory"
                 }
                 2 -> {
                     val customTab = CustomTabItemBinding.inflate(

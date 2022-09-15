@@ -30,7 +30,6 @@ class VoucherViewHolder(private val binding:ItemVoucherBinding,
                           private val onclick: () -> Unit):RecyclerView.ViewHolder(binding.root){
     fun bind(data:VoucherUIModel){
         binding.tvInvoiceCodeNumber.text = data.invoiceNumber.toString()
-        binding.tieInvoiceSpecification.setText(data.specification)
     }
 }
 

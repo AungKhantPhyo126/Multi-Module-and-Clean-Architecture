@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -269,34 +270,34 @@ class EditGroupFragment : Fragment() {
 
     fun uploadFile(actionType: String) {
 
-        viewModel.selectedImgUri?.let {
-
-        }
-
-        val name = binding.edtGroupName.text.toString()
-            .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        if (actionType == CREATE_GROUP) {
-            viewModel.createGroup(
-                photo!!,
-                args.type.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                args.quality.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                isFrequentlyUsed.toString()
-                    .toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                name
-            )
+        if (binding.edtGroupName.text.isNullOrEmpty() ||
+               viewModel.selectedImgUri.value == null ){
+            Toast.makeText(requireContext(),"Fill required Fields",Toast.LENGTH_LONG)
         } else {
+            val name = binding.edtGroupName.text.toString()
+                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            if (actionType == CREATE_GROUP) {
+                viewModel.createGroup(
+                    photo!!,
+                    args.type.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                    args.quality.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                    isFrequentlyUsed.toString()
+                        .toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                    name
+                )
+            } else {
 
-            viewModel.editGroup(
-                photo!!,
-                args.groupInfo!!.id,
-                args.type.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                args.quality.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                isFrequentlyUsed.toString()
-                    .toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                name
-            )
+                viewModel.editGroup(
+                    photo!!,
+                    args.groupInfo!!.id,
+                    args.type.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                    args.quality.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                    isFrequentlyUsed.toString()
+                        .toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                    name
+                )
+            }
         }
-
     }
 
     fun chooseImage() {

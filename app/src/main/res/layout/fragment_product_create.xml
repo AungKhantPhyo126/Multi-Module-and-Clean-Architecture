@@ -45,7 +45,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tv_label_stock"
@@ -163,7 +163,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_y"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="80dp"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:hintEnabled="false"
@@ -175,14 +175,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/y"
-                    android:inputType="numberDecimal"
-                    />
+                    android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_p"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="80dp"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:hintEnabled="false"
@@ -201,7 +200,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_k"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="80dp"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:hintEnabled="false"
@@ -546,6 +545,19 @@
                 app:layout_constraintEnd_toStartOf="@+id/guideline2"
                 app:layout_constraintStart_toStartOf="@+id/tv_label_image"
                 app:layout_constraintTop_toTopOf="@+id/mcv_video" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_refresh_product_code"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:paddingVertical="14dp"
+                android:layout_marginEnd="16dp"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:icon="@drawable/ic_refresh"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_stock_code_number"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_stock_code_number" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

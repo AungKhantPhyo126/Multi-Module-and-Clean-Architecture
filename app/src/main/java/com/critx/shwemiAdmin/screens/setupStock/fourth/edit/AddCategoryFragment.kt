@@ -273,7 +273,9 @@ class AddCategoryFragment : Fragment() {
             }
 
         if (args.category != null) {
-            viewModel.getRelatedCat(args.category!!.id)
+            if (viewModel.selectedRecommendCat.value ==  null){
+                viewModel.getRelatedCat(args.category!!.id)
+            }
             binding.cbFrequentlyUsed.isChecked = args.groupInfo!!.isFrequentlyUse
             binding.btnConfirm.text = "Save"
             binding.edtEnterCategory.setText(args.category!!.name)

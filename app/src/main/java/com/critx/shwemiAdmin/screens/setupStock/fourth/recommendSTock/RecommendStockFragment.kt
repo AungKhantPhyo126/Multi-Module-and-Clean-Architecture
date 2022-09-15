@@ -80,6 +80,8 @@ class RecommendStockFragment:Fragment() {
         binding.rvRecommendStock.adapter =adapter
         collectData()
 
+
+
         binding.btnOk.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -96,9 +98,9 @@ class RecommendStockFragment:Fragment() {
                         } else loadingDialog.dismiss()
                         if (it.successLoading != null) {
                             adapter.submitList(it.successLoading)
-//                            sharedViewModel.selectedRecommendCat?.addAll(it.successLoading!!.filter {
-//                                it.isChecked
-//                            }.map { it.id.toInt() })
+                            sharedViewModel.setSelectedRecommendCat(it.successLoading!!.filter {
+                                it.isChecked
+                            }.map { it.id.toInt() })
                             findNavController().previousBackStackEntry?.savedStateHandle?.set(
                                 "selected recommend categories",
                                 it.successLoading!!.filter {
@@ -127,7 +129,13 @@ class RecommendStockFragment:Fragment() {
                         if (it.successLoading != null) {
                             adapter.submitList(it.successLoading)
                             args.catId?.let {
-                                viewModel.getRelatedCat(it)
+                                if (sharedViewModel.selectedRecommendCat.value.isNullOrEmpty()){
+                                    viewModel.getRelatedCat(it)
+                                }else{
+                                    sharedViewModel.selectedRecommendCat.value!!.forEach {
+                                        viewModel.selectImage(it.toString())
+                                    }
+                                }
                             }
 //                            sharedViewModel.selectedRecommendCat?.addAll(it.successLoading!!.filter {
 //                                it.isChecked

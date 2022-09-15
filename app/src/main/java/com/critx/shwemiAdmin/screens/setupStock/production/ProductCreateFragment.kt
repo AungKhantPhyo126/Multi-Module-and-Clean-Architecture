@@ -6,22 +6,17 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.ThumbnailUtils
-import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Size
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.util.DisplayMetrics
+import android.view.*
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.os.CancellationSignal
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -40,7 +35,6 @@ import com.critx.shwemiAdmin.databinding.ProductAddedDialogBinding
 import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.SelectedImage
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.convertBitmapToFile
-import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.getRealVideoPathFromUri
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.getResizedBitmap
 import com.critx.shwemiAdmin.screens.setupStock.fourth.recommendSTock.RecommendStockAdapter
 import com.critx.shwemiAdmin.screens.setupStock.third.edit.getRealPathFromUri
@@ -55,6 +49,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.io.InputStream
+
 
 @AndroidEntryPoint
 class ProductCreateFragment : Fragment() {
@@ -213,6 +208,9 @@ var photo1: MultipartBody.Part? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.btnRefreshProductCode.setOnClickListener {
+            viewModel.getProductCode()
+        }
         binding.cbGemValue.setOnCheckedChangeListener { compoundButton, ischecked ->
             if (ischecked) {
                 val builder = MaterialAlertDialogBuilder(requireContext())
@@ -223,13 +221,24 @@ var photo1: MultipartBody.Part? = null
                 builder.setView(alertDialogBinding.root)
                 val alertDialog = builder.create()
 
-                val mDisplayMetrics = requireActivity().windowManager.currentWindowMetrics
-                val mDisplayWidth = mDisplayMetrics.bounds.width()
-                val mDisplayHeight = mDisplayMetrics.bounds.height()
+                val displayMetrics = DisplayMetrics()
+                var mDisplayWidth = 0
+                var mDisplayHeight = 0
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    val mDisplayMetrics = requireActivity().windowManager.currentWindowMetrics
+                    mDisplayWidth = mDisplayMetrics.bounds.width()
+                    mDisplayHeight = mDisplayMetrics.bounds.height()
+                }else{
+                    requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
+                    mDisplayWidth = displayMetrics.widthPixels
+                    mDisplayHeight = displayMetrics.heightPixels
+                }
+
 
                 val mLayoutParams = WindowManager.LayoutParams()
                 mLayoutParams.width = (mDisplayWidth).toInt()
                 mLayoutParams.height = (mDisplayHeight).toInt()
+                mLayoutParams.verticalMargin = 16f
                 alertDialog.window?.attributes = mLayoutParams
 
                 alertDialog.setCancelable(false)
@@ -489,6 +498,7 @@ var photo1: MultipartBody.Part? = null
         alertDialog.setCancelable(false)
         alertDialog.show()
         successBinding.btnCreateAnotherStock.setOnClickListener {
+            viewModel.getProductCode()
             alertDialog.dismiss()
         }
         successBinding.btnCreateNewItem.setOnClickListener {
@@ -552,7 +562,6 @@ var photo1: MultipartBody.Part? = null
         dialogbinding.actDiamondActualSellValue.setText(actualSellValue.toString())
         dialogbinding.tvReset.setTextColor(requireContext().getColorStateList(R.color.primary_color))
         dialogbinding.btnCalculate.text = "Add"
-
     }
 
     fun createProduct() {
@@ -561,10 +570,7 @@ var photo1: MultipartBody.Part? = null
             binding.edtGoldGemGm.text.isNullOrEmpty() ||
             binding.edtK.text.isNullOrEmpty() ||
             binding.edtP.text.isNullOrEmpty() ||
-            binding.edtY.text.isNullOrEmpty() ||
-            binding.edtPtClipPrice.text.isNullOrEmpty() ||
-            binding.edtServiceFee.text.isNullOrEmpty()
-
+            binding.edtY.text.isNullOrEmpty()
         ) {
             Toast.makeText(requireContext(), "Fill The Required Fields", Toast.LENGTH_LONG).show()
         }else{
