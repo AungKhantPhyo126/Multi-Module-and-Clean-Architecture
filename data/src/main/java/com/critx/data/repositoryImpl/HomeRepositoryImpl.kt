@@ -1,4 +1,4 @@
-package com.critx.data.repository
+package com.critx.data.repositoryImpl
 
 import com.critx.data.datasource.HomeNetWorkDatasource
 import com.critx.data.network.dto.asDomain

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -13,6 +14,9 @@ import androidx.navigation.fragment.findNavController
 import com.critx.common.qrscan.getBarLauncher
 import com.critx.common.qrscan.getBarLauncherTest
 import com.critx.common.qrscan.scanQrCode
+import com.critx.common.ui.getAlertDialog
+import com.critx.common.ui.showSuccessDialog
+import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentCollectStockBinding
 import com.critx.shwemiAdmin.screens.discount.DiscountRecyclerAdapter
@@ -21,6 +25,9 @@ class CollectStockFragment:Fragment() {
     private lateinit var binding: FragmentCollectStockBinding
     private val viewModel by viewModels<CollectStockVIewModel>()
     private lateinit var barlauncer:Any
+    private lateinit var loadingDialog: AlertDialog
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,23 +51,76 @@ class CollectStockFragment:Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
+        loadingDialog = requireContext().getAlertDialog()
         barlauncer = this.getBarLauncherTest(requireContext()) { viewModel.addStockCode(it) }
-        binding.mcvScanHere.setOnClickListener {
+        binding.ivScan.setOnClickListener {
             scanQrCode(requireContext(),barlauncer)
         }
         val adapter = CollectStockRecyclerAdapter{
 
         }
-        binding.mcvScanHere.setOnClickListener {
-            scanQrCode(requireContext(),barlauncer)
-        }
-        binding.layoutCollectStockBatch.btnNext.setOnClickListener {
-            findNavController().navigate(CollectStockFragmentDirections.actionCollectStockFragmentToFillInfoCollectStockFragment())
-        }
+
         binding.layoutCollectStockBatch.rvCollectStockBatch.adapter=adapter
         viewModel.scannedStockcodebatch.observe(viewLifecycleOwner){
             adapter.submitList(it)
             adapter.notifyDataSetChanged()
+        }
+
+        binding.layoutCollectStockBatch.btnNext.setOnClickListener {
+            viewModel.getProductIdList()
+        }
+
+        viewModel.getProductIdListLiveData.observe(viewLifecycleOwner){
+            when(it){
+                is Resource.Loading->{
+                    loadingDialog.show()
+                }
+                is Resource.Success->{
+                    //id list
+
+                    findNavController().navigate(CollectStockFragmentDirections.actionCollectStockFragmentToFillInfoCollectStockFragment())
+                }
+                is Resource.Error->{
+                    loadingDialog.dismiss()
+                }
+            }
+        }
+
+        viewModel.getProductIdLiveData.observe(viewLifecycleOwner){
+            when(it){
+                is Resource.Loading->{
+                    loadingDialog.show()
+                }
+                is Resource.Success->{
+                    binding.edtStockCode.setText(it.data)
+                    viewModel.collectStock(it.data.orEmpty(),binding.edtWeight.text.toString())
+                }
+                is Resource.Error->{
+                    loadingDialog.dismiss()
+                }
+            }
+        }
+
+        viewModel.collectStockSingleLiveData.observe(viewLifecycleOwner){
+            when(it){
+                is Resource.Loading->{
+                    loadingDialog.show()
+                }
+                is Resource.Success->{
+                    loadingDialog.dismiss()
+                    requireContext().showSuccessDialog(it.data.orEmpty()){
+                        binding.edtStockCode.text?.clear()
+                        binding.edtWeight.text?.clear()
+                    }
+                }
+                is Resource.Error->{
+                    loadingDialog.dismiss()
+                }
+            }
+        }
+
+        binding.btnConfirm.setOnClickListener {
+            viewModel.getProductId(binding.edtStockCode.text.toString())
         }
 
         binding.chiptGp.setOnCheckedStateChangeListener { group, checkedIds ->
