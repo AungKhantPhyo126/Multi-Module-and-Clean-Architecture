@@ -1,16 +1,20 @@
 package com.critx.data.di
 
 import com.critx.data.datasource.auth.AuthNetWorkDataSource
+import com.critx.data.datasource.collectStock.CollectStockDataSource
 import com.critx.data.datasource.setupstock.SetupStockNetWorkDatasource
 import com.critx.data.network.api.AuthService
 import com.critx.data.network.api.CollectStockService
 import com.critx.data.network.api.HomeService
 import com.critx.data.network.api.SetUpStockService
 import com.critx.data.network.datasource.AuthNetWorkDataSourceImpl
+import com.critx.data.network.datasource.CollectStockDataSourceImpl
 import com.critx.data.network.datasource.SetupStockNetWorkSourceImpl
 import com.critx.data.repositoryImpl.AuthRepositoryImpl
+import com.critx.data.repositoryImpl.CollectStockRepositoryImpl
 import com.critx.data.repositoryImpl.SetupStockRepositoryImpl
 import com.critx.domain.repository.AuthRepository
+import com.critx.domain.repository.CollectStockRepository
 import com.critx.domain.repository.SetupStockRepository
 import dagger.Module
 import dagger.Provides
@@ -55,6 +59,17 @@ class NetworkModule {
     @Singleton
     fun provideSetupStockRepo(setupStockNetWorkDatasource : SetupStockNetWorkDatasource):SetupStockRepository{
         return SetupStockRepositoryImpl(setupStockNetWorkDatasource )
+    }
+
+    @Provides
+    @Singleton
+    fun provideCollectStockDataSource(collectStockService: CollectStockService):CollectStockDataSource{
+        return CollectStockDataSourceImpl(collectStockService)
+    }
+    @Provides
+    @Singleton
+    fun provideCollectStockRepo(collectStockDataSource: CollectStockDataSource):CollectStockRepository{
+        return CollectStockRepositoryImpl(collectStockDataSource )
     }
 //    @Provides
 //    @Singleton

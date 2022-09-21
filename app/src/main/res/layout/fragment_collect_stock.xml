@@ -155,6 +155,7 @@
                 android:background="@drawable/popup_window_transparent"
                 android:hint="Type or Scan"
                 android:paddingStart="8dp"
+                android:imeOptions="actionDone"
                 android:textAlignment="textStart"
                 android:textAppearance="@style/TextAppearance.ShweMi.Body2"
                 android:textColor="@color/primary_color" />

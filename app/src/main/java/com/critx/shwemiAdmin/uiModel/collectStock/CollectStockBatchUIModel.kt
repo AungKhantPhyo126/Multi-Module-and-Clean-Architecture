@@ -1,6 +1,7 @@
 package com.critx.shwemiAdmin.uiModel.collectStock
 
 data class CollectStockBatchUIModel(
-    val id:String,
-    val invoiceCode:String
+    val productId:String,
+    val productCode:String,
+    val productType:String
 )

@@ -2,6 +2,9 @@ package com.critx.common.ui
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.text.TextUtils
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -70,3 +73,9 @@ fun ImageView.getThumbnail(url: String){
 }
 
 fun getBitMapWithGlide(url: String?,context: Context) =Glide.with(context).asBitmap().load(url).submit().get()
+
+fun AutoCompleteTextView.showDropdown(adapter: ArrayAdapter<String>?) {
+    if (!TextUtils.isEmpty(this.text.toString())) {
+        adapter?.filter?.filter(null)
+    }
+}
