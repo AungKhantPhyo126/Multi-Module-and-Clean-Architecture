@@ -136,4 +136,5 @@
     <string name="enter_sell_price_of_diamond">Enter Sell Price of Diamond</string>
     <string name="diamond_actual_sell_value">Diamond Actual Sell Value</string>
     <string name="enter_gold_gem_weight">Enter Gold + Gem Weight</string>
+    <string name="target_box">Target Box</string>
 </resources>
