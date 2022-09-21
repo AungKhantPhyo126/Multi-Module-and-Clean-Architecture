@@ -96,9 +96,10 @@ class CollectStockFragment : Fragment() {
 
         binding.layoutCollectStockBatch.btnNext.setOnClickListener {
             findNavController().navigate(CollectStockFragmentDirections.actionCollectStockFragmentToFillInfoCollectStockFragment(jewelleryType,
-            viewModel.scannedStockcodebatch.value?.map {
-                it.productId
-            }?.toTypedArray()))
+                viewModel.scannedStockcodebatch.value?.map {
+                    it.productId
+                }?.toTypedArray() ?: emptyArray()
+            ))
         }
 
         viewModel.scanProductCodeLive.observe(viewLifecycleOwner) {
