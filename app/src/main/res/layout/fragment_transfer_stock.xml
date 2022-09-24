@@ -69,14 +69,12 @@
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        app:errorEnabled="false"
-        app:hintEnabled="false"
-        app:expandedHintEnabled="false"
         app:boxStrokeColor="@color/based_grey"
         app:boxStrokeWidth="1dp"
-        app:layout_constraintEnd_toStartOf="@+id/til_box_quantity"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:errorEnabled="false"
+        app:expandedHintEnabled="false"
+        app:hintEnabled="false"
+        app:layout_constraintEnd_toEndOf="@+id/mcv_scan_here"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mcv_scan_here"
         app:prefixText="Code :"
@@ -89,37 +87,7 @@
             android:layout_height="wrap_content"
             android:focusable="false"
             android:inputType="none"
-            android:maxLines="1"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_box_quantity"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
-        app:errorEnabled="false"
-        app:hintEnabled="false"
-        app:boxStrokeColor="@color/based_grey"
-        app:boxStrokeWidth="1dp"
-        app:expandedHintEnabled="false"
-        app:layout_constraintBottom_toBottomOf="@+id/til_box_code"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/til_box_code"
-        app:layout_constraintTop_toTopOf="@+id/til_box_code"
-        app:prefixText="Qty :"
-        app:prefixTextAppearance="@style/TextAppearance.ShweMi.Body2"
-        app:prefixTextColor="@color/black">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_box_quantity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="none"
-            android:focusable="false"
-            android:maxLines="1"/>
+            android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -166,15 +134,15 @@
         android:id="@+id/mcv_scan_here_stock"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:clickable="false"
         android:focusable="false"
         app:cardCornerRadius="8dp"
         app:cardElevation="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tv_label_target_box"
+        app:layout_constraintStart_toStartOf="@+id/mcv_scan_here"
         app:layout_constraintTop_toBottomOf="@id/til_jewellery_type"
         app:strokeWidth="1dp">
 
@@ -222,7 +190,7 @@
         android:id="@+id/include_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        layout="@layout/include_check_up_stock_button_layout"
+        layout="@layout/include_transfer_stock_button_layout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

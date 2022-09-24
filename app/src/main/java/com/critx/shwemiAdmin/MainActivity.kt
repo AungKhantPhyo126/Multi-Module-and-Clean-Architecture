@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         R.id.chooseJewelleryQualityFragment,
         R.id.chooseGroupFragment,
         R.id.chooseCategoryFragment,
+        R.id.transferCheckUpStockFragment
     )
 
     private val imgUrl =

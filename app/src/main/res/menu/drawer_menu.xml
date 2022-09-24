@@ -67,7 +67,7 @@
                     android:title="@string/edit_stock"
                     android:icon="@drawable/ic_edit_stock"/>
                 <item
-                    android:id="@+id/transferCheckUpFragment"
+                    android:id="@+id/transferCheckUpStockFragment"
                     android:title="@string/transfer_checkup_stock"
                     android:icon="@drawable/ic_transfer_check_up_stock"/>
                 <item

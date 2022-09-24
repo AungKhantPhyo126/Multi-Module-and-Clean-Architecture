@@ -50,7 +50,7 @@ class DiscountFragment :Fragment(){
             scanQrCode(requireContext(),barlauncer)
 
         }
-        binding.layoutDiscount.rvDiscount.adapter=adapter
+        binding.layoutDiscount.rvStockCodeList.adapter=adapter
         adapter.submitList(listOf(
             DiscountUIModel(
                 "1",

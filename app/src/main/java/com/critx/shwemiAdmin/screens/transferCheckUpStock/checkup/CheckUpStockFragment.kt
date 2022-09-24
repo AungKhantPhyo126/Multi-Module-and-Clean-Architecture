@@ -1,4 +1,4 @@
-package com.critx.shwemiAdmin.screens.flashsale
+package com.critx.shwemiAdmin.screens.transferCheckUpStock.checkup
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,14 +8,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.critx.common.qrscan.getBarLauncher
 import com.critx.common.qrscan.scanQrCode
 import com.critx.shwemiAdmin.R
-import com.critx.shwemiAdmin.databinding.FragmentFlashSaleBinding
+import com.critx.shwemiAdmin.databinding.FragmentCheckUpBinding
+import com.critx.shwemiAdmin.screens.transferCheckUpStock.TransferCheckUpStockFragmentDirections
+import com.critx.shwemiAdmin.uiModel.StockCodeForListUiModel
 import com.critx.shwemiAdmin.uiModel.discount.DiscountUIModel
 
-class FlashSaleFragment: Fragment() {
-    private lateinit var binding: FragmentFlashSaleBinding
+class CheckUpStockFragment:Fragment() {
+    private lateinit var binding:FragmentCheckUpBinding
     private lateinit var barlauncer:Any
 
     override fun onCreateView(
@@ -25,8 +28,8 @@ class FlashSaleFragment: Fragment() {
     ): View? {
         barlauncer = this.getBarLauncher(requireContext())
 
-        return FragmentFlashSaleBinding.inflate(inflater).also {
-            binding = it
+        return FragmentCheckUpBinding.inflate(inflater).also {
+            binding= it
         }.root
     }
     private fun toolbarsetup(){
@@ -35,39 +38,40 @@ class FlashSaleFragment: Fragment() {
         val toolbarCenterText: TextView = activity!!.findViewById<View>(R.id.center_text_title) as TextView
         val toolbarEndIcon: ImageView = activity!!.findViewById<View>(R.id.iv_end_icon) as ImageView
         toolbarCenterText.isVisible=true
-        toolbarCenterText.text=getString(R.string.flash_sale)
+        toolbarCenterText.text=getString(R.string.transfer_checkup_stock)
         toolbarCenterImage.isVisible =false
         toolbarEndIcon.isVisible =false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbarsetup()
-        val adapter = FlashSaleRecyclerAdapter{
-
-        }
-        binding.mcvScanHere.setOnClickListener {
+        binding.ivScanStock.setOnClickListener {
             scanQrCode(requireContext(),barlauncer)
+        }
+        val adapter = StockRecyclerAdapter{
 
         }
-        binding.layoutDiscount.rvStockCodeList.adapter=adapter
+        binding.includeScannedStockList.rvStockCodeList.adapter = adapter
         adapter.submitList(listOf(
-            DiscountUIModel(
+            StockCodeForListUiModel(
                 "1",
                 "123456788"
             ),
-            DiscountUIModel(
+            StockCodeForListUiModel(
                 "2",
                 "123456788"
             ),
-            DiscountUIModel(
+            StockCodeForListUiModel(
                 "3",
                 "123456788"
             ),
-            DiscountUIModel(
+            StockCodeForListUiModel(
                 "4",
                 "123456788"
             )
         ))
+        binding.includeButton.btnGive.setOnClickListener {
+            findNavController().navigate(TransferCheckUpStockFragmentDirections.actionTransferCheckUpStockFragmentToCheckUpResultFragment())
+        }
     }
 }

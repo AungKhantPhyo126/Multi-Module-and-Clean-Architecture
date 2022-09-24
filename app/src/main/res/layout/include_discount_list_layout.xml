@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="@id/tv_label_total_scanned_stock"
         app:layout_constraintBottom_toBottomOf="@id/tv_label_total_scanned_stock"/>
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_discount"
+        android:id="@+id/rv_stock_code_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"

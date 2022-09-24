@@ -145,12 +145,8 @@ class DailyGoldPriceFragment:Fragment() {
 
         viewModel.isLogin.observe(viewLifecycleOwner){
             if (it){
-                if (viewModel.isRefreshTokenExpire()){
-                    findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
-                }else{
                     enqueueRefreshTokenWork()
                     viewModel.getProfile()
-                }
             }else{
                 findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
             }

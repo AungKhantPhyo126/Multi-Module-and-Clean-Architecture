@@ -189,4 +189,23 @@
             app:argType="string"
             app:nullable="true" />
     </fragment>
+    <fragment
+        android:id="@+id/transferCheckUpStockFragment"
+        android:name="com.critx.shwemiAdmin.screens.transferCheckUpStock.TransferCheckUpStockFragment"
+        android:label="TransferCheckUpStockFragment" >
+        <action
+            android:id="@+id/action_transferCheckUpStockFragment_to_checkUpResultFragment"
+            app:destination="@id/checkUpResultFragment" />
+        <action
+            android:id="@+id/action_transferCheckUpStockFragment_to_matchCodeFragment"
+            app:destination="@id/matchCodeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/checkUpResultFragment"
+        android:name="com.critx.shwemiAdmin.screens.transferCheckUpStock.checkup.checkUpResult.CheckUpResultFragment"
+        android:label="CheckUpResultFragment" />
+    <fragment
+        android:id="@+id/matchCodeFragment"
+        android:name="com.critx.shwemiAdmin.screens.transferCheckUpStock.transfer.matchCode.MatchCodeFragment"
+        android:label="MatchCodeFragment" />
 </navigation>

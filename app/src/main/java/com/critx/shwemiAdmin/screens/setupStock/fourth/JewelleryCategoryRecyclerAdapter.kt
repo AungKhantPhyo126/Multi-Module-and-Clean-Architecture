@@ -15,7 +15,6 @@ import com.critx.common.ui.loadImageWithGlide
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.BubbleCardBinding
 import com.critx.shwemiAdmin.databinding.ItemAddNewBinding
-import com.critx.shwemiAdmin.databinding.ItemFlashSaleBinding
 import com.critx.shwemiAdmin.databinding.ItemImageSelectionBinding
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryCategoryUiModel
 import com.daasuu.bl.ArrowDirection

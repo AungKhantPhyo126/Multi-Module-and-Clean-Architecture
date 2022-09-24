@@ -6,7 +6,7 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tl_transfer_check_up_stock"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="?attr/actionBarSize"
         android:layout_marginTop="8dp"
         app:layout_goneMarginTop="24dp"
@@ -17,6 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorHeight="0dp"
+        app:tabGravity="center"
         app:tabMode="fixed"
         app:tabContentStart="0dp"
         app:tabIndicatorGravity="center"

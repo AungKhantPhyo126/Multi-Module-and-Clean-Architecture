@@ -43,7 +43,7 @@ class TransferCheckUpStockFragment:Fragment() {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
 
-        binding.vpTransferCheckUpStock.adapter = SampleTakeAndReturnPagerAdapter(this)
+        binding.vpTransferCheckUpStock.adapter = TransferCheckUpStockPagerAdapter(this)
         TabLayoutMediator(
             binding.tlTransferCheckUpStock,
             binding.vpTransferCheckUpStock

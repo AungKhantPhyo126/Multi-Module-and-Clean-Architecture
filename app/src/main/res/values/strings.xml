@@ -137,4 +137,7 @@
     <string name="diamond_actual_sell_value">Diamond Actual Sell Value</string>
     <string name="enter_gold_gem_weight">Enter Gold + Gem Weight</string>
     <string name="target_box">Target Box</string>
+    <string name="required">Required</string>
+    <string name="not_from_box">Not From Box</string>
+    <string name="stock_qty">Stock Qty -</string>
 </resources>

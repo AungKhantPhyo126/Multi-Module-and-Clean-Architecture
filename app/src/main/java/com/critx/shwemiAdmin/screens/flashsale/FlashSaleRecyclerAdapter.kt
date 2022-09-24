@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.critx.shwemiAdmin.databinding.ItemDiscountBinding
-import com.critx.shwemiAdmin.databinding.ItemFlashSaleBinding
+import com.critx.shwemiAdmin.databinding.ItemStockCodeBinding
 import com.critx.shwemiAdmin.uiModel.discount.DiscountUIModel
 
 class FlashSaleRecyclerAdapter(private val onclick:()->Unit) : ListAdapter<DiscountUIModel, FlashSaleViewHolder>(
@@ -14,7 +14,7 @@ class FlashSaleRecyclerAdapter(private val onclick:()->Unit) : ListAdapter<Disco
 )  {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlashSaleViewHolder {
         return FlashSaleViewHolder(
-            ItemFlashSaleBinding.inflate(
+            ItemStockCodeBinding.inflate(
                 LayoutInflater.from(parent.context),parent,false
             ),onclick)
     }
@@ -26,7 +26,7 @@ class FlashSaleRecyclerAdapter(private val onclick:()->Unit) : ListAdapter<Disco
 
 }
 
-class FlashSaleViewHolder(private val binding: ItemFlashSaleBinding,
+class FlashSaleViewHolder(private val binding: ItemStockCodeBinding,
                          private val onclick: () -> Unit): RecyclerView.ViewHolder(binding.root){
     fun bind(data: DiscountUIModel){
         binding.tvStockCodeNumber.text = data.invoiceCode
