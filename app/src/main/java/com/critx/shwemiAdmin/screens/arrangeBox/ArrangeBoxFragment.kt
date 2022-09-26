@@ -10,6 +10,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentArrangeBoxBinding
+import com.critx.shwemiAdmin.screens.transferCheckUpStock.checkup.StockRecyclerAdapter
+import com.critx.shwemiAdmin.uiModel.StockCodeForListUiModel
 
 class ArrangeBoxFragment:Fragment() {
     private lateinit var binding:FragmentArrangeBoxBinding
@@ -35,5 +37,27 @@ class ArrangeBoxFragment:Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
+        val adapter = StockRecyclerAdapter{
+
+        }
+        binding.includeArrangeBoxList.rvArrangeBox.adapter = adapter
+        adapter.submitList(listOf(
+            StockCodeForListUiModel(
+                "1",
+                "123456788"
+            ),
+            StockCodeForListUiModel(
+                "2",
+                "123456788"
+            ),
+            StockCodeForListUiModel(
+                "3",
+                "123456788"
+            ),
+            StockCodeForListUiModel(
+                "4",
+                "123456788"
+            )
+        ))
     }
 }

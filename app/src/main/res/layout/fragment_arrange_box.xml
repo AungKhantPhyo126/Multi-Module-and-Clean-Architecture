@@ -61,7 +61,7 @@
     </com.google.android.material.card.MaterialCardView>
     <include
         android:layout_marginTop="16dp"
-        android:id="@+id/rv_stock_code_list"
+        android:id="@+id/include_arrange_box_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
