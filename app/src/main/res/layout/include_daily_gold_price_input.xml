@@ -3,37 +3,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/tv_gold_block"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
         android:layout_marginStart="16dp"
         android:layout_marginTop="40dp"
         android:text="@string/gold_block_ac"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         app:layout_constraintBottom_toTopOf="@+id/tv_gq_by_p"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_gold_block"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="220dp"
         android:layout_height="48dp"
-        app:errorEnabled="true"
-        app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
-        app:boxStrokeWidth="1dp"
         app:boxCornerRadiusBottomEnd="15dp"
         app:boxCornerRadiusBottomStart="15dp"
         app:boxCornerRadiusTopEnd="15dp"
         app:boxCornerRadiusTopStart="15dp"
-        app:layout_constraintStart_toEndOf="@id/tv_gold_block"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_gold_block"
+        app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
+        app:boxStrokeWidth="1dp"
+        app:errorEnabled="true"
         app:layout_constraintBottom_toBottomOf="@id/tv_gold_block"
-        >
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_gold_block"
+        app:layout_constraintTop_toTopOf="@id/tv_gold_block">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_gold_block"
@@ -46,9 +46,9 @@
         android:id="@+id/tv_gq_by_p"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
         android:layout_marginTop="47dp"
         android:text="@string/_15p_gq"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         app:layout_constraintBottom_toTopOf="@+id/tv_gq_by_k"
         app:layout_constraintStart_toStartOf="@+id/tv_gold_block"
         app:layout_constraintTop_toBottomOf="@+id/tv_gold_block" />
@@ -81,12 +81,13 @@
         android:id="@+id/tv_gq_by_k"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
         android:layout_marginTop="47dp"
         android:text="@string/_22k_gq"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         app:layout_constraintBottom_toTopOf="@+id/tv_diamond"
         app:layout_constraintStart_toStartOf="@+id/tv_gq_by_p"
         app:layout_constraintTop_toBottomOf="@+id/tv_gq_by_p" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_gq_by_k"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -116,12 +117,13 @@
         android:id="@+id/tv_diamond"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
         android:layout_marginTop="47dp"
         android:text="@string/diamond"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         app:layout_constraintBottom_toTopOf="@+id/tv_wg"
         app:layout_constraintStart_toStartOf="@+id/tv_gq_by_k"
         app:layout_constraintTop_toBottomOf="@+id/tv_gq_by_k" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_diamond"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -150,12 +152,13 @@
         android:id="@+id/tv_wg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
         android:layout_marginTop="47dp"
         android:text="@string/wg_1_gm"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         app:layout_constraintBottom_toTopOf="@+id/tv_rebuy"
         app:layout_constraintStart_toStartOf="@+id/tv_diamond"
         app:layout_constraintTop_toBottomOf="@+id/tv_diamond" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_wg"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -176,7 +179,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_wg"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -184,11 +187,14 @@
         android:id="@+id/tv_rebuy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
         android:layout_marginTop="47dp"
+        android:layout_marginBottom="32dp"
         android:text="@string/rebuy_100"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tv_wg"
         app:layout_constraintTop_toBottomOf="@+id/tv_wg" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_rebuy"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"

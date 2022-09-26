@@ -208,4 +208,16 @@
         android:id="@+id/matchCodeFragment"
         android:name="com.critx.shwemiAdmin.screens.transferCheckUpStock.transfer.matchCode.MatchCodeFragment"
         android:label="MatchCodeFragment" />
+    <fragment
+        android:id="@+id/orderStockFragment"
+        android:name="com.critx.shwemiAdmin.screens.orderStock.OrderStockFragment"
+        android:label="OrderStockFragment" >
+        <action
+            android:id="@+id/action_orderStockFragment_to_fillOrderInfoFragment"
+            app:destination="@id/fillOrderInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/fillOrderInfoFragment"
+        android:name="com.critx.shwemiAdmin.screens.orderStock.fillOrderInfo.FillOrderInfoFragment"
+        android:label="FillOrderInfoFragment" />
 </navigation>
