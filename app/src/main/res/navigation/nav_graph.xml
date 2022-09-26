@@ -224,4 +224,8 @@
         android:id="@+id/arrangeBoxFragment"
         android:name="com.critx.shwemiAdmin.screens.arrangeBox.ArrangeBoxFragment"
         android:label="ArrangeBoxFragment" />
+    <fragment
+        android:id="@+id/checkUpBoxWeightFragment"
+        android:name="com.critx.shwemiAdmin.screens.checkUpBoxWeight.CheckUpBoxWeightFragment"
+        android:label="CheckUpBoxWeightFragment" />
 </navigation>

@@ -25,6 +25,7 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_add_category.xml" value="0.2" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_arrange_box.xml" value="0.20521590423257802" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_check_up.xml" value="0.264" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_check_up_box_weight.xml" value="0.20436083796494228" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_choose_category.xml" value="0.20436083796494228" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_choose_group.xml" value="0.2" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_choose_jewellery_quality.xml" value="0.2" />
@@ -55,6 +56,7 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_voucher.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/frgment_check_up_result.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_arrange_box_list.xml" value="0.20521590423257802" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_check_up_box_weight_list.xml" value="0.20436083796494228" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_check_up_stock_button_layout.xml" value="0.20436083796494228" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_check_up_stock_list.xml" value="0.20436083796494228" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_collect_stock_batch.xml" value="0.1" />
@@ -72,6 +74,7 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_add_chip.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_add_new.xml" value="0.20436083796494228" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_arrange_box.xml" value="0.20436083796494228" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_box_weight.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_collect_stock_batch.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_discount.xml" value="0.176" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_drop_down_text.xml" value="0.16051912568306012" />

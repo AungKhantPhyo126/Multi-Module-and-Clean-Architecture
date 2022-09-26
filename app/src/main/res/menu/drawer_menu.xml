@@ -89,7 +89,7 @@
                     android:title="@string/arrange_box"
                     android:icon="@drawable/ic_arrange_box"/>
                 <item
-                    android:id="@+id/checkBoxWeightFragment"
+                    android:id="@+id/checkUpBoxWeightFragment"
                     android:title="@string/check_box_weight"
                     android:icon="@drawable/ic_check_box_weight"/>
             </menu>
