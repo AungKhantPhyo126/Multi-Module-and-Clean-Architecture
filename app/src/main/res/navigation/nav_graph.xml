@@ -220,4 +220,8 @@
         android:id="@+id/fillOrderInfoFragment"
         android:name="com.critx.shwemiAdmin.screens.orderStock.fillOrderInfo.FillOrderInfoFragment"
         android:label="FillOrderInfoFragment" />
+    <fragment
+        android:id="@+id/arrangeBoxFragment"
+        android:name="com.critx.shwemiAdmin.screens.arrangeBox.ArrangeBoxFragment"
+        android:label="ArrangeBoxFragment" />
 </navigation>

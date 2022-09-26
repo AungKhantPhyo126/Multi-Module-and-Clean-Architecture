@@ -140,4 +140,6 @@
     <string name="required">Required</string>
     <string name="not_from_box">Not From Box</string>
     <string name="stock_qty">Stock Qty -</string>
+    <string name="box_code">Box Code</string>
+    <string name="box_code_label">Box Code -</string>
 </resources>
