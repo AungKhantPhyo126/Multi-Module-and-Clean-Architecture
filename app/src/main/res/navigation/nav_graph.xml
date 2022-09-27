@@ -228,4 +228,8 @@
         android:id="@+id/checkUpBoxWeightFragment"
         android:name="com.critx.shwemiAdmin.screens.checkUpBoxWeight.CheckUpBoxWeightFragment"
         android:label="CheckUpBoxWeightFragment" />
+    <fragment
+        android:id="@+id/editStockFragment"
+        android:name="com.critx.shwemiAdmin.screens.editStock.EditStockFragment"
+        android:label="EditStockFragment" />
 </navigation>
