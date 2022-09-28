@@ -20,10 +20,12 @@ import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentCollectStockBinding
 import com.critx.shwemiAdmin.uiModel.collectStock.CollectStockBatchUIModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CollectStockFragment : Fragment() {
     private lateinit var binding: FragmentCollectStockBinding
-    private val viewModel by viewModels<CollectStockVIewModel>()
+    private val viewModel by viewModels<CollectStockViewModel>()
     private lateinit var barlauncer: Any
     private lateinit var loadingDialog: AlertDialog
 

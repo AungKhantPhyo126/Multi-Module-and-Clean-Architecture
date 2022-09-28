@@ -15,7 +15,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
 
 @HiltViewModel
-class CollectStockVIewModel @Inject constructor(
+class CollectStockViewModel @Inject constructor(
     private val localDatabase: LocalDatabase,
     private val getProductIdUseCase: GetProductIdUseCase,
     private val collectSingleUseCase: CollectSingleUseCase,

@@ -36,5 +36,6 @@ fun Context.getAlertDialog():AlertDialog{
     )
     builder.setView(alertDialogBinding.root)
     val alertDialog = builder.create()
+    alertDialog.setCancelable(false)
     return alertDialog
 }
