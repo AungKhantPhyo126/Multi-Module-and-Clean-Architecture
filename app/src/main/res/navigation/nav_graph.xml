@@ -69,7 +69,15 @@
     <fragment
         android:id="@+id/fillInfoCollectStockFragment"
         android:name="com.critx.shwemiAdmin.screens.collectstock.fillinfo.FillInfoCollectStockFragment"
-        android:label="FillInfoCollectStockFragment" />
+        android:label="FillInfoCollectStockFragment" >
+        <argument
+            android:name="jewelleryType"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="productIdList"
+            app:argType="string[]" />
+    </fragment>
     <fragment
         android:id="@+id/setupStockFragment"
         android:name="com.critx.shwemiAdmin.screens.setupStock.first.SetupStockFragment"

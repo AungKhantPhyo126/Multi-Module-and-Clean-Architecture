@@ -10,8 +10,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:buttonTint="@color/primary_color"
         android:text="@string/wastage"
-android:buttonTint="@color/primary_color"
         app:layout_constraintBottom_toBottomOf="@+id/til_k"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/til_k"
@@ -21,8 +21,8 @@ android:buttonTint="@color/primary_color"
         android:id="@+id/cb_goldsmith"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/goldsmith"
         android:buttonTint="@color/primary_color"
+        android:text="@string/goldsmith"
         app:layout_constraintBottom_toBottomOf="@+id/til_choose_one_gold_smith"
         app:layout_constraintStart_toStartOf="@+id/cb_wastage"
         app:layout_constraintTop_toTopOf="@+id/til_choose_one_gold_smith" />
@@ -31,8 +31,8 @@ android:buttonTint="@color/primary_color"
         android:id="@+id/cb_bonus"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/bonus"
         android:buttonTint="@color/primary_color"
+        android:text="@string/bonus"
         app:layout_constraintBottom_toBottomOf="@+id/til_enter_bonus_amount"
         app:layout_constraintStart_toStartOf="@+id/cb_goldsmith"
         app:layout_constraintTop_toTopOf="@+id/til_enter_bonus_amount" />
@@ -41,21 +41,10 @@ android:buttonTint="@color/primary_color"
         android:id="@+id/cb_size"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:buttonTint="@color/primary_color"
         android:text="@string/size"
-        android:buttonTint="@color/primary_color"
-        app:layout_constraintBottom_toBottomOf="@+id/til_size1"
         app:layout_constraintStart_toStartOf="@+id/cb_bonus"
-        app:layout_constraintTop_toTopOf="@+id/til_size1" />
-
-    <CheckBox
-        android:id="@+id/cb_amount"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/amount"
-        android:buttonTint="@color/primary_color"
-        app:layout_constraintBottom_toBottomOf="@+id/til_enter_amount"
-        app:layout_constraintStart_toStartOf="@+id/cb_size"
-        app:layout_constraintTop_toTopOf="@+id/til_enter_amount" />
+        app:layout_constraintTop_toTopOf="@+id/rv_jewellery_size" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_y"
@@ -63,18 +52,18 @@ android:buttonTint="@color/primary_color"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        app:hintEnabled="false"
-        android:enabled="false"
         android:layout_marginEnd="16dp"
+        android:enabled="false"
+        app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_y"
-            android:inputType="numberDecimal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/y" />
+            android:hint="@string/y"
+            android:inputType="numberDecimal" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -120,7 +109,7 @@ android:buttonTint="@color/primary_color"
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_choose_one_gold_smith"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -136,7 +125,7 @@ android:buttonTint="@color/primary_color"
         app:layout_constraintStart_toStartOf="@+id/til_k"
         app:layout_constraintTop_toBottomOf="@+id/til_p">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <AutoCompleteTextView
             android:id="@+id/edt_choose_one_gold_smith"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -144,6 +133,7 @@ android:buttonTint="@color/primary_color"
             android:hint="Choose one GoldSmith"
             android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_enter_bonus_amount"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -152,9 +142,9 @@ android:buttonTint="@color/primary_color"
         android:layout_marginTop="16dp"
         android:background="@drawable/rounded_corner_dropdown_background"
         android:elevation="2dp"
+        android:enabled="false"
         app:boxStrokeWidth="0dp"
         app:hintEnabled="false"
-        android:enabled="false"
         app:layout_constraintEnd_toEndOf="@+id/til_y"
         app:layout_constraintStart_toStartOf="@+id/til_k"
         app:layout_constraintTop_toBottomOf="@+id/til_choose_one_gold_smith">
@@ -163,162 +153,8 @@ android:buttonTint="@color/primary_color"
             android:id="@+id/edt_enter_bonus_amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
             android:hint="Enter bonus Amount" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_size3"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:hintEnabled="false"
-        android:layout_marginEnd="16dp"
-        android:enabled="false"
-        app:layout_constraintEnd_toEndOf="parent"
-       app:layout_constraintTop_toBottomOf="@id/til_enter_bonus_amount">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_size3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="77''" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_size2"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:hintEnabled="false"
-        android:enabled="false"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toStartOf="@id/til_y"
-       app:layout_constraintTop_toBottomOf="@id/til_enter_bonus_amount">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_size2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="22''" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_size1"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:enabled="false"
-        app:hintEnabled="false"
-        app:layout_constraintEnd_toStartOf="@id/til_p"
-        app:layout_constraintStart_toStartOf="@+id/til_enter_bonus_amount"
-        app:layout_constraintTop_toBottomOf="@id/til_enter_bonus_amount">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_size1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="20''" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_size6"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:hintEnabled="false"
-        android:enabled="false"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/til_size1">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_size6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="20''" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_size5"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:hintEnabled="false"
-        android:enabled="false"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toStartOf="@id/til_y"
-        app:layout_constraintTop_toBottomOf="@id/til_size1">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_size5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="20''" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_size4"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:enabled="false"
-        app:hintEnabled="false"
-        app:layout_constraintEnd_toStartOf="@id/til_p"
-        app:layout_constraintTop_toBottomOf="@id/til_size1">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_size4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="21''" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_enter_custom_size"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/rounded_corner_dropdown_background"
-        android:elevation="2dp"
-        app:boxStrokeWidth="0dp"
-        app:hintEnabled="false"
-        android:enabled="false"
-        app:layout_constraintEnd_toEndOf="@+id/til_y"
-        app:layout_constraintStart_toStartOf="@+id/til_k"
-        app:layout_constraintTop_toBottomOf="@+id/til_size4">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_enter_custom_size"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter custom size" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_enter_amount"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/rounded_corner_dropdown_background"
-        android:elevation="2dp"
-        app:boxStrokeWidth="0dp"
-        app:hintEnabled="false"
-        android:enabled="false"
-        app:layout_constraintEnd_toEndOf="@+id/til_y"
-        app:layout_constraintStart_toStartOf="@+id/til_k"
-        app:layout_constraintTop_toBottomOf="@+id/til_enter_custom_size">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_enter_amount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter Amount" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -332,6 +168,20 @@ android:buttonTint="@color/primary_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_jewellery_size"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="3"
+        tools:listitem="@layout/item_jewellery_size"
+        app:layout_constraintBottom_toTopOf="@+id/btn_confirm"
+        app:layout_constraintEnd_toEndOf="@id/til_enter_bonus_amount"
+        app:layout_constraintStart_toStartOf="@+id/til_enter_bonus_amount"
+        app:layout_constraintTop_toBottomOf="@+id/til_enter_bonus_amount" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

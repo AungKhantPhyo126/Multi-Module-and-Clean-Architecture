@@ -1,18 +1,11 @@
 package com.critx.data.network.datasource
 
-import com.critx.commonkotlin.util.Resource
 import com.critx.data.datasource.auth.AuthNetWorkDataSource
 import com.critx.data.network.api.AuthService
 import com.critx.data.network.apiParams.auth.LoginData
 import com.critx.data.network.dto.SimpleResponse
-import com.critx.data.network.dto.SimpleResponseDto
 import com.critx.data.network.dto.auth.LoginSuccessDto
 import com.critx.data.network.dto.auth.ProfileDto
-import com.critx.data.repository.AuthRepositoryImpl
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import retrofit2.HttpException
-import java.io.IOException
 import javax.inject.Inject
 
 class AuthNetWorkDataSourceImpl @Inject constructor(

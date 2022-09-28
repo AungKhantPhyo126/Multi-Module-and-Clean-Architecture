@@ -533,3 +533,8 @@ inline fun <reified T> ResponseBody.parseError(): T? {
     }
     return null
 }
+
+fun getErrorString(errorList:List<String?>):String{
+    val gg = errorList.filterNotNull()
+    return gg[0]
+}
