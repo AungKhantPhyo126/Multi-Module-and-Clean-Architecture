@@ -236,4 +236,16 @@
         android:id="@+id/giveGoldFragment"
         android:name="com.critx.shwemiAdmin.screens.giveGold.GiveGoldFragment"
         android:label="GiveGoldFragment" />
+    <fragment
+        android:id="@+id/repairStockFragment"
+        android:name="com.critx.shwemiAdmin.screens.repairStock.RepairStockFragment"
+        android:label="RepairStockFragment" >
+        <action
+            android:id="@+id/action_repairStockFragment_to_assignGsFragment"
+            app:destination="@id/assignGsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/assignGsFragment"
+        android:name="com.critx.shwemiAdmin.screens.repairStock.assignGs.AssignGsFragment"
+        android:label="AssignGsFragment" />
 </navigation>

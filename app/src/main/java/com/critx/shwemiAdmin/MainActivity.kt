@@ -41,7 +41,9 @@ class MainActivity : AppCompatActivity() {
         R.id.arrangeBoxFragment,
         R.id.checkUpBoxWeightFragment,
         R.id.editStockFragment,
-        R.id.giveGoldFragment
+        R.id.giveGoldFragment,
+        R.id.transferCheckUpStockFragment,
+        R.id.repairStockFragment
     )
 
     private val imgUrl =

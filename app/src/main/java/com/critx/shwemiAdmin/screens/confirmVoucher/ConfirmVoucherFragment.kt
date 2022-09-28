@@ -30,6 +30,7 @@ class ConfirmVoucherFragment:Fragment() {
         toolbarCenterText.isVisible=true
         toolbarCenterText.text=getString(R.string.confirm_voucher)
         toolbarCenterImage.isVisible =false
+        toolbarEndIcon.isVisible=true
         toolbarEndIcon.setImageDrawable(requireContext().getDrawable(R.drawable.ic_edit))
     }
 

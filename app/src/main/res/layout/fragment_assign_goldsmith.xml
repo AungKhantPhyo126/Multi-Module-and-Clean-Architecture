@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_label_first"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/circle_bg_text"
+        android:gravity="center"
+        android:text="1"
+
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.ShweMi.Body1"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/view_first_line"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view_first_line"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@color/primary_color"
+
+        app:layout_constraintBottom_toBottomOf="@id/tv_label_first"
+        app:layout_constraintEnd_toStartOf="@+id/tv_label_second"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tv_label_first"
+        app:layout_constraintTop_toTopOf="@id/tv_label_first" />
+
+    <TextView
+        android:id="@+id/tv_label_second"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/circle_bg_text"
+        android:gravity="center"
+        android:text="2"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.ShweMi.Body1"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/view_second_line"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/view_first_line"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view_second_line"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@color/primary_color"
+        app:layout_constraintBottom_toBottomOf="@id/tv_label_second"
+        app:layout_constraintEnd_toStartOf="@+id/tv_label_third"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tv_label_second"
+        app:layout_constraintTop_toTopOf="@id/tv_label_second" />
+
+    <TextView
+        android:id="@+id/tv_label_third"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="26dp"
+        android:background="@drawable/circle_bg_text"
+        android:gravity="center"
+        android:text="3"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.ShweMi.Body1"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/view_second_line"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_label_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Item"
+        android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+        android:textColor="@color/edit_text_color"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/tv_label_first"
+        app:layout_constraintStart_toStartOf="@+id/tv_label_first"
+        app:layout_constraintTop_toBottomOf="@+id/tv_label_first" />
+    <TextView
+        android:id="@+id/tv_label_job"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Job"
+        android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+        android:textColor="@color/edit_text_color"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/tv_label_second"
+        app:layout_constraintStart_toStartOf="@+id/tv_label_second"
+        app:layout_constraintTop_toBottomOf="@+id/tv_label_second" />
+    <TextView
+        android:id="@+id/tv_label_assign"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Assign"
+        android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+        android:textColor="@color/edit_text_color"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/tv_label_third"
+        app:layout_constraintStart_toStartOf="@+id/tv_label_third"
+        app:layout_constraintTop_toBottomOf="@+id/tv_label_third" />
+    <ScrollView
+        android:id="@+id/chip_scroll_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:fillViewport="true"
+        android:layout_margin="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_label_item"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_gp_jewellery_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:chipSpacing="8dp"
+            app:singleLine="false"
+            app:singleSelection="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_label_item"
+            app:layout_constraintBottom_toTopOf="@id/btn_next">
+
+        </com.google.android.material.chip.ChipGroup>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/tv_label_qty"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Qty"
+        android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+        app:layout_constraintBottom_toBottomOf="@+id/til_qty"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/til_qty" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_qty"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        app:hintEnabled="false"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@id/tv_label_item">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_qty"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:inputType="numberDecimal"
+            android:hint="Enter Total Quantity"
+            android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/tv_label_weight"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Weight"
+        android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+        app:layout_constraintBottom_toBottomOf="@+id/til_weight"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/til_weight" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_weight"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        app:hintEnabled="false"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@id/til_qty">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_weight"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:inputType="numberDecimal"
+            android:hint="Enter Total Weight"
+            android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <androidx.constraintlayout.widget.Group
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/assign_view"
+        android:visibility="gone"
+        app:constraint_referenced_ids="tv_label_qty,til_qty,tv_label_weight,til_weight"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="126dp" />
+
+    <Button
+        android:id="@+id/btn_assign_gs"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Assign Gold Smith"
+        android:paddingVertical="14dp"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
