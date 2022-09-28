@@ -1,0 +1,613 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_print"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:paddingVertical="14dp"
+        app:icon="@drawable/ic_print"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_confirm"
+        app:layout_constraintEnd_toStartOf="@+id/btn_confirm"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btn_confirm" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_confirm"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Confirm"
+        android:paddingVertical="14dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btn_print" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@id/btn_confirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="127dp" />
+
+            <TextView
+                android:id="@+id/tv_label_invoice_code"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Invoice Code"
+                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                app:layout_constraintBottom_toBottomOf="@+id/mcv_invoice_code"
+                app:layout_constraintEnd_toStartOf="@+id/guideline2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/mcv_invoice_code" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcv_invoice_code"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toStartOf="@+id/btn_generate_invoice_code"
+                app:layout_constraintStart_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="@color/based_grey"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_invoice_code"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                        android:textStyle="bold"
+                        tools:text="123456" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_generate_invoice_code"
+                android:layout_width="52dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="16dp"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                app:icon="@drawable/ic_generate"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/mcv_invoice_code"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/mcv_invoice_code" />
+
+            <TextView
+                android:id="@+id/tv_label_gold_smith"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="GoldSmith"
+                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                app:layout_constraintBottom_toBottomOf="@+id/mcv_choose_gold_smith"
+                app:layout_constraintEnd_toStartOf="@id/guideline2"
+                app:layout_constraintStart_toStartOf="@id/tv_label_invoice_code"
+                app:layout_constraintTop_toTopOf="@+id/mcv_choose_gold_smith" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcv_choose_gold_smith"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/mcv_invoice_code">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_choose_gold_smith"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:boxCornerRadiusBottomEnd="8dp"
+                    app:boxCornerRadiusBottomStart="8dp"
+                    app:boxCornerRadiusTopEnd="8dp"
+                    app:boxCornerRadiusTopStart="8dp"
+                    app:boxStrokeWidth="0dp"
+                    app:endIconTint="@color/primary_color"
+                    app:errorEnabled="false"
+                    app:hintEnabled="false">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/act_gold_smith"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:hint="Choose GoldSmith"
+                        android:inputType="none"
+                        android:textAlignment="center"
+                        android:textColorHint="@color/primary_color"
+                        android:textStyle="bold" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_order_item_name"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/mcv_choose_gold_smith">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_order_item_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="Enter Order Item Name"
+                    android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tv_label_order_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Order item"
+                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                app:layout_constraintBottom_toBottomOf="@+id/til_order_item_name"
+                app:layout_constraintEnd_toStartOf="@id/guideline2"
+                app:layout_constraintStart_toStartOf="@id/tv_label_invoice_code"
+                app:layout_constraintTop_toTopOf="@+id/til_order_item_name" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_order_qty"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/til_order_item_name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_order_qty"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="Enter Order Item Qty"
+                    android:inputType="number"
+                    android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tv_label_order_qty"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Order Qty"
+                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                app:layout_constraintBottom_toBottomOf="@+id/til_order_qty"
+                app:layout_constraintEnd_toStartOf="@id/guideline2"
+                app:layout_constraintStart_toStartOf="@id/tv_label_invoice_code"
+                app:layout_constraintTop_toTopOf="@+id/til_order_qty" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_k"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                app:hintEnabled="false"
+                app:layout_constraintStart_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/til_order_qty">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_k"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="K"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_p"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toStartOf="@id/til_y"
+                app:layout_constraintStart_toEndOf="@+id/til_k"
+                app:layout_constraintTop_toBottomOf="@id/til_order_qty">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_p"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="P"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_y"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="@id/til_order_qty"
+                app:layout_constraintTop_toBottomOf="@id/til_order_qty">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_y"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/y"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tv_label_weight_per_unit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Weight per Unit"
+                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                app:layout_constraintBottom_toBottomOf="@+id/til_k"
+                app:layout_constraintEnd_toStartOf="@id/guideline2"
+                app:layout_constraintStart_toStartOf="@id/tv_label_invoice_code"
+                app:layout_constraintTop_toTopOf="@+id/til_k" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcv_hundred_percent"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:checkable="true"
+                app:layout_constraintEnd_toStartOf="@+id/mcv_other"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/til_k"
+                app:layout_constraintTop_toBottomOf="@id/til_k"
+                app:strokeColor="@color/based_grey"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_hundred_percent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="100%"
+                        android:textColor="@color/collect_stock_chip_text_color_selector"
+                        android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcv_other"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:checkable="true"
+                app:layout_constraintEnd_toEndOf="@+id/til_y"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/mcv_hundred_percent"
+                app:layout_constraintTop_toBottomOf="@id/til_k"
+                app:strokeColor="@color/based_grey"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_other"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Other"
+                        android:textColor="@color/collect_stock_chip_text_color_selector"
+                        android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/tv_label_gold_box"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Gold Box"
+                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                app:layout_constraintBottom_toBottomOf="@+id/mcv_hundred_percent"
+                app:layout_constraintEnd_toStartOf="@id/guideline2"
+                app:layout_constraintStart_toStartOf="@id/tv_label_invoice_code"
+                app:layout_constraintTop_toTopOf="@+id/mcv_hundred_percent" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_gold_gm"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/mcv_hundred_percent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_gold_gm"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="Enter Gold Weight"
+                    android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tv_label_gold_gm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Gold (gm)"
+                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                app:layout_constraintBottom_toBottomOf="@+id/til_gold_gm"
+                app:layout_constraintEnd_toStartOf="@id/guideline2"
+                app:layout_constraintStart_toStartOf="@id/tv_label_invoice_code"
+                app:layout_constraintTop_toTopOf="@+id/til_gold_gm" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_gem_gm"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/til_gold_gm">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_gem_gm"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="Enter Gem Weight"
+                    android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tv_label_gem_gm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Gem (gm)"
+                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                app:layout_constraintBottom_toBottomOf="@+id/til_gem_gm"
+                app:layout_constraintEnd_toStartOf="@id/guideline2"
+                app:layout_constraintStart_toStartOf="@id/tv_label_invoice_code"
+                app:layout_constraintTop_toTopOf="@+id/til_gem_gm" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcv_gold_gem_gm"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:cardElevation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/til_gem_gm"
+                app:strokeColor="@color/based_grey"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_gold_and_gem_gm"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                        android:textStyle="bold"
+                        android:text="Gold+Gem Weight"
+                        android:textColor="@color/edit_text_color"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/tv_label_gold_and_gem_gm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Gold+Gem (gm)"
+                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                app:layout_constraintBottom_toBottomOf="@+id/mcv_gold_gem_gm"
+                app:layout_constraintEnd_toStartOf="@id/guideline2"
+                app:layout_constraintStart_toStartOf="@id/tv_label_invoice_code"
+                app:layout_constraintTop_toTopOf="@+id/mcv_gold_gem_gm" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcv_due_date"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/mcv_gold_gem_gm"
+                app:strokeColor="@color/based_grey"
+                app:strokeWidth="1dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/iv_calendar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_calendar" />
+
+                    <TextView
+                        android:id="@+id/tv_due_date"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        tools:text="24-Jul-2022"
+                        android:textColor="@color/primary_color"
+                        android:textStyle="bold"
+                        android:textAlignment="center"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_calendar"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:id="@+id/tv_label_due_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Due Date"
+                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                app:layout_constraintBottom_toBottomOf="@+id/mcv_due_date"
+                app:layout_constraintEnd_toStartOf="@id/guideline2"
+                app:layout_constraintStart_toStartOf="@id/tv_label_invoice_code"
+                app:layout_constraintTop_toTopOf="@+id/mcv_due_date" />
+
+
+            <TextView
+                android:id="@+id/tv_label_making_charges"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Making Charges"
+                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                app:layout_constraintEnd_toStartOf="@id/guideline2"
+                app:layout_constraintStart_toStartOf="@id/tv_label_invoice_code"
+                app:layout_constraintTop_toTopOf="@+id/til_k_2" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_k_2"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                app:hintEnabled="false"
+                app:layout_constraintStart_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/mcv_due_date">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_k2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="K"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_p2"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toStartOf="@id/til_y"
+                app:layout_constraintStart_toEndOf="@+id/til_k_2"
+                app:layout_constraintTop_toBottomOf="@id/mcv_due_date">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_p2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="P"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_y2"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="@id/mcv_due_date"
+                app:layout_constraintTop_toBottomOf="@id/mcv_due_date">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_y2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/y"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tv_label_for_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="for one"
+                android:textAppearance="@style/TextAppearance.ShweMi.Caption"
+                app:layout_constraintStart_toStartOf="@+id/tv_label_making_charges"
+                app:layout_constraintTop_toBottomOf="@+id/tv_label_making_charges" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

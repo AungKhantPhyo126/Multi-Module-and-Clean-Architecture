@@ -232,4 +232,8 @@
         android:id="@+id/editStockFragment"
         android:name="com.critx.shwemiAdmin.screens.editStock.EditStockFragment"
         android:label="EditStockFragment" />
+    <fragment
+        android:id="@+id/giveGoldFragment"
+        android:name="com.critx.shwemiAdmin.screens.giveGold.GiveGoldFragment"
+        android:label="GiveGoldFragment" />
 </navigation>
