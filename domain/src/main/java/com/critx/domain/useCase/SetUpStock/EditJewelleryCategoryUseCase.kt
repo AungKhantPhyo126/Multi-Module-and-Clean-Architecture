@@ -16,6 +16,7 @@ class EditJewelleryCategoryUseCase@Inject constructor(
         jewellery_quality_id : RequestBody,
         groupId:RequestBody,
         is_frequently_used : RequestBody,
+        withGem: RequestBody,
         name : RequestBody,
         avgWeigh:RequestBody,
         avgKyat: RequestBody,
@@ -29,5 +30,5 @@ class EditJewelleryCategoryUseCase@Inject constructor(
         recommendCat:MutableList<RequestBody>
 
     )=setupStockRepository.editJewelleryCategory(
-        token,method,categoryId, jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used, name, avgWeigh, avgKyat,avgPae,avgYwae, images, video, specification, design,orderToGs,recommendCat)
+        token,method,categoryId, jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used,withGem, name, avgWeigh, avgKyat,avgPae,avgYwae, images, video, specification, design,orderToGs,recommendCat)
 }

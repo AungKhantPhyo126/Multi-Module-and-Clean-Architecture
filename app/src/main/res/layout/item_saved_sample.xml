@@ -19,11 +19,11 @@
             android:id="@+id/tv_label_stock_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="@string/stock_code_label"
             android:textAppearance="@style/TextAppearance.ShweMi.Body2"
             app:layout_constraintStart_toEndOf="@+id/iv_sample"
-            app:layout_constraintStart_toStartOf="@+id/iv_sample"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -49,54 +49,29 @@
             app:layout_constraintTop_toTopOf="@id/tv_label_stock_code" />
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_enter_specification"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
-            android:visibility="visible"
-            app:boxBackgroundColor="@color/white"
-            app:boxCornerRadiusBottomEnd="15dp"
-            app:boxCornerRadiusBottomStart="15dp"
-            app:boxCornerRadiusTopEnd="15dp"
-            app:boxCornerRadiusTopStart="15dp"
-            app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
-            app:boxStrokeWidth="1dp"
-            app:errorEnabled="false"
-            app:hintEnabled="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_sample"
-            app:layout_constraintTop_toBottomOf="@+id/tv_label_stock_code">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/tie_specification"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="top"
-                android:hint="@string/enter_specification"
-                android:inputType="textMultiLine"
-                android:maxLines="7"
-                android:minLines="3"
-                android:scrollbars="vertical"
-                android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
         <ImageView
             android:id="@+id/iv_sample"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/til_enter_specification"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/dummy_chip_image" />
+
+        <TextView
+            android:id="@+id/tv_sample_spec"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            tools:text="haha"
+            android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_label_stock_code"
+            app:layout_constraintTop_toBottomOf="@+id/tv_label_stock_code" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
 

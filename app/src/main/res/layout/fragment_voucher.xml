@@ -17,15 +17,17 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/mcv_scan_here"
-        android:layout_width="220dp"
+        android:layout_width="0dp"
         android:layout_height="48dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="24dp"
-        android:clickable="true"
-        android:focusable="true"
         android:layout_marginEnd="16dp"
+        android:clickable="false"
+        android:focusable="false"
         app:cardCornerRadius="8dp"
         app:cardElevation="16dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_label_invoice_code"
         app:layout_constraintTop_toTopOf="parent"
         app:strokeWidth="1dp">
 
@@ -35,21 +37,26 @@
             android:gravity="center"
             android:weightSum="5">
 
-            <TextView
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_scan_here"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:text="@string/scan_here"
-                android:textAlignment="center"
+                android:layout_weight="4"
+                android:background="@drawable/popup_window_transparent"
+                android:hint="Type or Scan"
+                android:imeOptions="actionDone"
+                android:paddingStart="8dp"
+                android:textAlignment="textStart"
                 android:textAppearance="@style/TextAppearance.ShweMi.Body2"
                 android:textColor="@color/primary_color" />
 
             <ImageView
+                android:id="@+id/iv_scan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="1"
                 android:layout_marginEnd="16dp"
+                android:layout_weight="1"
                 android:src="@drawable/ic_qr_scan" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

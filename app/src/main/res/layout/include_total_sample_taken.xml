@@ -7,35 +7,35 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/tv_label_total_scanned_stock"
+        android:id="@+id/tv_label_total_sample_taken"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="@string/total_scanned_stock"
+        android:text="Total Sample Taked Item - "
         android:textAppearance="@style/TextAppearance.ShweMi.Caption"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
     <TextView
-        android:id="@+id/tv_total_scanned_stock_count"
+        android:id="@+id/tv_total_sample_taken_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="3"
         android:textAppearance="@style/TextAppearance.ShweMi.Caption"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/tv_label_total_scanned_stock"
-        app:layout_constraintTop_toTopOf="@id/tv_label_total_scanned_stock"
-        app:layout_constraintBottom_toBottomOf="@id/tv_label_total_scanned_stock"/>
+        app:layout_constraintStart_toEndOf="@id/tv_label_total_sample_taken"
+        app:layout_constraintTop_toTopOf="@id/tv_label_total_sample_taken"
+        app:layout_constraintBottom_toBottomOf="@id/tv_label_total_sample_taken"/>
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_sample"
+        android:id="@+id/rv_sample_taken"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_label_total_scanned_stock"
+        app:layout_constraintTop_toBottomOf="@id/tv_label_total_sample_taken"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_saved_sample"
+        tools:listitem="@layout/item_taken_sample"
         android:orientation="vertical"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -35,7 +35,8 @@ class SampleTakeAndReturn : Fragment() {
         toolbarCenterText.isVisible=true
         toolbarCenterText.text=getString(R.string.sample_take_amp_return)
         toolbarCenterImage.isVisible =false
-        toolbarEndIcon.isVisible =false
+        toolbarEndIcon.isVisible =true
+        toolbarEndIcon.setImageDrawable(requireContext().getDrawable(R.drawable.cart_box))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

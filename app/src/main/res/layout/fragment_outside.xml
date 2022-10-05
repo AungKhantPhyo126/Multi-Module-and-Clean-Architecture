@@ -46,7 +46,7 @@
                 app:boxCornerRadiusTopStart="15dp"
                 app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
                 app:boxStrokeWidth="1dp"
-                app:errorEnabled="true"
+                app:errorEnabled="false"
                 app:hintTextAppearance="@style/TextAppearance.ShweMi.Caption"
                 app:hintTextColor="@color/edit_text_color"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -58,7 +58,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scrollbars="vertical"
-                    android:maxLines="3"
+                    android:maxLines="2"
                     android:minLines="2" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -89,7 +89,7 @@
                 app:boxCornerRadiusTopStart="15dp"
                 app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
                 app:boxStrokeWidth="1dp"
-                app:errorEnabled="true"
+                app:errorEnabled="false"
                 app:hintTextAppearance="@style/TextAppearance.ShweMi.Caption"
                 app:hintTextColor="@color/edit_text_color"
                 app:layout_constraintEnd_toEndOf="@+id/til_stock_name"
@@ -102,7 +102,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="0dp"
                     android:scrollbars="vertical"
-                    android:maxLines="3"
+                    android:maxLines="2"
                     android:minLines="2" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -130,7 +130,7 @@
                 app:boxCornerRadiusTopStart="15dp"
                 app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
                 app:boxStrokeWidth="1dp"
-                app:errorEnabled="true"
+                app:errorEnabled="false"
                 app:hintTextAppearance="@style/TextAppearance.ShweMi.Caption"
                 app:hintTextColor="@color/edit_text_color"
                 app:layout_constraintEnd_toEndOf="@id/til_weigh"
@@ -143,7 +143,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="0dp"
                     android:gravity="top"
-                    android:maxLines="6"
+                    android:maxLines="4"
                     android:minLines="4"
                     android:scrollbars="vertical"/>
             </com.google.android.material.textfield.TextInputLayout>

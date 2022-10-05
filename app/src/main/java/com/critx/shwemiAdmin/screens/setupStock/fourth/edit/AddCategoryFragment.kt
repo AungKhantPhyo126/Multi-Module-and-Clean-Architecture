@@ -67,6 +67,7 @@ class AddCategoryFragment : Fragment() {
 
     private var isFrequentlyUsed = 0
     private var orderToGs = 0
+    private var withGem = 0
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
     private lateinit var launchChooseImage1: ActivityResultLauncher<Intent>
@@ -262,6 +263,11 @@ class AddCategoryFragment : Fragment() {
         orderToGs = if (binding.cbOrderToGs.isChecked) 1 else 0
         binding.cbOrderToGs.setOnCheckedChangeListener { compoundButton, ischecked ->
             isFrequentlyUsed = if (ischecked) 1 else 0
+        }
+
+        withGem = if (binding.cbHasGem.isChecked) 1 else 0
+        binding.cbOrderToGs.setOnCheckedChangeListener { compoundButton, ischecked ->
+            withGem = if (ischecked) 1 else 0
         }
 
 
@@ -841,6 +847,8 @@ class AddCategoryFragment : Fragment() {
                     args.groupInfo.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
                     isFrequentlyUsed.toString()
                         .toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                    withGem.toString()
+                        .toRequestBody("multipart/form-data".toMediaTypeOrNull()),
                     name,
                     avgWeigh,
                     photoToUpload,
@@ -860,6 +868,8 @@ class AddCategoryFragment : Fragment() {
                     args.quality.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
                     args.groupInfo.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
                     isFrequentlyUsed.toString()
+                        .toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                    withGem.toString()
                         .toRequestBody("multipart/form-data".toMediaTypeOrNull()),
                     name,
                     avgWeigh,
