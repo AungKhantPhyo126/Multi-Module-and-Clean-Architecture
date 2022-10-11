@@ -32,7 +32,7 @@ interface CollectStockService {
 //        @Part("product_codes[]") productCodeList:List<RequestBody>
 //    ):Response<ProductIdListResponse>
 
-    @POST("api/products/{stockCode}/scan")
+    @GET("api/products/{stockCode}/scan")
     suspend fun scanStockCode(
         @Header("Authorization") token: String,
         @Path("stockCode") stockCode:String,
@@ -44,7 +44,7 @@ interface CollectStockService {
         @Query("jewellery_type") type:String
         ):Response<JewellerySizeResponse>
 
-
+    @JvmSuppressWildcards
     @Multipart
     @POST("api/products/update/multiple")
     suspend fun multipleStockUpdate(

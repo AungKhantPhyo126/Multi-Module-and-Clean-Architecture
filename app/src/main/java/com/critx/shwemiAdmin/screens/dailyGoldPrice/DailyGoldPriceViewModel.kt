@@ -42,7 +42,7 @@ class DailyGoldPriceViewModel @Inject constructor(
     get() = _isLogin
 
     fun isloggedIn(){
-        _isLogin.value=true
+        _isLogin.value=localDatabase.isLogin()
 //        return true
     }
     init {

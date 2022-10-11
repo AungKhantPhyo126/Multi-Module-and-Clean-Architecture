@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -28,6 +29,7 @@ class CollectStockFragment : Fragment() {
     private val viewModel by viewModels<CollectStockViewModel>()
     private lateinit var barlauncer: Any
     private lateinit var loadingDialog: AlertDialog
+    private lateinit var adapter:CollectStockRecyclerAdapter
 
     var jewelleryType:String? = null
 
@@ -58,42 +60,27 @@ class CollectStockFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
+        viewModel.stockCodeList = mutableListOf()
         loadingDialog = requireContext().getAlertDialog()
         barlauncer = this.getBarLauncherTest(requireContext()) { viewModel.scanStock(it) }
         binding.ivScan.setOnClickListener {
             scanQrCode(requireContext(), barlauncer)
         }
-        val adapter = CollectStockRecyclerAdapter {
+        adapter = CollectStockRecyclerAdapter {
             viewModel.removeStockCode(it)
         }
-
+        observeForBatch()
         binding.layoutCollectStockBatch.rvCollectStockBatch.adapter = adapter
-        viewModel.scannedStockcodebatch.observe(viewLifecycleOwner) {
-            binding.layoutCollectStockBatch.btnNext.isEnabled = it.size>0
-            if (it.size > 1){
-                val typeList = it.map { it.productType }
-                jewelleryType = if (typeList.toSet().size ==1){
-                    typeList[0]
-                }else{
-                    null
-                }
+            binding.edtStockCode.setOnKeyListener { view, keyCode, keyevent ->
+                //If the keyevent is a key-down event on the "enter" button
+                if (keyevent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    // Perform your action on key press here
+                    if (binding.chipBatch.isChecked){
+                        viewModel.scanStock(binding.edtStockCode.text.toString())
+                    }
+                    true
+                } else false
             }
-            adapter.submitList(it)
-            adapter.notifyDataSetChanged()
-        }
-
-        binding.edtStockCode.setOnKeyListener { view, keyCode, keyevent ->
-            //If the keyevent is a key-down event on the "enter" button
-            if (keyevent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                //...
-                // Perform your action on key press here
-                viewModel.scanStock(binding.edtStockCode.text.toString())
-                binding.edtStockCode.text?.clear()
-                true
-            } else false
-        }
-
-
 
 
         binding.layoutCollectStockBatch.btnNext.setOnClickListener {
@@ -104,21 +91,86 @@ class CollectStockFragment : Fragment() {
             ))
         }
 
+
+        binding.btnConfirm.setOnClickListener {
+            viewModel.getProductId(binding.edtStockCode.text.toString())
+        }
+
+
+        binding.chiptGp.setOnCheckedStateChangeListener { group, checkedIds ->
+            if (checkedIds.contains(R.id.chip_single)) {
+                binding.singleSelectedLayout.isVisible = true
+                binding.layoutCollectStockBatch.root.isVisible = false
+                binding.edtStockCode.text?.clear()
+                observeForSingle()
+
+            } else if (checkedIds.contains(R.id.chip_batch)) {
+                binding.singleSelectedLayout.isVisible = false
+                binding.layoutCollectStockBatch.root.isVisible = true
+                binding.edtStockCode.text?.clear()
+                observeForBatch()
+            }
+        }
+    }
+    fun observeForBatch(){
+        viewModel.scannedStockcodebatch.observe(viewLifecycleOwner) {
+            binding.layoutCollectStockBatch.btnNext.isEnabled = it.size>0
+            val typeList = it.map { it.productType }
+            if (it.size > 1){
+                jewelleryType = if (typeList.toSet().size ==1){
+                    typeList[0]
+                }else{
+                    null
+                }
+            }else if(it.size>0){
+                jewelleryType = typeList[0]
+            }
+            adapter.submitList(it)
+            adapter.notifyDataSetChanged()
+            binding.edtStockCode.text?.clear()
+        }
+
         viewModel.scanProductCodeLive.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Loading -> {
                     loadingDialog.show()
                 }
                 is Resource.Success -> {
+                    loadingDialog.dismiss()
                     //id list
-                    viewModel.addStockCode(
-                        CollectStockBatchUIModel(
-                            it.data!!.id,
-                            binding.edtStockCode.text.toString(),
-                            it.data!!.type.toString()
-                        )
+                    val resultItem = CollectStockBatchUIModel(
+                        it.data!!.id,
+                        binding.edtStockCode.text.toString(),
+                        it.data!!.type.toString()
                     )
+                    if (viewModel.stockCodeList.contains(resultItem).not()){
+                        viewModel.addStockCode(resultItem)
+                    }else{
+                        Toast.makeText(requireContext(),"Stock Already Scanned",Toast.LENGTH_LONG).show()
+                    }
+                    viewModel.resetScanProductCodeLive()
 //                    findNavController().navigate(CollectStockFragmentDirections.actionCollectStockFragmentToFillInfoCollectStockFragment())
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                }
+            }
+        }
+    }
+    fun observeForSingle(){
+
+        viewModel.collectStockSingleLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    requireContext().showSuccessDialog(it.data.orEmpty()) {
+                        binding.edtStockCode.text?.clear()
+                        binding.edtWeight.text?.clear()
+                        viewModel.resetCollectStockSingleLiveData()
+                    }
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
@@ -132,44 +184,12 @@ class CollectStockFragment : Fragment() {
                     loadingDialog.show()
                 }
                 is Resource.Success -> {
-                    binding.edtStockCode.setText(it.data)
                     viewModel.collectStock(it.data.orEmpty(), binding.edtWeight.text.toString())
+                    viewModel.resetGetProductIdLiveData()
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
                 }
-            }
-        }
-
-        viewModel.collectStockSingleLiveData.observe(viewLifecycleOwner) {
-            when (it) {
-                is Resource.Loading -> {
-                    loadingDialog.show()
-                }
-                is Resource.Success -> {
-                    loadingDialog.dismiss()
-                    requireContext().showSuccessDialog(it.data.orEmpty()) {
-                        binding.edtStockCode.text?.clear()
-                        binding.edtWeight.text?.clear()
-                    }
-                }
-                is Resource.Error -> {
-                    loadingDialog.dismiss()
-                }
-            }
-        }
-
-        binding.btnConfirm.setOnClickListener {
-            viewModel.getProductId(binding.edtStockCode.text.toString())
-        }
-
-        binding.chiptGp.setOnCheckedStateChangeListener { group, checkedIds ->
-            if (checkedIds.contains(R.id.chip_single)) {
-                binding.singleSelectedLayout.isVisible = true
-                binding.layoutCollectStockBatch.root.isVisible = false
-            } else if (checkedIds.contains(R.id.chip_batch)) {
-                binding.singleSelectedLayout.isVisible = false
-                binding.layoutCollectStockBatch.root.isVisible = true
             }
         }
     }
