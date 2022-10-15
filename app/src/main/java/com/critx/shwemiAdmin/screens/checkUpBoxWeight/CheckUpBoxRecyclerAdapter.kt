@@ -7,9 +7,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.critx.shwemiAdmin.databinding.ItemBoxWeightBinding
 import com.critx.shwemiAdmin.uiModel.StockCodeForListUiModel
+import com.critx.shwemiAdmin.uiModel.checkupBoxWeight.BoxWeightUiModel
 
 class CheckUpBoxRecyclerAdapter :
-    ListAdapter<StockCodeForListUiModel, CheckUpBoxViewHolder>(
+    ListAdapter<BoxWeightUiModel, CheckUpBoxViewHolder>(
         CheckUpBoxDiffUtil
     ){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CheckUpBoxViewHolder {
@@ -25,18 +26,19 @@ class CheckUpBoxRecyclerAdapter :
 }
 
 class CheckUpBoxViewHolder(private val binding: ItemBoxWeightBinding): RecyclerView.ViewHolder(binding.root){
-    fun bind(data: StockCodeForListUiModel){
-        binding.tvStockCodeNumber.text = data.invoiceCode
+    fun bind(data: BoxWeightUiModel){
+        binding.tvBoxCode.text = data.code
+        binding.tvWeightValue.text = data.weight
     }
 }
 
 
-object CheckUpBoxDiffUtil : DiffUtil.ItemCallback<StockCodeForListUiModel>() {
-    override fun areItemsTheSame(oldItem: StockCodeForListUiModel, newItem: StockCodeForListUiModel): Boolean {
+object CheckUpBoxDiffUtil : DiffUtil.ItemCallback<BoxWeightUiModel>() {
+    override fun areItemsTheSame(oldItem: BoxWeightUiModel, newItem: BoxWeightUiModel): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: StockCodeForListUiModel, newItem: StockCodeForListUiModel): Boolean {
+    override fun areContentsTheSame(oldItem: BoxWeightUiModel, newItem: BoxWeightUiModel): Boolean {
         return oldItem == newItem
     }
 

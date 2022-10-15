@@ -30,7 +30,7 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
-            android:id="@+id/tv_stock_code_number"
+            android:id="@+id/tv_box_code"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
