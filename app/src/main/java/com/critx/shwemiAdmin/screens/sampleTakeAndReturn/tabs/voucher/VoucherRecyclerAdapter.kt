@@ -5,9 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.critx.shwemiAdmin.databinding.ItemNewSampleBinding
 import com.critx.shwemiAdmin.databinding.ItemVoucherBinding
-import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.tabs.new.NewSampleDiffUtil
 import com.critx.shwemiAdmin.uiModel.simpleTakeAndReturn.VoucherForSampleUIModel
 
 class VoucherRecyclerAdapter(private val onclick:()->Unit) : ListAdapter<VoucherForSampleUIModel, VoucherViewHolder>(

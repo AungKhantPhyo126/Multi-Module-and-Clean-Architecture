@@ -1,4 +1,4 @@
-package com.critx.shwemiAdmin.screens.sampleTakeAndReturn.tabs.new
+package com.critx.shwemiAdmin.screens.sampleTakeAndReturn.tabs.inventory
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.critx.common.ui.loadImageWithGlide
 import com.critx.shwemiAdmin.databinding.ItemNewSampleBinding
-import com.critx.shwemiAdmin.uiModel.sampleTakeAndReturn.NewSampleUIModel
 import com.critx.shwemiAdmin.uiModel.simpleTakeAndReturn.SampleItemUIModel
 
 class NewSampleRecyclerAdapter(private val onclick:()->Unit) : ListAdapter<SampleItemUIModel, NewSampleViewHolder>(

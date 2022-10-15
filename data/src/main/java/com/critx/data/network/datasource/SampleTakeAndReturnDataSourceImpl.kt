@@ -8,6 +8,7 @@ import com.critx.data.network.dto.sampleTakeAndReturn.SampleCheckDto
 import com.critx.data.network.dto.sampleTakeAndReturn.VoucherSampleDto
 import com.critx.data.network.dto.sampleTakeAndReturn.VoucherScanDto
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import javax.inject.Inject
 
 class SampleTakeAndReturnDataSourceImpl @Inject constructor(
@@ -189,9 +190,9 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
 
     override suspend fun saveOutsideSample(
         token: String,
-        name: String,
-        weight: String,
-        specification: String,
+        name: RequestBody?,
+        weight: RequestBody?,
+        specification: RequestBody?,
         image: MultipartBody.Part
     ): SimpleResponseDto {
         val response = sampleTakeAndReturnService.saveOutsideSample(token,name,weight,specification, image)

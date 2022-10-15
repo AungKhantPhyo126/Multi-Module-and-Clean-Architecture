@@ -14,8 +14,9 @@ import com.critx.shwemiAdmin.databinding.CustomTabItemBinding
 import com.critx.shwemiAdmin.databinding.FragmentSampleTakeAndReturnBinding
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class SampleTakeAndReturn : Fragment() {
     private lateinit var binding: FragmentSampleTakeAndReturnBinding
     override fun onCreateView(

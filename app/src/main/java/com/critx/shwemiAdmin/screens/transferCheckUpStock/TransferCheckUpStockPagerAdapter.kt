@@ -2,9 +2,6 @@ package com.critx.shwemiAdmin.screens.transferCheckUpStock
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.tabs.new.NewSampleFragment
-import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.tabs.outside.OutSideFragment
-import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.tabs.voucher.VoucherFragment
 import com.critx.shwemiAdmin.screens.transferCheckUpStock.checkup.CheckUpStockFragment
 import com.critx.shwemiAdmin.screens.transferCheckUpStock.transfer.TransferStockFragment
 

@@ -2,13 +2,13 @@ package com.critx.shwemiAdmin.screens.sampleTakeAndReturn
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.tabs.new.NewSampleFragment
+import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.tabs.inventory.InventoryFragment
 import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.tabs.outside.OutSideFragment
 import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.tabs.voucher.VoucherFragment
 
 
 const val VOUCHER="voucher"
-const val NEW="new"
+const val INVENTORY="inventory"
 const val OUTSIDE="outside"
 
 
@@ -18,7 +18,7 @@ class SampleTakeAndReturnPagerAdapter(fragment:Fragment):FragmentStateAdapter(fr
     override fun createFragment(position: Int): Fragment {
         val type = when(position){
             0-> VOUCHER
-            1-> NEW
+            1-> INVENTORY
             2-> OUTSIDE
             else-> VOUCHER
         }
@@ -26,8 +26,8 @@ class SampleTakeAndReturnPagerAdapter(fragment:Fragment):FragmentStateAdapter(fr
             VOUCHER -> {
                 VoucherFragment()
             }
-            NEW->{
-                NewSampleFragment()
+            INVENTORY->{
+                InventoryFragment()
             }
             OUTSIDE->{
                 OutSideFragment()

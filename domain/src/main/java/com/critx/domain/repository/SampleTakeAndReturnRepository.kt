@@ -8,6 +8,7 @@ import com.critx.domain.model.sampleTakeAndReturn.VoucherSampleDomain
 import com.critx.domain.model.sampleTakeAndReturn.VoucherScanDomain
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 interface SampleTakeAndReturnRepository {
 
@@ -27,7 +28,7 @@ interface SampleTakeAndReturnRepository {
 
      fun removeFromHandedList(token:String,sampleId: List<String>):Flow<Resource<SimpleData>>
 
-     fun saveOutsideSample(token: String,name:String,weight:String,specification:String,image: MultipartBody.Part):Flow<Resource<SimpleData>>
+     fun saveOutsideSample(token: String,name:RequestBody?,weight:RequestBody?,specification:RequestBody?,image: MultipartBody.Part):Flow<Resource<SimpleData>>
 
      fun returnSample(token: String,sampleId:List<String>):Flow<Resource<SimpleData>>
 }

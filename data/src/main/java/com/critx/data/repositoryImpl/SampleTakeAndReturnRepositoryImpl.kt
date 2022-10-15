@@ -14,6 +14,7 @@ import com.critx.domain.repository.SampleTakeAndReturnRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
@@ -185,9 +186,9 @@ class SampleTakeAndReturnRepositoryImpl @Inject constructor(
 
     override fun saveOutsideSample(
         token: String,
-        name: String,
-        weight: String,
-        specification: String,
+        name: RequestBody?,
+        weight: RequestBody?,
+        specification: RequestBody?,
         image: MultipartBody.Part
     ): Flow<Resource<SimpleData>> =
     flow {

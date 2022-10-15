@@ -6,6 +6,7 @@ import com.critx.data.network.dto.sampleTakeAndReturn.SampleCheckResponse
 import com.critx.data.network.dto.sampleTakeAndReturn.VoucherSampleResponse
 import com.critx.data.network.dto.sampleTakeAndReturn.VoucherScanResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -70,14 +71,13 @@ interface SampleTakeAndReturnService {
     ): Response<SimpleResponse>
 
 
-    @FormUrlEncoded
     @Multipart
     @POST("api/samples/outside/take")
     suspend fun saveOutsideSample(
         @Header("Authorization") token: String,
-        @Field("name") name: String,
-        @Field("weight_gm") weight_gm: String,
-        @Field("specification") specification: String,
+        @Part("name") name: RequestBody?,
+        @Part("weight_gm") weight_gm: RequestBody?,
+        @Part("specification") specification: RequestBody?,
         @Part image: MultipartBody.Part
     ):Response<SimpleResponse>
 }

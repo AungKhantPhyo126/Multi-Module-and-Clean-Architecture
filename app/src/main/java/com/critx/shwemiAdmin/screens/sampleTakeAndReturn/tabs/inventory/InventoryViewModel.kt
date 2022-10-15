@@ -1,4 +1,4 @@
-package com.critx.shwemiAdmin.screens.sampleTakeAndReturn.tabs.new
+package com.critx.shwemiAdmin.screens.sampleTakeAndReturn.tabs.inventory
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
 import com.critx.domain.model.collectStock.ProductIdWithTypeDomain
-import com.critx.domain.model.sampleTakeAndReturn.VoucherSampleDomain
 import com.critx.domain.model.sampleTakeAndReturn.VoucherScanDomain
 import com.critx.domain.useCase.collectStock.ScanProductCodeUseCase
 import com.critx.domain.useCase.sampleTakeAndReturn.CheckSampleUseCase
@@ -14,7 +13,6 @@ import com.critx.domain.useCase.sampleTakeAndReturn.ScanInvoiceUseCase
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.notifyObserverWithResource
 import com.critx.shwemiAdmin.uiModel.simpleTakeAndReturn.SampleItemUIModel
-import com.critx.shwemiAdmin.uiModel.simpleTakeAndReturn.VoucherForSampleUIModel
 import com.critx.shwemiAdmin.uiModel.simpleTakeAndReturn.asUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -100,7 +98,7 @@ class InventoryViewModel @Inject constructor(
                         _sampleLiveData.value = Resource.Loading()
                     }
                     is Resource.Success -> {
-                        _sampleLiveData.value = Resource.Success(it.data.map { it.asUIModel() })
+                        _sampleLiveData.value = Resource.Success(it.data!!.map { it.asUIModel() } as MutableList<SampleItemUIModel>)
                     }
                     is Resource.Error -> {
                         _sampleLiveData.value = Resource.Error(it.message)

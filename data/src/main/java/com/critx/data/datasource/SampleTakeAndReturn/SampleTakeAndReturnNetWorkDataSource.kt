@@ -6,6 +6,7 @@ import com.critx.data.network.dto.sampleTakeAndReturn.SampleCheckDto
 import com.critx.data.network.dto.sampleTakeAndReturn.VoucherSampleDto
 import com.critx.data.network.dto.sampleTakeAndReturn.VoucherScanDto
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.Response
 
 interface SampleTakeAndReturnNetWorkDataSource {
@@ -25,7 +26,7 @@ interface SampleTakeAndReturnNetWorkDataSource {
 
     suspend fun removeFromHandedList(token:String,sampleId: List<String>):SimpleResponseDto
 
-    suspend fun saveOutsideSample(token: String,name:String,weight:String,specification:String,image:MultipartBody.Part):SimpleResponseDto
+    suspend fun saveOutsideSample(token: String,name:RequestBody?,weight:RequestBody?,specification:RequestBody?,image:MultipartBody.Part):SimpleResponseDto
 
     suspend fun returnSample(token: String,sampleId:List<String>):SimpleResponseDto
 }
