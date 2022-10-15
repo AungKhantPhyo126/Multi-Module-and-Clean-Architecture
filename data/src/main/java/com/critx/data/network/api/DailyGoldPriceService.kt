@@ -13,7 +13,7 @@ interface DailyGoldPriceService {
     ): Response<GoldPriceResponse>
 
     @FormUrlEncoded
-    @POST("api/gold_types")
+    @POST("/api/gold_prices/update")
     suspend fun updateGoldPrice(
         @Header("Authorization") token: String,
         @FieldMap price :HashMap<String,String>
