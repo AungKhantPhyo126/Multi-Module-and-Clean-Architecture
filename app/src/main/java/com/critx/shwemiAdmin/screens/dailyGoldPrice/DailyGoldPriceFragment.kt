@@ -13,7 +13,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -24,13 +23,13 @@ import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.FragmentDailyGoldPriceBinding
-import com.critx.shwemiAdmin.uiModel.dailygoldandprice.asUiModel
 import com.critx.shwemiAdmin.workerManager.RefreshTokenWorker
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
+
 
 @AndroidEntryPoint
 class DailyGoldPriceFragment:Fragment() {
@@ -95,7 +94,36 @@ class DailyGoldPriceFragment:Fragment() {
         toolbarEndIcon.setOnClickListener {
             viewModel.logout()
         }
+        binding.btnUpdate.setOnClickListener {
+            val map: HashMap<String, String> = HashMap()
+            map["price[1]"] = binding.layoutDailyGoldPriceInput.edtGoldBlock.text.toString()
+            map["price[2]"] = binding.layoutDailyGoldPriceInput.edt15pGq.text.toString()
+            map["price[3]"] = binding.layoutDailyGoldPriceInput.edt22kGq.text.toString()
+            map["price[4]"] = binding.layoutDailyGoldPriceInput.edtDiamond.text.toString()
+            map["price[5]"] = binding.layoutDailyGoldPriceInput.edtWg.text.toString()
+            map["price[6]"] = binding.layoutDailyGoldPriceInput.edtRebuy.text.toString()
+            viewModel.updateGoldPrice(map)
+        }
 
+        viewModel.updateGoldLive.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    requireContext().showSuccessDialog(it.data!!) {
+                        viewModel.resetUpdateGoldLive()
+                    }
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    viewModel.resetUpdateGoldLive()
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+
+                }
+            }
+        }
         viewModel.getGoldPriceLive.observe(viewLifecycleOwner){
             when(it){
                 is Resource.Loading->{
@@ -103,12 +131,13 @@ class DailyGoldPriceFragment:Fragment() {
                 }
                 is Resource.Success->{
                     loadingDialog.dismiss()
-                    binding.layoutDailyGoldPriceInput.edtGoldBlock.setText(it.data?.get(0)!!.price +it.data?.get(0)!!.unit )
-                    binding.layoutDailyGoldPriceInput.edt15pGq.setText(it.data?.get(1)!!.price +it.data?.get(1)!!.unit )
-                    binding.layoutDailyGoldPriceInput.edt22kGq.setText(it.data?.get(2)!!.price +it.data?.get(2)!!.unit )
-                    binding.layoutDailyGoldPriceInput.edtDiamond.setText(it.data?.get(3)!!.price +it.data?.get(3)!!.unit )
-                    binding.layoutDailyGoldPriceInput.edtWg.setText(it.data?.get(4)!!.price +it.data?.get(4)!!.unit )
-                    binding.layoutDailyGoldPriceInput.edtRebuy.setText(it.data?.get(4)!!.price +it.data?.get(4)!!.unit )
+
+                    binding.layoutDailyGoldPriceInput.edtGoldBlock.setText(it.data?.get(0)!!.price )
+                    binding.layoutDailyGoldPriceInput.edt15pGq.setText(it.data?.get(1)!!.price )
+                    binding.layoutDailyGoldPriceInput.edt22kGq.setText(it.data?.get(2)!!.price  )
+                    binding.layoutDailyGoldPriceInput.edtDiamond.setText(it.data?.get(3)!!.price )
+                    binding.layoutDailyGoldPriceInput.edtWg.setText(it.data?.get(4)!!.price  )
+                    binding.layoutDailyGoldPriceInput.edtRebuy.setText(it.data?.get(4)!!.price  )
                 }
                 is Resource.Error->{
                     loadingDialog.dismiss()
@@ -172,7 +201,7 @@ class DailyGoldPriceFragment:Fragment() {
             if (it){
                     enqueueRefreshTokenWork()
                     viewModel.getProfile()
-                viewModel.getGoldPrice()
+
             }else{
                 findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
             }
@@ -191,12 +220,6 @@ class DailyGoldPriceFragment:Fragment() {
         binding.btnByTable.setOnClickListener {
             findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToPriceByTableFragment())
         }
-        binding.btnUpdate.setOnClickListener {
-            requireContext().showSuccessDialog("Price Uploaded") {
-//                findNavController().popBackStack()
-//                findNavController().clearBackStack(R.id.dailyGoldPriceFragment)
-            }
-        }
     }
     private fun enqueueRefreshTokenWork() {
         workManager.enqueueUniquePeriodicWork(
@@ -205,5 +228,18 @@ class DailyGoldPriceFragment:Fragment() {
             repeatingRequest
         )
     }
-
+//    fun addConstantTextInEditText(edt: EditText, text: String?) {
+//        edt.setText(text)
+//        Selection.setSelection(edt.text, edt.text.length)
+//        edt.addTextChangedListener(object : TextWatcher {
+//            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+//            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+//            override fun afterTextChanged(s: Editable) {
+//                if (!s.toString().contains(text!!)) {
+//                    edt.setText(text)
+//                    Selection.setSelection(edt.text, edt.text.length)
+//                }
+//            }
+//        })
+//    }
 }

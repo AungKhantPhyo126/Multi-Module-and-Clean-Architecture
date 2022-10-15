@@ -30,15 +30,20 @@
         app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
         app:boxStrokeWidth="1dp"
         app:errorEnabled="true"
+        app:expandedHintEnabled="false"
+        app:suffixText="Kyat"
+        app:hintEnabled="false"
         app:layout_constraintBottom_toBottomOf="@id/tv_gold_block"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_gold_block"
-        app:layout_constraintTop_toTopOf="@id/tv_gold_block">
+        app:layout_constraintTop_toTopOf="@id/tv_gold_block"
+        >
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_gold_block"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -65,6 +70,9 @@
         app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
         app:boxStrokeWidth="1dp"
         app:errorEnabled="true"
+        app:expandedHintEnabled="false"
+        app:suffixText="Kyat"
+        app:hintEnabled="false"
         app:layout_constraintBottom_toBottomOf="@id/tv_gq_by_p"
         app:layout_constraintEnd_toEndOf="@+id/til_gold_block"
         app:layout_constraintStart_toStartOf="@+id/til_gold_block"
@@ -73,7 +81,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_15p_gq"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -100,6 +109,9 @@
         app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
         app:boxStrokeWidth="1dp"
         app:errorEnabled="true"
+        app:expandedHintEnabled="false"
+        app:suffixText="Kyat"
+        app:hintEnabled="false"
         app:layout_constraintBottom_toBottomOf="@id/tv_gq_by_k"
         app:layout_constraintEnd_toEndOf="@+id/til_gold_block"
         app:layout_constraintStart_toStartOf="@+id/til_gold_block"
@@ -108,7 +120,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_22k_gq"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -136,6 +149,9 @@
         app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
         app:boxStrokeWidth="1dp"
         app:errorEnabled="true"
+        app:expandedHintEnabled="false"
+        app:suffixText="Kyat"
+        app:hintEnabled="false"
         app:layout_constraintBottom_toBottomOf="@id/tv_diamond"
         app:layout_constraintEnd_toEndOf="@+id/til_gold_block"
         app:layout_constraintStart_toStartOf="@+id/til_gold_block"
@@ -144,7 +160,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_diamond"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -171,6 +188,9 @@
         app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
         app:boxStrokeWidth="1dp"
         app:errorEnabled="true"
+        app:expandedHintEnabled="false"
+        app:suffixText="gram"
+        app:hintEnabled="false"
         app:layout_constraintBottom_toBottomOf="@id/tv_wg"
         app:layout_constraintEnd_toEndOf="@+id/til_gold_block"
         app:layout_constraintStart_toStartOf="@+id/til_gold_block"
@@ -179,7 +199,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_wg"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -207,6 +228,9 @@
         app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
         app:boxStrokeWidth="1dp"
         app:errorEnabled="true"
+        app:expandedHintEnabled="false"
+        app:suffixText="Kyat"
+        app:hintEnabled="false"
         app:layout_constraintBottom_toBottomOf="@id/tv_rebuy"
         app:layout_constraintEnd_toEndOf="@+id/til_gold_block"
         app:layout_constraintStart_toStartOf="@+id/til_gold_block"
@@ -215,7 +239,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_rebuy"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 

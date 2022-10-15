@@ -10,6 +10,7 @@ import com.critx.domain.useCase.auth.LogoutUseCase
 import com.critx.domain.useCase.auth.RefreshTokenUseCase
 import com.critx.domain.useCase.dailygoldprice.GetGoldPriceUseCase
 import com.critx.domain.useCase.dailygoldprice.GetProfileUsecase
+import com.critx.domain.useCase.dailygoldprice.UpdateGoldPriceUseCase
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.uiModel.dailygoldandprice.GoldPriceUIModel
@@ -29,6 +30,7 @@ class DailyGoldPriceViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
     private val getProfileUsecase: GetProfileUsecase,
     private val getGoldPriceUseCase: GetGoldPriceUseCase,
+    private val updateGoldPriceUseCase: UpdateGoldPriceUseCase,
     private val refreshTokenUseCase: RefreshTokenUseCase
 ): ViewModel() {
     private val _logoutState = MutableStateFlow(LogoutUiState())
@@ -48,6 +50,14 @@ class DailyGoldPriceViewModel @Inject constructor(
     val getGoldPriceLive : LiveData<Resource<List<GoldPriceUIModel>>>
         get()  = _getGoldPriceLive
 
+    private val _updateGoldLive = MutableLiveData<Resource<String>>()
+    val updateGoldLive : LiveData<Resource<String>>
+        get()  = _updateGoldLive
+
+    fun resetUpdateGoldLive(){
+        _updateGoldLive.value = null
+    }
+
     fun isloggedIn(){
         _isLogin.value=localDatabase.isLogin()
 //        return true
@@ -58,6 +68,26 @@ class DailyGoldPriceViewModel @Inject constructor(
 
     fun isRefreshTokenExpire():Boolean{
         return localDatabase.isRefreshTokenExpire()
+    }
+
+    fun updateGoldPrice(price: HashMap<String,String>){
+        viewModelScope.launch {
+            updateGoldPriceUseCase(localDatabase.getToken().orEmpty(),price).collectLatest {
+                when(it){
+                    is Resource.Loading->{
+                        _updateGoldLive.value  = Resource.Loading()
+                    }
+                    is Resource.Success->{
+                        _updateGoldLive.value  = Resource.Success(it.data!!.message)
+
+                    }
+                    is Resource.Error->{
+                        _updateGoldLive.value  = Resource.Error(it.message)
+
+                    }
+                }
+            }
+        }
     }
 
     fun getGoldPrice(){
@@ -122,6 +152,7 @@ class DailyGoldPriceViewModel @Inject constructor(
                         )
                     }
                     is Resource.Success->{
+                        getGoldPrice()
                         _profileState.value =_profileState.value.copy(
                             loading = false,
                             successLoading = result.data!!.asUiModel()
