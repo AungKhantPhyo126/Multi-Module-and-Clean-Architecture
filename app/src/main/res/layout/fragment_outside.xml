@@ -17,6 +17,36 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <RadioButton
+                    android:id="@+id/radio_button_sample_take"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:buttonTint="@color/primary_color"
+                    android:checked="true"
+                    android:text="@string/sample_take"
+                    android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/radio_button_sample_return"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/primary_color"
+                    android:text="@string/sample_return"
+                    android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
+                    android:textStyle="bold" />
+            </RadioGroup>
 
             <TextView
                 android:id="@+id/tv_stock_name"
@@ -51,7 +81,7 @@
                 app:hintTextColor="@color/edit_text_color"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_stock_name"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/radioGroup">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_stock_name"
