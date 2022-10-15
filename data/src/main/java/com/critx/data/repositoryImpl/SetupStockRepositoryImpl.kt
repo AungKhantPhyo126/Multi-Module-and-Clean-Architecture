@@ -223,6 +223,7 @@ class SetupStockRepositoryImpl @Inject constructor(
         jewellery_quality_id: RequestBody,
         groupId: RequestBody,
         is_frequently_used: RequestBody,
+        withGem:RequestBody,
         name: RequestBody,
         avgWeigh: RequestBody,
         avgKyat:RequestBody,
@@ -242,7 +243,7 @@ class SetupStockRepositoryImpl @Inject constructor(
                 emit(
                     Resource.Success(
                         setupStockNetWorkDatasource.createJewelleryCategory(
-                            token, jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used, name, avgWeigh, avgKyat,avgPae,avgYwae, images, video, specification, design,orderToGs
+                            token, jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used,withGem, name, avgWeigh, avgKyat,avgPae,avgYwae, images, video, specification, design,orderToGs
                         ,recommendCat).data.asDomain()
                     )
                 )
@@ -263,6 +264,7 @@ class SetupStockRepositoryImpl @Inject constructor(
         jewellery_quality_id: RequestBody,
         groupId: RequestBody,
         is_frequently_used: RequestBody,
+        withGem: RequestBody,
         name: RequestBody,
         avgWeigh: RequestBody,
         avgKyat:RequestBody,
@@ -281,7 +283,7 @@ class SetupStockRepositoryImpl @Inject constructor(
                 emit(
                     Resource.Success(
                         setupStockNetWorkDatasource.editJewelleryCategory(
-                            token, method,categoryId,jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used, name, avgWeigh, avgKyat,avgPae,avgYwae, images, video, specification, design,orderToGs
+                            token, method,categoryId,jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used,withGem, name, avgWeigh, avgKyat,avgPae,avgYwae, images, video, specification, design,orderToGs
                             ,recommendCat).response.asDomain()
                     )
                 )

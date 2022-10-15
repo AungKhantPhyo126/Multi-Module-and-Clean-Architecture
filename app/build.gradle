@@ -53,6 +53,9 @@ dependencies {
     implementation(project(":commonkotlin"))
     implementation(project(":data"))
 
+    def multidex_version = "2.0.1"
+    implementation("androidx.multidex:multidex:$multidex_version")
+
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'com.google.android.material:material:1.6.1'

@@ -14,8 +14,9 @@ import com.critx.shwemiAdmin.databinding.CustomTabItemBinding
 import com.critx.shwemiAdmin.databinding.FragmentSampleTakeAndReturnBinding
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class SampleTakeAndReturn : Fragment() {
     private lateinit var binding: FragmentSampleTakeAndReturnBinding
     override fun onCreateView(
@@ -35,7 +36,8 @@ class SampleTakeAndReturn : Fragment() {
         toolbarCenterText.isVisible=true
         toolbarCenterText.text=getString(R.string.sample_take_amp_return)
         toolbarCenterImage.isVisible =false
-        toolbarEndIcon.isVisible =false
+        toolbarEndIcon.isVisible =true
+        toolbarEndIcon.setImageDrawable(requireContext().getDrawable(R.drawable.cart_box))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

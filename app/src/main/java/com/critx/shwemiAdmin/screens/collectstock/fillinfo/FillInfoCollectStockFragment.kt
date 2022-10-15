@@ -18,6 +18,7 @@ import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentCollectStockBinding
 import com.critx.shwemiAdmin.databinding.FragmentFillInfoCollectStockBinding
+import com.critx.shwemiAdmin.showDropdown
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -48,13 +49,15 @@ class FillInfoCollectStockFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadingDialog = requireContext().getAlertDialog()
-        viewModel.getGoldSmithList()
         binding.cbWastage.setOnCheckedChangeListener { compoundButton, ischecked ->
             makeEnableTil(binding.tilK, ischecked)
             makeEnableTil(binding.tilP, ischecked)
             makeEnableTil(binding.tilY, ischecked)
         }
         binding.cbGoldsmith.setOnCheckedChangeListener { compoundButton, ischecked ->
+            if (ischecked){
+                viewModel.getGoldSmithList()
+            }
             makeEnableTil(binding.tilChooseOneGoldSmith, ischecked)
         }
         binding.cbBonus.setOnCheckedChangeListener { compoundButton, ischecked ->
@@ -78,12 +81,18 @@ class FillInfoCollectStockFragment : Fragment() {
                 }
                 is Resource.Success->{
                     loadingDialog.dismiss()
-                    val arrayAdapter = ArrayAdapter(requireContext(),R.layout.item_drop_down_text,it.data!!.map { it.name })
+//                    it.data!!.map { it.name }
+                    val list = it.data!!.map { it.name }
+                    val arrayAdapter = ArrayAdapter(requireContext(),R.layout.item_drop_down_text,list)
                     binding.edtChooseOneGoldSmith.setAdapter(arrayAdapter)
+                    binding.edtChooseOneGoldSmith.setText(list[0],false)
                     binding.edtChooseOneGoldSmith.addTextChangedListener {editable->
                         viewModel.selectedGoldSmith = it.data!!.find {
                             it.name==binding.edtChooseOneGoldSmith.text.toString()
                         }?.id
+                    }
+                    binding.edtChooseOneGoldSmith.setOnClickListener {
+                        binding.edtChooseOneGoldSmith.showDropdown(arrayAdapter)
                     }
                 }
                 is Resource.Error->{
@@ -103,6 +112,7 @@ class FillInfoCollectStockFragment : Fragment() {
                     loadingDialog.dismiss()
                     viewModel.selectedSize = it.data?.find { it.isChecked }?.id
                     adapter.submitList(it.data)
+                    adapter.notifyDataSetChanged()
                 }
                 is Resource.Error->{
                     loadingDialog.dismiss()

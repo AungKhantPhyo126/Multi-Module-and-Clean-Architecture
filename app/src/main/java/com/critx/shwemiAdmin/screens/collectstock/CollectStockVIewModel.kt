@@ -9,6 +9,7 @@ import com.critx.domain.useCase.collectStock.ScanProductCodeUseCase
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.uiModel.collectStock.CollectStockBatchUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -21,46 +22,90 @@ class CollectStockViewModel @Inject constructor(
     private val collectSingleUseCase: CollectSingleUseCase,
     private val scanProductCodeUseCase: ScanProductCodeUseCase
 //    private val getProductIdListUseCase: GetProductIdListUseCase
-) :ViewModel(){
-    private var _scannedStockcodebatch=MutableLiveData<MutableList<CollectStockBatchUIModel>>()
-    val scannedStockcodebatch : LiveData<MutableList<CollectStockBatchUIModel>>
-    get() = _scannedStockcodebatch
+) : ViewModel() {
+    var stockIdForSingle = ""
+    private var _scannedStockcodebatch = MutableLiveData<MutableList<CollectStockBatchUIModel>>()
+    val scannedStockcodebatch: LiveData<MutableList<CollectStockBatchUIModel>>
+        get() = _scannedStockcodebatch
+    fun resetScannedStockCodeBatch(){
+        _scannedStockcodebatch.value= null
+    }
 
     private var _getProductIdLiveData = MutableLiveData<Resource<String>>()
-    val getProductIdLiveData:LiveData<Resource<String>>
-    get() = _getProductIdLiveData
+    val getProductIdLiveData: LiveData<Resource<String>>
+        get() = _getProductIdLiveData
+
+    fun resetGetProductIdLiveData(){
+        _getProductIdLiveData.value = null
+    }
 
     private var _scanProductCodeLive = MutableLiveData<Resource<ProductIdWithTypeDomain>>()
-    val scanProductCodeLive:LiveData<Resource<ProductIdWithTypeDomain>>
+    val scanProductCodeLive: LiveData<Resource<ProductIdWithTypeDomain>>
         get() = _scanProductCodeLive
 
+    fun resetScanProductCodeLive(){
+        _scanProductCodeLive.value= null
+    }
+
     private var _collectStockSingleLiveData = MutableLiveData<Resource<String>>()
-    val collectStockSingleLiveData:LiveData<Resource<String>>
+    val collectStockSingleLiveData: LiveData<Resource<String>>
         get() = _collectStockSingleLiveData
 
+    fun resetCollectStockSingleLiveData(){
+        _collectStockSingleLiveData.value = null
+    }
 
-    private val stockCodeList = mutableListOf<CollectStockBatchUIModel>()
 
-    fun addStockCode(stockItem:CollectStockBatchUIModel){
+    var stockCodeList = mutableListOf<CollectStockBatchUIModel>()
+
+    fun addStockCode(stockItem: CollectStockBatchUIModel) {
         stockCodeList.add(stockItem)
-        _scannedStockcodebatch.value=stockCodeList
+        _scannedStockcodebatch.value = stockCodeList
     }
 
-    fun removeStockCode(item:CollectStockBatchUIModel){
+    fun removeStockCode(item: CollectStockBatchUIModel) {
         stockCodeList.remove(item)
-        _scannedStockcodebatch.value=stockCodeList
+        _scannedStockcodebatch.value = stockCodeList
     }
 
-    fun scanStock(code: String){
+    fun scanStock(code: String) {
         viewModelScope.launch {
-            _scanProductCodeLive = scanProductCodeUseCase(localDatabase.getToken().orEmpty(),code).asLiveData() as MutableLiveData<Resource<ProductIdWithTypeDomain>>
+            scanProductCodeUseCase(localDatabase.getToken().orEmpty(), code).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _scanProductCodeLive.value = Resource.Loading()
+                    }
+                    is Resource.Success -> {
+                        _scanProductCodeLive.value = Resource.Success(it.data)
+
+                    }
+                    is Resource.Error -> {
+                        _scanProductCodeLive.value = Resource.Error(it.message)
+                    }
+                }
+            }
         }
     }
 
-    fun getProductId(productCode:String){
+    fun getProductId(productCode: String) {
         viewModelScope.launch {
-            _getProductIdLiveData =
-                getProductIdUseCase(localDatabase.getToken().orEmpty(),productCode).asLiveData() as MutableLiveData<Resource<String>>
+            scanProductCodeUseCase(
+                localDatabase.getToken().orEmpty(),
+                productCode
+            ).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _getProductIdLiveData.value = Resource.Loading()
+                    }
+                    is Resource.Success -> {
+                        _getProductIdLiveData.value = Resource.Success(it.data!!.id)
+
+                    }
+                    is Resource.Error -> {
+                        _getProductIdLiveData.value = Resource.Error(it.message)
+                    }
+                }
+            }
         }
     }
 
@@ -78,14 +123,29 @@ class CollectStockViewModel @Inject constructor(
 //        }
 //    }
 
-    fun collectStock(productCode:String,weight:String){
+    fun collectStock(productCode: String, weight: String) {
         val weightRequestBody = weight.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         viewModelScope.launch {
-            _collectStockSingleLiveData =
-                collectSingleUseCase(localDatabase.getToken().orEmpty(),productCode,weightRequestBody).asLiveData() as MutableLiveData<Resource<String>>
+                collectSingleUseCase(
+                    localDatabase.getToken().orEmpty(),
+                    productCode,
+                    weightRequestBody
+                ).collectLatest {
+                    when (it) {
+                        is Resource.Loading -> {
+                            _collectStockSingleLiveData.value = Resource.Loading()
+                        }
+                        is Resource.Success -> {
+                            _collectStockSingleLiveData.value = Resource.Success(it.data)
+
+                        }
+                        is Resource.Error -> {
+                            _collectStockSingleLiveData.value = Resource.Error(it.message)
+                        }
+                    }
+                }
         }
     }
-
 
 
 }

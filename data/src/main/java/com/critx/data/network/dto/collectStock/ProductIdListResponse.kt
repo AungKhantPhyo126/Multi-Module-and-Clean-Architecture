@@ -8,12 +8,12 @@ data class ProductIdListResponse(
 
 data class ProductIdWithType(
     val id:String,
-    val jewelleryType:Int
+    val jewellery_type_id:Int
 )
 
 fun ProductIdWithType.asDomain():ProductIdWithTypeDomain{
     return ProductIdWithTypeDomain(
         id = id,
-        type = jewelleryType
+        type = jewellery_type_id
     )
 }

@@ -10,6 +10,7 @@ import com.critx.domain.useCase.collectStock.CollectBatchUseCase
 import com.critx.domain.useCase.collectStock.GetGoldSmithListUseCase
 import com.critx.domain.useCase.collectStock.GetJewellerySizeUseCase
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
+import com.critx.shwemiAdmin.notifyObserverWithResource
 import com.critx.shwemiAdmin.uiModel.collectStock.CollectStockBatchUIModel
 import com.critx.shwemiAdmin.uiModel.collectStock.GoldSmithUiModel
 import com.critx.shwemiAdmin.uiModel.collectStock.JewellerySizeUIModel
@@ -47,18 +48,32 @@ class FillInfoCollectStockViewModel @Inject constructor(
     var selectedSize:String? = null
 
     fun selectSize(id:String){
-         var selectedSize = _jewellerySizeLiveData.value!!.data!!.find {
-            it.id == id
-        }
-        selectedSize!!.isChecked = selectedSize.isChecked.not()
-
-        var unselectedSize = _jewellerySizeLiveData.value!!.data!!.filter {
+//         var selectedSize = _jewellerySizeLiveData.value!!.data!!.find {
+//            it.id == id
+//        }
+//        selectedSize!!.isChecked = selectedSize.isChecked.not()
+//
+//        var unselectedSize = _jewellerySizeLiveData.value!!.data!!.filter {
+//            it.id != id
+//        }
+//
+//        unselectedSize.forEach {
+//            it.isChecked = false
+//        }
+        _jewellerySizeLiveData.value!!.data!!.filter {
             it.id != id
-        }
-
-        unselectedSize.forEach {
+        }.forEach {
             it.isChecked = false
         }
+
+        _jewellerySizeLiveData.value!!.data!!.find {
+            it.id == id
+        }?.isChecked = _jewellerySizeLiveData.value!!.data!!.find {
+            it.id == id
+        }?.isChecked!!.not()
+
+        _jewellerySizeLiveData.value = _jewellerySizeLiveData.value
+
     }
 
     fun getJewellerySize(type:String){

@@ -41,10 +41,11 @@
         android:id="@+id/cb_size"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:buttonTint="@color/primary_color"
         android:text="@string/size"
         app:layout_constraintStart_toStartOf="@+id/cb_bonus"
-        app:layout_constraintTop_toTopOf="@+id/rv_jewellery_size" />
+        app:layout_constraintTop_toBottomOf="@+id/cb_bonus" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_y"
@@ -72,7 +73,6 @@
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
         android:enabled="false"
         app:hintEnabled="false"
         app:layout_constraintEnd_toStartOf="@id/til_y"
@@ -115,10 +115,7 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/rounded_corner_dropdown_background"
         android:elevation="2dp"
-        android:enabled="false"
         app:boxStrokeWidth="0dp"
-        app:endIconDrawable="@drawable/ic_expand_more"
-        app:endIconMode="custom"
         app:endIconTint="?attr/editTextColor"
         app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="@+id/til_y"
@@ -129,9 +126,9 @@
             android:id="@+id/edt_choose_one_gold_smith"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="false"
+            android:inputType="none"
             android:hint="Choose one GoldSmith"
-            android:inputType="none" />
+           />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -171,17 +168,17 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_jewellery_size"
+        android:visibility="gone"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="3"
-        tools:listitem="@layout/item_jewellery_size"
         app:layout_constraintBottom_toTopOf="@+id/btn_confirm"
         app:layout_constraintEnd_toEndOf="@id/til_enter_bonus_amount"
         app:layout_constraintStart_toStartOf="@+id/til_enter_bonus_amount"
-        app:layout_constraintTop_toBottomOf="@+id/til_enter_bonus_amount" />
+        app:layout_constraintTop_toTopOf="@+id/cb_size"
+        app:spanCount="3"
+        tools:listitem="@layout/item_jewellery_size" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

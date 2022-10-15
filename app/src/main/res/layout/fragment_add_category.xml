@@ -476,13 +476,12 @@
             android:id="@+id/cb_frequently_used"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:buttonTint="@color/primary_color"
             android:text="@string/frequently_used"
             app:layout_constraintEnd_toStartOf="@+id/cb_order_to_gs"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="@+id/tv_label_category"
-            app:layout_constraintTop_toBottomOf="@+id/mcv_video" />
+            app:layout_constraintTop_toBottomOf="@+id/cb_has_gem" />
 
         <CheckBox
             android:id="@+id/cb_order_to_gs"
@@ -576,5 +575,15 @@
                     app:tint="@color/primary_color" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+
+        <CheckBox
+            android:id="@+id/cb_has_gem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="With Gem"
+            android:buttonTint="@color/primary_color"
+            app:layout_constraintStart_toStartOf="@+id/tv_label_video_gif"
+            app:layout_constraintTop_toBottomOf="@+id/mcv_video" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

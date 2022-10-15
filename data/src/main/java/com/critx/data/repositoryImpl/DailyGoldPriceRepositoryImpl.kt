@@ -3,7 +3,9 @@ package com.critx.data.repositoryImpl
 import com.critx.commonkotlin.util.Resource
 import com.critx.data.GetErrorMessage
 import com.critx.data.datasource.dailyGoldAndPrice.DailyGoldAndPriceNetWorkDataSource
+import com.critx.data.network.dto.asDomain
 import com.critx.data.network.dto.dailygoldAndPrice.asDomain
+import com.critx.domain.model.SimpleData
 import com.critx.domain.model.dailyGoldAndPrice.GoldPriceDomain
 import com.critx.domain.repository.DailyGoldPriceRepository
 import kotlinx.coroutines.flow.Flow
@@ -22,6 +24,27 @@ class DailyGoldPriceRepositoryImpl @Inject constructor(
                 emit(
                     Resource.Success(
                         dailyGoldAndPriceNetWorkDataSource.getGoldPrice(token).map { it.asDomain() }
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
+
+    override fun updateGoldPrice(
+        token: String,
+        price: HashMap<String, String>
+    ): Flow<Resource<SimpleData>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        dailyGoldAndPriceNetWorkDataSource.updateGoldPrice(token,price).asDomain()
                     )
                 )
             } catch (e: HttpException) {

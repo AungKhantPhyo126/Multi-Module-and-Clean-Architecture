@@ -9,14 +9,14 @@
         android:id="@+id/radioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:layout_marginStart="16dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <RadioButton
-            android:id="@+id/radio_button_1"
+            android:id="@+id/radio_button_sample_take"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
@@ -27,13 +27,12 @@
             android:textStyle="bold" />
 
         <RadioButton
-            android:id="@+id/radio_button_2"
+            android:id="@+id/radio_button_sample_return"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/primary_color"
             android:text="@string/sample_return"
             android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
-
             android:textStyle="bold" />
     </RadioGroup>
 
@@ -50,15 +49,17 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/mcv_scan_here"
-        android:layout_width="220dp"
+        android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginTop="24dp"
-        android:clickable="true"
-        android:focusable="true"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
+        android:clickable="false"
+        android:focusable="false"
         app:cardCornerRadius="8dp"
         app:cardElevation="16dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_label_stock_code"
         app:layout_constraintTop_toBottomOf="@id/radioGroup"
         app:strokeWidth="1dp">
 
@@ -68,21 +69,26 @@
             android:gravity="center"
             android:weightSum="5">
 
-            <TextView
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_scan_here"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:text="@string/scan_here"
-                android:textAlignment="center"
+                android:layout_weight="4"
+                android:background="@drawable/popup_window_transparent"
+                android:hint="Type or Scan"
+                android:imeOptions="actionDone"
+                android:paddingStart="8dp"
+                android:textAlignment="textStart"
                 android:textAppearance="@style/TextAppearance.ShweMi.Body2"
                 android:textColor="@color/primary_color" />
 
             <ImageView
+                android:id="@+id/iv_scan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="1"
                 android:layout_marginEnd="16dp"
+                android:layout_weight="1"
                 android:src="@drawable/ic_qr_scan" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

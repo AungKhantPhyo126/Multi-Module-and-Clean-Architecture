@@ -16,7 +16,6 @@ interface DailyGoldPriceService {
     @POST("api/gold_types")
     suspend fun updateGoldPrice(
         @Header("Authorization") token: String,
-        @Field("price[2]") price2:String,
-        @Field("price[3]") price3:String
+        @FieldMap price :HashMap<String,String>
     ): Response<SimpleResponse>
 }
