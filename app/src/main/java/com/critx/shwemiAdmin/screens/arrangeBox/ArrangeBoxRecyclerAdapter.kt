@@ -7,16 +7,18 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.critx.shwemiAdmin.databinding.ItemArrangeBoxBinding
 import com.critx.shwemiAdmin.uiModel.StockCodeForListUiModel
+import com.critx.shwemiAdmin.uiModel.checkUpTransfer.BoxScanUIModel
+import com.critx.shwemiAdmin.uiModel.collectStock.CollectStockBatchUIModel
 
-class ArrangeBoxRecyclerAdapter :
-    ListAdapter<StockCodeForListUiModel, ArrangeBoxViewHolder>(
+class ArrangeBoxRecyclerAdapter(private val onclick:(item: BoxScanUIModel)->Unit)  :
+    ListAdapter<BoxScanUIModel, ArrangeBoxViewHolder>(
     ArrangeBoxDiffUtil
 ){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArrangeBoxViewHolder {
         return ArrangeBoxViewHolder(
             ItemArrangeBoxBinding.inflate(
                 LayoutInflater.from(parent.context),parent,false
-            ))
+            ),onclick)
     }
 
     override fun onBindViewHolder(holder: ArrangeBoxViewHolder, position: Int) {
@@ -24,19 +26,23 @@ class ArrangeBoxRecyclerAdapter :
     }
 }
 
-class ArrangeBoxViewHolder(private val binding: ItemArrangeBoxBinding): RecyclerView.ViewHolder(binding.root){
-    fun bind(data: StockCodeForListUiModel){
-        binding.tvStockCodeNumber.text = data.invoiceCode
+class ArrangeBoxViewHolder(private val binding: ItemArrangeBoxBinding,
+                           private val onclick:(item:BoxScanUIModel)->Unit): RecyclerView.ViewHolder(binding.root){
+    fun bind(data: BoxScanUIModel){
+        binding.tvStockCodeNumber.text = data.code
+        binding.ibCross.setOnClickListener {
+            onclick(data)
+        }
     }
 }
 
 
-object ArrangeBoxDiffUtil : DiffUtil.ItemCallback<StockCodeForListUiModel>() {
-    override fun areItemsTheSame(oldItem: StockCodeForListUiModel, newItem: StockCodeForListUiModel): Boolean {
+object ArrangeBoxDiffUtil : DiffUtil.ItemCallback<BoxScanUIModel>() {
+    override fun areItemsTheSame(oldItem: BoxScanUIModel, newItem: BoxScanUIModel): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: StockCodeForListUiModel, newItem: StockCodeForListUiModel): Boolean {
+    override fun areContentsTheSame(oldItem: BoxScanUIModel, newItem: BoxScanUIModel): Boolean {
         return oldItem == newItem
     }
 
