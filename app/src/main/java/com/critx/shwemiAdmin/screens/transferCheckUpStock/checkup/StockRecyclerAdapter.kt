@@ -9,7 +9,7 @@ import com.critx.shwemiAdmin.databinding.ItemStockCodeBinding
 import com.critx.shwemiAdmin.screens.flashsale.FlashSaleViewHolder
 import com.critx.shwemiAdmin.uiModel.StockCodeForListUiModel
 
-class StockRecyclerAdapter (private val onclick:()->Unit) :ListAdapter<StockCodeForListUiModel,StockCodeListViewHolder>(
+class StockRecyclerAdapter (private val onclick:(item:StockCodeForListUiModel)->Unit) :ListAdapter<StockCodeForListUiModel,StockCodeListViewHolder>(
     StockCodeListDiffUtil
 ){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StockCodeListViewHolder {
@@ -25,9 +25,12 @@ class StockRecyclerAdapter (private val onclick:()->Unit) :ListAdapter<StockCode
 }
 
 class StockCodeListViewHolder(private val binding: ItemStockCodeBinding,
-                          private val onclick: () -> Unit): RecyclerView.ViewHolder(binding.root){
+                          private val onclick: (item:StockCodeForListUiModel) -> Unit): RecyclerView.ViewHolder(binding.root){
     fun bind(data: StockCodeForListUiModel){
         binding.tvStockCodeNumber.text = data.invoiceCode
+        binding.ibCross.setOnClickListener {
+            onclick(data)
+        }
     }
 }
 

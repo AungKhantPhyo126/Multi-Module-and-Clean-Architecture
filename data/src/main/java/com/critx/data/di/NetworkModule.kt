@@ -2,25 +2,14 @@ package com.critx.data.di
 
 import com.critx.data.datasource.SampleTakeAndReturn.SampleTakeAndReturnNetWorkDataSource
 import com.critx.data.datasource.auth.AuthNetWorkDataSource
+import com.critx.data.datasource.box.BoxNetWorkDataSource
 import com.critx.data.datasource.collectStock.CollectStockDataSource
 import com.critx.data.datasource.dailyGoldAndPrice.DailyGoldAndPriceNetWorkDataSource
 import com.critx.data.datasource.setupstock.SetupStockNetWorkDatasource
 import com.critx.data.network.api.*
-import com.critx.data.network.datasource.AuthNetWorkDataSourceImpl
-import com.critx.data.network.datasource.CollectStockDataSourceImpl
-import com.critx.data.network.datasource.DailyGoldAndPriceDataSourceImpl
-import com.critx.data.network.datasource.SampleTakeAndReturnDataSourceImpl
-import com.critx.data.network.datasource.SetupStockNetWorkSourceImpl
-import com.critx.data.repositoryImpl.AuthRepositoryImpl
-import com.critx.data.repositoryImpl.CollectStockRepositoryImpl
-import com.critx.data.repositoryImpl.DailyGoldPriceRepositoryImpl
-import com.critx.data.repositoryImpl.SampleTakeAndReturnRepositoryImpl
-import com.critx.data.repositoryImpl.SetupStockRepositoryImpl
-import com.critx.domain.repository.AuthRepository
-import com.critx.domain.repository.CollectStockRepository
-import com.critx.domain.repository.DailyGoldPriceRepository
-import com.critx.domain.repository.SampleTakeAndReturnRepository
-import com.critx.domain.repository.SetupStockRepository
+import com.critx.data.network.datasource.*
+import com.critx.data.repositoryImpl.*
+import com.critx.domain.repository.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -103,6 +92,18 @@ class NetworkModule {
     fun provideSampleTakeAndReturnRepo(sampleTakeAndReturnNetWorkDataSource: SampleTakeAndReturnNetWorkDataSource): SampleTakeAndReturnRepository {
         return SampleTakeAndReturnRepositoryImpl(sampleTakeAndReturnNetWorkDataSource)
     }
+
+    @Provides
+    @Singleton
+    fun provideBoxNetWorkDataSource(boxService: BoxService): BoxNetWorkDataSource {
+        return BoxDataSourceImpl(boxService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBoxRepo(boxNetWorkDataSource: BoxNetWorkDataSource): BoxRepository {
+        return BoxRepositoryImpl(boxNetWorkDataSource)
+    }
 //    @Provides
 //    @Singleton
 //    fun provideAuthRepository(
@@ -115,7 +116,12 @@ class NetworkModule {
 
     @Provides
     @Singleton
+    fun provideBoxService(retrofit: Retrofit) = retrofit.create<BoxService>()
+
+    @Provides
+    @Singleton
     fun provideDailyGoldPriceService(retrofit: Retrofit) = retrofit.create<DailyGoldPriceService>()
+
     @Provides
     @Singleton
     fun provideSampleTakeAndReturnService(retrofit: Retrofit) =

@@ -1,32 +1,42 @@
 package com.critx.shwemiAdmin.screens.transferCheckUpStock.checkup
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.critx.common.qrscan.getBarLauncher
+import com.critx.common.qrscan.getBarLauncherTest
 import com.critx.common.qrscan.scanQrCode
+import com.critx.common.ui.getAlertDialog
+import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentCheckUpBinding
 import com.critx.shwemiAdmin.screens.transferCheckUpStock.TransferCheckUpStockFragmentDirections
 import com.critx.shwemiAdmin.uiModel.StockCodeForListUiModel
-import com.critx.shwemiAdmin.uiModel.discount.DiscountUIModel
+import com.critx.shwemiAdmin.uiModel.checkUpTransfer.ScanStockUIModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CheckUpStockFragment:Fragment() {
     private lateinit var binding:FragmentCheckUpBinding
-    private lateinit var barlauncer:Any
+    private lateinit var barlauncherBox:Any
+    private lateinit var barlauncherStock:Any
+    private lateinit var loadingDialog: AlertDialog
+    private val viewModel by viewModels<CheckUpStockViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        barlauncer = this.getBarLauncher(requireContext())
 
         return FragmentCheckUpBinding.inflate(inflater).also {
             binding= it
@@ -45,31 +55,108 @@ class CheckUpStockFragment:Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        toolbarsetup()
+        barlauncherBox = this.getBarLauncherTest(requireContext()) { viewModel.getBoxData(it) }
+        barlauncherStock = this.getBarLauncherTest(requireContext()) { viewModel.scanStock(it) }
+        loadingDialog = requireContext().getAlertDialog()
+
         binding.ivScanStock.setOnClickListener {
-            scanQrCode(requireContext(),barlauncer)
+            scanQrCode(requireContext(),barlauncherBox)
         }
         val adapter = StockRecyclerAdapter{
-
+            viewModel.removeStockCode(it)
         }
+
+        binding.edtTargetBoxCode.setOnKeyListener { view, keyCode, keyevent ->
+            //If the keyevent is a key-down event on the "enter" button
+            if (keyevent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                // Perform your action on key press here
+               viewModel.getBoxData(binding.edtTargetBoxCode.text.toString())
+                true
+            } else false
+        }
+
+        binding.edtStockCode.setOnKeyListener { view, keyCode, keyevent ->
+            //If the keyevent is a key-down event on the "enter" button
+            if (keyevent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                // Perform your action on key press here
+                viewModel.scanStock(binding.edtStockCode.text.toString())
+                true
+            } else false
+        }
+
         binding.includeScannedStockList.rvStockCodeList.adapter = adapter
-        adapter.submitList(listOf(
-            StockCodeForListUiModel(
-                "1",
-                "123456788"
-            ),
-            StockCodeForListUiModel(
-                "2",
-                "123456788"
-            ),
-            StockCodeForListUiModel(
-                "3",
-                "123456788"
-            ),
-            StockCodeForListUiModel(
-                "4",
-                "123456788"
-            )
-        ))
+
+        viewModel.getBoxDataLive.observe(viewLifecycleOwner){
+            when(it){
+                is Resource.Loading -> {
+                   loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    binding.edtBoxCode.setText(it.data!!.code)
+                    binding.edtBoxQuantity.setText(it.data!!.qty)
+                    binding.actJewelleryType.setText(it.data!!.jewelleryType)
+                    binding.edtTargetBoxCode.text?.clear()
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    Toast.makeText(requireContext(),it.message, Toast.LENGTH_LONG).show()
+
+                }
+            }
+        }
+        viewModel.scanStockLive.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    //id list
+                    val resultItem = StockCodeForListUiModel(
+                        it.data!!.id,
+                        binding.edtStockCode.text.toString(),
+                    )
+                    if (viewModel.stockCodeList.contains(resultItem).not()){
+                        viewModel.addStockCode(resultItem)
+                    }else{
+                        Toast.makeText(requireContext(),"Stock Already Scanned",Toast.LENGTH_LONG).show()
+                    }
+                    viewModel.resetScanStockLive()
+//                    findNavController().navigate(CollectStockFragmentDirections.actionCollectStockFragmentToFillInfoCollectStockFragment())
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                }
+            }
+        }
+        viewModel.stockListLive.observe(viewLifecycleOwner){
+            adapter.submitList(it)
+            adapter.notifyDataSetChanged()
+            binding.edtStockCode.text?.clear()
+        }
+
+
+//
+//        adapter.submitList(listOf(
+//            StockCodeForListUiModel(
+//                "1",
+//                "123456788"
+//            ),
+//            StockCodeForListUiModel(
+//                "2",
+//                "123456788"
+//            ),
+//            StockCodeForListUiModel(
+//                "3",
+//                "123456788"
+//            ),
+//            StockCodeForListUiModel(
+//                "4",
+//                "123456788"
+//            )
+//        ))
         binding.includeButton.btnGive.setOnClickListener {
             findNavController().navigate(TransferCheckUpStockFragmentDirections.actionTransferCheckUpStockFragmentToCheckUpResultFragment())
         }

@@ -5,6 +5,7 @@ import com.critx.data.GetErrorMessage
 import com.critx.data.datasource.box.BoxNetWorkDataSource
 import com.critx.data.network.dto.box.asDomain
 import com.critx.data.network.dto.dailygoldAndPrice.asDomain
+import com.critx.domain.model.box.BoxScanDomain
 import com.critx.domain.model.box.BoxWeightDomain
 import com.critx.domain.repository.BoxRepository
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +27,24 @@ class BoxRepositoryImpl @Inject constructor(
                 emit(
                     Resource.Success(
                         boxNetWorkDataSource.getBoxWeight(token,boxIdList).map { it.asDomain() }
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
+
+    override fun getBoxData(token: String, boxCode: String): Flow<Resource<BoxScanDomain>>  =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        boxNetWorkDataSource.getBoxData(token,boxCode).asDomain()
                     )
                 )
             } catch (e: HttpException) {

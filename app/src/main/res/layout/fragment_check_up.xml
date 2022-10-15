@@ -88,6 +88,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="false"
+            android:textAppearance="@style/TextAppearance.ShweMi.Caption"
+            android:textStyle="bold"
             android:inputType="none"
             android:maxLines="1"/>
     </com.google.android.material.textfield.TextInputLayout>
