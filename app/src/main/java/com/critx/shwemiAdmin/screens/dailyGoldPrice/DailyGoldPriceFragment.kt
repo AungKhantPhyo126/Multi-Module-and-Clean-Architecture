@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -19,9 +20,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.work.*
 import com.critx.common.ui.getAlertDialog
 import com.critx.common.ui.showSuccessDialog
+import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.FragmentDailyGoldPriceBinding
+import com.critx.shwemiAdmin.uiModel.dailygoldandprice.asUiModel
 import com.critx.shwemiAdmin.workerManager.RefreshTokenWorker
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -93,6 +96,28 @@ class DailyGoldPriceFragment:Fragment() {
             viewModel.logout()
         }
 
+        viewModel.getGoldPriceLive.observe(viewLifecycleOwner){
+            when(it){
+                is Resource.Loading->{
+                    loadingDialog.show()
+                }
+                is Resource.Success->{
+                    loadingDialog.dismiss()
+                    binding.layoutDailyGoldPriceInput.edtGoldBlock.setText(it.data?.get(0)!!.price +it.data?.get(0)!!.unit )
+                    binding.layoutDailyGoldPriceInput.edt15pGq.setText(it.data?.get(1)!!.price +it.data?.get(1)!!.unit )
+                    binding.layoutDailyGoldPriceInput.edt22kGq.setText(it.data?.get(2)!!.price +it.data?.get(2)!!.unit )
+                    binding.layoutDailyGoldPriceInput.edtDiamond.setText(it.data?.get(3)!!.price +it.data?.get(3)!!.unit )
+                    binding.layoutDailyGoldPriceInput.edtWg.setText(it.data?.get(4)!!.price +it.data?.get(4)!!.unit )
+                    binding.layoutDailyGoldPriceInput.edtRebuy.setText(it.data?.get(4)!!.price +it.data?.get(4)!!.unit )
+                }
+                is Resource.Error->{
+                    loadingDialog.dismiss()
+                    Toast.makeText(requireContext(),it.message,Toast.LENGTH_LONG).show()
+
+                }
+            }
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
 
@@ -147,6 +172,7 @@ class DailyGoldPriceFragment:Fragment() {
             if (it){
                     enqueueRefreshTokenWork()
                     viewModel.getProfile()
+                viewModel.getGoldPrice()
             }else{
                 findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
             }

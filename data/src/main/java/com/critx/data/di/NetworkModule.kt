@@ -2,19 +2,20 @@ package com.critx.data.di
 
 import com.critx.data.datasource.auth.AuthNetWorkDataSource
 import com.critx.data.datasource.collectStock.CollectStockDataSource
+import com.critx.data.datasource.dailyGoldAndPrice.DailyGoldAndPriceNetWorkDataSource
 import com.critx.data.datasource.setupstock.SetupStockNetWorkDatasource
-import com.critx.data.network.api.AuthService
-import com.critx.data.network.api.CollectStockService
-import com.critx.data.network.api.HomeService
-import com.critx.data.network.api.SetUpStockService
+import com.critx.data.network.api.*
 import com.critx.data.network.datasource.AuthNetWorkDataSourceImpl
 import com.critx.data.network.datasource.CollectStockDataSourceImpl
+import com.critx.data.network.datasource.DailyGoldAndPriceDataSourceImpl
 import com.critx.data.network.datasource.SetupStockNetWorkSourceImpl
 import com.critx.data.repositoryImpl.AuthRepositoryImpl
 import com.critx.data.repositoryImpl.CollectStockRepositoryImpl
+import com.critx.data.repositoryImpl.DailyGoldPriceRepositoryImpl
 import com.critx.data.repositoryImpl.SetupStockRepositoryImpl
 import com.critx.domain.repository.AuthRepository
 import com.critx.domain.repository.CollectStockRepository
+import com.critx.domain.repository.DailyGoldPriceRepository
 import com.critx.domain.repository.SetupStockRepository
 import dagger.Module
 import dagger.Provides
@@ -71,6 +72,17 @@ class NetworkModule {
     fun provideCollectStockRepo(collectStockDataSource: CollectStockDataSource):CollectStockRepository{
         return CollectStockRepositoryImpl(collectStockDataSource )
     }
+
+    @Provides
+    @Singleton
+    fun provideDailyGoldPriceDataSource(dailyGoldPriceService: DailyGoldPriceService):DailyGoldAndPriceNetWorkDataSource{
+        return DailyGoldAndPriceDataSourceImpl(dailyGoldPriceService)
+    }
+    @Provides
+    @Singleton
+    fun provideDailyGoldPrice(dailyGoldAndPriceNetWorkDataSource: DailyGoldAndPriceNetWorkDataSource):DailyGoldPriceRepository{
+        return DailyGoldPriceRepositoryImpl(dailyGoldAndPriceNetWorkDataSource)
+    }
 //    @Provides
 //    @Singleton
 //    fun provideAuthRepository(
@@ -81,6 +93,9 @@ class NetworkModule {
 //        )
 //    }
 
+    @Provides
+    @Singleton
+    fun provideDailyGoldPriceService(retrofit: Retrofit) = retrofit.create<DailyGoldPriceService>()
 
     @Provides
     @Singleton

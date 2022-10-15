@@ -8,9 +8,11 @@ import androidx.work.WorkManager
 import com.critx.commonkotlin.util.Resource
 import com.critx.domain.useCase.auth.LogoutUseCase
 import com.critx.domain.useCase.auth.RefreshTokenUseCase
+import com.critx.domain.useCase.dailygoldprice.GetGoldPriceUseCase
 import com.critx.domain.useCase.dailygoldprice.GetProfileUsecase
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
+import com.critx.shwemiAdmin.uiModel.dailygoldandprice.GoldPriceUIModel
 import com.critx.shwemiAdmin.uiModel.dailygoldandprice.asUiModel
 import com.critx.shwemiAdmin.uistate.LoginUiState
 import com.critx.shwemiAdmin.uistate.LogoutUiState
@@ -26,6 +28,7 @@ class DailyGoldPriceViewModel @Inject constructor(
     private val localDatabase: LocalDatabase,
     private val logoutUseCase: LogoutUseCase,
     private val getProfileUsecase: GetProfileUsecase,
+    private val getGoldPriceUseCase: GetGoldPriceUseCase,
     private val refreshTokenUseCase: RefreshTokenUseCase
 ): ViewModel() {
     private val _logoutState = MutableStateFlow(LogoutUiState())
@@ -41,8 +44,12 @@ class DailyGoldPriceViewModel @Inject constructor(
     val isLogin:LiveData<Boolean>
     get() = _isLogin
 
+    private val _getGoldPriceLive = MutableLiveData<Resource<List<GoldPriceUIModel>>>()
+    val getGoldPriceLive : LiveData<Resource<List<GoldPriceUIModel>>>
+        get()  = _getGoldPriceLive
+
     fun isloggedIn(){
-        _isLogin.value=true
+        _isLogin.value=localDatabase.isLogin()
 //        return true
     }
     init {
@@ -51,6 +58,26 @@ class DailyGoldPriceViewModel @Inject constructor(
 
     fun isRefreshTokenExpire():Boolean{
         return localDatabase.isRefreshTokenExpire()
+    }
+
+    fun getGoldPrice(){
+        viewModelScope.launch {
+            getGoldPriceUseCase(localDatabase.getToken().orEmpty()).collectLatest {
+                when(it){
+                    is Resource.Loading->{
+                        _getGoldPriceLive.value  = Resource.Loading()
+                    }
+                    is Resource.Success->{
+                        _getGoldPriceLive.value  = Resource.Success(it.data!!.map { it.asUiModel() })
+
+                    }
+                    is Resource.Error->{
+                        _getGoldPriceLive.value  = Resource.Error(it.message)
+
+                    }
+                }
+            }
+        }
     }
 
     fun logout(){

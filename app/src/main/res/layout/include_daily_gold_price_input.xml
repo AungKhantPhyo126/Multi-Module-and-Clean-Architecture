@@ -71,7 +71,7 @@
         app:layout_constraintTop_toTopOf="@id/tv_gq_by_p">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_gq_by_p"
+            android:id="@+id/edt_15p_gq"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -106,7 +106,7 @@
         app:layout_constraintTop_toTopOf="@id/tv_gq_by_k">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_gq_by_k"
+            android:id="@+id/edt_22k_gq"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
