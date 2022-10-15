@@ -21,13 +21,13 @@ class TransferCheckUpRepositoryImpl @Inject constructor(
         token: String,
         boxCode: String,
         productIdList: List<String>
-    ): Flow<Resource<List<CheckUpDomain>>> =
+    ): Flow<Resource<CheckUpDomain>> =
         flow {
             emit(Resource.Loading())
             try {
                 emit(
                     Resource.Success(
-                        transferCheckUpNetWorkDataSource.checkUp(token,boxCode,productIdList).map { it.asDomain() }
+                        transferCheckUpNetWorkDataSource.checkUp(token,boxCode,productIdList).asDomain()
                     )
                 )
             } catch (e: HttpException) {

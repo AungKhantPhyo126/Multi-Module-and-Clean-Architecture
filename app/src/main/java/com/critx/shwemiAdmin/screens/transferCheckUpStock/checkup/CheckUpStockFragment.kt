@@ -132,12 +132,41 @@ class CheckUpStockFragment:Fragment() {
             }
         }
         viewModel.stockListLive.observe(viewLifecycleOwner){
+            binding.includeButton.btnCheck.isEnabled = it.size>0
             adapter.submitList(it)
             adapter.notifyDataSetChanged()
             binding.edtStockCode.text?.clear()
         }
 
+        binding.includeButton.btnCheck.setOnClickListener {
+            if (viewModel.targetBoxCode == null){
+                Toast.makeText(requireContext(),"Please scan a box",Toast.LENGTH_LONG).show()
+            }else{
+                viewModel.checkUp(
+                    viewModel.targetBoxCode!!,
+                    viewModel.stockCodeList.map { it.id }
+                )
+            }
 
+        }
+
+        viewModel.checkUpStockLive.observe(viewLifecycleOwner){
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    findNavController().navigate(TransferCheckUpStockFragmentDirections.actionTransferCheckUpStockFragmentToCheckUpResultFragment(it.data!!))
+
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    Toast.makeText(requireContext(),it.message, Toast.LENGTH_LONG).show()
+
+                }
+            }
+        }
 //
 //        adapter.submitList(listOf(
 //            StockCodeForListUiModel(
@@ -157,8 +186,6 @@ class CheckUpStockFragment:Fragment() {
 //                "123456788"
 //            )
 //        ))
-        binding.includeButton.btnGive.setOnClickListener {
-            findNavController().navigate(TransferCheckUpStockFragmentDirections.actionTransferCheckUpStockFragmentToCheckUpResultFragment())
-        }
+
     }
 }

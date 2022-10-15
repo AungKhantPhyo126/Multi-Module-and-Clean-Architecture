@@ -13,7 +13,7 @@ class TransferCheckUpDataSourceImpl @Inject constructor(
         token: String,
         boxCode: String,
         productIdList: List<String>
-    ): List<CheckUpDto> {
+    ): CheckUpDto {
         val response = transferCheckUpService.checkUp(token, boxCode, productIdList)
         return if (response.isSuccessful) {
             response.body()?.data ?: throw Exception("Response body Null")

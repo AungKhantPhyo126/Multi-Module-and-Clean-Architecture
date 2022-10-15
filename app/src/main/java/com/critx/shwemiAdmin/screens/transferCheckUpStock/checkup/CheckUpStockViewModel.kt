@@ -10,9 +10,12 @@ import com.critx.commonkotlin.util.Resource
 import com.critx.domain.model.collectStock.ProductIdWithTypeDomain
 import com.critx.domain.useCase.box.GetBoxDataUseCase
 import com.critx.domain.useCase.collectStock.ScanProductCodeUseCase
+import com.critx.domain.useCase.transferCheckUp.CheckUpUseCase
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.uiModel.StockCodeForListUiModel
 import com.critx.shwemiAdmin.uiModel.checkUpTransfer.BoxScanUIModel
+import com.critx.shwemiAdmin.uiModel.checkUpTransfer.CheckUpUiModel
+import com.critx.shwemiAdmin.uiModel.checkUpTransfer.asUIModel
 import com.critx.shwemiAdmin.uiModel.checkUpTransfer.asUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -23,8 +26,10 @@ import javax.inject.Inject
 class CheckUpStockViewModel @Inject constructor(
     private val localDatabase: LocalDatabase,
     private val getBoxDataUseCase: GetBoxDataUseCase,
-    private val scanProductCodeUseCase: ScanProductCodeUseCase
+    private val scanProductCodeUseCase: ScanProductCodeUseCase,
+    private val checkUpUseCase: CheckUpUseCase
 ):ViewModel() {
+    var targetBoxCode:String? = null
     private var _getBoxDataLive = MutableLiveData<Resource<BoxScanUIModel>>()
     val getBoxDataLive: LiveData<Resource<BoxScanUIModel>>
         get() = _getBoxDataLive
@@ -37,6 +42,12 @@ class CheckUpStockViewModel @Inject constructor(
     val stockListLive: LiveData<MutableList<StockCodeForListUiModel>>
         get() = _stockListLive
 
+    private var _checkUpStockLive = MutableLiveData<Resource<CheckUpUiModel>>()
+    val checkUpStockLive: LiveData<Resource<CheckUpUiModel>>
+        get() = _checkUpStockLive
+    fun resetCheckUpStockLive(){
+        _checkUpStockLive.value= null
+    }
 
     var stockCodeList = mutableListOf<StockCodeForListUiModel>()
 
@@ -52,6 +63,26 @@ class CheckUpStockViewModel @Inject constructor(
 
     fun resetScanStockLive(){
         _scanStockLive.value= null
+    }
+
+    fun checkUp(boxCode: String,productIdList:List<String>){
+        viewModelScope.launch {
+            checkUpUseCase(localDatabase.getToken().orEmpty(),boxCode,productIdList).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _checkUpStockLive.value = Resource.Loading()
+                    }
+                    is Resource.Success -> {
+                        _checkUpStockLive.value = Resource.Success(it.data!!.asUIModel())
+
+                    }
+                    is Resource.Error -> {
+                        _checkUpStockLive.value = Resource.Error(it.message)
+
+                    }
+                }
+            }
+        }
     }
 
     fun scanStock(stockCode:String){
@@ -82,6 +113,7 @@ class CheckUpStockViewModel @Inject constructor(
                         _getBoxDataLive.value = Resource.Loading()
                     }
                     is Resource.Success -> {
+                        targetBoxCode = it.data!!.code
                         _getBoxDataLive.value = Resource.Success(it.data!!.asUiModel())
 
                     }

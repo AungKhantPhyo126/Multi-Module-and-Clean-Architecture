@@ -6,6 +6,7 @@ import com.critx.data.datasource.box.BoxNetWorkDataSource
 import com.critx.data.datasource.collectStock.CollectStockDataSource
 import com.critx.data.datasource.dailyGoldAndPrice.DailyGoldAndPriceNetWorkDataSource
 import com.critx.data.datasource.setupstock.SetupStockNetWorkDatasource
+import com.critx.data.datasource.transferCheckUp.TransferCheckUpNetWorkDataSource
 import com.critx.data.network.api.*
 import com.critx.data.network.datasource.*
 import com.critx.data.repositoryImpl.*
@@ -104,6 +105,18 @@ class NetworkModule {
     fun provideBoxRepo(boxNetWorkDataSource: BoxNetWorkDataSource): BoxRepository {
         return BoxRepositoryImpl(boxNetWorkDataSource)
     }
+
+    @Provides
+    @Singleton
+    fun provideTransferCheckUpNetWorkDataSource(transferCheckUpService: TransferCheckUpService): TransferCheckUpNetWorkDataSource {
+        return TransferCheckUpDataSourceImpl(transferCheckUpService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTransferCheckUpRepository(transferCheckUpNetWorkDataSource: TransferCheckUpNetWorkDataSource): TransferCheckUpRepository {
+        return TransferCheckUpRepositoryImpl(transferCheckUpNetWorkDataSource)
+    }
 //    @Provides
 //    @Singleton
 //    fun provideAuthRepository(
@@ -113,6 +126,10 @@ class NetworkModule {
 //            authNetWorkDataSource,
 //        )
 //    }
+
+    @Provides
+    @Singleton
+    fun provideTransferCheckUpService(retrofit: Retrofit) = retrofit.create<TransferCheckUpService>()
 
     @Provides
     @Singleton

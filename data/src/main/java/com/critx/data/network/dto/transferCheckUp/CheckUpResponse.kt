@@ -3,7 +3,7 @@ package com.critx.data.network.dto.transferCheckUp
 import com.critx.domain.model.transferCheckUP.CheckUpDomain
 
 data class CheckUpResponse(
-    val data :List<CheckUpDto>
+    val data :CheckUpDto
 )
 data class CheckUpDto(
     val required:List<String>?,

@@ -211,7 +211,11 @@
     <fragment
         android:id="@+id/checkUpResultFragment"
         android:name="com.critx.shwemiAdmin.screens.transferCheckUpStock.checkup.checkUpResult.CheckUpResultFragment"
-        android:label="CheckUpResultFragment" />
+        android:label="CheckUpResultFragment" >
+        <argument
+            android:name="checkUpStocks"
+            app:argType="com.critx.shwemiAdmin.uiModel.checkUpTransfer.CheckUpUiModel" />
+    </fragment>
     <fragment
         android:id="@+id/matchCodeFragment"
         android:name="com.critx.shwemiAdmin.screens.transferCheckUpStock.transfer.matchCode.MatchCodeFragment"
