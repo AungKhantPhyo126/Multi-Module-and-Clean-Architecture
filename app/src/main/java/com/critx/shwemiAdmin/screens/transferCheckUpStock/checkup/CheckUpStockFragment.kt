@@ -25,10 +25,10 @@ import com.critx.shwemiAdmin.uiModel.checkUpTransfer.ScanStockUIModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CheckUpStockFragment:Fragment() {
-    private lateinit var binding:FragmentCheckUpBinding
-    private lateinit var barlauncherBox:Any
-    private lateinit var barlauncherStock:Any
+class CheckUpStockFragment : Fragment() {
+    private lateinit var binding: FragmentCheckUpBinding
+    private lateinit var barlauncherBox: Any
+    private lateinit var barlauncherStock: Any
     private lateinit var loadingDialog: AlertDialog
     private val viewModel by viewModels<CheckUpStockViewModel>()
 
@@ -39,36 +39,45 @@ class CheckUpStockFragment:Fragment() {
     ): View? {
 
         return FragmentCheckUpBinding.inflate(inflater).also {
-            binding= it
+            binding = it
         }.root
     }
-    private fun toolbarsetup(){
 
-        val toolbarCenterImage: ImageView = activity!!.findViewById<View>(R.id.center_image) as ImageView
-        val toolbarCenterText: TextView = activity!!.findViewById<View>(R.id.center_text_title) as TextView
+    private fun toolbarsetup() {
+
+        val toolbarCenterImage: ImageView =
+            activity!!.findViewById<View>(R.id.center_image) as ImageView
+        val toolbarCenterText: TextView =
+            activity!!.findViewById<View>(R.id.center_text_title) as TextView
         val toolbarEndIcon: ImageView = activity!!.findViewById<View>(R.id.iv_end_icon) as ImageView
-        toolbarCenterText.isVisible=true
-        toolbarCenterText.text=getString(R.string.transfer_checkup_stock)
-        toolbarCenterImage.isVisible =false
-        toolbarEndIcon.isVisible =false
+        toolbarCenterText.isVisible = true
+        toolbarCenterText.text = getString(R.string.transfer_checkup_stock)
+        toolbarCenterImage.isVisible = false
+        toolbarEndIcon.isVisible = false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
-        barlauncherBox = this.getBarLauncherTest(requireContext()) { viewModel.getBoxData(it) }
-        barlauncherStock = this.getBarLauncherTest(requireContext()) { viewModel.scanStock(it) }
+        barlauncherBox = this.getBarLauncherTest(requireContext()) {
+            binding.edtScanBox.setText(it)
+            viewModel.getBoxData(it)
+        }
+        barlauncherStock = this.getBarLauncherTest(requireContext()) {
+            binding.edtScanStock.setText(it)
+            viewModel.scanStock(it)
+        }
         loadingDialog = requireContext().getAlertDialog()
 
         binding.tilScanHere.setEndIconOnClickListener {
-            scanQrCode(requireContext(),barlauncherBox)
+            scanQrCode(requireContext(), barlauncherBox)
         }
 
 
         binding.tilScanStock.setEndIconOnClickListener {
-            scanQrCode(requireContext(),barlauncherStock)
+            scanQrCode(requireContext(), barlauncherStock)
         }
-        val adapter = StockRecyclerAdapter{
+        val adapter = StockRecyclerAdapter {
             viewModel.removeStockCode(it)
         }
 
@@ -76,7 +85,7 @@ class CheckUpStockFragment:Fragment() {
             //If the keyevent is a key-down event on the "enter" button
             if (keyevent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 // Perform your action on key press here
-               viewModel.getBoxData(binding.edtScanBox.text.toString())
+                viewModel.getBoxData(binding.edtScanBox.text.toString())
                 true
             } else false
         }
@@ -92,10 +101,10 @@ class CheckUpStockFragment:Fragment() {
 
         binding.includeScannedStockList.rvStockCodeList.adapter = adapter
 
-        viewModel.getBoxDataLive.observe(viewLifecycleOwner){
-            when(it){
+        viewModel.getBoxDataLive.observe(viewLifecycleOwner) {
+            when (it) {
                 is Resource.Loading -> {
-                   loadingDialog.show()
+                    loadingDialog.show()
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
@@ -106,7 +115,7 @@ class CheckUpStockFragment:Fragment() {
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
-                    Toast.makeText(requireContext(),it.message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
 
                 }
             }
@@ -123,10 +132,11 @@ class CheckUpStockFragment:Fragment() {
                         it.data!!.id,
                         binding.edtScanStock.text.toString(),
                     )
-                    if (viewModel.stockCodeList.contains(resultItem).not()){
+                    if (viewModel.stockCodeList.contains(resultItem).not()) {
                         viewModel.addStockCode(resultItem)
-                    }else{
-                        Toast.makeText(requireContext(),"Stock Already Scanned",Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(requireContext(), "Stock Already Scanned", Toast.LENGTH_LONG)
+                            .show()
                     }
                     viewModel.resetScanStockLive()
 //                    findNavController().navigate(CollectStockFragmentDirections.actionCollectStockFragmentToFillInfoCollectStockFragment())
@@ -136,17 +146,17 @@ class CheckUpStockFragment:Fragment() {
                 }
             }
         }
-        viewModel.stockListLive.observe(viewLifecycleOwner){
-            binding.includeButton.btnCheck.isEnabled = it.size>0
+        viewModel.stockListLive.observe(viewLifecycleOwner) {
+            binding.includeButton.btnCheck.isEnabled = it.size > 0
             adapter.submitList(it)
             adapter.notifyDataSetChanged()
             binding.edtScanStock.text?.clear()
         }
 
         binding.includeButton.btnCheck.setOnClickListener {
-            if (viewModel.targetBoxCode == null){
-                Toast.makeText(requireContext(),"Please scan a box",Toast.LENGTH_LONG).show()
-            }else{
+            if (viewModel.targetBoxCode == null) {
+                Toast.makeText(requireContext(), "Please scan a box", Toast.LENGTH_LONG).show()
+            } else {
                 viewModel.checkUp(
                     viewModel.targetBoxCode!!,
                     viewModel.stockCodeList.map { it.id }
@@ -156,19 +166,23 @@ class CheckUpStockFragment:Fragment() {
         }
 
 
-        viewModel.checkUpStockLive.observe(viewLifecycleOwner){
+        viewModel.checkUpStockLive.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Loading -> {
                     loadingDialog.show()
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
-                    findNavController().navigate(TransferCheckUpStockFragmentDirections.actionTransferCheckUpStockFragmentToCheckUpResultFragment(it.data!!))
+                    findNavController().navigate(
+                        TransferCheckUpStockFragmentDirections.actionTransferCheckUpStockFragmentToCheckUpResultFragment(
+                            it.data!!
+                        )
+                    )
                     viewModel.resetCheckUpStockLive()
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
-                    Toast.makeText(requireContext(),it.message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
 
                 }
             }

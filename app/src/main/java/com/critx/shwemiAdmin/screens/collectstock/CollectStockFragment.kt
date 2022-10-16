@@ -63,7 +63,10 @@ class CollectStockFragment : Fragment() {
         toolbarsetup()
         viewModel.stockCodeList = mutableListOf()
         loadingDialog = requireContext().getAlertDialog()
-        barlauncer = this.getBarLauncherTest(requireContext()) { viewModel.scanStock(it) }
+        barlauncer = this.getBarLauncherTest(requireContext()) {
+            binding.edtScanHere.setText(it)
+            viewModel.scanStock(it)
+        }
         binding.tilScanHere.setEndIconOnClickListener {
             scanQrCode(requireContext(), barlauncer)
         }
@@ -88,12 +91,12 @@ class CollectStockFragment : Fragment() {
 
 
         binding.layoutCollectStockBatch.btnNext.setOnClickListener {
-            viewModel.resetScannedStockCodeBatch()
             findNavController().navigate(CollectStockFragmentDirections.actionCollectStockFragmentToFillInfoCollectStockFragment(jewelleryType,
-                viewModel.scannedStockcodebatch.value?.map {
+                viewModel.stockCodeList.map {
                     it.productId
-                }?.toTypedArray() ?: emptyArray()
+                }.toTypedArray()
             ))
+
         }
 
 
@@ -149,9 +152,9 @@ class CollectStockFragment : Fragment() {
                         binding.edtScanHere.text.toString(),
                         it.data!!.type.toString()
                     )
-                    if (viewModel.stockCodeList.contains(resultItem).not()){
+                    if (viewModel.stockCodeList.contains(resultItem).not() && binding.chipBatch.isChecked){
                         viewModel.addStockCode(resultItem)
-                    }else{
+                    }else if(binding.chipBatch.isChecked){
                         Toast.makeText(requireContext(),"Stock Already Scanned",Toast.LENGTH_LONG).show()
                     }
                     viewModel.resetScanProductCodeLive()

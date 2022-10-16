@@ -54,7 +54,10 @@ class ArrangeBoxFragment:Fragment() {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
         loadingDialog = requireContext().getAlertDialog()
-        barlauncherBox = this.getBarLauncherTest(requireContext()) { viewModel.getBoxData(it) }
+        barlauncherBox = this.getBarLauncherTest(requireContext()) {
+            binding.edtScanHere.setText(it)
+            viewModel.getBoxData(it)
+        }
         binding.tilScanHere.setEndIconOnClickListener {
             scanQrCode(requireContext(), barlauncherBox)
         }

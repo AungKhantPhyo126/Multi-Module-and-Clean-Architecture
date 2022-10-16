@@ -54,7 +54,10 @@ class CheckUpBoxWeightFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
         loadingDialog = requireContext().getAlertDialog()
-        barlauncherBox = this.getBarLauncherTest(requireContext()) { viewModel.getBoxData(it) }
+        barlauncherBox = this.getBarLauncherTest(requireContext()) {
+            binding.edtScanHere.setText(it)
+            viewModel.getBoxData(it)
+        }
         binding.edtScanHere.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
                 // If the event is a key-down event on the "enter" button

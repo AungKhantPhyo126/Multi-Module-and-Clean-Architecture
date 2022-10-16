@@ -58,8 +58,14 @@ class TransferStockFragment:Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
-        barlauncherBox = this.getBarLauncherTest(requireContext()) { viewModel.getBoxData(it) }
-        barlauncherStock = this.getBarLauncherTest(requireContext()) { viewModel.scanStock(it) }
+        barlauncherBox = this.getBarLauncherTest(requireContext()) {
+            binding.edtScanBox.setText(it)
+            viewModel.getBoxData(it)
+        }
+        barlauncherStock = this.getBarLauncherTest(requireContext()) {
+            binding.edtScanStock.setText(it)
+            viewModel.scanStock(it)
+        }
         loadingDialog = requireContext().getAlertDialog()
         binding.tilScanBox.setEndIconOnClickListener {
             scanQrCode(requireContext(),barlauncherBox)

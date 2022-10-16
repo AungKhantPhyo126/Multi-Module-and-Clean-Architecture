@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -97,6 +98,7 @@ class FillInfoCollectStockFragment : Fragment() {
                 }
                 is Resource.Error->{
                     loadingDialog.dismiss()
+                    Toast.makeText(requireContext(),it.message,Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -116,6 +118,8 @@ class FillInfoCollectStockFragment : Fragment() {
                 }
                 is Resource.Error->{
                     loadingDialog.dismiss()
+                    Toast.makeText(requireContext(),it.message,Toast.LENGTH_LONG).show()
+
                 }
             }
         }
@@ -133,11 +137,12 @@ class FillInfoCollectStockFragment : Fragment() {
                 }
                 is Resource.Error->{
                     loadingDialog.dismiss()
+                    Toast.makeText(requireContext(),it.message,Toast.LENGTH_LONG).show()
+
                 }
             }
         }
 
-        binding.rvJewellerySize.isVisible = args.jewelleryType != null
         binding.cbSize.isVisible = args.jewelleryType != null
 
         if (args.jewelleryType != null) {

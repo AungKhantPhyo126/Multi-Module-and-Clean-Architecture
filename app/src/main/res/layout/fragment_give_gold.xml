@@ -606,6 +606,29 @@
                 android:textAppearance="@style/TextAppearance.ShweMi.Caption"
                 app:layout_constraintStart_toStartOf="@+id/tv_label_making_charges"
                 app:layout_constraintTop_toBottomOf="@+id/tv_label_making_charges" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_sample_take"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:insetBottom="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetLeft="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:backgroundTint="@color/white"
+                android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                android:textColor="@color/primary_color"
+                android:text="Sample Take"
+                app:icon="@drawable/ic_right_arrow"
+                app:iconTint="@color/primary_color"
+                app:iconGravity="end"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/til_k_2" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
