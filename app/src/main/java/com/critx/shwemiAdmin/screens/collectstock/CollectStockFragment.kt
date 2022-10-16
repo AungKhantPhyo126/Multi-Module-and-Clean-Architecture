@@ -88,6 +88,7 @@ class CollectStockFragment : Fragment() {
 
 
         binding.layoutCollectStockBatch.btnNext.setOnClickListener {
+            viewModel.resetScannedStockCodeBatch()
             findNavController().navigate(CollectStockFragmentDirections.actionCollectStockFragmentToFillInfoCollectStockFragment(jewelleryType,
                 viewModel.scannedStockcodebatch.value?.map {
                     it.productId
@@ -129,6 +130,7 @@ class CollectStockFragment : Fragment() {
             }else if(it.size>0){
                 jewelleryType = typeList[0]
             }
+            binding.layoutCollectStockBatch.tvTotalScannedStockCount.text = typeList.size.toString()
             adapter.submitList(it)
             adapter.notifyDataSetChanged()
             binding.edtScanHere.text?.clear()

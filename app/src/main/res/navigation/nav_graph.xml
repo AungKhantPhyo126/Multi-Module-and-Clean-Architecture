@@ -219,7 +219,17 @@
     <fragment
         android:id="@+id/matchCodeFragment"
         android:name="com.critx.shwemiAdmin.screens.transferCheckUpStock.transfer.matchCode.MatchCodeFragment"
-        android:label="MatchCodeFragment" />
+        android:label="MatchCodeFragment" >
+        <argument
+            android:name="stockCodeList"
+            app:argType="string[]" />
+        <argument
+            android:name="boxCode"
+            app:argType="string" />
+        <argument
+            android:name="stockCodeIdList"
+            app:argType="string[]" />
+    </fragment>
     <fragment
         android:id="@+id/orderStockFragment"
         android:name="com.critx.shwemiAdmin.screens.orderStock.OrderStockFragment"

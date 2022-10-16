@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingVertical="14dp"
+            android:enabled="false"
             android:text="Match"
             android:textStyle="bold"
             android:layout_marginStart="16dp"

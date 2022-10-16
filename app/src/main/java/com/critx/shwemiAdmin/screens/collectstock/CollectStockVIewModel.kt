@@ -27,9 +27,7 @@ class CollectStockViewModel @Inject constructor(
     private var _scannedStockcodebatch = MutableLiveData<MutableList<CollectStockBatchUIModel>>()
     val scannedStockcodebatch: LiveData<MutableList<CollectStockBatchUIModel>>
         get() = _scannedStockcodebatch
-    fun resetScannedStockCodeBatch(){
-        _scannedStockcodebatch.value= null
-    }
+
 
     private var _getProductIdLiveData = MutableLiveData<Resource<String>>()
     val getProductIdLiveData: LiveData<Resource<String>>
@@ -66,6 +64,10 @@ class CollectStockViewModel @Inject constructor(
     fun removeStockCode(item: CollectStockBatchUIModel) {
         stockCodeList.remove(item)
         _scannedStockcodebatch.value = stockCodeList
+    }
+    fun resetScannedStockCodeBatch(){
+        stockCodeList.removeAll(stockCodeList)
+        _scannedStockcodebatch.value= stockCodeList
     }
 
     fun scanStock(code: String) {
