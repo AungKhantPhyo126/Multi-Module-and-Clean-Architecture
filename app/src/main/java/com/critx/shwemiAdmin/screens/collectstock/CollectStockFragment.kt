@@ -20,6 +20,7 @@ import com.critx.common.ui.showSuccessDialog
 import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentCollectStockBinding
+import com.critx.shwemiAdmin.hideKeyboard
 import com.critx.shwemiAdmin.uiModel.collectStock.CollectStockBatchUIModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -63,7 +64,7 @@ class CollectStockFragment : Fragment() {
         viewModel.stockCodeList = mutableListOf()
         loadingDialog = requireContext().getAlertDialog()
         barlauncer = this.getBarLauncherTest(requireContext()) { viewModel.scanStock(it) }
-        binding.ivScan.setOnClickListener {
+        binding.tilScanHere.setEndIconOnClickListener {
             scanQrCode(requireContext(), barlauncer)
         }
         adapter = CollectStockRecyclerAdapter {
@@ -71,16 +72,19 @@ class CollectStockFragment : Fragment() {
         }
         observeForBatch()
         binding.layoutCollectStockBatch.rvCollectStockBatch.adapter = adapter
-            binding.edtStockCode.setOnKeyListener { view, keyCode, keyevent ->
-                //If the keyevent is a key-down event on the "enter" button
-                if (keyevent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    // Perform your action on key press here
-                    if (binding.chipBatch.isChecked){
-                        viewModel.scanStock(binding.edtStockCode.text.toString())
-                    }
-                    true
-                } else false
+        binding.edtScanHere.setOnKeyListener(object : View.OnKeyListener {
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
+                // If the event is a key-down event on the "enter" button
+                if (event.action == KeyEvent.ACTION_DOWN &&
+                    keyCode == KeyEvent.KEYCODE_ENTER) {
+                    // Perform action on key press
+                    viewModel.scanStock(binding.edtScanHere.text.toString())
+                    hideKeyboard(activity,binding.edtScanHere)
+                    return true
+                }
+                return false
             }
+        })
 
 
         binding.layoutCollectStockBatch.btnNext.setOnClickListener {
@@ -93,7 +97,7 @@ class CollectStockFragment : Fragment() {
 
 
         binding.btnConfirm.setOnClickListener {
-            viewModel.getProductId(binding.edtStockCode.text.toString())
+            viewModel.getProductId(binding.edtScanHere.text.toString())
         }
 
 
@@ -101,13 +105,13 @@ class CollectStockFragment : Fragment() {
             if (checkedIds.contains(R.id.chip_single)) {
                 binding.singleSelectedLayout.isVisible = true
                 binding.layoutCollectStockBatch.root.isVisible = false
-                binding.edtStockCode.text?.clear()
+                binding.edtScanHere.text?.clear()
                 observeForSingle()
 
             } else if (checkedIds.contains(R.id.chip_batch)) {
                 binding.singleSelectedLayout.isVisible = false
                 binding.layoutCollectStockBatch.root.isVisible = true
-                binding.edtStockCode.text?.clear()
+                binding.edtScanHere.text?.clear()
                 observeForBatch()
             }
         }
@@ -127,7 +131,7 @@ class CollectStockFragment : Fragment() {
             }
             adapter.submitList(it)
             adapter.notifyDataSetChanged()
-            binding.edtStockCode.text?.clear()
+            binding.edtScanHere.text?.clear()
         }
 
         viewModel.scanProductCodeLive.observe(viewLifecycleOwner) {
@@ -140,7 +144,7 @@ class CollectStockFragment : Fragment() {
                     //id list
                     val resultItem = CollectStockBatchUIModel(
                         it.data!!.id,
-                        binding.edtStockCode.text.toString(),
+                        binding.edtScanHere.text.toString(),
                         it.data!!.type.toString()
                     )
                     if (viewModel.stockCodeList.contains(resultItem).not()){
@@ -167,13 +171,14 @@ class CollectStockFragment : Fragment() {
                 is Resource.Success -> {
                     loadingDialog.dismiss()
                     requireContext().showSuccessDialog(it.data.orEmpty()) {
-                        binding.edtStockCode.text?.clear()
+                        binding.edtScanHere.text?.clear()
                         binding.edtWeight.text?.clear()
                         viewModel.resetCollectStockSingleLiveData()
                     }
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
+                    Toast.makeText(requireContext(),it.message,Toast.LENGTH_LONG).show()
                 }
             }
         }

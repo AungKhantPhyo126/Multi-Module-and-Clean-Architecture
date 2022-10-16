@@ -60,27 +60,32 @@ class CheckUpStockFragment:Fragment() {
         barlauncherStock = this.getBarLauncherTest(requireContext()) { viewModel.scanStock(it) }
         loadingDialog = requireContext().getAlertDialog()
 
-        binding.ivScanStock.setOnClickListener {
+        binding.tilScanHere.setEndIconOnClickListener {
             scanQrCode(requireContext(),barlauncherBox)
+        }
+
+
+        binding.tilScanStock.setEndIconOnClickListener {
+            scanQrCode(requireContext(),barlauncherStock)
         }
         val adapter = StockRecyclerAdapter{
             viewModel.removeStockCode(it)
         }
 
-        binding.edtTargetBoxCode.setOnKeyListener { view, keyCode, keyevent ->
+        binding.edtScanBox.setOnKeyListener { view, keyCode, keyevent ->
             //If the keyevent is a key-down event on the "enter" button
             if (keyevent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 // Perform your action on key press here
-               viewModel.getBoxData(binding.edtTargetBoxCode.text.toString())
+               viewModel.getBoxData(binding.edtScanBox.text.toString())
                 true
             } else false
         }
 
-        binding.edtStockCode.setOnKeyListener { view, keyCode, keyevent ->
+        binding.edtScanStock.setOnKeyListener { view, keyCode, keyevent ->
             //If the keyevent is a key-down event on the "enter" button
             if (keyevent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 // Perform your action on key press here
-                viewModel.scanStock(binding.edtStockCode.text.toString())
+                viewModel.scanStock(binding.edtScanStock.text.toString())
                 true
             } else false
         }
@@ -97,7 +102,7 @@ class CheckUpStockFragment:Fragment() {
                     binding.edtBoxCode.setText(it.data!!.code)
                     binding.edtBoxQuantity.setText(it.data!!.qty)
                     binding.actJewelleryType.setText(it.data!!.jewelleryType)
-                    binding.edtTargetBoxCode.text?.clear()
+                    binding.edtScanBox.text?.clear()
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
@@ -116,7 +121,7 @@ class CheckUpStockFragment:Fragment() {
                     //id list
                     val resultItem = StockCodeForListUiModel(
                         it.data!!.id,
-                        binding.edtStockCode.text.toString(),
+                        binding.edtScanStock.text.toString(),
                     )
                     if (viewModel.stockCodeList.contains(resultItem).not()){
                         viewModel.addStockCode(resultItem)
@@ -135,7 +140,7 @@ class CheckUpStockFragment:Fragment() {
             binding.includeButton.btnCheck.isEnabled = it.size>0
             adapter.submitList(it)
             adapter.notifyDataSetChanged()
-            binding.edtStockCode.text?.clear()
+            binding.edtScanStock.text?.clear()
         }
 
         binding.includeButton.btnCheck.setOnClickListener {
@@ -150,6 +155,7 @@ class CheckUpStockFragment:Fragment() {
 
         }
 
+
         viewModel.checkUpStockLive.observe(viewLifecycleOwner){
             when (it) {
                 is Resource.Loading -> {
@@ -158,7 +164,7 @@ class CheckUpStockFragment:Fragment() {
                 is Resource.Success -> {
                     loadingDialog.dismiss()
                     findNavController().navigate(TransferCheckUpStockFragmentDirections.actionTransferCheckUpStockFragmentToCheckUpResultFragment(it.data!!))
-
+                    viewModel.resetCheckUpStockLive()
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()

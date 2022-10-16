@@ -5,6 +5,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -13,10 +14,12 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.critx.common.qrscan.getBarLauncherTest
+import com.critx.common.qrscan.scanQrCode
 import com.critx.common.ui.getAlertDialog
 import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentArrangeBoxBinding
+import com.critx.shwemiAdmin.hideKeyboard
 import com.critx.shwemiAdmin.screens.transferCheckUpStock.checkup.StockRecyclerAdapter
 import com.critx.shwemiAdmin.uiModel.StockCodeForListUiModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,18 +55,36 @@ class ArrangeBoxFragment:Fragment() {
         toolbarsetup()
         loadingDialog = requireContext().getAlertDialog()
         barlauncherBox = this.getBarLauncherTest(requireContext()) { viewModel.getBoxData(it) }
+        binding.tilScanHere.setEndIconOnClickListener {
+            scanQrCode(requireContext(), barlauncherBox)
+        }
         val adapter = ArrangeBoxRecyclerAdapter{
             viewModel.removeBox(it)
         }
         binding.includeArrangeBoxList.rvArrangeBox.adapter = adapter
-        binding.edtBoxCode.setOnKeyListener { view, keyCode, keyevent ->
-            //If the keyevent is a key-down event on the "enter" button
-            if (keyevent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                // Perform your action on key press here
-                viewModel.getBoxData(binding.edtBoxCode.text.toString())
-                true
-            } else false
-        }
+//        binding.edtBoxCode.setOnKeyListener { view, keyCode, keyevent ->
+//            //If the keyevent is a key-down event on the "enter" button
+//            if (keyevent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+//                // Perform your action on key press here
+//                viewModel.getBoxData(binding.edtBoxCode.text.toString())
+//                true
+//            } else false
+//        }
+
+        binding.edtScanHere.setOnKeyListener(object : View.OnKeyListener {
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
+                // If the event is a key-down event on the "enter" button
+                if (event.action == KeyEvent.ACTION_DOWN &&
+                    keyCode == KeyEvent.KEYCODE_ENTER) {
+                    // Perform action on key press
+                    viewModel.getBoxData(binding.edtScanHere.text.toString())
+                    hideKeyboard(activity,binding.edtScanHere)
+                    return true
+                }
+                return false
+            }
+        })
+
         viewModel.getBoxDataLive.observe(viewLifecycleOwner){
             when(it){
                 is Resource.Loading -> {
@@ -84,7 +105,7 @@ class ArrangeBoxFragment:Fragment() {
             binding.btnArrange.isEnabled = it.size>0
             adapter.submitList(it)
             adapter.notifyDataSetChanged()
-            binding.edtBoxCode.text?.clear()
+//            binding.edtBoxCode.text?.clear()
         }
         binding.btnArrange.setOnClickListener {
             viewModel.resetBoxList()

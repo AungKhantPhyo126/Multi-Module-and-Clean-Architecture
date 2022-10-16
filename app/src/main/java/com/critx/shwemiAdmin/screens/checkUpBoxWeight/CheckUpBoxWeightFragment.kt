@@ -13,10 +13,12 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.critx.common.qrscan.getBarLauncherTest
+import com.critx.common.qrscan.scanQrCode
 import com.critx.common.ui.getAlertDialog
 import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentCheckUpBoxWeightBinding
+import com.critx.shwemiAdmin.hideKeyboard
 import com.critx.shwemiAdmin.screens.transferCheckUpStock.checkup.StockRecyclerAdapter
 import com.critx.shwemiAdmin.uiModel.StockCodeForListUiModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,13 +55,21 @@ class CheckUpBoxWeightFragment: Fragment() {
         toolbarsetup()
         loadingDialog = requireContext().getAlertDialog()
         barlauncherBox = this.getBarLauncherTest(requireContext()) { viewModel.getBoxData(it) }
-        binding.edtBoxCode.setOnKeyListener { view, keyCode, keyevent ->
-            //If the keyevent is a key-down event on the "enter" button
-            if (keyevent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                // Perform your action on key press here
-                viewModel.getBoxData(binding.edtBoxCode.text.toString())
-                true
-            } else false
+        binding.edtScanHere.setOnKeyListener(object : View.OnKeyListener {
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
+                // If the event is a key-down event on the "enter" button
+                if (event.action == KeyEvent.ACTION_DOWN &&
+                    keyCode == KeyEvent.KEYCODE_ENTER) {
+                    // Perform action on key press
+                    viewModel.getBoxData(binding.edtScanHere.text.toString())
+                    hideKeyboard(activity,binding.edtScanHere)
+                    return true
+                }
+                return false
+            }
+        })
+        binding.tilScanHere.setEndIconOnClickListener {
+            scanQrCode(requireContext(), barlauncherBox)
         }
         val adapter = CheckUpBoxRecyclerAdapter()
         binding.includeArrangeBoxList.rvArrangeBox.adapter = adapter
@@ -99,7 +109,7 @@ class CheckUpBoxWeightFragment: Fragment() {
             binding.btnCheck.isEnabled = it.size>0
             adapter.submitList(it)
             adapter.notifyDataSetChanged()
-            binding.edtBoxCode.text?.clear()
+            binding.edtScanHere.text?.clear()
         }
         binding.btnCheck.setOnClickListener {
             viewModel.resetAll()
