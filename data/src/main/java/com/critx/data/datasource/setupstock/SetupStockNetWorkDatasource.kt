@@ -89,7 +89,7 @@ interface SetupStockNetWorkDatasource {
         specification: RequestBody,
         design: MutableList<RequestBody>,
         orderToGs: RequestBody,
-        recommendCat: MutableList<RequestBody>
+        recommendCat: MutableList<RequestBody>?
     ): JewelleryCatCreatedData
 
     suspend fun editJewelleryCategory(
@@ -122,7 +122,8 @@ interface SetupStockNetWorkDatasource {
     ): CalculateKPYDto
 
     suspend fun getDesign(
-        token: String
+        token: String,
+        jewelleryType:String
     ): DesignDto
 
     suspend fun createProduct(

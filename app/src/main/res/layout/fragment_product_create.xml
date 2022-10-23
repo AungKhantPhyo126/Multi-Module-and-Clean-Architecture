@@ -40,8 +40,10 @@
         android:fillViewport="true"
         app:layout_constraintBottom_toTopOf="@id/btn_next"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -158,7 +160,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_begin="127dp" />
+                app:layout_constraintGuide_begin="118dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_y"
@@ -167,6 +169,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:hintEnabled="false"
+                app:expandedHintEnabled="false"
+                app:suffixText="Y"
                 app:layout_constraintEnd_toEndOf="@id/til_stock_name"
                 app:layout_constraintTop_toBottomOf="@id/til_gold_gem_gm">
 
@@ -174,7 +178,8 @@
                     android:id="@+id/edt_y"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/y"
+                    android:textAlignment="center"
+                    android:text="0"
                     android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -185,6 +190,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:hintEnabled="false"
+                app:expandedHintEnabled="false"
+                app:suffixText="P"
                 app:layout_constraintEnd_toStartOf="@id/til_y"
                 app:layout_constraintStart_toEndOf="@+id/til_k"
                 app:layout_constraintTop_toBottomOf="@id/til_gold_gem_gm">
@@ -193,7 +200,8 @@
                     android:id="@+id/edt_p"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="P"
+                    android:textAlignment="center"
+                    android:text="0"
                     android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -204,6 +212,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:hintEnabled="false"
+                app:expandedHintEnabled="false"
+                app:suffixText="K"
                 app:layout_constraintStart_toStartOf="@id/guideline2"
                 app:layout_constraintTop_toBottomOf="@id/til_gold_gem_gm">
 
@@ -211,7 +221,8 @@
                     android:id="@+id/edt_k"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="K"
+                    android:textAlignment="center"
+                    android:text="0"
                     android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -230,28 +241,29 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="GemValue"
                 android:buttonTint="@color/primary_color"
+                android:text="GemValue"
                 app:layout_constraintEnd_toStartOf="@+id/guideline2"
                 app:layout_constraintStart_toStartOf="@+id/tv_label_avg_wastage"
                 app:layout_constraintTop_toBottomOf="@+id/til_k" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_gem_value"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 app:hintEnabled="false"
+                app:layout_constraintBottom_toBottomOf="@id/cb_gem_value"
                 app:layout_constraintEnd_toEndOf="@+id/til_stock_name"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintBottom_toBottomOf="@id/cb_gem_value"
                 app:layout_constraintTop_toTopOf="@id/cb_gem_value">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_gem_value"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:inputType="numberDecimal"
                     android:hint="Enter Gem Value"
+                    android:inputType="numberDecimal"
                     android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -284,8 +296,8 @@
                     android:id="@+id/edt_pt_clip_price"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:inputType="numberDecimal"
                     android:hint="@string/enter_price"
+                    android:inputType="numberDecimal"
                     android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -326,13 +338,13 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_img_1"
-                android:layout_width="0dp"
-                android:layout_height="65dp"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/mcv_img_3"
+                app:layout_constraintEnd_toStartOf="@+id/mcv_img_2"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@+id/til_service_fee"
                 app:layout_constraintTop_toBottomOf="@+id/til_service_fee">
@@ -365,17 +377,16 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mcv_img_2"
-                android:layout_width="0dp"
-                android:layout_height="65dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
+                android:id="@+id/mcv_img_3"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_marginTop="16dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="8dp"
-                app:layout_constraintEnd_toEndOf="@+id/til_service_fee"
+                app:layout_constraintEnd_toEndOf="@+id/mcv_img_1"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/mcv_img_3"
-                app:layout_constraintTop_toTopOf="@+id/mcv_img_3">
+                app:layout_constraintStart_toStartOf="@+id/guideline2"
+                app:layout_constraintTop_toBottomOf="@+id/mcv_img_1">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -405,12 +416,12 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mcv_img_3"
-                android:layout_width="0dp"
-                android:layout_height="65dp"
+                android:id="@+id/mcv_img_2"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/mcv_img_2"
+                app:layout_constraintEnd_toEndOf="@+id/til_service_fee"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/mcv_img_1"
                 app:layout_constraintTop_toTopOf="@+id/mcv_img_1">
@@ -427,8 +438,10 @@
                         android:src="@drawable/empty_picture"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
 
                     <ImageView
                         android:id="@+id/iv_remove3"
@@ -447,7 +460,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@string/image"
+                android:text="@string/image_gif"
                 android:textAppearance="@style/TextAppearance.ShweMi.Body2"
                 app:layout_constraintEnd_toStartOf="@+id/guideline2"
                 app:layout_constraintStart_toStartOf="@+id/tv_label_service_fee"
@@ -455,18 +468,21 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_video"
-                android:layout_width="0dp"
-                android:layout_height="65dp"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
                 android:clickable="true"
                 android:focusable="true"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/mcv_img_3"
+                android:backgroundTint="@android:color/transparent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/mcv_img_2"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@+id/til_service_fee"
-                app:layout_constraintTop_toBottomOf="@+id/mcv_img_1">
+                app:layout_constraintTop_toBottomOf="@+id/mcv_img_3">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -497,17 +513,16 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_gif"
-                android:layout_width="0dp"
-                android:layout_height="65dp"
-                android:layout_marginEnd="8dp"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="8dp"
-                app:layout_constraintEnd_toEndOf="@+id/mcv_img_3"
-                app:layout_constraintEnd_toStartOf="@+id/mcv_img_2"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/mcv_img_1"
-                app:layout_constraintStart_toStartOf="@+id/mcv_img_3"
-                app:layout_constraintTop_toTopOf="@+id/mcv_video">
+                android:backgroundTint="@android:color/transparent"
+                app:layout_constraintBottom_toBottomOf="@+id/mcv_img_3"
+                app:layout_constraintEnd_toEndOf="@+id/mcv_img_2"
+                app:layout_constraintStart_toStartOf="@+id/mcv_img_2"
+                app:layout_constraintTop_toTopOf="@+id/mcv_img_3">
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -540,7 +555,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@string/video_gif"
+                android:text="@string/video"
                 android:textAppearance="@style/TextAppearance.ShweMi.Body2"
                 app:layout_constraintEnd_toStartOf="@+id/guideline2"
                 app:layout_constraintStart_toStartOf="@+id/tv_label_image"
@@ -550,11 +565,11 @@
                 android:id="@+id/btn_refresh_product_code"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:paddingVertical="14dp"
                 android:layout_marginEnd="16dp"
+                android:paddingVertical="14dp"
+                app:icon="@drawable/ic_refresh"
                 app:iconGravity="textStart"
                 app:iconPadding="0dp"
-                app:icon="@drawable/ic_refresh"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_stock_code_number"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv_stock_code_number" />

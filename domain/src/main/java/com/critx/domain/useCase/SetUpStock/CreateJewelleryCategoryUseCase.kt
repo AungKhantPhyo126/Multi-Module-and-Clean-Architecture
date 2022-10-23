@@ -26,7 +26,7 @@ class CreateJewelleryCategoryUseCase @Inject constructor(
         specification: RequestBody,
         design: MutableList<RequestBody>,
         orderToGs: RequestBody,
-        recommendCat: MutableList<RequestBody>
+        recommendCat: MutableList<RequestBody>?
 
     ) = setupStockRepository.createJewelleryCategory(
         token,

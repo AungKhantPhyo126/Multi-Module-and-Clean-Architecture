@@ -8,6 +8,7 @@ import com.critx.data.network.dto.SimpleResponseDto
 import com.critx.data.network.dto.setupStock.ProductCodeResponse
 import com.critx.data.network.dto.setupStock.jewelleryCategory.*
 import com.critx.data.network.dto.setupStock.jewelleryCategory.error.CreateCategoryError
+import com.critx.data.network.dto.setupStock.jewelleryCategory.error.getMessage
 import com.critx.data.network.dto.setupStock.jewelleryGroup.Data
 import com.critx.data.network.dto.setupStock.jewelleryGroup.JewelleryGroupDto
 import com.critx.data.network.dto.setupStock.jewelleryQuality.JewelleryQualityData
@@ -283,7 +284,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         specification: RequestBody,
         design: MutableList<RequestBody>,
         orderToGs: RequestBody,
-        recommendCat: MutableList<RequestBody>
+        recommendCat: MutableList<RequestBody>?
     ): JewelleryCatCreatedData {
         val response = setUpStockService.createJewelleryCategory(
             token,
@@ -414,9 +415,10 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getDesign(token: String): DesignDto {
+    override suspend fun getDesign(token: String,jewelleryType:String): DesignDto {
         val response = setUpStockService.getDesignList(
-            token
+            token,
+            jewelleryType
         )
         return if (response.isSuccessful) {
             response.body() ?: throw Exception("Response body Null")
@@ -487,7 +489,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.string()?:"Bad request"
+                       getErrorString(response.errorBody()?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!)
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"

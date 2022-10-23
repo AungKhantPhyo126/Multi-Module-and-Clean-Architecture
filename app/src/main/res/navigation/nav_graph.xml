@@ -175,7 +175,11 @@
     <fragment
         android:id="@+id/designListFragment"
         android:name="com.critx.shwemiAdmin.screens.setupStock.fourth.design.DesignListFragment"
-        android:label="DesignListFragment" />
+        android:label="DesignListFragment" >
+        <argument
+            android:name="jewelleryType"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/productCreateFragment"
         android:name="com.critx.shwemiAdmin.screens.setupStock.production.ProductCreateFragment"

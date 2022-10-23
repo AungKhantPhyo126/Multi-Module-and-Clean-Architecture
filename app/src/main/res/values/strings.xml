@@ -114,7 +114,9 @@
     <string name="per_unit">per unit</string>
     <string name="avg_weight">Avg Weight</string>
     <string name="avg_wastage">Avg Wastage</string>
-    <string name="video_gif"><![CDATA[Video & gif]]></string>
+    <string name="video">Video</string>
+    <string name="image_gif"><![CDATA[Image & gif]]></string>
+
     <string name="order_to_gs">Order to Gs</string>
     <string name="reconmend_ahtal">တွဲဖက်ဝတ်ဆင်နိုင်သော အထည်များ</string>
     <string name="new_category">New Category</string>

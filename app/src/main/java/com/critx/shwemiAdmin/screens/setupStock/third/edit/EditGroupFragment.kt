@@ -71,13 +71,13 @@ class EditGroupFragment : Fragment() {
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
     var photo: MultipartBody.Part? = null
+    var originalfile:File? =null
+    var originalbm :Bitmap? = null
 
     private lateinit var launchChooseImage: ActivityResultLauncher<Intent>
     private lateinit var readStoragePermissionlauncher: ActivityResultLauncher<String>
 
     private val sharedViewModel by activityViewModels<ChooseGroupViewModel>()
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         launchChooseImage =
@@ -165,20 +165,18 @@ class EditGroupFragment : Fragment() {
 
                 //image original
                 launch {
-                    var file:File? =null
-                    var bm :Bitmap? = null
+
                     args.groupInfo?.imageUrl?.let {
                         withContext(Dispatchers.IO) {
-                             bm = getBitMapWithGlide(it, requireContext())
+                             originalbm = getBitMapWithGlide(it, requireContext())
                             val fileName: String = it.substring(it.lastIndexOf('/') + 1)
-                             file = convertBitmapToFile( fileName,bm!!, requireContext())
+                             originalfile = convertBitmapToFile( fileName,originalbm!!, requireContext())
                             val requestBody =
-                                file!!.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-                            photo =
-                                MultipartBody.Part.createFormData("image", file!!.name, requestBody)
+                                originalfile!!.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+//                            photo = MultipartBody.Part.createFormData("image", originalfile!!.name, requestBody)
                         }
                         if (viewModel.selectedImgUri.value == null){
-                            viewModel.setSelectedImgUri(SelectedImage(file!!,bm!!))
+                            viewModel.setSelectedImgUri(SelectedImage(originalfile!!,originalbm!!))
                         }
                     }
                 }
@@ -249,14 +247,11 @@ class EditGroupFragment : Fragment() {
                 ).asRequestBody("multipart/form-data".toMediaTypeOrNull())
                 binding.ivGroupImage.setImageBitmap(it.bitMap)
                 photo = MultipartBody.Part.createFormData("image", it.file.name, requestBody)
-            }else{
+            }else if (originalfile != null){
                 photo = null
                 binding.ivGroupImage.setImageResource(R.drawable.empty_picture)
             }
         }
-
-
-
         binding.ibBack.setOnClickListener {
             findNavController().popBackStack()
         }

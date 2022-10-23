@@ -234,7 +234,7 @@ class SetupStockRepositoryImpl @Inject constructor(
         specification: RequestBody,
         design: MutableList<RequestBody>,
         orderToGs:RequestBody,
-        recommendCat:MutableList<RequestBody>
+        recommendCat:MutableList<RequestBody>?
 
     ): Flow<Resource<JewelleryCategory>> =
         flow {
@@ -342,14 +342,15 @@ class SetupStockRepositoryImpl @Inject constructor(
             }
         }
 
-    override fun getDesignList(token: String): Flow<Resource<List<DesignDomain>>> =
+    override fun getDesignList(token: String,jewelleryType:String): Flow<Resource<List<DesignDomain>>> =
         flow {
             emit(Resource.Loading())
             try {
                 emit(
                     Resource.Success(
                         setupStockNetWorkDatasource.getDesign(
-                            token
+                            token,
+                            jewelleryType
                         ).data.map { it.asDomain() }
                     )
                 )

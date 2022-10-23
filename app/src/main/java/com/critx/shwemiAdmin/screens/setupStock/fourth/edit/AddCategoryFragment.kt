@@ -477,7 +477,7 @@ class AddCategoryFragment : Fragment() {
             )
         }
         binding.mcvChooseDesign.setOnClickListener {
-            findNavController().navigate(AddCategoryFragmentDirections.actionAddCategoryFragmentToDesignListFragment())
+            findNavController().navigate(AddCategoryFragmentDirections.actionAddCategoryFragmentToDesignListFragment(args.type.id))
         }
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -799,8 +799,7 @@ class AddCategoryFragment : Fragment() {
             binding.edtK.text.isNullOrEmpty() ||
             binding.edtP.text.isNullOrEmpty() ||
             binding.edtY.text.isNullOrEmpty() ||
-            viewModel.selectedDesignIds.isNullOrEmpty() ||
-            viewModel.selectedRecommendCat.value.isNullOrEmpty()
+            viewModel.selectedDesignIds.isNullOrEmpty()
         ) {
             Toast.makeText(requireContext(), "Fill The Required Fields", Toast.LENGTH_LONG).show()
         } else {

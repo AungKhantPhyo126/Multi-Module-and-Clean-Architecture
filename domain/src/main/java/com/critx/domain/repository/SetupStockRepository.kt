@@ -86,7 +86,7 @@ interface SetupStockRepository {
         specification: RequestBody,
         design: MutableList<RequestBody>,
         orderToGs: RequestBody,
-        recommendCat: MutableList<RequestBody>
+        recommendCat: MutableList<RequestBody>?
     ): Flow<Resource<JewelleryCategory>>
 
     fun editJewelleryCategory(
@@ -122,7 +122,7 @@ interface SetupStockRepository {
         ywae: Double
     ): Flow<Resource<CalculateKPY>>
 
-    fun getDesignList(token: String): Flow<Resource<List<DesignDomain>>>
+    fun getDesignList(token: String,jewelleryType:String): Flow<Resource<List<DesignDomain>>>
 
     fun createProduct(
         token: String,

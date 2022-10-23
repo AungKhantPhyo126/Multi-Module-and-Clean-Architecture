@@ -113,7 +113,7 @@ interface SetUpStockService {
         @Part("specification") specification: RequestBody,
         @Part("designs[]") design: List<RequestBody>,
         @Part("order_to_goldsmith") orderToGs: RequestBody,
-        @Part("related_categories[]") recommendCat:List<RequestBody>
+        @Part("related_categories[]") recommendCat:List<RequestBody>?
     ): Response<JewelleryCatCreatedData>
 
     @JvmSuppressWildcards
@@ -149,9 +149,12 @@ interface SetUpStockService {
         @Query("ywae") ywae: Double,
     ): Response<CalculateKPYDto>
 
+
+
     @GET("api/designs/quicklist")
     suspend fun getDesignList(
-        @Header("Authorization") token: String
+        @Header("Authorization") token: String,
+        @Query("jewellery_type") jewelleryType:String
         ):Response<DesignDto>
 
 

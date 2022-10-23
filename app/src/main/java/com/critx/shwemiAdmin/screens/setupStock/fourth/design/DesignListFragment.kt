@@ -14,6 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.critx.common.ui.createChip
 import com.critx.common.ui.getAlertDialog
 import com.critx.common.ui.showSuccessDialog
@@ -35,6 +36,7 @@ class DesignListFragment:Fragment() {
     private val viewModel by activityViewModels<AddCategoryViewModel>()
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
+    private val args by navArgs<DesignListFragmentArgs>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,7 +50,7 @@ class DesignListFragment:Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getDesign()
+        viewModel.getDesign(args.jewelleryType)
         loadingDialog = requireContext().getAlertDialog()
 
         binding.chipGroupDesign.setOnCheckedStateChangeListener { group, checkedIds ->

@@ -137,7 +137,7 @@ class AddCategoryViewModel @Inject constructor(
         avgKyat: RequestBody,
         avgPae: RequestBody,
         avgYwae: RequestBody,
-        recommendCat: MutableList<RequestBody>
+        recommendCat: MutableList<RequestBody>?
 
     ) {
         viewModelScope.launch {
@@ -262,9 +262,9 @@ class AddCategoryViewModel @Inject constructor(
     }
 
 
-    fun getDesign() {
+    fun getDesign(jewelleryType:String) {
         viewModelScope.launch {
-            getDesignListUseCase(localDatabase.getToken().orEmpty()).collectLatest {
+            getDesignListUseCase(localDatabase.getToken().orEmpty(),jewelleryType).collectLatest {
                 when (it) {
                     is Resource.Loading -> {
                         _getDesign.value = _getDesign.value.copy(

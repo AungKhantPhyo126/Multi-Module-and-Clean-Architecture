@@ -351,7 +351,7 @@
                 android:layout_marginEnd="8dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/mcv_img_3"
+                app:layout_constraintEnd_toStartOf="@+id/mcv_img_2"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@+id/til_service_fee"
                 app:layout_constraintTop_toBottomOf="@+id/til_service_fee">
@@ -384,7 +384,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mcv_img_2"
+                android:id="@+id/mcv_img_3"
                 android:layout_width="0dp"
                 android:layout_height="65dp"
                 android:layout_marginStart="8dp"
@@ -393,8 +393,8 @@
                 app:cardElevation="8dp"
                 app:layout_constraintEnd_toEndOf="@+id/til_service_fee"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/mcv_img_3"
-                app:layout_constraintTop_toTopOf="@+id/mcv_img_3">
+                app:layout_constraintStart_toEndOf="@+id/mcv_img_2"
+                app:layout_constraintTop_toTopOf="@+id/mcv_img_2">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -424,12 +424,12 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mcv_img_3"
+                android:id="@+id/mcv_img_2"
                 android:layout_width="0dp"
                 android:layout_height="65dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/mcv_img_2"
+                app:layout_constraintEnd_toStartOf="@+id/mcv_img_3"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/mcv_img_1"
                 app:layout_constraintTop_toTopOf="@+id/mcv_img_1">
@@ -466,7 +466,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@string/image"
+                android:text="@string/image_gif"
                 android:textAppearance="@style/TextAppearance.ShweMi.Body2"
                 app:layout_constraintEnd_toStartOf="@+id/guideline2"
                 app:layout_constraintStart_toStartOf="@+id/tv_label_service_fee"
@@ -482,7 +482,7 @@
                 android:focusable="true"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/mcv_img_3"
+                app:layout_constraintEnd_toStartOf="@+id/mcv_img_2"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@+id/til_service_fee"
                 app:layout_constraintTop_toBottomOf="@+id/mcv_img_1">
@@ -521,11 +521,11 @@
                 android:layout_marginEnd="8dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="8dp"
-                app:layout_constraintEnd_toEndOf="@+id/mcv_img_3"
-                app:layout_constraintEnd_toStartOf="@+id/mcv_img_2"
+                app:layout_constraintEnd_toEndOf="@+id/mcv_img_2"
+                app:layout_constraintEnd_toStartOf="@+id/mcv_img_3"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/mcv_img_1"
-                app:layout_constraintStart_toStartOf="@+id/mcv_img_3"
+                app:layout_constraintStart_toStartOf="@+id/mcv_img_2"
                 app:layout_constraintTop_toTopOf="@+id/mcv_video">
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -559,7 +559,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@string/video_gif"
+                android:text="@string/video"
 
                 android:textAppearance="@style/TextAppearance.ShweMi.Body2"
                 app:layout_constraintEnd_toStartOf="@+id/guideline2"

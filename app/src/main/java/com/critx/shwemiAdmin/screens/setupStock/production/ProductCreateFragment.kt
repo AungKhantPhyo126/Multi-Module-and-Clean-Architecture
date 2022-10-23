@@ -26,6 +26,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.critx.common.ui.getAlertDialog
+import com.critx.common.ui.getBitMapWithGlide
 import com.critx.common.ui.getThumbnail
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
@@ -41,8 +42,10 @@ import com.critx.shwemiAdmin.screens.setupStock.third.edit.getRealPathFromUri
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -59,6 +62,9 @@ class ProductCreateFragment : Fragment() {
     private lateinit var adapter: RecommendStockAdapter
     private val viewModel by viewModels<FinalStockSetupViewModel>()
     private val sharedViewModel by activityViewModels<SharedViewModel>()
+
+    var originalfile:File? =null
+    var originalbm :Bitmap? = null
 
 //    private val args by navArgs<FinalStockSetupFragmentArgs>()
 var photo1: MultipartBody.Part? = null
@@ -211,6 +217,22 @@ var photo1: MultipartBody.Part? = null
         binding.btnRefreshProductCode.setOnClickListener {
             viewModel.getProductCode()
         }
+        binding.ivRemove1.setOnClickListener {
+            viewModel.setSelectedImgUri1(null)
+        }
+        binding.ivRemove2.setOnClickListener {
+            viewModel.setSelectedImgUri2(null)
+        }
+        binding.ivRemove3.setOnClickListener {
+            viewModel.setSelectedImgUri3(null)
+        }
+        binding.ivRemoveGif.setOnClickListener {
+            viewModel.setSelectedGif(null)
+        }
+        binding.ivRemoveVideo.setOnClickListener {
+            viewModel.setSelectedVideo(null)
+        }
+
         binding.cbGemValue.setOnCheckedChangeListener { compoundButton, ischecked ->
             if (ischecked) {
                 val builder = MaterialAlertDialogBuilder(requireContext())
@@ -357,7 +379,7 @@ var photo1: MultipartBody.Part? = null
             }
             if (selectedItem == null) {
                 gif = null
-                binding.ivGif.setImageResource(com.critx.shwemiAdmin.R.drawable.empty_picture)
+                binding.ivGif.setImageResource(com.critx.shwemiAdmin.R.drawable.empty_gif)
             }
             binding.ivRemoveGif.isVisible = selectedItem != null
 
@@ -387,6 +409,19 @@ var photo1: MultipartBody.Part? = null
 
         viewLifecycleOwner.lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+                launch {
+                    sharedViewModel.fourthCat?.let {
+                        withContext(Dispatchers.IO) {
+                            originalbm = getBitMapWithGlide(it.imageUrlList[0], requireContext())
+                            val fileName: String = it.imageUrlList[0].substring( it.imageUrlList[0].lastIndexOf('/') + 1)
+                            originalfile = convertBitmapToFile( fileName,originalbm!!, requireContext())
+                        }
+                    }
+                    if (viewModel.selectedImgUri1.value == null){
+                        viewModel.setSelectedImgUri1(SelectedImage(originalfile!!,originalbm!!))
+                    }
+                }
 
                 //CreateProduct
                 launch {
@@ -566,8 +601,7 @@ var photo1: MultipartBody.Part? = null
 
     fun createProduct() {
 
-        if (binding.edtEnterStockName.text.isNullOrEmpty() ||
-            binding.edtGoldGemGm.text.isNullOrEmpty() ||
+        if (binding.edtGoldGemGm.text.isNullOrEmpty() ||
             binding.edtK.text.isNullOrEmpty() ||
             binding.edtP.text.isNullOrEmpty() ||
             binding.edtY.text.isNullOrEmpty()
