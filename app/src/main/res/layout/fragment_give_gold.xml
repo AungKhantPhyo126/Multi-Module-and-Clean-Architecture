@@ -238,14 +238,17 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 app:hintEnabled="false"
+                app:expandedHintEnabled="false"
+                app:suffixText="K"
                 app:layout_constraintStart_toEndOf="@id/guideline2"
                 app:layout_constraintTop_toBottomOf="@id/til_order_qty">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_k"
+                    android:textAlignment="center"
+                    android:text="0"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="K"
                     android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -256,15 +259,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:hintEnabled="false"
+                app:expandedHintEnabled="false"
+                app:suffixText="P"
                 app:layout_constraintEnd_toStartOf="@id/til_y"
                 app:layout_constraintStart_toEndOf="@+id/til_k"
                 app:layout_constraintTop_toBottomOf="@id/til_order_qty">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_p"
+                    android:textAlignment="center"
+                    android:text="0"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="P"
                     android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -276,6 +282,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:hintEnabled="false"
+                app:expandedHintEnabled="false"
+                app:suffixText="Y"
                 app:layout_constraintEnd_toEndOf="@id/til_order_qty"
                 app:layout_constraintTop_toBottomOf="@id/til_order_qty">
 
@@ -283,7 +291,8 @@
                     android:id="@+id/edt_y"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/y"
+                    android:textAlignment="center"
+                    android:text="0"
                     android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -304,6 +313,8 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
                 android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
                 app:layout_constraintEnd_toStartOf="@+id/mcv_other"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@+id/til_k"
@@ -611,20 +622,22 @@
                 android:id="@+id/btn_sample_take"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:insetBottom="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetLeft="0dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                app:backgroundTint="@color/white"
+                android:layout_marginBottom="16dp"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                app:rippleColor="@color/edit_text_color"
+                android:text="Sample Take"
                 android:textAllCaps="false"
                 android:textAppearance="@style/TextAppearance.ShweMi.Body2"
                 android:textColor="@color/primary_color"
-                android:text="Sample Take"
+                app:backgroundTint="@color/white"
                 app:icon="@drawable/ic_right_arrow"
-                app:iconTint="@color/primary_color"
                 app:iconGravity="end"
+                app:iconTint="@color/primary_color"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

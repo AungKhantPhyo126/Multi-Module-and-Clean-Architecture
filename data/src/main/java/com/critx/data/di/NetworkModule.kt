@@ -5,6 +5,8 @@ import com.critx.data.datasource.auth.AuthNetWorkDataSource
 import com.critx.data.datasource.box.BoxNetWorkDataSource
 import com.critx.data.datasource.collectStock.CollectStockDataSource
 import com.critx.data.datasource.dailyGoldAndPrice.DailyGoldAndPriceNetWorkDataSource
+import com.critx.data.datasource.giveGold.GiveGoldDataSource
+import com.critx.data.datasource.repairStock.RepairStockDataSource
 import com.critx.data.datasource.setupstock.SetupStockNetWorkDatasource
 import com.critx.data.datasource.transferCheckUp.TransferCheckUpNetWorkDataSource
 import com.critx.data.network.api.*
@@ -117,6 +119,30 @@ class NetworkModule {
     fun provideTransferCheckUpRepository(transferCheckUpNetWorkDataSource: TransferCheckUpNetWorkDataSource): TransferCheckUpRepository {
         return TransferCheckUpRepositoryImpl(transferCheckUpNetWorkDataSource)
     }
+
+    @Provides
+    @Singleton
+    fun provideGiveGoldDataSource(giveGoldService: GiveGoldService): GiveGoldDataSource {
+        return GiveGoldDataSourceImpl(giveGoldService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGiveGoldRepository(giveGoldDataSource: GiveGoldDataSource): GiveGoldRepository {
+        return GiveGoldRepoImpl(giveGoldDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRepairStockDataSource(repairStockService: RepairStockService): RepairStockDataSource {
+        return RepairStockDataSourceImpl(repairStockService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRepairStockRepository(repairStockDataSource: RepairStockDataSource): RepairStockRepository {
+        return RepairStockRepoImpl(repairStockDataSource)
+    }
 //    @Provides
 //    @Singleton
 //    fun provideAuthRepository(
@@ -126,6 +152,14 @@ class NetworkModule {
 //            authNetWorkDataSource,
 //        )
 //    }
+
+    @Provides
+    @Singleton
+    fun provideRepairStockService(retrofit: Retrofit) = retrofit.create<RepairStockService>()
+
+    @Provides
+    @Singleton
+    fun provideGiveGoldService(retrofit: Retrofit) = retrofit.create<GiveGoldService>()
 
     @Provides
     @Singleton
