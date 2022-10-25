@@ -96,6 +96,7 @@ class CollectStockFragment : Fragment() {
                     it.productId
                 }.toTypedArray()
             ))
+            viewModel.resetScannedStockCodeBatch()
 
         }
 
@@ -176,9 +177,9 @@ class CollectStockFragment : Fragment() {
                 is Resource.Success -> {
                     loadingDialog.dismiss()
                     requireContext().showSuccessDialog(it.data.orEmpty()) {
+                        viewModel.resetCollectStockSingleLiveData()
                         binding.edtScanHere.text?.clear()
                         binding.edtWeight.text?.clear()
-                        viewModel.resetCollectStockSingleLiveData()
                     }
                 }
                 is Resource.Error -> {
