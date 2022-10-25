@@ -22,15 +22,16 @@ class GiveGoldDataSourceImpl @Inject constructor(
         goldBoxId: String,
         goldWeight: String,
         gemWeight: String,
+        goldAndGemWeight:String,
         wastageK: String,
         wastageP: String,
         wastageY: String,
         dueDate: String,
-        sampleList: List<String>
+        sampleList: List<String>?
     ): SimpleResponseDto {
         val response = giveGoldService.giveGold(
             token, goldSmithId, orderItem, orderQty, weightK, weighP, weightY,
-            goldBoxId, goldWeight, gemWeight, wastageK, wastageP, wastageY, dueDate, sampleList
+            goldBoxId, goldWeight, gemWeight,goldAndGemWeight, wastageK, wastageP, wastageY, dueDate, sampleList
         )
         return if (response.isSuccessful) {
             response.body()?.response ?: throw Exception("Response body Null")

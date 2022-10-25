@@ -17,11 +17,12 @@ interface GiveGoldRepository {
         goldBoxId: String,
         goldWeight: String,
         gemWeight: String,
+        goldAndGemWeight:String,
         wastageK: String,
         wastageP: String,
         wastageY: String,
         dueDate: String,
-        sampleList: List<String>
+        sampleList: List<String>?
     ):Flow<Resource<SimpleData>>
 
      fun getGoldBoxId(

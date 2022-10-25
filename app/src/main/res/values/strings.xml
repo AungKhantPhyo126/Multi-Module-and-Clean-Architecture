@@ -144,4 +144,5 @@
     <string name="stock_qty">Stock Qty -</string>
     <string name="box_code">Box Code</string>
     <string name="box_code_label">Box Code -</string>
+    <string name="choose_due_date">Choose Due Date</string>
 </resources>

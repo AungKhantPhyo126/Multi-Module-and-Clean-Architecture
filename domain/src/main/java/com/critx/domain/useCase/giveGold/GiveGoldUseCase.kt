@@ -17,11 +17,12 @@ class GiveGoldUseCase @Inject constructor(
         goldBoxId: String,
         goldWeight: String,
         gemWeight: String,
+        goldAndGemWeight:String,
         wastageK: String,
         wastageP: String,
         wastageY: String,
         dueDate: String,
-        sampleList: List<String>
+        sampleList: List<String>?
     )=giveGoldRepository.giveGold(token, goldSmithId, orderItem, orderQty, weightK, weighP,
-        weightY, goldBoxId, goldWeight, gemWeight, wastageK, wastageP, wastageY, dueDate, sampleList)
+        weightY, goldBoxId, goldWeight, gemWeight,goldAndGemWeight, wastageK, wastageP, wastageY, dueDate, sampleList)
 }

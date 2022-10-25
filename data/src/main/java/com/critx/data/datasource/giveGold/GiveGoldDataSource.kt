@@ -16,12 +16,13 @@ interface GiveGoldDataSource {
         weightY: String,
         goldBoxId: String,
         goldWeight: String,
+        goldAndGemWeight:String,
         gemWeight: String,
         wastageK: String,
         wastageP: String,
         wastageY: String,
         dueDate: String,
-        sampleList: List<String>
+        sampleList: List<String>?
     ):SimpleResponseDto
 
     suspend fun getGoldBoxId(
