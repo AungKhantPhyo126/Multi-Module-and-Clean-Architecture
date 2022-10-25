@@ -9,7 +9,7 @@ class ChargeRepairStockUseCase @Inject constructor(
 ) {
     operator fun invoke(
         token: String,
-        goldSmithId: RequestBody,
+        amount: RequestBody,
         repairStockList: List<RequestBody>
-    )=repairStockRepository.chargeRepairSTock(token, goldSmithId, repairStockList)
+    )=repairStockRepository.chargeRepairSTock(token, amount, repairStockList)
 }

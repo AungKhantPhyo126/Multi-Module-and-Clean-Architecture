@@ -7,6 +7,7 @@ import com.critx.data.network.dto.asDomain
 import com.critx.data.network.dto.repairStock.asDomain
 import com.critx.domain.model.SimpleData
 import com.critx.domain.model.repairStock.JobDoneDomain
+import com.critx.domain.model.repairStock.RepairJobDomain
 import com.critx.domain.repository.RepairStockRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -36,6 +37,27 @@ class RepairStockRepoImpl @Inject constructor(
         }
     }
 
+    override fun getRepairJob(
+        token: String,
+        jewelleryTypeId: String
+    ): Flow<Resource<List<RepairJobDomain>>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        repairStockDataSource.getRepairJobs(token,jewelleryTypeId).map { it.asDomain() }
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
+
     override fun assignGoldSmith(
         token: String,
         goldSmithId: RequestBody,
@@ -63,7 +85,7 @@ class RepairStockRepoImpl @Inject constructor(
 
     override fun chargeRepairSTock(
         token: String,
-        goldSmithId: RequestBody,
+        amount: RequestBody,
         repairStockList: List<RequestBody>
     ): Flow<Resource<SimpleData>>  =
     flow {
@@ -71,7 +93,7 @@ class RepairStockRepoImpl @Inject constructor(
         try {
             emit(
                 Resource.Success(
-                    repairStockDataSource.chargeRepairSTock(token,goldSmithId,repairStockList).asDomain()
+                    repairStockDataSource.chargeRepairSTock(token,amount,repairStockList).asDomain()
                 )
             )
         } catch (e: HttpException) {

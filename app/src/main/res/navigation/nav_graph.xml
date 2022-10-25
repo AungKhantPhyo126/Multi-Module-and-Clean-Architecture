@@ -273,5 +273,9 @@
     <fragment
         android:id="@+id/assignGsFragment"
         android:name="com.critx.shwemiAdmin.screens.repairStock.assignGs.AssignGsFragment"
-        android:label="AssignGsFragment" />
+        android:label="AssignGsFragment" >
+        <argument
+            android:name="goldSmith"
+            app:argType="string" />
+    </fragment>
 </navigation>

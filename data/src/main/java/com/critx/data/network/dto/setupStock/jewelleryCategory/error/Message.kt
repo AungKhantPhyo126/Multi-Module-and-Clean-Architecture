@@ -13,7 +13,9 @@ data class Message(
     val specification: List<String?>?,
     val video: List<String?>?,
     val related_categories:CategoryError?,
-    val product_code:List<String?>?
+    val product_code:List<String?>?,
+    val repair_stocks:List<String?>?,
+    val amount:List<String?>?
 )
 
 class ImagesError:ArrayList<String?>()
@@ -21,5 +23,5 @@ class CategoryError:ArrayList<String?>()
 
 fun Message.getMessage():List<String?>{
     return avg_wastage_per_unit_kpy ?:avg_weight_per_unit_gm?:designs?:group_id?:images?:jewellery_quality_id?:jewellery_type_id?:name?:
-    order_to_goldsmith?:specification?:video?:related_categories?:product_code?: emptyList()
+    order_to_goldsmith?:specification?:video?:related_categories?:product_code?:repair_stocks?:amount?: emptyList()
 }

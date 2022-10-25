@@ -8,6 +8,7 @@ import com.critx.commonkotlin.util.Resource
 import com.critx.domain.model.collectStock.ProductIdWithTypeDomain
 import com.critx.domain.model.sampleTakeAndReturn.VoucherScanDomain
 import com.critx.domain.useCase.collectStock.ScanProductCodeUseCase
+import com.critx.domain.useCase.sampleTakeAndReturn.AddToHandedListUseCase
 import com.critx.domain.useCase.sampleTakeAndReturn.CheckSampleUseCase
 import com.critx.domain.useCase.sampleTakeAndReturn.ScanInvoiceUseCase
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
@@ -24,7 +25,8 @@ class InventoryViewModel @Inject constructor(
     private val localDatabase: LocalDatabase,
     private val scanInvoiceUseCase: ScanInvoiceUseCase,
     private val checkSampleUseCase: CheckSampleUseCase,
-    private val scanProductCodeUseCase: ScanProductCodeUseCase
+    private val scanProductCodeUseCase: ScanProductCodeUseCase,
+    private val addToHandedListUseCase: AddToHandedListUseCase
 ) :ViewModel(){
 
     private val _sampleLiveData = MutableLiveData<Resource<MutableList<SampleItemUIModel>>>()

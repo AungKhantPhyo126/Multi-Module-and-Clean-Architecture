@@ -3,6 +3,7 @@ package com.critx.domain.repository
 import com.critx.commonkotlin.util.Resource
 import com.critx.domain.model.SimpleData
 import com.critx.domain.model.repairStock.JobDoneDomain
+import com.critx.domain.model.repairStock.RepairJobDomain
 import kotlinx.coroutines.flow.Flow
 import okhttp3.RequestBody
 
@@ -11,6 +12,11 @@ interface RepairStockRepository {
         token: String,
         goldSmithId: String,
     ): Flow<Resource<JobDoneDomain>>
+
+    fun getRepairJob(
+        token: String,
+        jewelleryTypeId: String,
+    ): Flow<Resource<List<RepairJobDomain>>>
 
 
      fun assignGoldSmith(
@@ -25,7 +31,7 @@ interface RepairStockRepository {
 
      fun chargeRepairSTock(
         token: String,
-        goldSmithId: RequestBody,
+        amount: RequestBody,
         repairStockList: List<RequestBody>,
     ):Flow<Resource<SimpleData>>
 }

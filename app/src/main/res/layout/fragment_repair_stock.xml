@@ -21,6 +21,7 @@
         android:id="@+id/horizontal_chip_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,13 +30,9 @@
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group_gs"
             android:layout_width="wrap_content"
+            app:singleSelection="true"
+            app:singleLine="true"
             android:layout_height="wrap_content">
-
-            <com.google.android.material.chip.Chip
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="THU" />
 
 
         </com.google.android.material.chip.ChipGroup>
@@ -176,6 +173,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_job"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
@@ -187,12 +185,17 @@
         app:layout_constraintBottom_toTopOf="@id/btn_assign_gs"
         android:layout_marginBottom="8dp"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_assign_gs"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:insetBottom="0dp"
+        android:insetLeft="0dp"
+        android:insetRight="0dp"
+        android:insetTop="0dp"
         android:text="Assign Goldsmith"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
