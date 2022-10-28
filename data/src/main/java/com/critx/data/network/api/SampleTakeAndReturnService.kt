@@ -30,8 +30,9 @@ interface SampleTakeAndReturnService {
     ): Response<VoucherSampleResponse>
 
 
-    @GET("api/sales/{invoiceId}/check-samples")
-    suspend fun checkSamples(
+//    @GET("api/sales/{invoiceId}/check-samples")
+@GET("api/products/{invoiceId}/check-samples")
+suspend fun checkSamples(
         @Header("Authorization") token: String,
         @Path("invoiceId") invoiceId: String
     ): Response<SampleCheckResponse>

@@ -18,6 +18,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.critx.common.qrscan.getBarLauncher
 import com.critx.common.ui.getAlertDialog
@@ -25,6 +26,8 @@ import com.critx.common.ui.showSuccessDialog
 import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentOutsideBinding
+import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.GIVE_GOLD_STATE
+import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.SelectedImage
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.convertBitmapToFile
 import com.critx.shwemiAdmin.screens.setupStock.third.edit.getRealPathFromUri
@@ -45,6 +48,8 @@ class OutSideFragment : Fragment() {
     var photo: MultipartBody.Part? = null
     private lateinit var loadingDialog: AlertDialog
     private lateinit var readStoragePermissionlauncher: ActivityResultLauncher<String>
+    private val sharedViewModel by activityViewModels<SharedViewModel>()
+
 
 
 
@@ -93,6 +98,8 @@ class OutSideFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadingDialog = requireContext().getAlertDialog()
+        binding.layoutBtnGroup.btnAddToHandedList.isEnabled =
+            sharedViewModel.sampleTakeScreenUIState != GIVE_GOLD_STATE
         binding.layoutBtnGroup.btnSave.setOnClickListener {
             if (photo != null) {
                 viewModel.saveOusideSample(

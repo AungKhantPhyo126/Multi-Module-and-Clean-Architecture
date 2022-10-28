@@ -16,6 +16,8 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.critx.common.databinding.ShwemiSuccessDialogBinding
 import com.critx.common.ui.getAlertDialog
 import com.critx.common.ui.showSuccessDialog
@@ -39,6 +41,7 @@ class GiveGoldFragment : Fragment() {
     private val viewModel by viewModels<GiveGoldViewModel>()
     private lateinit var loadingDialog: AlertDialog
     private lateinit var datePicker: MaterialDatePicker<Long>
+    private val args by navArgs<GiveGoldFragmentArgs>()
 
     var selectedGoldBoxId = ""
 
@@ -79,7 +82,15 @@ class GiveGoldFragment : Fragment() {
         loadingDialog = requireContext().getAlertDialog()
         viewModel.getGoldSmithList()
         viewModel.getGoldBoxId()
+        if (args.sampleList.isNullOrEmpty()){
+            binding.btnSampleTake.setTextColor(requireContext().getColorStateList(R.color.edit_text_color))
+        }else {
+            binding.btnSampleTake.setTextColor(requireContext().getColorStateList(R.color.primary_color))
+        }
 
+        binding.btnSampleTake.setOnClickListener {
+            findNavController().navigate(GiveGoldFragmentDirections.actionGiveGoldFragmentToSampleTakeAndReturnFragment())
+        }
         viewModel.giveGoldLiveData.observe(viewLifecycleOwner) {
 
             when (it) {
@@ -189,9 +200,10 @@ class GiveGoldFragment : Fragment() {
             if (
                 viewModel.selectedGoldSmith.isNullOrEmpty() ||
                 selectedGoldBoxId.isEmpty()
-                    ){
-                Toast.makeText(requireContext(),"select goldsmith and goldbox",Toast.LENGTH_LONG).show()
-            }else {
+            ) {
+                Toast.makeText(requireContext(), "select goldsmith and goldbox", Toast.LENGTH_LONG)
+                    .show()
+            } else {
 
 
                 val goldSmith = viewModel.selectedGoldSmith!!
@@ -208,6 +220,7 @@ class GiveGoldFragment : Fragment() {
                 val wastageP = binding.edtP2.text.toString()
                 val wastageY = binding.edtY2.text.toString()
                 val dueDate = binding.tvDueDate.text.toString()
+                val sampleList = args.sampleList?.toList()
                 viewModel.giveGold(
                     goldSmith,
                     orderItem,
@@ -223,7 +236,7 @@ class GiveGoldFragment : Fragment() {
                     wastageP,
                     wastageY,
                     dueDate,
-                    null
+                    sampleList
                 )
             }
         }

@@ -145,4 +145,5 @@
     <string name="box_code">Box Code</string>
     <string name="box_code_label">Box Code -</string>
     <string name="choose_due_date">Choose Due Date</string>
+    <string name="handed_list">Handed List</string>
 </resources>

@@ -10,13 +10,16 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavArgument
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.critx.shwemiAdmin.databinding.ActivityMainBinding
+import com.critx.shwemiAdmin.screens.giveGold.GiveGoldFragment
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -86,6 +89,10 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.sampleTakeAndReturnFragment->{
 
+            }
+            R.id.giveGoldFragment->{
+
+//                navController.navigate(GiveGoldFragment)
             }
 
         }

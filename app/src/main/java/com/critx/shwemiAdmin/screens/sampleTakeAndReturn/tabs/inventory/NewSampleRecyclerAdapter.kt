@@ -1,5 +1,7 @@
 package com.critx.shwemiAdmin.screens.sampleTakeAndReturn.tabs.inventory
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
@@ -7,31 +9,90 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.critx.common.ui.loadImageWithGlide
 import com.critx.shwemiAdmin.databinding.ItemNewSampleBinding
+import com.critx.shwemiAdmin.databinding.ItemSavedSampleBinding
+import com.critx.shwemiAdmin.screens.setupStock.third.AddItemViewHolder
+import com.critx.shwemiAdmin.screens.setupStock.third.ImageViewHolder
 import com.critx.shwemiAdmin.uiModel.simpleTakeAndReturn.SampleItemUIModel
 
-class NewSampleRecyclerAdapter(private val onclick:()->Unit) : ListAdapter<SampleItemUIModel, NewSampleViewHolder>(
+class NewSampleRecyclerAdapter(
+    private val onclick: () -> Unit,
+    private val viewModel: InventoryViewModel
+) : ListAdapter<SampleItemUIModel, RecyclerView.ViewHolder>(
     NewSampleDiffUtil
-)  {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewSampleViewHolder {
-        return NewSampleViewHolder(ItemNewSampleBinding.inflate(
-            LayoutInflater.from(parent.context),parent,false
-        ),onclick)
+) {
+
+    val unsavedSampleViewType = 2
+    val savedSampleViewType = 1
+    override fun getItemViewType(position: Int): Int {
+
+        return if (getItem(position).specification.isNullOrEmpty()) unsavedSampleViewType
+        else savedSampleViewType;
     }
 
-    override fun onBindViewHolder(holder: NewSampleViewHolder, position: Int) {
-        holder.bind(getItem(position))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == unsavedSampleViewType) {
+            NewSampleViewHolder(
+                ItemNewSampleBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                ), onclick, viewModel
+            )
+        } else {
+            SaveSampleViewHolder(
+                ItemSavedSampleBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                ), onclick
+            )
+        }
     }
 
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is NewSampleViewHolder -> {
+                holder.bind(getItem(position))
+            }
+            is SaveSampleViewHolder -> {
+                holder.bind(getItem(position))
+            }
+
+        }
+    }
 
 }
 
-class NewSampleViewHolder(private val binding:ItemNewSampleBinding,
-private val onclick: () -> Unit):RecyclerView.ViewHolder(binding.root){
-    fun bind(data:SampleItemUIModel){
+class SaveSampleViewHolder(
+    private val binding: ItemSavedSampleBinding,
+    private val onclick: () -> Unit,
+) : RecyclerView.ViewHolder(binding.root) {
+    fun bind(data: SampleItemUIModel) {
         binding.ivSample.loadImageWithGlide(data.imageUrl)
-        binding.tvStockCodeNumber.text = data.stockCode
-        binding.tieSpecification.setText(data.specification)
-        binding.tieSpecification.isFocusable = data.specification != null
+        binding.tvStockCodeNumber.text = data.productId
+        binding.tvSampleSpec.text = data.specification
+    }
+}
+
+class NewSampleViewHolder(
+    private val binding: ItemNewSampleBinding,
+    private val onclick: () -> Unit,
+    private val viewModel: InventoryViewModel
+) : RecyclerView.ViewHolder(binding.root) {
+    fun bind(data: SampleItemUIModel) {
+        binding.ivSample.loadImageWithGlide(data.imageUrl)
+        binding.tvStockCodeNumber.text = data.productId
+        binding.tieSpecification.setText(viewModel.specificationList[bindingAdapterPosition])
+        binding.tieSpecification.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+                // TODO Auto-generated method stub
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                // TODO Auto-generated method stub
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                viewModel.specificationList[bindingAdapterPosition] = s.toString()
+            }
+        })
     }
 }
 
@@ -40,7 +101,10 @@ object NewSampleDiffUtil : DiffUtil.ItemCallback<SampleItemUIModel>() {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: SampleItemUIModel, newItem: SampleItemUIModel): Boolean {
+    override fun areContentsTheSame(
+        oldItem: SampleItemUIModel,
+        newItem: SampleItemUIModel
+    ): Boolean {
         return oldItem == newItem
     }
 

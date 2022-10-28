@@ -11,9 +11,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class SharedViewModel :ViewModel() {
+class SharedViewModel : ViewModel() {
     var firstCat: JewelleryTypeUiModel? = null
     var secondCat: JewelleryQualityUiModel? = null
     var thirdCat: ChooseGroupUIModel? = null
     var fourthCat: JewelleryCategoryUiModel? = null
+
+    var sampleTakeScreenUIState: String? = null
+
 }
