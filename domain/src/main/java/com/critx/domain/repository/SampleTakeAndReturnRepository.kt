@@ -2,10 +2,7 @@ package com.critx.domain.repository
 
 import com.critx.commonkotlin.util.Resource
 import com.critx.domain.model.SimpleData
-import com.critx.domain.model.sampleTakeAndReturn.HandedListDomain
-import com.critx.domain.model.sampleTakeAndReturn.SampleCheckDomain
-import com.critx.domain.model.sampleTakeAndReturn.VoucherSampleDomain
-import com.critx.domain.model.sampleTakeAndReturn.VoucherScanDomain
+import com.critx.domain.model.sampleTakeAndReturn.*
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -17,6 +14,8 @@ interface SampleTakeAndReturnRepository {
      fun getVoucherSample(token: String,invoiceId:String):Flow<Resource<List<VoucherSampleDomain>>>
 
      fun getOutsideSample(token:String):Flow<Resource<List<VoucherSampleDomain>>>
+
+     fun getInventorySample(token:String):Flow<Resource<List<InventorySampleDomain>>>
 
      fun checkSample(token: String,invoiceId: String):Flow<Resource<List<SampleCheckDomain>>>
 

@@ -3,10 +3,7 @@ package com.critx.data.network.datasource
 import com.critx.data.datasource.SampleTakeAndReturn.SampleTakeAndReturnNetWorkDataSource
 import com.critx.data.network.api.SampleTakeAndReturnService
 import com.critx.data.network.dto.SimpleResponseDto
-import com.critx.data.network.dto.sampleTakeAndReturn.HandedListDto
-import com.critx.data.network.dto.sampleTakeAndReturn.SampleCheckDto
-import com.critx.data.network.dto.sampleTakeAndReturn.VoucherSampleDto
-import com.critx.data.network.dto.sampleTakeAndReturn.VoucherScanDto
+import com.critx.data.network.dto.sampleTakeAndReturn.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import javax.inject.Inject
@@ -76,6 +73,27 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
             )
         }
     }
+
+    override suspend fun getInventorySample(token: String): List<InventorySampleDto> {
+        val response = sampleTakeAndReturnService.getInventorySample(token)
+        return if (response.isSuccessful) {
+            response.body()?.data ?: throw Exception("Response body Null")
+        } else {
+            throw  Exception(
+                when (response.code()) {
+                    400 -> {
+                        response.errorBody()?.string() ?: "Bad request"
+                    }
+                    401 -> "You are not Authorized"
+                    402 -> "Payment required!!!"
+                    403 -> "Forbidden"
+                    404 -> "You request not found"
+                    405 -> "Method is not allowed!!!"
+                    else -> "Unhandled error occurred!!!"
+                }
+            )
+        }    }
+
 
     override suspend fun checkSample(token: String, invoiceId: String): List<SampleCheckDto> {
         val response = sampleTakeAndReturnService.checkSamples(token,invoiceId)

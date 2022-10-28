@@ -146,4 +146,6 @@
     <string name="box_code_label">Box Code -</string>
     <string name="choose_due_date">Choose Due Date</string>
     <string name="handed_list">Handed List</string>
+    <string name="total_sample_taken_items">Total Sample Taken Items</string>
+    <string name="item_name_dummy">အသီးကွင်း ဟန်းချိန်း</string>
 </resources>

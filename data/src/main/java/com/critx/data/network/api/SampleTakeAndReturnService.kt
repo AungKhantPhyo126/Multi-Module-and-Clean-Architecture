@@ -1,10 +1,7 @@
 package com.critx.data.network.api
 
 import com.critx.data.network.dto.SimpleResponse
-import com.critx.data.network.dto.sampleTakeAndReturn.HandedListResponse
-import com.critx.data.network.dto.sampleTakeAndReturn.SampleCheckResponse
-import com.critx.data.network.dto.sampleTakeAndReturn.VoucherSampleResponse
-import com.critx.data.network.dto.sampleTakeAndReturn.VoucherScanResponse
+import com.critx.data.network.dto.sampleTakeAndReturn.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -28,6 +25,11 @@ interface SampleTakeAndReturnService {
     suspend fun getOutsideSample(
         @Header("Authorization") token: String,
     ): Response<VoucherSampleResponse>
+
+    @GET("api/samples/inventory/list")
+    suspend fun getInventorySample(
+        @Header("Authorization") token: String,
+    ): Response<InventorySampleResponse>
 
 
 //    @GET("api/sales/{invoiceId}/check-samples")

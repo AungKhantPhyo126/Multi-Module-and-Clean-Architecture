@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -58,7 +59,37 @@ class InventoryFragment : Fragment() {
         binding.tilScanHere.setEndIconOnClickListener {
             this.scanQrCode(requireContext(), barlauncer)
         }
+        binding.radioGroup.setOnCheckedChangeListener { radioGroup, checkedButtonId ->
+            if (checkedButtonId == binding.radioButtonSampleTake.id){
+                binding.layoutSampleLists.root.isVisible = true
+                binding.layoutSampleReturn.root.isVisible = false
+            }else if (checkedButtonId == binding.radioButtonSampleReturn.id){
+                viewModel.getInventorySampleList()
+                binding.layoutSampleLists.root.isVisible = false
+                binding.layoutSampleReturn.root.isVisible = true
+            }
+        }
 
+        /**sampleReturn**/
+        val sampleReturnRecyclerAdapter = SampleReturnInventoryRecyclerAdapter()
+        binding.layoutSampleReturn.rvSampleReturnInventory.adapter = sampleReturnRecyclerAdapter
+
+            viewModel.getInventorySampleLiveData.observe(viewLifecycleOwner) {
+                when (it) {
+                    is Resource.Loading -> {
+                        loadingDialog.show()
+                    }
+                    is Resource.Success -> {
+                       loadingDialog.dismiss()
+                        sampleReturnRecyclerAdapter.submitList(it.data)
+                    }
+                    is Resource.Error -> {
+                        loadingDialog.dismiss()
+                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+
+                    }
+                }
+            }
 
         binding.layoutBtnGroup.btnSave.setOnClickListener {
             viewModel.saveSamples()

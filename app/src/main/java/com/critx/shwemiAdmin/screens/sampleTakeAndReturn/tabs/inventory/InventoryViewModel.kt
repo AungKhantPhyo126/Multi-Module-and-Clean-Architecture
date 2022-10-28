@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
 import com.critx.domain.model.collectStock.ProductIdWithTypeDomain
 import com.critx.domain.model.sampleTakeAndReturn.HandedListDomain
+import com.critx.domain.model.sampleTakeAndReturn.InventorySampleDomain
+import com.critx.domain.model.sampleTakeAndReturn.VoucherSampleDomain
 import com.critx.domain.model.sampleTakeAndReturn.VoucherScanDomain
 import com.critx.domain.useCase.collectStock.ScanProductCodeUseCase
 import com.critx.domain.useCase.sampleTakeAndReturn.*
@@ -27,10 +29,12 @@ class InventoryViewModel @Inject constructor(
     private val scanProductCodeUseCase: ScanProductCodeUseCase,
     private val addToHandedListUseCase: AddToHandedListUseCase,
     private val saveSampleUseCase: SaveSampleUseCase,
-    private val getHandedListUseCase: GetHandedListUseCase
+    private val getInventorySampleUseCase: GetInventorySampleUseCase
 ) : ViewModel() {
 
-
+    private val _getInventorySampleLiveData = MutableLiveData<Resource<List<InventorySampleDomain>>>()
+    val getInventorySampleLiveData: LiveData<Resource<List<InventorySampleDomain>>>
+        get() = _getInventorySampleLiveData
 
     private val _sampleLiveData = MutableLiveData<Resource<MutableList<SampleItemUIModel>>>()
     val sampleLiveData: LiveData<Resource<MutableList<SampleItemUIModel>>>
@@ -86,6 +90,24 @@ class InventoryViewModel @Inject constructor(
         get() = _voucherScanLiveData
 
 
+    fun getInventorySampleList() {
+        viewModelScope.launch {
+            getInventorySampleUseCase(
+                localDatabase.getToken().orEmpty()).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _getInventorySampleLiveData.value = Resource.Loading()
+                    }
+                    is Resource.Success -> {
+                        _getInventorySampleLiveData.value = Resource.Success(it.data!!)
+                    }
+                    is Resource.Error -> {
+                        _getInventorySampleLiveData.value = Resource.Error(it.message)
+                    }
+                }
+            }
+        }
+    }
 
     fun addToHandedList() {
         viewModelScope.launch {

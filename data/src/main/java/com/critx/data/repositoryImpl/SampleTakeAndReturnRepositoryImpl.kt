@@ -6,10 +6,7 @@ import com.critx.data.datasource.SampleTakeAndReturn.SampleTakeAndReturnNetWorkD
 import com.critx.data.network.dto.asDomain
 import com.critx.data.network.dto.sampleTakeAndReturn.asDomain
 import com.critx.domain.model.SimpleData
-import com.critx.domain.model.sampleTakeAndReturn.HandedListDomain
-import com.critx.domain.model.sampleTakeAndReturn.SampleCheckDomain
-import com.critx.domain.model.sampleTakeAndReturn.VoucherSampleDomain
-import com.critx.domain.model.sampleTakeAndReturn.VoucherScanDomain
+import com.critx.domain.model.sampleTakeAndReturn.*
 import com.critx.domain.repository.SampleTakeAndReturnRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -72,6 +69,24 @@ class SampleTakeAndReturnRepositoryImpl @Inject constructor(
                 emit(
                     Resource.Success(
                         sampleTakeAndReturnNetWorkDataSource.getOutsideSample(token).map { it.asDomain() }
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
+
+    override fun getInventorySample(token: String): Flow<Resource<List<InventorySampleDomain>>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        sampleTakeAndReturnNetWorkDataSource.getInventorySample(token).map { it.asDomain() }
                     )
                 )
             } catch (e: HttpException) {
