@@ -12,7 +12,7 @@ import com.critx.domain.model.sampleTakeAndReturn.HandedListDomain
 import com.critx.shwemiAdmin.databinding.ItemHandedListBinding
 import com.critx.shwemiAdmin.screens.transferCheckUpStock.transfer.matchCode.MatchCodeViewModel
 
-class HandedListRecyclerAdapter :
+class HandedListRecyclerAdapter(private val onclick:(data: HandedListDomain)->Unit) :
     ListAdapter<HandedListDomain, StockCodeListViewHolder>(
         StockCodeListDiffUtil
     ) {
@@ -20,7 +20,7 @@ class HandedListRecyclerAdapter :
         return StockCodeListViewHolder(
             ItemHandedListBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
-            )
+            ),onclick
         )
     }
 
@@ -30,14 +30,19 @@ class HandedListRecyclerAdapter :
 }
 
 class StockCodeListViewHolder(
-    private val binding: ItemHandedListBinding
+    private val binding: ItemHandedListBinding,
+    private val onclick:(data: HandedListDomain)->Unit
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(data: HandedListDomain) {
         binding.tvStockName.text = data.name
         binding.ivSample.loadImageWithGlide(data.file.url)
         binding.tvSampleSpec.text = data.specification
-        binding.tvSampleWeight.text = data.weight
-
+        if (data.weight.isNotEmpty()){
+            binding.tvSampleWeight.text = data.weight + "gm"
+        }
+        binding.ibCross.setOnClickListener {
+            onclick(data)
+        }
     }
 }
 

@@ -1,6 +1,7 @@
 package com.critx.data.network.api
 
 import com.critx.data.network.dto.SimpleResponse
+import com.critx.data.network.dto.SimpleResponseWithData
 import com.critx.data.network.dto.sampleTakeAndReturn.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -24,12 +25,12 @@ interface SampleTakeAndReturnService {
     @GET("api/samples/outside/list")
     suspend fun getOutsideSample(
         @Header("Authorization") token: String,
-    ): Response<VoucherSampleResponse>
+    ): Response<OutsideSampleResponse>
 
     @GET("api/samples/inventory/list")
     suspend fun getInventorySample(
         @Header("Authorization") token: String,
-    ): Response<InventorySampleResponse>
+    ): Response<OutsideSampleResponse>
 
 
 //    @GET("api/sales/{invoiceId}/check-samples")
@@ -59,11 +60,10 @@ suspend fun checkSamples(
         @Field("sample_id[]") sampleId: List<String>
     ): Response<SimpleResponse>
 
-    @FormUrlEncoded
-    @POST("api/samples/1/remove-handed-list")
+    @POST("api/samples/{sample_id}/remove-handed-list")
     suspend fun removeFromHandedList(
         @Header("Authorization") token: String,
-        @Field("sample_id[]") sampleId: List<String>
+        @Path("sample_id") sampleId: String
     ): Response<SimpleResponse>
 
     @FormUrlEncoded
@@ -82,5 +82,5 @@ suspend fun checkSamples(
         @Part("weight_gm") weight_gm: RequestBody?,
         @Part("specification") specification: RequestBody?,
         @Part image: MultipartBody.Part
-    ):Response<SimpleResponse>
+    ):Response<SimpleResponseWithData>
 }

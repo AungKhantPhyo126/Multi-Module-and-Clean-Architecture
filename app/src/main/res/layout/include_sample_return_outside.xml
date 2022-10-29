@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/tv_label_total_sample_taken"
+        android:id="@+id/tv_label_total_scanned_stock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -24,16 +24,16 @@
         tools:text="3"
         android:textAppearance="@style/TextAppearance.ShweMi.Caption"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/tv_label_total_sample_taken"
-        app:layout_constraintTop_toTopOf="@id/tv_label_total_sample_taken"
-        app:layout_constraintBottom_toBottomOf="@id/tv_label_total_sample_taken"/>
+        app:layout_constraintStart_toEndOf="@id/tv_label_total_scanned_stock"
+        app:layout_constraintTop_toTopOf="@id/tv_label_total_scanned_stock"
+        app:layout_constraintBottom_toBottomOf="@id/tv_label_total_scanned_stock"/>
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_sample_return_inventory"
+        android:id="@+id/rv_sample_return_outside"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_label_total_sample_taken"
+        app:layout_constraintTop_toBottomOf="@id/tv_label_total_scanned_stock"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_sample_return_outside"

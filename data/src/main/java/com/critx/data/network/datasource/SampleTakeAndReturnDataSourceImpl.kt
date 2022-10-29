@@ -3,6 +3,7 @@ package com.critx.data.network.datasource
 import com.critx.data.datasource.SampleTakeAndReturn.SampleTakeAndReturnNetWorkDataSource
 import com.critx.data.network.api.SampleTakeAndReturnService
 import com.critx.data.network.dto.SimpleResponseDto
+import com.critx.data.network.dto.SimpleResponseWithData
 import com.critx.data.network.dto.sampleTakeAndReturn.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -53,7 +54,7 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getOutsideSample(token: String): List<VoucherSampleDto> {
+    override suspend fun getOutsideSample(token: String): List<OutsideSampleDto> {
         val response = sampleTakeAndReturnService.getOutsideSample(token)
         return if (response.isSuccessful) {
             response.body()?.data ?: throw Exception("Response body Null")
@@ -74,7 +75,7 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getInventorySample(token: String): List<InventorySampleDto> {
+    override suspend fun getInventorySample(token: String): List<OutsideSampleDto> {
         val response = sampleTakeAndReturnService.getInventorySample(token)
         return if (response.isSuccessful) {
             response.body()?.data ?: throw Exception("Response body Null")
@@ -184,7 +185,7 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
 
     override suspend fun removeFromHandedList(
         token: String,
-        sampleId: List<String>
+        sampleId: String
     ): SimpleResponseDto {
         val response = sampleTakeAndReturnService.removeFromHandedList(token,sampleId)
         return if (response.isSuccessful) {
@@ -212,10 +213,10 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
         weight: RequestBody?,
         specification: RequestBody?,
         image: MultipartBody.Part
-    ): SimpleResponseDto {
+    ): SimpleResponseWithData {
         val response = sampleTakeAndReturnService.saveOutsideSample(token,name,weight,specification, image)
         return if (response.isSuccessful) {
-            response.body()?.response ?: throw Exception("Response body Null")
+            response.body() ?: throw Exception("Response body Null")
         } else {
             throw  Exception(
                 when (response.code()) {

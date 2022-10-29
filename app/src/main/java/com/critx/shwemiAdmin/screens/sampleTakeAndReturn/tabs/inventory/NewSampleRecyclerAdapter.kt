@@ -15,7 +15,7 @@ import com.critx.shwemiAdmin.screens.setupStock.third.ImageViewHolder
 import com.critx.shwemiAdmin.uiModel.simpleTakeAndReturn.SampleItemUIModel
 
 class NewSampleRecyclerAdapter(
-    private val onclick: () -> Unit,
+    private val onclick: (data: SampleItemUIModel) -> Unit,
     private val viewModel: InventoryViewModel
 ) : ListAdapter<SampleItemUIModel, RecyclerView.ViewHolder>(
     NewSampleDiffUtil
@@ -62,23 +62,29 @@ class NewSampleRecyclerAdapter(
 
 class SaveSampleViewHolder(
     private val binding: ItemSavedSampleBinding,
-    private val onclick: () -> Unit,
+    private val onclick: (data: SampleItemUIModel) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(data: SampleItemUIModel) {
+        binding.ibCross.setOnClickListener {
+            onclick(data)
+        }
         binding.ivSample.loadImageWithGlide(data.imageUrl)
-        binding.tvStockCodeNumber.text = data.productId
+        binding.tvStockCodeNumber.text = data.productCode
         binding.tvSampleSpec.text = data.specification
     }
 }
 
 class NewSampleViewHolder(
     private val binding: ItemNewSampleBinding,
-    private val onclick: () -> Unit,
+    private val onclick: (data: SampleItemUIModel) -> Unit,
     private val viewModel: InventoryViewModel
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(data: SampleItemUIModel) {
+        binding.ibCross.setOnClickListener {
+            onclick(data)
+        }
         binding.ivSample.loadImageWithGlide(data.imageUrl)
-        binding.tvStockCodeNumber.text = data.productId
+        binding.tvStockCodeNumber.text = data.productCode
         binding.tieSpecification.setText(viewModel.specificationList[bindingAdapterPosition])
         binding.tieSpecification.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
@@ -98,7 +104,7 @@ class NewSampleViewHolder(
 
 object NewSampleDiffUtil : DiffUtil.ItemCallback<SampleItemUIModel>() {
     override fun areItemsTheSame(oldItem: SampleItemUIModel, newItem: SampleItemUIModel): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem.productId == newItem.productId
     }
 
     override fun areContentsTheSame(

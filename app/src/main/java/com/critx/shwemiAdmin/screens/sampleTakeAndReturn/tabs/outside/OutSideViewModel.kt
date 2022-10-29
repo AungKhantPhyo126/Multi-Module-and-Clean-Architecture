@@ -5,7 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
+import com.critx.domain.model.SimpleData
 import com.critx.domain.model.collectStock.ProductIdWithTypeDomain
+import com.critx.domain.model.sampleTakeAndReturn.OutsideSampleDomain
+import com.critx.domain.useCase.sampleTakeAndReturn.AddToHandedListUseCase
+import com.critx.domain.useCase.sampleTakeAndReturn.GetOutsideSampleUseCase
+import com.critx.domain.useCase.sampleTakeAndReturn.ReturnSampleUseCase
 import com.critx.domain.useCase.sampleTakeAndReturn.SaveOutsideSampleUseCase
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.SelectedImage
@@ -19,11 +24,28 @@ import javax.inject.Inject
 @HiltViewModel
 class OutSideViewModel @Inject constructor(
     private val localDatabase: LocalDatabase,
-    private val saveOutsideSampleUseCase: SaveOutsideSampleUseCase
-):ViewModel() {
-    private var _saveOutsideSample = MutableLiveData<Resource<String>>()
-    val saveOutsideSample: LiveData<Resource<String>>
+    private val saveOutsideSampleUseCase: SaveOutsideSampleUseCase,
+    private val addToHandedListUseCase: AddToHandedListUseCase,
+    private val getOutsideSampleUseCase: GetOutsideSampleUseCase,
+    private val returnSampleUseCase: ReturnSampleUseCase
+
+
+    ):ViewModel() {
+    private val _getOutsideSampleLiveData = MutableLiveData<Resource<List<OutsideSampleDomain>>>()
+    val getOutsideSampleLiveData: LiveData<Resource<List<OutsideSampleDomain>>>
+        get() = _getOutsideSampleLiveData
+
+    private var _saveOutsideSample = MutableLiveData<Resource<SimpleData>>()
+    val saveOutsideSample: LiveData<Resource<SimpleData>>
         get() = _saveOutsideSample
+
+    private var _returnSampleLiveData = MutableLiveData<Resource<String>>()
+    val returnSampleLiveData: LiveData<Resource<String>>
+        get() = _returnSampleLiveData
+
+    fun resetReturnSampleLiveData(){
+        _returnSampleLiveData.value = null
+    }
 
     fun resetSaveOutSideSample(){
         _saveOutsideSample.value = null
@@ -36,6 +58,85 @@ class OutSideViewModel @Inject constructor(
 
     fun resetSelectedImg(){
         selectedImgUri.value = null
+    }
+
+    private val _addToHandedListLiveData = MutableLiveData<Resource<String>>()
+    val addToHandedListLiveData: LiveData<Resource<String>>
+        get() = _addToHandedListLiveData
+    fun resetAddtoHandleListLiveData(){
+        _addToHandedListLiveData.value = null
+    }
+
+    fun getSelectedOutsideSample():List<String>{
+        return _getOutsideSampleLiveData.value!!.data!!.filter {
+            it.isChecked
+        }.map { it.id.toString() }
+    }
+
+    fun returnSample(sampleIdList:List<String>){
+        viewModelScope.launch {
+            returnSampleUseCase(
+                localDatabase.getToken().orEmpty(),
+                sampleIdList).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _returnSampleLiveData.value = Resource.Loading()
+                    }
+                    is Resource.Success -> {
+                        _returnSampleLiveData.value = Resource.Success(it.data!!.message)
+                    }
+                    is Resource.Error -> {
+                        _returnSampleLiveData.value = Resource.Error(it.message)
+                    }
+                }
+            }
+        }
+    }
+
+
+    fun addToHandedList(sampleList:List<String>) {
+        viewModelScope.launch {
+            addToHandedListUseCase(
+                localDatabase.getToken().orEmpty(),
+                sampleList).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _addToHandedListLiveData.value = Resource.Loading()
+                    }
+                    is Resource.Success -> {
+                        _addToHandedListLiveData.value = Resource.Success(it.data!!.message)
+                    }
+                    is Resource.Error -> {
+                        _addToHandedListLiveData.value = Resource.Error(it.message)
+                    }
+                }
+            }
+        }
+    }
+
+    fun getOutSideSampleList() {
+        viewModelScope.launch {
+            getOutsideSampleUseCase(
+                localDatabase.getToken().orEmpty()).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _getOutsideSampleLiveData.value = Resource.Loading()
+                    }
+                    is Resource.Success -> {
+                        _getOutsideSampleLiveData.value = Resource.Success(it.data!!)
+                    }
+                    is Resource.Error -> {
+                        _getOutsideSampleLiveData.value = Resource.Error(it.message)
+                    }
+                }
+            }
+        }
+    }
+
+    fun selectSampleForReturn(id:String){
+        val targetItem = _getOutsideSampleLiveData.value!!.data!!.find { it.id.toString() ==id }
+        targetItem!!.isChecked = targetItem.isChecked.not()
+        _getOutsideSampleLiveData.value = _getOutsideSampleLiveData.value
     }
 
     fun saveOusideSample(
@@ -52,7 +153,7 @@ class OutSideViewModel @Inject constructor(
                         _saveOutsideSample.value = Resource.Loading()
                     }
                     is Resource.Success -> {
-                        _saveOutsideSample.value = Resource.Success(it.data?.message)
+                        _saveOutsideSample.value = Resource.Success(it.data!!)
 
                     }
                     is Resource.Error -> {

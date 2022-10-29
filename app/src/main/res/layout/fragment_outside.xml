@@ -4,49 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioButton
+            android:id="@+id/radio_button_sample_take"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:buttonTint="@color/primary_color"
+            android:checked="true"
+            android:text="@string/sample_take"
+            android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
+            android:textStyle="bold" />
+
+        <RadioButton
+            android:id="@+id/radio_button_sample_return"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/primary_color"
+            android:text="@string/sample_return"
+            android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
+            android:textStyle="bold" />
+    </RadioGroup>
+    <include
+        android:layout_marginTop="16dp"
+        android:id="@+id/layout_sample_return"
+        layout="@layout/include_sample_return_inventory"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/radioGroup"
+        app:layout_constraintBottom_toTopOf="@id/layout_btn_group"/>
 
     <ScrollView
+        android:id="@+id/layout_sample_take_outside"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
         app:layout_constraintBottom_toTopOf="@id/layout_btn_group"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/radioGroup">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <RadioGroup
-                android:id="@+id/radioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
 
-                <RadioButton
-                    android:id="@+id/radio_button_sample_take"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="32dp"
-                    android:buttonTint="@color/primary_color"
-                    android:checked="true"
-                    android:text="@string/sample_take"
-                    android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
-                    android:textStyle="bold" />
-
-                <RadioButton
-                    android:id="@+id/radio_button_sample_return"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="@color/primary_color"
-                    android:text="@string/sample_return"
-                    android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
-                    android:textStyle="bold" />
-            </RadioGroup>
 
             <TextView
                 android:id="@+id/tv_stock_name"
@@ -81,7 +94,7 @@
                 app:hintTextColor="@color/edit_text_color"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_stock_name"
-                app:layout_constraintTop_toBottomOf="@id/radioGroup">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_stock_name"
@@ -207,6 +220,16 @@
     <include
         android:id="@+id/layout_btn_group"
         layout="@layout/include_outside_button_group"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <include
+        android:id="@+id/layout_btn_return_sample"
+        android:visibility="gone"
+        layout="@layout/include_sample_return_btn_group"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         app:layout_constraintBottom_toBottomOf="parent"

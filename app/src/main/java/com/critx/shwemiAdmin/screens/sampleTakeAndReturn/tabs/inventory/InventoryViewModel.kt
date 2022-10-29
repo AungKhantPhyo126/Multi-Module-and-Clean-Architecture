@@ -6,10 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
 import com.critx.domain.model.collectStock.ProductIdWithTypeDomain
-import com.critx.domain.model.sampleTakeAndReturn.HandedListDomain
-import com.critx.domain.model.sampleTakeAndReturn.InventorySampleDomain
-import com.critx.domain.model.sampleTakeAndReturn.VoucherSampleDomain
-import com.critx.domain.model.sampleTakeAndReturn.VoucherScanDomain
+import com.critx.domain.model.sampleTakeAndReturn.*
 import com.critx.domain.useCase.collectStock.ScanProductCodeUseCase
 import com.critx.domain.useCase.sampleTakeAndReturn.*
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
@@ -32,8 +29,8 @@ class InventoryViewModel @Inject constructor(
     private val getInventorySampleUseCase: GetInventorySampleUseCase
 ) : ViewModel() {
 
-    private val _getInventorySampleLiveData = MutableLiveData<Resource<List<InventorySampleDomain>>>()
-    val getInventorySampleLiveData: LiveData<Resource<List<InventorySampleDomain>>>
+    private val _getInventorySampleLiveData = MutableLiveData<Resource<List<OutsideSampleDomain>>>()
+    val getInventorySampleLiveData: LiveData<Resource<List<OutsideSampleDomain>>>
         get() = _getInventorySampleLiveData
 
     private val _sampleLiveData = MutableLiveData<Resource<MutableList<SampleItemUIModel>>>()
@@ -56,6 +53,10 @@ class InventoryViewModel @Inject constructor(
     val saveSampleLiveData: LiveData<Resource<String>>
         get() = _saveSampleLiveData
 
+    fun resetsaveSampleLiveData() {
+        _saveSampleLiveData.value = null
+    }
+
     fun resetScanProductCodeLive() {
         _scanProductCodeLive.value = null
     }
@@ -65,7 +66,8 @@ class InventoryViewModel @Inject constructor(
 
     fun addStockSample(item: SampleItemUIModel) {
         scannedSamples.add(item)
-        specificationList.add("")
+            specificationList.add("")
+
         _scannedSampleLiveData.value = scannedSamples
 //        _scannedSampleLiveData.notifyObserverWithResource()
     }
@@ -81,7 +83,7 @@ class InventoryViewModel @Inject constructor(
     fun resetSample() {
         scannedSamples.removeAll(scannedSamples)
         _scannedSampleLiveData.value = scannedSamples
-
+        _addToHandedListLiveData.value = null
 
     }
 
@@ -113,7 +115,7 @@ class InventoryViewModel @Inject constructor(
         viewModelScope.launch {
             addToHandedListUseCase(
                 localDatabase.getToken().orEmpty(),
-                scannedSamples.map { it.id }).collectLatest {
+                scannedSamples.map { it.sampleId }).collectLatest {
                 when (it) {
                     is Resource.Loading -> {
                         _addToHandedListLiveData.value = Resource.Loading()
@@ -132,9 +134,9 @@ class InventoryViewModel @Inject constructor(
     fun saveSamples() {
         viewModelScope.launch {
             val sampleIdHashMap: HashMap<String, String> = HashMap()
-            repeat(scannedSamples.filter { it.specification.isNullOrEmpty() }.map { it.id }.size) {
+            repeat(scannedSamples.filter { it.specification.isNullOrEmpty() }.map { it.sampleId }.size) {
                 sampleIdHashMap["sample[${scannedSamples.map { it.productId }[it]}]"] =
-                    specificationList[it]
+                    specificationList.filter { it.isNotEmpty() }[it]
             }
 
             saveSampleUseCase(localDatabase.getToken().orEmpty(), sampleIdHashMap).collectLatest {
@@ -144,10 +146,15 @@ class InventoryViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         _saveSampleLiveData.value = Resource.Success(it.data!!.message)
-                        repeat(scannedSamples.filter { it.specification.isNullOrEmpty() }
-                            .size) {
-                              scannedSamples[it].specification = specificationList[it]
+                        scannedSamples.filter { it.specification.isNullOrEmpty() }.forEach { sampleItemUIModel ->
+                            specificationList.filter { it.isNotEmpty() }.forEach {
+                                sampleItemUIModel.specification = it
+                            }
                         }
+//                            repeat(scannedSamples.filter { it.specification.isNullOrEmpty() }
+//                            .size) {
+//                              scannedSamples[it].specification = specificationList.filter { it.isNotEmpty() }[it]
+//                        }
                         _scannedSampleLiveData.value = scannedSamples
                     }
                     is Resource.Error -> {

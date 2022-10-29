@@ -28,12 +28,13 @@
 
         <TextView
             android:id="@+id/tv_stock_code_number"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.ShweMi.Body2"
             android:textColor="@color/primary_color"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/tv_label_stock_code"
+            app:layout_constraintEnd_toStartOf="@+id/ib_cross"
             app:layout_constraintStart_toEndOf="@+id/tv_label_stock_code"
             app:layout_constraintTop_toTopOf="@id/tv_label_stock_code"
             tools:text="123456789" />

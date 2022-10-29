@@ -25,7 +25,7 @@ class GiveGoldViewModel @Inject constructor(
     private val getGoldSmithListUseCase: GetGoldSmithListUseCase,
     private val getGoldBoxIdUseCase: GetGoldBoxIdUseCase
 ) : ViewModel() {
-    var selectedGoldSmith:String? = null
+
 
 
     private var _giveGoldLiveData = MutableLiveData<Resource<String>>()

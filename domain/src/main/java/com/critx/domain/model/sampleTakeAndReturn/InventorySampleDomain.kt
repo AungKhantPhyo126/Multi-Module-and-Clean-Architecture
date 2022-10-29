@@ -1,10 +1,12 @@
 package com.critx.domain.model.sampleTakeAndReturn
-data class InventorySampleDomain(
+data class OutsideSampleDomain(
     val file: FileShweMiDomain,
     val id: Int,
-    val product: ProductDomain,
+    val name:String,
+    val weightGm:String,
     val specification: String,
-    val type: Int
+    val type: Int,
+    var isChecked:Boolean = false
 )
 data class ProductDomain(
     val code: String,

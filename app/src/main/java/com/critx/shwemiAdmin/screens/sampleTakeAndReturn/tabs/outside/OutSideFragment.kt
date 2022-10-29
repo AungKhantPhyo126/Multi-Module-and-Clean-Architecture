@@ -17,6 +17,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -49,8 +50,6 @@ class OutSideFragment : Fragment() {
     private lateinit var loadingDialog: AlertDialog
     private lateinit var readStoragePermissionlauncher: ActivityResultLauncher<String>
     private val sharedViewModel by activityViewModels<SharedViewModel>()
-
-
 
 
     override fun onCreateView(
@@ -98,18 +97,82 @@ class OutSideFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadingDialog = requireContext().getAlertDialog()
+
+        /**sampleReturn**/
+        binding.radioGroup.setOnCheckedChangeListener { radioGroup, checkedButtonId ->
+            if (checkedButtonId == binding.radioButtonSampleTake.id) {
+                binding.layoutSampleTakeOutside.isVisible = true
+                binding.layoutSampleReturn.root.isVisible = false
+                binding.layoutBtnReturnSample.root.isVisible = false
+            } else if (checkedButtonId == binding.radioButtonSampleReturn.id) {
+                viewModel.getOutSideSampleList()
+                binding.layoutSampleTakeOutside.isVisible = false
+                binding.layoutSampleReturn.root.isVisible = true
+                binding.layoutBtnReturnSample.root.isVisible = true
+
+            }
+        }
+        binding.layoutBtnReturnSample.btnSampleReturn.setOnClickListener {
+            viewModel.returnSample(viewModel.getSelectedOutsideSample())
+        }
+        val sampleReturnRecyclerAdapter = SampleReturnInventoryRecyclerAdapter {
+            viewModel.selectSampleForReturn(it)
+        }
+        binding.layoutSampleReturn.rvSampleReturnInventory.adapter = sampleReturnRecyclerAdapter
+
+        viewModel.getOutsideSampleLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    sampleReturnRecyclerAdapter.submitList(it.data)
+                    sampleReturnRecyclerAdapter.notifyDataSetChanged()
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+
+                }
+            }
+        }
+        viewModel.returnSampleLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    requireContext().showSuccessDialog(it.data!!){
+                        viewModel.getOutSideSampleList()
+                    }
+                    viewModel.resetReturnSampleLiveData()
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+
+                }
+            }
+        }
+        /**  **/
+
         binding.layoutBtnGroup.btnAddToHandedList.isEnabled =
-            sharedViewModel.sampleTakeScreenUIState != GIVE_GOLD_STATE
+            false
         binding.layoutBtnGroup.btnSave.setOnClickListener {
             if (photo != null) {
                 viewModel.saveOusideSample(
-                    binding.edtStockName.text.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                    binding.edtWeigh.text.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                    binding.edtSpecification.text.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                    binding.edtStockName.text.toString()
+                        .toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                    binding.edtWeigh.text.toString()
+                        .toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                    binding.edtSpecification.text.toString()
+                        .toRequestBody("multipart/form-data".toMediaTypeOrNull()),
                     photo!!
                 )
-            }else{
-                Toast.makeText(requireContext(),"Please upload a photo",Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(requireContext(), "Please upload a photo", Toast.LENGTH_LONG).show()
             }
 
         }
@@ -132,18 +195,41 @@ class OutSideFragment : Fragment() {
                 photo = MultipartBody.Part.createFormData("image", it.file.name, requestBody)
             }
         }
-//
-        viewModel.saveOutsideSample.observe(viewLifecycleOwner){
+        viewModel.addToHandedListLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Loading -> {
                     loadingDialog.show()
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
-                    requireContext().showSuccessDialog(it.data!!){
+                    requireContext().showSuccessDialog(it.data!!) {
+
+                    }
+                    viewModel.resetAddtoHandleListLiveData()
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+
+                }
+            }
+        }
+//
+        viewModel.saveOutsideSample.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    requireContext().showSuccessDialog(it.data!!.message) {
 
                     }
                     viewModel.resetSaveOutSideSample()
+                    binding.layoutBtnGroup.btnAddToHandedList.isEnabled = true
+                    binding.layoutBtnGroup.btnAddToHandedList.setOnClickListener { view ->
+                        viewModel.addToHandedList(listOf(it.data!!.id!!))
+                    }
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
@@ -151,6 +237,7 @@ class OutSideFragment : Fragment() {
             }
         }
     }
+
     fun chooseImage() {
         val pickIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         pickIntent.type = "image/*"

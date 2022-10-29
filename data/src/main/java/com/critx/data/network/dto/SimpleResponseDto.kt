@@ -16,3 +16,18 @@ fun SimpleResponseDto.asDomain():SimpleData{
         message = message
     )
 }
+
+data class SimpleResponseWithData(
+    val response:SimpleResponseDto,
+    val data: DataWithId
+)
+data class DataWithId(
+    val id:String
+)
+fun SimpleResponseWithData.asDomain():SimpleData{
+    return SimpleData(
+        status = response.status,
+        message = response.message,
+        id = data.id
+    )
+}

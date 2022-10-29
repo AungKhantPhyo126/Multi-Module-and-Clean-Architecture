@@ -6,6 +6,7 @@ data class SampleCheckResponse(
     val data:List<SampleCheckDto>
 )
 data class SampleCheckDto(
+    val productCode:String?,
     val productId:String?,
     val thumbnail:String?,
     val sampleId:String?,
@@ -14,6 +15,7 @@ data class SampleCheckDto(
 
 fun SampleCheckDto.asDomain():SampleCheckDomain{
     return SampleCheckDomain(
+        productCode = productCode.orEmpty(),
         productId = productId.orEmpty(),
         thumbnail = thumbnail.orEmpty(),
         sampleId = sampleId.orEmpty(),

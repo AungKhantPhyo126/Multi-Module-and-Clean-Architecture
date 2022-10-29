@@ -45,7 +45,9 @@ class HandedListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         loadingDialog = requireContext().getAlertDialog()
         viewModel.getHandedList()
-        val adapter = HandedListRecyclerAdapter()
+        val adapter = HandedListRecyclerAdapter{
+            viewModel.removeHandedList(it.id)
+        }
         binding.rvHandedList.adapter = adapter
         viewModel.getHandedListLiveData.observe(viewLifecycleOwner) {
             when (it) {
@@ -55,7 +57,7 @@ class HandedListFragment : Fragment() {
                 is Resource.Success -> {
                     loadingDialog.dismiss()
                     adapter.submitList(it.data)
-
+                    adapter.notifyDataSetChanged()
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
@@ -63,6 +65,23 @@ class HandedListFragment : Fragment() {
                 }
             }
         }
+
+        viewModel.removeHandedListItemLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    viewModel.getHandedList()
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
         binding.ibBack.setOnClickListener {
             findNavController().popBackStack()
         }

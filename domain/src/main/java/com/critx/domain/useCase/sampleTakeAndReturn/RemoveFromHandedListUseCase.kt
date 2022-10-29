@@ -6,5 +6,5 @@ import javax.inject.Inject
 class RemoveFromHandedListUseCase @Inject constructor(
     private val sampleTakeAndReturnRepository: SampleTakeAndReturnRepository
 ){
-    operator fun invoke(token:String,sampleId: List<String>)=sampleTakeAndReturnRepository.removeFromHandedList(token,sampleId)
+    operator fun invoke(token:String,sampleId: String)=sampleTakeAndReturnRepository.removeFromHandedList(token,sampleId)
 }

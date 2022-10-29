@@ -64,32 +64,32 @@ class InventoryFragment : Fragment() {
                 binding.layoutSampleLists.root.isVisible = true
                 binding.layoutSampleReturn.root.isVisible = false
             }else if (checkedButtonId == binding.radioButtonSampleReturn.id){
-                viewModel.getInventorySampleList()
+//                viewModel.getInventorySampleList()
                 binding.layoutSampleLists.root.isVisible = false
                 binding.layoutSampleReturn.root.isVisible = true
             }
         }
 
         /**sampleReturn**/
-        val sampleReturnRecyclerAdapter = SampleReturnInventoryRecyclerAdapter()
-        binding.layoutSampleReturn.rvSampleReturnInventory.adapter = sampleReturnRecyclerAdapter
-
-            viewModel.getInventorySampleLiveData.observe(viewLifecycleOwner) {
-                when (it) {
-                    is Resource.Loading -> {
-                        loadingDialog.show()
-                    }
-                    is Resource.Success -> {
-                       loadingDialog.dismiss()
-                        sampleReturnRecyclerAdapter.submitList(it.data)
-                    }
-                    is Resource.Error -> {
-                        loadingDialog.dismiss()
-                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
-
-                    }
-                }
-            }
+//        val sampleReturnRecyclerAdapter = SampleReturnInventoryRecyclerAdapter()
+//        binding.layoutSampleReturn.rvSampleReturnInventory.adapter = sampleReturnRecyclerAdapter
+//
+//            viewModel.getInventorySampleLiveData.observe(viewLifecycleOwner) {
+//                when (it) {
+//                    is Resource.Loading -> {
+//                        loadingDialog.show()
+//                    }
+//                    is Resource.Success -> {
+//                       loadingDialog.dismiss()
+//                        sampleReturnRecyclerAdapter.submitList(it.data)
+//                    }
+//                    is Resource.Error -> {
+//                        loadingDialog.dismiss()
+//                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+//
+//                    }
+//                }
+//            }
 
         binding.layoutBtnGroup.btnSave.setOnClickListener {
             viewModel.saveSamples()
@@ -114,11 +114,11 @@ class InventoryFragment : Fragment() {
         }
 
         val newSampleRecyclerAdapter = NewSampleRecyclerAdapter({
-
+            viewModel.removeSample(it)
         }, viewModel)
 
         binding.layoutBtnGroup.btnAddToHandedList.isEnabled =
-            sharedViewModel.sampleTakeScreenUIState != GIVE_GOLD_STATE
+            sharedViewModel.sampleTakeScreenUIState != GIVE_GOLD_STATE && newSampleRecyclerAdapter.currentList.isEmpty().not()
 
 
         binding.layoutSampleLists.rvSample.adapter = newSampleRecyclerAdapter
@@ -151,6 +151,7 @@ class InventoryFragment : Fragment() {
 
                     }
                     newSampleRecyclerAdapter.notifyDataSetChanged()
+                    viewModel.resetsaveSampleLiveData()
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
@@ -168,8 +169,9 @@ class InventoryFragment : Fragment() {
                 is Resource.Success -> {
                     loadingDialog.dismiss()
                     requireContext().showSuccessDialog(it.data!!) {
-                        viewModel.resetSample()
+
                     }
+                    viewModel.resetSample()
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
@@ -203,6 +205,7 @@ class InventoryFragment : Fragment() {
         }
 
         viewModel.scannedSampleLiveData.observe(viewLifecycleOwner) {
+            binding.layoutBtnGroup.btnAddToHandedList.isEnabled = it.isNotEmpty()
             newSampleRecyclerAdapter.submitList(it)
             newSampleRecyclerAdapter.notifyDataSetChanged()
         }

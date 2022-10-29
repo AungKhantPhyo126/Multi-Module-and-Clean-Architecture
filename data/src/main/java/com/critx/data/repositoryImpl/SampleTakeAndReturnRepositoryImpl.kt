@@ -62,7 +62,7 @@ class SampleTakeAndReturnRepositoryImpl @Inject constructor(
             }
         }
 
-    override fun getOutsideSample(token: String): Flow<Resource<List<VoucherSampleDomain>>> =
+    override fun getOutsideSample(token: String): Flow<Resource<List<OutsideSampleDomain>>> =
         flow {
             emit(Resource.Loading())
             try {
@@ -80,7 +80,7 @@ class SampleTakeAndReturnRepositoryImpl @Inject constructor(
             }
         }
 
-    override fun getInventorySample(token: String): Flow<Resource<List<InventorySampleDomain>>> =
+    override fun getInventorySample(token: String): Flow<Resource<List<OutsideSampleDomain>>> =
         flow {
             emit(Resource.Loading())
             try {
@@ -180,7 +180,7 @@ class SampleTakeAndReturnRepositoryImpl @Inject constructor(
 
     override fun removeFromHandedList(
         token: String,
-        sampleId: List<String>
+        sampleId: String
     ): Flow<Resource<SimpleData>> =
         flow {
             emit(Resource.Loading())

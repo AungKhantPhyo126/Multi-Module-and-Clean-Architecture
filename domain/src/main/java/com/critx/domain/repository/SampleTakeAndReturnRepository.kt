@@ -13,9 +13,9 @@ interface SampleTakeAndReturnRepository {
 
      fun getVoucherSample(token: String,invoiceId:String):Flow<Resource<List<VoucherSampleDomain>>>
 
-     fun getOutsideSample(token:String):Flow<Resource<List<VoucherSampleDomain>>>
+     fun getOutsideSample(token:String):Flow<Resource<List<OutsideSampleDomain>>>
 
-     fun getInventorySample(token:String):Flow<Resource<List<InventorySampleDomain>>>
+     fun getInventorySample(token:String):Flow<Resource<List<OutsideSampleDomain>>>
 
      fun checkSample(token: String,invoiceId: String):Flow<Resource<List<SampleCheckDomain>>>
 
@@ -25,7 +25,7 @@ interface SampleTakeAndReturnRepository {
 
      fun addToHandedList(token:String,sampleId:List<String>):Flow<Resource<SimpleData>>
 
-     fun removeFromHandedList(token:String,sampleId: List<String>):Flow<Resource<SimpleData>>
+     fun removeFromHandedList(token:String,sampleId: String):Flow<Resource<SimpleData>>
 
      fun saveOutsideSample(token: String,name:RequestBody?,weight:RequestBody?,specification:RequestBody?,image: MultipartBody.Part):Flow<Resource<SimpleData>>
 

@@ -15,6 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -26,6 +27,7 @@ import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentGiveGoldBinding
 import com.critx.shwemiAdmin.databinding.ServiceChargeDialogBinding
 import com.critx.shwemiAdmin.hideKeyboard
+import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
 import com.critx.shwemiAdmin.showDropdown
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -39,6 +41,7 @@ import java.util.*
 class GiveGoldFragment : Fragment() {
     private lateinit var binding: FragmentGiveGoldBinding
     private val viewModel by viewModels<GiveGoldViewModel>()
+    private val sharedViewModel by activityViewModels<SharedViewModel>()
     private lateinit var loadingDialog: AlertDialog
     private lateinit var datePicker: MaterialDatePicker<Long>
     private val args by navArgs<GiveGoldFragmentArgs>()
@@ -82,13 +85,28 @@ class GiveGoldFragment : Fragment() {
         loadingDialog = requireContext().getAlertDialog()
         viewModel.getGoldSmithList()
         viewModel.getGoldBoxId()
-        if (args.sampleList.isNullOrEmpty()){
+        if (args.sampleList.isNullOrEmpty()) {
             binding.btnSampleTake.setTextColor(requireContext().getColorStateList(R.color.edit_text_color))
-        }else {
+        } else {
             binding.btnSampleTake.setTextColor(requireContext().getColorStateList(R.color.primary_color))
         }
 
+
+bindCachedData()
+
         binding.btnSampleTake.setOnClickListener {
+            sharedViewModel.orderItem.value = binding.edtOrderItemName.text.toString()
+            sharedViewModel.orderQty.value = binding.edtOrderQty.text.toString()
+            sharedViewModel.weightK.value = binding.edtK.text.toString()
+            sharedViewModel.weightP.value = binding.edtP.text.toString()
+            sharedViewModel.weightY.value = binding.edtY.text.toString()
+            sharedViewModel.goldWeight.value = binding.edtGoldGm.text.toString()
+            sharedViewModel.gemWeight.value= binding.edtGemGm.text.toString()
+            sharedViewModel.goldAndGemWeight.value = binding.tvGoldAndGemGm.text.toString()
+            sharedViewModel.wastageK.value= binding.edtK2.text.toString()
+            sharedViewModel.wastageP.value = binding.edtP2.text.toString()
+            sharedViewModel.wastageY.value = binding.edtY2.text.toString()
+            sharedViewModel.dueDate.value = binding.tvDueDate.text.toString()
             findNavController().navigate(GiveGoldFragmentDirections.actionGiveGoldFragmentToSampleTakeAndReturnFragment())
         }
         viewModel.giveGoldLiveData.observe(viewLifecycleOwner) {
@@ -99,9 +117,27 @@ class GiveGoldFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
+                    sharedViewModel.selectedGoldBoxId.value = null
+//                    sharedViewModel.selectedGoldSmith.value = null
+                    sharedViewModel.orderItem.value  = null
+                    sharedViewModel.orderQty.value  = null
+                    sharedViewModel.weightK.value  = null
+                    sharedViewModel.weightP.value  = null
+                    sharedViewModel.weightY.value  = null
+                    sharedViewModel.goldWeight.value  = null
+                    sharedViewModel.gemWeight.value  = null
+                    sharedViewModel.goldAndGemWeight .value = null
+                    sharedViewModel.wastageK.value  =null
+                    sharedViewModel.wastageP.value  = null
+                    sharedViewModel.wastageY.value  = null
+                    sharedViewModel.dueDate.value  = null
+                    binding.mcvOther.isChecked =false
+                    binding.mcvHundredPercent.isChecked = false
                     requireContext().showSuccessDialog(it.data!!) {
+                        bindCachedData()
                         viewModel.resetGiveGoldLiveData()
                     }
+
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
@@ -125,9 +161,12 @@ class GiveGoldFragment : Fragment() {
                         ArrayAdapter(requireContext(), R.layout.item_drop_down_text, list)
                     binding.actGoldSmith.setAdapter(arrayAdapter)
                     binding.actGoldSmith.setText(list[0], false)
-                    viewModel.selectedGoldSmith = it.data!![0].id
+                    if (sharedViewModel.selectedGoldSmith.value.isNullOrEmpty().not()){
+                        binding.actGoldSmith.setText(it.data!!.find { it.id == sharedViewModel.selectedGoldSmith.value }!!.name, false)
+                    }
+                    sharedViewModel.selectedGoldSmith.value = it.data!![0].id
                     binding.actGoldSmith.addTextChangedListener { editable ->
-                        viewModel.selectedGoldSmith = it.data!!.find {
+                        sharedViewModel.selectedGoldSmith.value = it.data!!.find {
                             it.name == binding.actGoldSmith.text.toString()
                         }?.id
                     }
@@ -149,14 +188,18 @@ class GiveGoldFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
+                    if (sharedViewModel.selectedGoldBoxId.value.isNullOrEmpty().not()){
+                        binding.mcvHundredPercent.isChecked = it.data!!.find { it.id == sharedViewModel.selectedGoldBoxId.value }!!.name == "100%"
+                        binding.mcvOther.isChecked = it.data!!.find { it.id == sharedViewModel.selectedGoldBoxId.value }!!.name == "Other"
+                    }
                     binding.mcvHundredPercent.setOnCheckedChangeListener { card, isChecked ->
                         if (isChecked) {
-                            selectedGoldBoxId = it.data!!.find { it.name == "100%" }!!.id
+                            sharedViewModel.selectedGoldBoxId.value = it.data!!.find { it.name == "100%" }!!.id
                         }
                     }
                     binding.mcvOther.setOnCheckedChangeListener { card, isChecked ->
                         if (isChecked) {
-                            selectedGoldBoxId = it.data!!.find { it.name == "Other" }!!.id
+                            sharedViewModel.selectedGoldBoxId.value = it.data!!.find { it.name == "Other" }!!.id
                         }
                     }
                 }
@@ -174,7 +217,7 @@ class GiveGoldFragment : Fragment() {
         }
 
         binding.mcvOther.setOnClickListener {
-            binding.mcvOther.isChecked = binding.mcvHundredPercent.isChecked.not()
+            binding.mcvOther.isChecked = binding.mcvOther.isChecked.not()
             binding.mcvHundredPercent.isChecked = false
         }
         binding.mcvDueDate.setOnClickListener {
@@ -190,23 +233,21 @@ class GiveGoldFragment : Fragment() {
         binding.mcvGoldGemGm.setOnClickListener {
             if (binding.edtGoldGm.text!!.isNotEmpty() && binding.edtGemGm.text!!.isNotEmpty()) {
                 binding.tvGoldAndGemGm.text =
-                    (binding.edtGoldGm.text.toString().toInt() + binding.edtGemGm.text.toString()
-                        .toInt()).toString()
+                    (binding.edtGoldGm.text.toString().toDouble() + binding.edtGemGm.text.toString()
+                        .toDouble()).toString()
             }
         }
 
 
         binding.btnConfirm.setOnClickListener {
             if (
-                viewModel.selectedGoldSmith.isNullOrEmpty() ||
-                selectedGoldBoxId.isEmpty()
+                sharedViewModel.selectedGoldSmith.value.isNullOrEmpty() ||
+                sharedViewModel.selectedGoldBoxId.value.isNullOrEmpty()
             ) {
                 Toast.makeText(requireContext(), "select goldsmith and goldbox", Toast.LENGTH_LONG)
                     .show()
             } else {
-
-
-                val goldSmith = viewModel.selectedGoldSmith!!
+                val goldSmith = sharedViewModel.selectedGoldSmith.value!!
                 val orderItem = binding.edtOrderItemName.text.toString()
                 val orderQty = binding.edtOrderQty.text.toString()
                 val weightK = binding.edtK.text.toString()
@@ -215,7 +256,7 @@ class GiveGoldFragment : Fragment() {
                 val goldGm = binding.edtGoldGm.text.toString()
                 val gemGm = binding.edtGemGm.text.toString()
                 val goldAndGemGm = binding.tvGoldAndGemGm.text.toString()
-                val goldBox = selectedGoldBoxId
+                val goldBox = sharedViewModel.selectedGoldBoxId.value!!
                 val wastageK = binding.edtK2.text.toString()
                 val wastageP = binding.edtP2.text.toString()
                 val wastageY = binding.edtY2.text.toString()
@@ -240,6 +281,20 @@ class GiveGoldFragment : Fragment() {
                 )
             }
         }
+    }
+    fun bindCachedData(){
+        binding.edtOrderItemName.setText(sharedViewModel.orderItem.value ?:"")
+        binding.edtOrderQty.setText(sharedViewModel.orderQty.value ?:"")
+        binding.edtK.setText(sharedViewModel.weightK.value ?:"")
+        binding.edtP.setText(sharedViewModel.weightP.value ?:"")
+        binding.edtY.setText(sharedViewModel.weightY.value ?:"")
+        binding.edtGoldGm.setText(sharedViewModel.goldWeight.value ?:"")
+        binding.edtGemGm.setText(sharedViewModel.gemWeight.value ?:"")
+        binding.tvGoldAndGemGm.text = sharedViewModel.goldAndGemWeight.value ?:""
+        binding.edtK2.setText(sharedViewModel.wastageK.value ?:"")
+        binding.edtP2.setText(sharedViewModel.wastageP.value ?:"")
+        binding.edtY2.setText(sharedViewModel.wastageY.value ?:"")
+        binding.tvDueDate.text = sharedViewModel.dueDate.value ?:""
     }
 }
 
