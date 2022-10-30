@@ -17,7 +17,7 @@ interface SampleTakeAndReturnNetWorkDataSource {
 
     suspend fun getInventorySample(token:String):List<OutsideSampleDto>
 
-    suspend fun checkSample(token: String,invoiceId: String):List<SampleCheckDto>
+    suspend fun checkSample(token: String,invoiceId: String):SampleCheckDto
 
     suspend fun saveSample(token: String ,sample:HashMap<String,String>):SimpleResponseDto
 

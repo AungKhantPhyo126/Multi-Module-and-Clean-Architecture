@@ -101,13 +101,13 @@ class SampleTakeAndReturnRepositoryImpl @Inject constructor(
     override fun checkSample(
         token: String,
         invoiceId: String
-    ): Flow<Resource<List<SampleCheckDomain>>> =
+    ): Flow<Resource<SampleCheckDomain>> =
     flow {
         emit(Resource.Loading())
         try {
             emit(
                 Resource.Success(
-                    sampleTakeAndReturnNetWorkDataSource.checkSample(token, invoiceId).map { it.asDomain() }
+                    sampleTakeAndReturnNetWorkDataSource.checkSample(token, invoiceId).asDomain()
                 )
             )
         } catch (e: HttpException) {

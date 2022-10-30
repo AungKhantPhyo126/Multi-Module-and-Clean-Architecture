@@ -3,7 +3,7 @@ package com.critx.data.network.dto.sampleTakeAndReturn
 import com.critx.domain.model.sampleTakeAndReturn.SampleCheckDomain
 
 data class SampleCheckResponse(
-    val data:List<SampleCheckDto>
+    val data:SampleCheckDto
 )
 data class SampleCheckDto(
     val productCode:String?,

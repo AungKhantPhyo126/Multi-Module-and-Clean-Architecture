@@ -96,7 +96,7 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
         }    }
 
 
-    override suspend fun checkSample(token: String, invoiceId: String): List<SampleCheckDto> {
+    override suspend fun checkSample(token: String, invoiceId: String): SampleCheckDto {
         val response = sampleTakeAndReturnService.checkSamples(token,invoiceId)
         return if (response.isSuccessful) {
             response.body()?.data ?: throw Exception("Response body Null")

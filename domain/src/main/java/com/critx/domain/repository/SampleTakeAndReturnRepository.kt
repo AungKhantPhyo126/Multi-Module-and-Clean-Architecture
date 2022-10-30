@@ -17,7 +17,7 @@ interface SampleTakeAndReturnRepository {
 
      fun getInventorySample(token:String):Flow<Resource<List<OutsideSampleDomain>>>
 
-     fun checkSample(token: String,invoiceId: String):Flow<Resource<List<SampleCheckDomain>>>
+     fun checkSample(token: String,invoiceId: String):Flow<Resource<SampleCheckDomain>>
 
      fun saveSample(token: String ,sample:HashMap<String,String>):Flow<Resource<SimpleData>>
 

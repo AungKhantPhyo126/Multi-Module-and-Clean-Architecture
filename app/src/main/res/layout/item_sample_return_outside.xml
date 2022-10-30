@@ -21,7 +21,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="@string/item_name_dummy"
+            tools:text="@string/item_name_dummy"
             android:textAppearance="@style/TextAppearance.ShweMi.Body2"
             app:layout_constraintEnd_toStartOf="@+id/iv_sample"
             app:layout_constraintStart_toEndOf="@+id/checkBox"

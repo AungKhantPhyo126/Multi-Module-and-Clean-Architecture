@@ -36,6 +36,6 @@
         app:layout_constraintTop_toBottomOf="@id/tv_label_total_sample_taken"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_sample_return_outside"
+        tools:listitem="@layout/item_sample_return_inventory"
         android:orientation="vertical"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

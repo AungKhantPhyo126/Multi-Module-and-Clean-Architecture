@@ -26,15 +26,16 @@ class InventoryViewModel @Inject constructor(
     private val scanProductCodeUseCase: ScanProductCodeUseCase,
     private val addToHandedListUseCase: AddToHandedListUseCase,
     private val saveSampleUseCase: SaveSampleUseCase,
-    private val getInventorySampleUseCase: GetInventorySampleUseCase
+    private val getInventorySampleUseCase: GetInventorySampleUseCase,
+    private val returnSampleUseCase: ReturnSampleUseCase
 ) : ViewModel() {
 
     private val _getInventorySampleLiveData = MutableLiveData<Resource<List<OutsideSampleDomain>>>()
     val getInventorySampleLiveData: LiveData<Resource<List<OutsideSampleDomain>>>
         get() = _getInventorySampleLiveData
 
-    private val _sampleLiveData = MutableLiveData<Resource<MutableList<SampleItemUIModel>>>()
-    val sampleLiveData: LiveData<Resource<MutableList<SampleItemUIModel>>>
+    private val _sampleLiveData = MutableLiveData<Resource<SampleItemUIModel>>()
+    val sampleLiveData: LiveData<Resource<SampleItemUIModel>>
         get() = _sampleLiveData
 
     private val _scannedSampleLiveData = MutableLiveData<MutableList<SampleItemUIModel>>()
@@ -52,6 +53,13 @@ class InventoryViewModel @Inject constructor(
     private val _saveSampleLiveData = MutableLiveData<Resource<String>>()
     val saveSampleLiveData: LiveData<Resource<String>>
         get() = _saveSampleLiveData
+
+    private var _returnSampleLiveData = MutableLiveData<Resource<String>>()
+    val returnSampleLiveData: LiveData<Resource<String>>
+        get() = _returnSampleLiveData
+    fun resetReturnSampleLiveData(){
+        _returnSampleLiveData.value = null
+    }
 
     fun resetsaveSampleLiveData() {
         _saveSampleLiveData.value = null
@@ -91,6 +99,25 @@ class InventoryViewModel @Inject constructor(
     val voucherScanLiveData: LiveData<Resource<VoucherScanDomain>>
         get() = _voucherScanLiveData
 
+    fun returnSample(sampleIdList:List<String>){
+        viewModelScope.launch {
+            returnSampleUseCase(
+                localDatabase.getToken().orEmpty(),
+                sampleIdList).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _returnSampleLiveData.value = Resource.Loading()
+                    }
+                    is Resource.Success -> {
+                        _returnSampleLiveData.value = Resource.Success(it.data!!.message)
+                    }
+                    is Resource.Error -> {
+                        _returnSampleLiveData.value = Resource.Error(it.message)
+                    }
+                }
+            }
+        }
+    }
 
     fun getInventorySampleList() {
         viewModelScope.launch {
@@ -174,7 +201,7 @@ class InventoryViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         _voucherScanLiveData.value = Resource.Success(it.data)
-                        checkSampleUseCase(localDatabase.getToken().orEmpty(), it.data!!.id)
+//                        checkSampleUseCase(localDatabase.getToken().orEmpty(), it.data!!.id)
                     }
                     is Resource.Error -> {
                         _voucherScanLiveData.value = Resource.Error(it.message)
@@ -211,7 +238,7 @@ class InventoryViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         _sampleLiveData.value =
-                            Resource.Success(it.data!!.map { it.asUIModel() } as MutableList<SampleItemUIModel>)
+                            Resource.Success(it.data!!.asUIModel())
                     }
                     is Resource.Error -> {
                         _sampleLiveData.value = Resource.Error(it.message)
