@@ -9,7 +9,9 @@ import com.critx.domain.model.giveGold.GoldBoxDomain
 import com.critx.domain.model.repairStock.JobDoneDomain
 import com.critx.domain.useCase.collectStock.GetGoldSmithListUseCase
 import com.critx.domain.useCase.giveGold.GetGoldBoxIdUseCase
+import com.critx.domain.useCase.giveGold.GiveGoldScanUseCase
 import com.critx.domain.useCase.giveGold.GiveGoldUseCase
+import com.critx.domain.useCase.giveGold.ServiceChargeUseCase
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.uiModel.collectStock.GoldSmithUiModel
 import com.critx.shwemiAdmin.uiModel.collectStock.asUiModel
@@ -23,14 +25,22 @@ class GiveGoldViewModel @Inject constructor(
     private val localDatabase: LocalDatabase,
     private val giveGoldUseCase: GiveGoldUseCase,
     private val getGoldSmithListUseCase: GetGoldSmithListUseCase,
-    private val getGoldBoxIdUseCase: GetGoldBoxIdUseCase
+    private val getGoldBoxIdUseCase: GetGoldBoxIdUseCase,
+    private val giveGoldScanUseCase: GiveGoldScanUseCase,
+    private val serviceChargeUseCase: ServiceChargeUseCase
 ) : ViewModel() {
+    private var _serviceChargeLiveData = MutableLiveData<Resource<String>>()
+    val serviceChargeLiveData: LiveData<Resource<String>>
+        get() = _serviceChargeLiveData
 
-
+    fun resetserviceChargeLiveData(){
+        _serviceChargeLiveData.value = null
+    }
 
     private var _giveGoldLiveData = MutableLiveData<Resource<String>>()
     val giveGoldLiveData: LiveData<Resource<String>>
         get() = _giveGoldLiveData
+
     fun resetGiveGoldLiveData(){
         _giveGoldLiveData.value = null
     }
@@ -43,6 +53,40 @@ class GiveGoldViewModel @Inject constructor(
     private var _goldSmithListLiveData= MutableLiveData<Resource<MutableList<GoldSmithUiModel>>>()
     val goldSmithListLiveData : LiveData<Resource<MutableList<GoldSmithUiModel>>>
         get() = _goldSmithListLiveData
+
+    fun serviceCharge(invoiceNumber:String,wastageGm:String,chargeAmount:String){
+        viewModelScope.launch {
+            giveGoldScanUseCase(localDatabase.getToken().orEmpty(),invoiceNumber).collectLatest {
+                when(it){
+                    is Resource.Loading->{
+                        _serviceChargeLiveData.value = Resource.Loading()
+                    }
+                    is Resource.Success->{
+                        serviceChargeUseCase(localDatabase.getToken().orEmpty(), wastageGm,chargeAmount,
+                        it.data!!.id).collectLatest {
+                            when(it){
+                                is Resource.Loading->{
+                                    _serviceChargeLiveData.value = Resource.Loading()
+
+                                }
+                                is Resource.Success->{
+                                    _serviceChargeLiveData.value = Resource.Success(it.data!!.message)
+
+                                }
+                                is Resource.Error->{
+                                    _serviceChargeLiveData.value = Resource.Error(it.message)
+
+                                }
+                            }
+                        }
+                    }
+                    is Resource.Error->{
+                        _serviceChargeLiveData.value = Resource.Error(it.message)
+                    }
+                }
+            }
+        }
+    }
 
     fun getGoldSmithList(){
         viewModelScope.launch {

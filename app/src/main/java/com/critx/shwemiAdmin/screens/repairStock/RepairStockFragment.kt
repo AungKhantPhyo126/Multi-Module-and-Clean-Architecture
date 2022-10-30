@@ -21,7 +21,6 @@ import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentRepairStockBinding
 import com.critx.shwemiAdmin.databinding.ServiceChargeDialogBinding
-import com.critx.shwemiAdmin.screens.giveGold.showServiceChargeDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -148,6 +147,7 @@ fun Context.showServiceChargeOnlyDialog(onClick: (amount:String) -> Unit) {
     val alertDialogBinding = ServiceChargeDialogBinding.inflate(
         inflater, ConstraintLayout(builder.context), false
     )
+
     alertDialogBinding.tilWastageWeightInGm.isVisible = false
     alertDialogBinding.btnGive.text = "OK"
     builder.setView(alertDialogBinding.root)

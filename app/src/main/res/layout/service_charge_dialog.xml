@@ -28,6 +28,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_invoice_scan"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:boxBackgroundColor="@color/white"
+        app:endIconDrawable="@drawable/ic_qr_scan"
+        app:endIconMode="custom"
+        app:endIconTintMode="screen"
+        app:hintEnabled="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_message">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_invoice_number"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:inputType="text"
+            android:hint="Enter Invoice or Scan here"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_charge_amount"
@@ -43,12 +68,12 @@
         app:boxStrokeColor="@color/primary_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_message">
+        app:layout_constraintTop_toBottomOf="@+id/til_invoice_scan">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_charge_amount"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:hint="Enter Charge Amount"
             />
     </com.google.android.material.textfield.TextInputLayout>
@@ -71,7 +96,7 @@
             android:id="@+id/edt_wastage_weight_in_gm"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:hint="Enter Wastage Weight in gm"
             />
     </com.google.android.material.textfield.TextInputLayout>

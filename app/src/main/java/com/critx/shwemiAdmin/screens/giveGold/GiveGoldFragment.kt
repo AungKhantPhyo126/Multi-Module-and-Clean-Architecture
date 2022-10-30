@@ -20,6 +20,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.critx.common.databinding.ShwemiSuccessDialogBinding
+import com.critx.common.qrscan.getBarLauncherTest
+import com.critx.common.qrscan.scanQrCode
 import com.critx.common.ui.getAlertDialog
 import com.critx.common.ui.showSuccessDialog
 import com.critx.commonkotlin.util.Resource
@@ -27,6 +29,7 @@ import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentGiveGoldBinding
 import com.critx.shwemiAdmin.databinding.ServiceChargeDialogBinding
 import com.critx.shwemiAdmin.hideKeyboard
+import com.critx.shwemiAdmin.screens.repairStock.showServiceChargeOnlyDialog
 import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
 import com.critx.shwemiAdmin.showDropdown
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -40,11 +43,14 @@ import java.util.*
 @AndroidEntryPoint
 class GiveGoldFragment : Fragment() {
     private lateinit var binding: FragmentGiveGoldBinding
+    private lateinit var alertDialogBinding:ServiceChargeDialogBinding
     private val viewModel by viewModels<GiveGoldViewModel>()
     private val sharedViewModel by activityViewModels<SharedViewModel>()
     private lateinit var loadingDialog: AlertDialog
     private lateinit var datePicker: MaterialDatePicker<Long>
     private val args by navArgs<GiveGoldFragmentArgs>()
+    private lateinit var barLauncher: Any
+
 
     var selectedGoldBoxId = ""
 
@@ -85,6 +91,9 @@ class GiveGoldFragment : Fragment() {
         loadingDialog = requireContext().getAlertDialog()
         viewModel.getGoldSmithList()
         viewModel.getGoldBoxId()
+        barLauncher = this.getBarLauncherTest(requireContext()) {
+            alertDialogBinding.edtInvoiceNumber.setText(it)
+        }
         if (args.sampleList.isNullOrEmpty()) {
             binding.btnSampleTake.setTextColor(requireContext().getColorStateList(R.color.edit_text_color))
         } else {
@@ -92,7 +101,31 @@ class GiveGoldFragment : Fragment() {
         }
 
 
-bindCachedData()
+        bindCachedData()
+
+        /**retrieve product**/
+        binding.btnRetrieveProduct.setOnClickListener {
+            showServiceChargeDialogForGoldGive()
+        }
+        viewModel.serviceChargeLiveData.observe(viewLifecycleOwner){
+            when(it){
+                is Resource.Loading->{
+                    loadingDialog.show()
+                }
+                is Resource.Success->{
+                    loadingDialog.dismiss()
+                    requireContext().showSuccessDialog(it.data!!){
+                        viewModel.resetserviceChargeLiveData()
+                    }
+                }
+                is Resource.Error->{
+                    loadingDialog.dismiss()
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+
+                }
+            }
+        }
+
 
         binding.btnSampleTake.setOnClickListener {
             sharedViewModel.orderItem.value = binding.edtOrderItemName.text.toString()
@@ -101,9 +134,9 @@ bindCachedData()
             sharedViewModel.weightP.value = binding.edtP.text.toString()
             sharedViewModel.weightY.value = binding.edtY.text.toString()
             sharedViewModel.goldWeight.value = binding.edtGoldGm.text.toString()
-            sharedViewModel.gemWeight.value= binding.edtGemGm.text.toString()
+            sharedViewModel.gemWeight.value = binding.edtGemGm.text.toString()
             sharedViewModel.goldAndGemWeight.value = binding.tvGoldAndGemGm.text.toString()
-            sharedViewModel.wastageK.value= binding.edtK2.text.toString()
+            sharedViewModel.wastageK.value = binding.edtK2.text.toString()
             sharedViewModel.wastageP.value = binding.edtP2.text.toString()
             sharedViewModel.wastageY.value = binding.edtY2.text.toString()
             sharedViewModel.dueDate.value = binding.tvDueDate.text.toString()
@@ -119,19 +152,19 @@ bindCachedData()
                     loadingDialog.dismiss()
                     sharedViewModel.selectedGoldBoxId.value = null
 //                    sharedViewModel.selectedGoldSmith.value = null
-                    sharedViewModel.orderItem.value  = null
-                    sharedViewModel.orderQty.value  = null
-                    sharedViewModel.weightK.value  = null
-                    sharedViewModel.weightP.value  = null
-                    sharedViewModel.weightY.value  = null
-                    sharedViewModel.goldWeight.value  = null
-                    sharedViewModel.gemWeight.value  = null
-                    sharedViewModel.goldAndGemWeight .value = null
-                    sharedViewModel.wastageK.value  =null
-                    sharedViewModel.wastageP.value  = null
-                    sharedViewModel.wastageY.value  = null
-                    sharedViewModel.dueDate.value  = null
-                    binding.mcvOther.isChecked =false
+                    sharedViewModel.orderItem.value = null
+                    sharedViewModel.orderQty.value = null
+                    sharedViewModel.weightK.value = null
+                    sharedViewModel.weightP.value = null
+                    sharedViewModel.weightY.value = null
+                    sharedViewModel.goldWeight.value = null
+                    sharedViewModel.gemWeight.value = null
+                    sharedViewModel.goldAndGemWeight.value = null
+                    sharedViewModel.wastageK.value = null
+                    sharedViewModel.wastageP.value = null
+                    sharedViewModel.wastageY.value = null
+                    sharedViewModel.dueDate.value = null
+                    binding.mcvOther.isChecked = false
                     binding.mcvHundredPercent.isChecked = false
                     requireContext().showSuccessDialog(it.data!!) {
                         bindCachedData()
@@ -161,8 +194,11 @@ bindCachedData()
                         ArrayAdapter(requireContext(), R.layout.item_drop_down_text, list)
                     binding.actGoldSmith.setAdapter(arrayAdapter)
                     binding.actGoldSmith.setText(list[0], false)
-                    if (sharedViewModel.selectedGoldSmith.value.isNullOrEmpty().not()){
-                        binding.actGoldSmith.setText(it.data!!.find { it.id == sharedViewModel.selectedGoldSmith.value }!!.name, false)
+                    if (sharedViewModel.selectedGoldSmith.value.isNullOrEmpty().not()) {
+                        binding.actGoldSmith.setText(
+                            it.data!!.find { it.id == sharedViewModel.selectedGoldSmith.value }!!.name,
+                            false
+                        )
                     }
                     sharedViewModel.selectedGoldSmith.value = it.data!![0].id
                     binding.actGoldSmith.addTextChangedListener { editable ->
@@ -188,18 +224,22 @@ bindCachedData()
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
-                    if (sharedViewModel.selectedGoldBoxId.value.isNullOrEmpty().not()){
-                        binding.mcvHundredPercent.isChecked = it.data!!.find { it.id == sharedViewModel.selectedGoldBoxId.value }!!.name == "100%"
-                        binding.mcvOther.isChecked = it.data!!.find { it.id == sharedViewModel.selectedGoldBoxId.value }!!.name == "Other"
+                    if (sharedViewModel.selectedGoldBoxId.value.isNullOrEmpty().not()) {
+                        binding.mcvHundredPercent.isChecked =
+                            it.data!!.find { it.id == sharedViewModel.selectedGoldBoxId.value }!!.name == "100%"
+                        binding.mcvOther.isChecked =
+                            it.data!!.find { it.id == sharedViewModel.selectedGoldBoxId.value }!!.name == "Other"
                     }
                     binding.mcvHundredPercent.setOnCheckedChangeListener { card, isChecked ->
                         if (isChecked) {
-                            sharedViewModel.selectedGoldBoxId.value = it.data!!.find { it.name == "100%" }!!.id
+                            sharedViewModel.selectedGoldBoxId.value =
+                                it.data!!.find { it.name == "100%" }!!.id
                         }
                     }
                     binding.mcvOther.setOnCheckedChangeListener { card, isChecked ->
                         if (isChecked) {
-                            sharedViewModel.selectedGoldBoxId.value = it.data!!.find { it.name == "Other" }!!.id
+                            sharedViewModel.selectedGoldBoxId.value =
+                                it.data!!.find { it.name == "Other" }!!.id
                         }
                     }
                 }
@@ -282,40 +322,49 @@ bindCachedData()
             }
         }
     }
-    fun bindCachedData(){
-        binding.edtOrderItemName.setText(sharedViewModel.orderItem.value ?:"")
-        binding.edtOrderQty.setText(sharedViewModel.orderQty.value ?:"")
-        binding.edtK.setText(sharedViewModel.weightK.value ?:"")
-        binding.edtP.setText(sharedViewModel.weightP.value ?:"")
-        binding.edtY.setText(sharedViewModel.weightY.value ?:"")
-        binding.edtGoldGm.setText(sharedViewModel.goldWeight.value ?:"")
-        binding.edtGemGm.setText(sharedViewModel.gemWeight.value ?:"")
-        binding.tvGoldAndGemGm.text = sharedViewModel.goldAndGemWeight.value ?:""
-        binding.edtK2.setText(sharedViewModel.wastageK.value ?:"")
-        binding.edtP2.setText(sharedViewModel.wastageP.value ?:"")
-        binding.edtY2.setText(sharedViewModel.wastageY.value ?:"")
-        binding.tvDueDate.text = sharedViewModel.dueDate.value ?:""
+
+    fun bindCachedData() {
+        binding.edtOrderItemName.setText(sharedViewModel.orderItem.value ?: "")
+        binding.edtOrderQty.setText(sharedViewModel.orderQty.value ?: "")
+        binding.edtK.setText(sharedViewModel.weightK.value ?: "")
+        binding.edtP.setText(sharedViewModel.weightP.value ?: "")
+        binding.edtY.setText(sharedViewModel.weightY.value ?: "")
+        binding.edtGoldGm.setText(sharedViewModel.goldWeight.value ?: "")
+        binding.edtGemGm.setText(sharedViewModel.gemWeight.value ?: "")
+        binding.tvGoldAndGemGm.text = sharedViewModel.goldAndGemWeight.value ?: ""
+        binding.edtK2.setText(sharedViewModel.wastageK.value ?: "")
+        binding.edtP2.setText(sharedViewModel.wastageP.value ?: "")
+        binding.edtY2.setText(sharedViewModel.wastageY.value ?: "")
+        binding.tvDueDate.text = sharedViewModel.dueDate.value ?: ""
+    }
+
+    fun showServiceChargeDialogForGoldGive() {
+        val builder = MaterialAlertDialogBuilder(requireContext())
+        val inflater: LayoutInflater = LayoutInflater.from(builder.context)
+        alertDialogBinding = ServiceChargeDialogBinding.inflate(
+            inflater, ConstraintLayout(builder.context), false
+        )
+        alertDialogBinding.tilInvoiceScan.setEndIconOnClickListener {
+            scanQrCode(requireContext(),barLauncher)
+        }
+        builder.setView(alertDialogBinding.root)
+        val alertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        alertDialogBinding.btnGive.setOnClickListener {
+            viewModel.serviceCharge(
+                alertDialogBinding.edtInvoiceNumber.text.toString(),
+                alertDialogBinding.edtWastageWeightInGm.text.toString(),
+                alertDialogBinding.edtChargeAmount.text.toString()
+            )
+            alertDialog.dismiss()
+        }
+        alertDialogBinding.ivCross.setOnClickListener {
+            alertDialog.dismiss()
+        }
+        alertDialog.show()
     }
 }
 
-fun Context.showServiceChargeDialog(onClick: () -> Unit) {
-    val builder = MaterialAlertDialogBuilder(this)
-    val inflater: LayoutInflater = LayoutInflater.from(builder.context)
-    val alertDialogBinding = ServiceChargeDialogBinding.inflate(
-        inflater, ConstraintLayout(builder.context), false
-    )
-    builder.setView(alertDialogBinding.root)
-    val alertDialog = builder.create()
-    alertDialog.setCancelable(false)
-    alertDialogBinding.btnGive.setOnClickListener {
-        alertDialog.dismiss()
-        onClick()
-    }
-    alertDialogBinding.ivCross.setOnClickListener {
-        alertDialog.dismiss()
-    }
-    alertDialog.show()
-}
 
 fun convertToSqlDate(calendar: Calendar): String {
     return SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(calendar.time)

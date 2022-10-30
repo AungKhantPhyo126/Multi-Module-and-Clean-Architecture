@@ -6,6 +6,7 @@ import com.critx.data.datasource.giveGold.GiveGoldDataSource
 import com.critx.data.network.dto.asDomain
 import com.critx.data.network.dto.giveGold.asDomain
 import com.critx.domain.model.SimpleData
+import com.critx.domain.model.giveGold.GiveGoldScanDomain
 import com.critx.domain.model.giveGold.GoldBoxDomain
 import com.critx.domain.repository.GiveGoldRepository
 import kotlinx.coroutines.flow.Flow
@@ -83,6 +84,27 @@ class GiveGoldRepoImpl @Inject constructor(
                 emit(
                     Resource.Success(
                         giveGoldDataSource.serviceCharge(token,chargeAmount,wastageGm, invoice).asDomain()
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
+
+    override fun giveGoldScan(
+        token: String,
+        invoiceNumber: String
+    ): Flow<Resource<GiveGoldScanDomain>>  =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        giveGoldDataSource.giveGoldScan(token,invoiceNumber).asDomain()
                     )
                 )
             } catch (e: HttpException) {

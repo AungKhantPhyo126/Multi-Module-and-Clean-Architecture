@@ -1,6 +1,7 @@
 package com.critx.data.network.api
 
 import com.critx.data.network.dto.SimpleResponse
+import com.critx.data.network.dto.giveGold.GiveGoldScanResponse
 import com.critx.data.network.dto.giveGold.GoldBoxResponse
 import retrofit2.Response
 import retrofit2.http.*
@@ -35,11 +36,18 @@ interface GiveGoldService {
     ): Response<GoldBoxResponse>
 
     @FormUrlEncoded
-    @GET("api/gold_givings/{invoice}/retrieve-products")
+    @POST("api/gold_givings/{invoice}/retrieve-products")
     suspend fun serviceCharge(
         @Header("Authorization") token: String,
         @Field("charged_amount") chargeAmount: String,
         @Field("wastage_gm") wastageGm: String,
         @Path("invoice") invoice: String
     ): Response<SimpleResponse>
+
+    @GET("api/gold_givings/{invoice}/scan")
+    suspend fun giveGoldScan(
+        @Header("Authorization") token: String,
+        @Path("invoice") invoice: String
+
+        ):Response<GiveGoldScanResponse>
 }
