@@ -39,12 +39,12 @@ class ImageRecyclerAdapter(
 //    var tracker: SelectionTracker<Long>? = null
     override fun getItemViewType(position: Int): Int {
 
-        return if (position == 0) addItemViewType
+        return if (getItem(position)==null) addItemViewType
         else itemViewType;
     }
 
     override fun getItemCount(): Int {
-        return super.getItemCount()+1
+        return super.getItemCount()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -67,7 +67,7 @@ class ImageRecyclerAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ImageViewHolder -> {
-                holder.bind(getItem(position-1))
+                holder.bind(getItem(position))
             }
             is AddItemViewHolder -> {
                 holder.bind()
@@ -151,17 +151,17 @@ class ImageViewHolder(
 
     }
 
-    fun getItem(): ItemDetailsLookup.ItemDetails<Long> =
-
-        //1
-        object : ItemDetailsLookup.ItemDetails<Long>() {
-
-            //2
-            override fun getPosition(): Int = adapterPosition
-
-            //3
-            override fun getSelectionKey(): Long = itemId
-        }
+//    fun getItem(): ItemDetailsLookup.ItemDetails<Long> =
+//
+//        //1
+//        object : ItemDetailsLookup.ItemDetails<Long>() {
+//
+//            //2
+//            override fun getPosition(): Int = adapterPosition
+//
+//            //3
+//            override fun getSelectionKey(): Long = itemId
+//        }
 
 }
 

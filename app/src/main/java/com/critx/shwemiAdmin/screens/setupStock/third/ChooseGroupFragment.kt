@@ -25,6 +25,7 @@ import com.critx.common.ui.createChip
 import com.critx.common.ui.getAlertDialog
 import com.critx.common.ui.showDeleteSuccessDialog
 import com.critx.common.ui.showSuccessDialog
+import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.*
@@ -48,11 +49,12 @@ class ChooseGroupFragment : Fragment() {
     private var snackBar: Snackbar? = null
     private lateinit var adapter: ImageRecyclerAdapter
     private var frequentUse = 0
+    var selectedGroupModel:ChooseGroupUIModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
-            viewModel.setSelectGroup(null)
+//            viewModel.setSelectGroup(null)
             findNavController().popBackStack()
         }
     }
@@ -97,51 +99,90 @@ class ChooseGroupFragment : Fragment() {
                 args.firstCat.id.toInt(),
                 args.secondCat.id.toInt()
             )
+            adapter.notifyDataSetChanged()
         }
         loadingDialog = requireContext().getAlertDialog()
         binding.tvFirstCat.text = args.firstCat.name
         binding.tvSecondCat.text = args.secondCat.name
         setupRecyclerImage()
-        viewModel.selectedChooseGroupUIModel.observe(viewLifecycleOwner){
-            if (it != null){
-                binding.tvThirdCat.isVisible = true
-                binding.tvThirdCat.setTextColor(requireContext().getColor(R.color.primary_color))
-                binding.tvThirdCat.text = it.name
-                binding.chipGroupChooseGp.check(it.id.toInt())
-                viewModel.selectImage(it.id,true)
-                collectDataForRecyclerView()
-            }else{
-                binding.tvThirdCat.isVisible = false
+//        viewModel.selectedChooseGroupUIModel.observe(viewLifecycleOwner) {
+//            if (it != null) {
+//                binding.tvThirdCat.isVisible = true
+//                binding.tvThirdCat.setTextColor(requireContext().getColor(R.color.primary_color))
+//                binding.tvThirdCat.text = it.name
+//                binding.chipGroupChooseGp.check(it.id.toInt())
+//                viewModel.selectImage(it.id)
+////                collectDataForRecyclerView()
+//            } else {
+//                binding.tvThirdCat.isVisible = false
+//            }
+//            binding.btnNext.isEnabled = it != null
+//        }
+
+        viewModel.getGroupLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    adapter.submitList(it.data)
+                    adapter.notifyDataSetChanged()
+                    setupChipView(it.data?.filterNotNull().orEmpty())
+                    val selectedItem = it.data!!.filterNotNull().find { it.isChecked }
+                    binding.btnNext.isEnabled = selectedItem != null
+
+                    if (!it.data.isNullOrEmpty() && selectedItem != null) {
+                        selectedGroupModel = selectedItem
+                        binding.chipGroupChooseGp.check(selectedItem.id.toInt())
+                        selectedItem.name.let {
+                            binding.tvThirdCat.isVisible = true
+                            binding.tvThirdCat.setTextColor(requireContext().getColor(R.color.primary_color))
+                            binding.tvThirdCat.text = it
+                        }
+                    } else {
+                        binding.tvThirdCat.isVisible = false
+                    }
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    snackBar?.dismiss()
+                    snackBar = Snackbar.make(
+                        binding.root,
+                        it.message!!,
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackBar?.show()
+                }
             }
-            binding.btnNext.isEnabled = it != null
         }
         viewLifecycleOwner.lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 //getJewelleryGroup
-                launch {
-                    viewModel.getGroupState.collect {
-                        if (it.loading) {
-                            loadingDialog.show()
-                        } else loadingDialog.dismiss()
-                        if (it.successLoading != null) {
-                            adapter.submitList(it.successLoading)
-                            adapter.notifyDataSetChanged()
-                            findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<ChooseGroupUIModel>(
-                                CREATEED_GROUP_ID
-                            )
-                                ?.observe(viewLifecycleOwner) {
-                                    if(
-                                        findNavController().previousBackStackEntry?.destination?.id == R.id.editGroupFragment ||
-                                        findNavController().previousBackStackEntry?.destination?.id == R.id.chooseCategoryFragment
-                                    ){
-                                        viewModel.setSelectGroup(it)
-                                    }
-                                }
-                            setupChipView(it.successLoading.orEmpty())
-                        }
-                    }
-                }
+//                launch {
+//                    viewModel.getGroupState.collect {
+//                        if (it.loading) {
+//                            loadingDialog.show()
+//                        } else loadingDialog.dismiss()
+//                        if (it.successLoading != null) {
+//                            adapter.submitList(it.successLoading)
+//                            adapter.notifyDataSetChanged()
+//                            findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<ChooseGroupUIModel>(
+//                                CREATEED_GROUP_ID
+//                            )
+//                                ?.observe(viewLifecycleOwner) {
+//                                    if(
+//                                        findNavController().previousBackStackEntry?.destination?.id == R.id.editGroupFragment ||
+//                                        findNavController().previousBackStackEntry?.destination?.id == R.id.chooseCategoryFragment
+//                                    ){
+//                                        viewModel.setSelectGroup(it)
+//                                    }
+//                                }
+//                            setupChipView(it.successLoading.orEmpty())
+//                        }
+//                    }
+//                }
 
                 launch {
                     viewModel.deleteGroupState.collectLatest {
@@ -150,11 +191,14 @@ class ChooseGroupFragment : Fragment() {
                         } else loadingDialog.dismiss()
 
                         if (it.deleteSuccessLoading != null) {
-                            viewModel.setSelectGroup(null)
+                            viewModel.getJewelleryGroup(frequentUse,
+                                args.firstCat.id.toInt(),
+                                args.secondCat.id.toInt()
+                            )
                             requireContext().showSuccessDialog("Group Deleted") {
 
                                 it.deleteSuccessLoading = null
-                                refreshData()
+//                                refreshData()
                             }
                         }
                     }
@@ -204,13 +248,13 @@ class ChooseGroupFragment : Fragment() {
             ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment(
                 args.firstCat,
                 args.secondCat,
-                viewModel.selectedChooseGroupUIModel.value
+                selectedGroupModel
             )
         )
     }
 
     fun navigateWithAddView() {
-        viewModel.setSelectGroup(null)
+//        viewModel.setSelectGroup(null)
         findNavController().navigate(
             ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment(
                 args.firstCat,
@@ -224,19 +268,20 @@ class ChooseGroupFragment : Fragment() {
 
         adapter = ImageRecyclerAdapter({
             //deleteClick
-            requireContext().showDeleteSuccessDialog("All items related to this Group will be deleted"
+            requireContext().showDeleteSuccessDialog(
+                "All items related to this Group will be deleted"
             ) {
                 viewModel.deleteJewelleryGroup(it)
             }
         },
             {
-                viewModel.setSelectGroup(it)
+                viewModel.selectImage(it.id)
             }, {
                 //addNewClick
                 navigateWithAddView()
             }, {
                 //navigateToEditClick
-                viewModel.setSelectGroup(it)
+//                viewModel.setSelectGroup(it)
                 navigateWithEditView()
 
             })
@@ -278,9 +323,9 @@ class ChooseGroupFragment : Fragment() {
             chip.isChecked = item.isChecked
             editView.setOnClickListener {
                 popupWindow.dismiss()
-                if (!binding.rvImages.isVisible){
-                    viewModel.setSelectGroup(item)
-                }
+//                if (!binding.rvImages.isVisible) {
+//                    viewModel.setSelectGroup(item)
+//                }
                 navigateWithEditView()
             }
 
@@ -298,12 +343,11 @@ class ChooseGroupFragment : Fragment() {
         }
 
 
-
-        if (viewModel.selectedChooseGroupUIModel.value != null){
-            binding.chipGroupChooseGp.check(viewModel.selectedChooseGroupUIModel.value!!.id.toInt())
-        }else{
-            binding.tvThirdCat.isVisible=false
-        }
+//        if (viewModel.selectedChooseGroupUIModel.value != null) {
+//            binding.chipGroupChooseGp.check(viewModel.selectedChooseGroupUIModel.value!!.id.toInt())
+//        } else {
+//            binding.tvThirdCat.isVisible = false
+//        }
 
         addChipView.setOnClickListener {
             navigateWithAddView()
@@ -316,72 +360,63 @@ class ChooseGroupFragment : Fragment() {
             }.let {
                 if (it != null) {
                     val chip = it as Chip
-                    if (!binding.rvImages.isVisible){
-                        viewModel.setSelectGroup(list.find { it.id ==chip.id.toString() })
-                    }
-//                    binding.tvThirdCat.isVisible = true
-//                    binding.tvThirdCat.setTextColor(requireContext().getColor(R.color.primary_color))
-//                    binding.tvThirdCat.text = chip.text
-                } else {
-                    viewModel.setSelectGroup(null)
-//                    binding.tvThirdCat.isVisible = false
+                    viewModel.selectImage(chip.id.toString())
                 }
-
+            }
+            binding.btnNext.setOnClickListener {
+                findNavController().navigate(
+                    ChooseGroupFragmentDirections.actionChooseGroupFragmentToChooseCategoryFragment(
+                        args.firstCat,
+                        args.secondCat,
+                        selectedGroupModel!!
+                    )
+                )
+            }
+            binding.btnBack.setOnClickListener {
+//            viewModel.setSelectGroup(null)
+                findNavController().popBackStack()
             }
         }
-        binding.btnNext.setOnClickListener {
-            findNavController().navigate(
-                ChooseGroupFragmentDirections.actionChooseGroupFragmentToChooseCategoryFragment(
-                    args.firstCat,
-                    args.secondCat,
-                    viewModel.selectedChooseGroupUIModel.value!!
-                )
+
+        fun refreshData() {
+            viewModel.getJewelleryGroup(
+                frequentUse,
+                args.firstCat.id.toInt(),
+                args.secondCat.id.toInt()
             )
         }
-        binding.btnBack.setOnClickListener {
-            viewModel.setSelectGroup(null)
-            findNavController().popBackStack()
-        }
-    }
 
-    fun refreshData(){
-        viewModel.getJewelleryGroup(
-            frequentUse,
-            args.firstCat.id.toInt(),
-            args.secondCat.id.toInt()
-        )
-    }
-
-    fun collectDataForRecyclerView() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-
-                //getJewelleryGroup
-                launch {
-                    viewModel.getGroupState.collect { uiState ->
-                        if (uiState.loading) {
-                            loadingDialog.show()
-                        } else loadingDialog.dismiss()
-                        if (uiState.successLoading != null) {
-                            adapter.submitList(uiState.successLoading)
-                            adapter.notifyDataSetChanged()
-//                            setupChipView(uiState.successLoading.orEmpty())
-                            uiState.successLoading?.find { uiModel ->
-                                uiModel.isChecked
-                            }?.let { checkedModel ->
-                                if (checkedModel != null) {
-                                    binding.tvThirdCat.isVisible = true
-                                    binding.tvThirdCat.setTextColor(requireContext().getColor(R.color.primary_color))
-                                    binding.tvThirdCat.text = checkedModel.name
-                                } else {
-                                    binding.tvThirdCat.isVisible = false
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//    fun collectDataForRecyclerView() {
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//
+//                //getJewelleryGroup
+//                launch {
+//                    viewModel.getGroupState.collect { uiState ->
+//                        if (uiState.loading) {
+//                            loadingDialog.show()
+//                        } else loadingDialog.dismiss()
+//                        if (uiState.successLoading != null) {
+//                            adapter.submitList(uiState.successLoading)
+//                            adapter.notifyDataSetChanged()
+////                            setupChipView(uiState.successLoading.orEmpty())
+//                            uiState.successLoading?.find { uiModel ->
+//                                uiModel.isChecked
+//                            }?.let { checkedModel ->
+//                                if (checkedModel != null) {
+//                                    binding.tvThirdCat.isVisible = true
+//                                    binding.tvThirdCat.setTextColor(requireContext().getColor(R.color.primary_color))
+//                                    binding.tvThirdCat.text = checkedModel.name
+//                                } else {
+//                                    binding.tvThirdCat.isVisible = false
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
     }
 
 }

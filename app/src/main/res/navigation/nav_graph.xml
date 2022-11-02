@@ -100,6 +100,9 @@
         <action
             android:id="@+id/action_chooseJewelleryQualityFragment_to_chooseGroupFragment"
             app:destination="@id/chooseGroupFragment" />
+        <action
+            android:id="@+id/action_chooseJewelleryQualityFragment_to_productCreateFragment"
+            app:destination="@id/productCreateFragment" />
     </fragment>
     <fragment
         android:id="@+id/chooseGroupFragment"

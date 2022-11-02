@@ -28,7 +28,7 @@ class JewelleryCategoryRecyclerAdapter(
     private val deleteClick:(id:String)->Unit
 
 ) : ListAdapter<JewelleryCategoryUiModel, RecyclerView.ViewHolder>(
-    ChooseGroupDiffUtil
+    ChooseJewelleryCategoryDiffUtil
 ) {
     val addItemViewType = 2
     val itemViewType = 1
@@ -166,7 +166,7 @@ class ImageViewHolder(
 
 }
 
-object ChooseGroupDiffUtil : DiffUtil.ItemCallback<JewelleryCategoryUiModel>() {
+object ChooseJewelleryCategoryDiffUtil : DiffUtil.ItemCallback<JewelleryCategoryUiModel>() {
     override fun areItemsTheSame(
         oldItem: JewelleryCategoryUiModel,
         newItem: JewelleryCategoryUiModel

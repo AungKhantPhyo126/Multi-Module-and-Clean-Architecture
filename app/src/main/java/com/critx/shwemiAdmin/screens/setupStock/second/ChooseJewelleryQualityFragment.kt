@@ -41,6 +41,7 @@ class ChooseJewelleryQualityFragment:Fragment() {
     private val viewModel by viewModels<JewelleryQualityViewModel>()
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
+    var directNavigateList = mutableListOf<String>()
 
 
     override fun onCreateView(
@@ -89,6 +90,9 @@ class ChooseJewelleryQualityFragment:Fragment() {
                                 val chip = requireContext().createChip(item.name)
                                 chip.id = item.id.toInt()
                                 binding.chipGroupJewelleryQuality.addView(chip)
+                                if (item.name == "18K" || item.name =="စိန်ထည်" || item.name =="အခေါက်ထည်"){
+                                    directNavigateList.add(chip.id.toString())
+                                }
                             }
                         }
                     }
@@ -129,13 +133,19 @@ class ChooseJewelleryQualityFragment:Fragment() {
             findNavController().popBackStack()
         }
         binding.btnNext.setOnClickListener {
-            if (binding.tvSecondCat.isVisible){
-                findNavController().navigate(
-                    ChooseJewelleryQualityFragmentDirections.actionChooseJewelleryQualityFragmentToChooseGroupFragment(
-                    args.firstCat,
-                        JewelleryQualityUiModel(checkedChipId.toString(),binding.tvSecondCat.text.toString())
-                ))
-            }else{
+             if (directNavigateList.contains(binding.chipGroupJewelleryQuality.checkedChipId.toString())){
+               findNavController().navigate(ChooseJewelleryQualityFragmentDirections.actionChooseJewelleryQualityFragmentToProductCreateFragment())
+            }else if (binding.tvSecondCat.isVisible){
+                 findNavController().navigate(
+                     com.critx.shwemiAdmin.screens.setupStock.second.ChooseJewelleryQualityFragmentDirections.actionChooseJewelleryQualityFragmentToChooseGroupFragment(
+                         args.firstCat,
+                         com.critx.shwemiAdmin.uiModel.setupStock.JewelleryQualityUiModel(
+                             checkedChipId.toString(),
+                             binding.tvSecondCat.text.toString()
+                         )
+                     ))
+             }
+             else{
                 Toast.makeText(requireContext(),"Please choose at least one category", Toast.LENGTH_LONG).show()
             }
 

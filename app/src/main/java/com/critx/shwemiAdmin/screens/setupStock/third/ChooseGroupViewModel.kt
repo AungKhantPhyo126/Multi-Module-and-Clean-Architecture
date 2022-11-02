@@ -28,14 +28,15 @@ class ChooseGroupViewModel @Inject constructor(
     private val deleteJewelleryGroupUseCase: DeleteJewelleryGroupUseCase
 ) : ViewModel() {
     //forselection
+//
+//    var selectedChooseGroupUIModel = MutableLiveData<ChooseGroupUIModel?>(null)
+//    fun setSelectGroup(selecctedGroup: ChooseGroupUIModel?) {
+//        selectedChooseGroupUIModel.value = selecctedGroup
+//    }
 
-    var selectedChooseGroupUIModel = MutableLiveData<ChooseGroupUIModel?>(null)
-    fun setSelectGroup(selecctedGroup:ChooseGroupUIModel?){
-        selectedChooseGroupUIModel.value=selecctedGroup
-    }
-
-    private val _getGroupState = MutableStateFlow(JewelleryGroupUiState())
-    val getGroupState = _getGroupState.asStateFlow()
+    private val _getGroupLiveData = MutableLiveData<Resource<List<ChooseGroupUIModel?>>>()
+    val getGroupLiveData: LiveData<Resource<List<ChooseGroupUIModel?>>>
+        get() = _getGroupLiveData
 
     private val _deleteGroupState = MutableStateFlow(JewelleryGroupUiState())
     val deleteGroupState = _deleteGroupState.asStateFlow()
@@ -43,7 +44,8 @@ class ChooseGroupViewModel @Inject constructor(
     private var _event = MutableSharedFlow<UiEvent>()
     val event = _event.asSharedFlow()
 
-    fun getJewelleryGroup(isFrequentlyUse: Int,firstCatId:Int,secondCatId:Int) {
+
+    fun getJewelleryGroup(isFrequentlyUse: Int, firstCatId: Int, secondCatId: Int) {
         viewModelScope.launch {
             getJewelleryGroupUseCase(
                 localDatabase.getToken().orEmpty(),
@@ -53,39 +55,30 @@ class ChooseGroupViewModel @Inject constructor(
             ).collectLatest { result ->
                 when (result) {
                     is Resource.Loading -> {
-                        _getGroupState.value = _getGroupState.value.copy(
-                            loading = true
-                        )
+                        _getGroupLiveData.value = Resource.Loading()
                     }
                     is Resource.Success -> {
-                     _getGroupState.update { uiState ->
-                            uiState.copy(
-                             loading = false,
-                             successLoading = result.data?.data!!.map { it.asUiModel() }
-                         )
-                        }
-
+                        val resultdata = mutableListOf<ChooseGroupUIModel?>(null)
+                        resultdata.addAll(result.data!!.data.map { it.asUiModel() })
+                        _getGroupLiveData.value =
+                            Resource.Success(resultdata)
 
                     }
                     is Resource.Error -> {
-                        _getGroupState.value = _getGroupState.value.copy(
-                            loading = false,
-                        )
-                        result.message?.let { errorString ->
-                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
-                        }
+                        _getGroupLiveData.value = Resource.Error(result.message)
                     }
                 }
             }
         }
     }
 
-    fun deleteJewelleryGroup(id:String){
+    fun deleteJewelleryGroup(id: String) {
         val method = "DELETE"
-        val methodRequestBody =method.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val methodRequestBody = method.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         viewModelScope.launch {
-            deleteJewelleryGroupUseCase(localDatabase.getToken().orEmpty(),methodRequestBody,id
-            ).collectLatest {result->
+            deleteJewelleryGroupUseCase(
+                localDatabase.getToken().orEmpty(), methodRequestBody, id
+            ).collectLatest { result ->
                 when (result) {
                     is Resource.Loading -> {
                         _deleteGroupState.value = _deleteGroupState.value.copy(
@@ -116,36 +109,22 @@ class ChooseGroupViewModel @Inject constructor(
         }
     }
 
-    fun selectImage(id: String,forImageView:Boolean) {
-        val groupImageList = _getGroupState.value.successLoading.orEmpty()
-        groupImageList.filter {
-            it.id != id
+    fun selectImage(id: String) {
+
+        _getGroupLiveData.value!!.data!!.filter {
+            it!!.id != id
         }.forEach {
-            it.isChecked = false
+            it!!.isChecked = false
         }
 
-        _getGroupState.update { uiState ->
-            groupImageList.find {
-                it.id == id
-            }?.isChecked = groupImageList.find {
-                it.id == id
-            }?.isChecked!!.not()
+        _getGroupLiveData.value!!.data!!.find {
+            it!!.id == id
+        }?.isChecked = _getGroupLiveData.value!!.data!!.find {
+            it!!.id == id
+        }?.isChecked!!.not()
 
-//            groupImageList.find {
-//                it.id == id
-//            }?.let {
-//                selectedChooseGroupUIModel.value = if (it.isChecked){
-//                    it
-//                }else{
-//                    null
-//                }
-//            }
+        _getGroupLiveData.value = _getGroupLiveData.value
 
-            uiState.copy(
-                successLoading = groupImageList
-            )
-
-        }
 
     }
 

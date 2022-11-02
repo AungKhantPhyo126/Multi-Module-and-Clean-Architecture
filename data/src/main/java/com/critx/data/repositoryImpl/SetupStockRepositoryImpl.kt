@@ -367,12 +367,10 @@ class SetupStockRepositoryImpl @Inject constructor(
         token: String,
         name: RequestBody,
         productCode:RequestBody,
-
-
         type: RequestBody,
         quality: RequestBody,
-        group: RequestBody,
-        categoryId: RequestBody,
+        group: RequestBody?,
+        categoryId: RequestBody?,
         goldAndGemWeight: RequestBody,
         gemWeightKyat: RequestBody,
         gemWeightPae: RequestBody,

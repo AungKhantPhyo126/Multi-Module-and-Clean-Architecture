@@ -67,8 +67,12 @@ class RepairStockFragment:Fragment() {
         binding.rvJob.adapter=adapter
 
         binding.chipGroupGs.setOnCheckedStateChangeListener { group, checkedIds ->
-            checkedGoldSmith = checkedIds[0].toString()
-            viewModel.getJobDone(checkedIds[0].toString())
+            if (checkedIds.isNotEmpty()){
+                checkedGoldSmith = checkedIds[0].toString()
+                viewModel.getJobDone(checkedIds[0].toString())
+            }else{
+                checkedGoldSmith = ""
+            }
         }
 
         binding.mcvServiceGs.setOnClickListener {

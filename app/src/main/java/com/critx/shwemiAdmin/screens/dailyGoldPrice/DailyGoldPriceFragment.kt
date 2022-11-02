@@ -131,16 +131,21 @@ class DailyGoldPriceFragment:Fragment() {
                 }
                 is Resource.Success->{
                     loadingDialog.dismiss()
-
                     binding.layoutDailyGoldPriceInput.edtGoldBlock.setText(it.data?.get(0)!!.price )
                     binding.layoutDailyGoldPriceInput.edt15pGq.setText(it.data?.get(1)!!.price )
                     binding.layoutDailyGoldPriceInput.edt22kGq.setText(it.data?.get(2)!!.price  )
-                    binding.layoutDailyGoldPriceInput.edtDiamond.setText(it.data?.get(3)!!.price )
-                    binding.layoutDailyGoldPriceInput.edtWg.setText(it.data?.get(4)!!.price  )
-                    binding.layoutDailyGoldPriceInput.edtRebuy.setText(it.data?.get(4)!!.price  )
+                    binding.layoutDailyGoldPriceInput.edtDiamond.setText(it.data?.get(3)!!.price)
+                    binding.layoutDailyGoldPriceInput.edtWg.setText(it.data?.get(4)!!.price )
+                    binding.layoutDailyGoldPriceInput.edtRebuy.setText(it.data?.get(4)!!.price )
                 }
                 is Resource.Error->{
                     loadingDialog.dismiss()
+                    binding.layoutDailyGoldPriceInput.edtGoldBlock.setText("")
+                    binding.layoutDailyGoldPriceInput.edt15pGq.setText("")
+                    binding.layoutDailyGoldPriceInput.edt22kGq.setText("")
+                    binding.layoutDailyGoldPriceInput.edtDiamond.setText("")
+                    binding.layoutDailyGoldPriceInput.edtWg.setText("")
+                    binding.layoutDailyGoldPriceInput.edtRebuy.setText("")
                     Toast.makeText(requireContext(),it.message,Toast.LENGTH_LONG).show()
 
                 }

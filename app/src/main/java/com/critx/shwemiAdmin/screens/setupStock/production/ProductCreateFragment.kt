@@ -418,7 +418,7 @@ var photo1: MultipartBody.Part? = null
                             originalfile = convertBitmapToFile( fileName,originalbm!!, requireContext())
                         }
                     }
-                    if (viewModel.selectedImgUri1.value == null){
+                    if (viewModel.selectedImgUri1.value == null && originalfile != null && originalbm != null){
                         viewModel.setSelectedImgUri1(SelectedImage(originalfile!!,originalbm!!))
                     }
                 }
