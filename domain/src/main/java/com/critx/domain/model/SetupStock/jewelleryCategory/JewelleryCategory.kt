@@ -8,6 +8,8 @@ data class JewelleryCategory(
     val id:String,
     val name:String,
     val isFrequentlyUse:String,
+    val withGem:String,
+    val orderToGs:String,
     val specification : String,
     val avgWeightPerUnitGm:Double,
     val avgWastagePerUnitKpy:Double,

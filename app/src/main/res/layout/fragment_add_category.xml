@@ -150,19 +150,19 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:hintEnabled="false"
             app:expandedHintEnabled="false"
-            app:suffixText="Y"
+            app:hintEnabled="false"
             app:layout_constraintEnd_toEndOf="@id/til_category"
-            app:layout_constraintTop_toBottomOf="@id/til_weight_in_gm">
+            app:layout_constraintTop_toBottomOf="@id/til_weight_in_gm"
+            app:suffixText="Y">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edt_y"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
                 android:text="0"
-                android:textAlignment="center"
-                android:inputType="numberDecimal" />
+                android:textAlignment="center" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -171,20 +171,20 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:hintEnabled="false"
             app:expandedHintEnabled="false"
-            app:suffixText="P"
+            app:hintEnabled="false"
             app:layout_constraintEnd_toStartOf="@id/til_y"
             app:layout_constraintStart_toEndOf="@+id/til_k"
-            app:layout_constraintTop_toBottomOf="@id/til_weight_in_gm">
+            app:layout_constraintTop_toBottomOf="@id/til_weight_in_gm"
+            app:suffixText="P">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edt_p"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
                 android:text="0"
-                android:textAlignment="center"
-                android:inputType="numberDecimal" />
+                android:textAlignment="center" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -193,19 +193,19 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:hintEnabled="false"
             app:expandedHintEnabled="false"
-            app:suffixText="K"
+            app:hintEnabled="false"
             app:layout_constraintStart_toStartOf="@id/til_category"
-            app:layout_constraintTop_toBottomOf="@id/til_weight_in_gm">
+            app:layout_constraintTop_toBottomOf="@id/til_weight_in_gm"
+            app:suffixText="K">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edt_k"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
+                android:inputType="numberDecimal"
                 android:text="0"
-                android:inputType="numberDecimal" />
+                android:textAlignment="center" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -261,15 +261,13 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/mcv_img_1"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/mcv_img_2"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/til_specification"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_label_image"
             app:layout_constraintTop_toBottomOf="@+id/til_specification">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -301,14 +299,14 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/mcv_img_3"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
             android:layout_marginTop="16dp"
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp"
-            app:layout_constraintEnd_toEndOf="@+id/mcv_img_1"
-            app:layout_constraintStart_toStartOf="@+id/mcv_img_1"
-            app:layout_constraintTop_toBottomOf="@+id/mcv_img_1">
+            app:layout_constraintEnd_toEndOf="@id/mcv_img_1"
+            app:layout_constraintStart_toStartOf="@id/mcv_img_1"
+            app:layout_constraintTop_toBottomOf="@id/mcv_img_2">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -339,14 +337,14 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/mcv_img_2"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp"
-            app:layout_constraintEnd_toEndOf="@+id/til_specification"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/mcv_img_1"
-            app:layout_constraintTop_toTopOf="@+id/mcv_img_1">
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/mcv_img_1"
+            app:layout_constraintStart_toStartOf="@id/mcv_img_1"
+            app:layout_constraintEnd_toEndOf="@id/mcv_img_1">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -375,28 +373,18 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <TextView
-            android:id="@+id/tv_label_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/image_gif"
-            android:textAppearance="@style/TextAppearance.ShweMi.Body2"
-            app:layout_constraintStart_toStartOf="@+id/tv_label_category"
-            app:layout_constraintTop_toTopOf="@+id/mcv_img_1" />
+
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/mcv_video"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
             android:backgroundTint="@android:color/transparent"
             app:cardElevation="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/mcv_img_2"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/til_specification"
-            app:layout_constraintTop_toBottomOf="@+id/mcv_img_3">
+            app:layout_constraintEnd_toEndOf="@id/mcv_img_1"
+            app:layout_constraintStart_toStartOf="@id/mcv_img_1"
+            app:layout_constraintTop_toBottomOf="@id/mcv_gif">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -427,15 +415,15 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/mcv_gif"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:layout_marginTop="16dp"
             android:backgroundTint="@android:color/transparent"
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp"
-
-            app:layout_constraintBottom_toBottomOf="@+id/mcv_img_3"
-            app:layout_constraintEnd_toEndOf="@+id/mcv_img_2"
-            app:layout_constraintTop_toTopOf="@+id/mcv_img_3">
+            app:layout_constraintEnd_toEndOf="@id/mcv_img_1"
+            app:layout_constraintStart_toStartOf="@id/mcv_img_1"
+            app:layout_constraintTop_toBottomOf="@id/mcv_img_3">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -464,6 +452,15 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <TextView
+            android:id="@+id/tv_label_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/image_gif"
+            android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+            app:layout_constraintStart_toStartOf="@+id/tv_label_category"
+            app:layout_constraintTop_toTopOf="@+id/mcv_img_1" />
         <TextView
             android:id="@+id/tv_label_video_gif"
             android:layout_width="wrap_content"

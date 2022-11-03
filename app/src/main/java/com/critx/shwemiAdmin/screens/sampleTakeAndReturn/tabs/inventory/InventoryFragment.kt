@@ -157,6 +157,7 @@ class InventoryFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     viewModel.checkSampleUseCase(it.data!!.id)
+                    viewModel.resetScanProductCodeLive()
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
@@ -219,7 +220,6 @@ class InventoryFragment : Fragment() {
                     if (viewModel.scannedSamples.contains(it.data!!)) {
                         Toast.makeText(requireContext(), "Stock Already Scanned", Toast.LENGTH_LONG)
                             .show()
-
                     } else if (binding.radioButtonSampleTake.isChecked){
                         viewModel.addStockSample(it.data!!)
                     }else if (binding.radioButtonSampleReturn.isChecked){
@@ -230,6 +230,7 @@ class InventoryFragment : Fragment() {
                                .show()
                        }
                     }
+                    viewModel.resetSampleLiveData()
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
@@ -244,6 +245,9 @@ class InventoryFragment : Fragment() {
             if (binding.radioButtonSampleTake.isChecked){
                 newSampleRecyclerAdapter.submitList(it)
                 newSampleRecyclerAdapter.notifyDataSetChanged()
+                binding.layoutBtnGroup.btnSave.isEnabled =
+                    it.filter { it.specification.isNullOrEmpty() }.isNotEmpty()
+
             }else{
                 sampleReturnRecyclerAdapter.submitList(it)
                 sampleReturnRecyclerAdapter.notifyDataSetChanged()

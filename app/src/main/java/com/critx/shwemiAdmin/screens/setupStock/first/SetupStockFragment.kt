@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -22,6 +23,7 @@ import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.FragmentSetUpStocklBinding
 import com.critx.shwemiAdmin.screens.dailyGoldPrice.DailyGoldPriceFragmentDirections
+import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryTypeUiModel
 import com.critx.shwemiAdmin.workerManager.RefreshTokenWorker
 import com.google.android.material.chip.Chip
@@ -31,11 +33,12 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SetupStockFragment:Fragment() {
+class SetupStockFragment : Fragment() {
     private lateinit var binding: FragmentSetUpStocklBinding
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
     private val viewModel by viewModels<SetupStockViewModel>()
+    private val sharedViewModel by activityViewModels<SharedViewModel>()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,15 +48,18 @@ class SetupStockFragment:Fragment() {
             binding = it
         }.root
     }
-    private fun toolbarsetup(){
 
-        val toolbarCenterImage: ImageView = activity!!.findViewById<View>(R.id.center_image) as ImageView
-        val toolbarCenterText: TextView = activity!!.findViewById<View>(R.id.center_text_title) as TextView
+    private fun toolbarsetup() {
+
+        val toolbarCenterImage: ImageView =
+            activity!!.findViewById<View>(R.id.center_image) as ImageView
+        val toolbarCenterText: TextView =
+            activity!!.findViewById<View>(R.id.center_text_title) as TextView
         val toolbarEndIcon: ImageView = activity!!.findViewById<View>(R.id.iv_end_icon) as ImageView
-        toolbarCenterText.isVisible=true
-        toolbarCenterText.text=getString(R.string.set_up_stock)
-        toolbarCenterImage.isVisible =false
-        toolbarEndIcon.isVisible =false
+        toolbarCenterText.isVisible = true
+        toolbarCenterText.text = getString(R.string.set_up_stock)
+        toolbarCenterImage.isVisible = false
+        toolbarEndIcon.isVisible = false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,16 +67,15 @@ class SetupStockFragment:Fragment() {
         toolbarsetup()
         loadingDialog = requireContext().getAlertDialog()
 
-
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 //getJewelleryType
                 launch {
                     viewModel.jewelleryTypeState.collectLatest {
-                        if (it.loading){
+                        if (it.loading) {
                             loadingDialog.show()
-                        }else loadingDialog.dismiss()
+                        } else loadingDialog.dismiss()
                         if (!it.successLoading.isNullOrEmpty()) {
                             binding.chipGroupJewelleryType.removeAllViews()
                             for (item in it.successLoading!!) {
@@ -101,39 +106,48 @@ class SetupStockFragment:Fragment() {
             }
         }
 
-//        val nameList =
-//            arrayListOf("Extra Soft", "Soft", "Medium", "Hard", "Extra Hard",
-//                "Extra Soft", "Soft", "Medium", "Hard", "Extra Hard")
-
         var checkedChipId = 0
         binding.chipGroupJewelleryType.setOnCheckedStateChangeListener { group, checkedIds ->
-            for (index in 0 until group.childCount){
+            for (index in 0 until group.childCount) {
                 val chip = group[index] as Chip
-                if (chip.isChecked){
+                if (chip.isChecked) {
                     checkedChipId = chip.id
                     binding.tvFirstCat.setTextColor(requireContext().getColor(R.color.primary_color))
                     binding.tvFirstCat.text = chip.text
                     binding.ivFirst.isVisible = true
+                    if (findNavController().previousBackStackEntry?.destination?.id == R.id.recommendStockFragment) {
+                        sharedViewModel.firstCatForRecommendCat =
+                            JewelleryTypeUiModel(checkedChipId.toString(), chip.text.toString())
+                    }
                 }
             }
+            if (checkedIds.isNullOrEmpty()) sharedViewModel.firstCatForRecommendCat = null
+
         }
         binding.btnNext.setOnClickListener {
-            if (binding.tvFirstCat.text != requireContext().getString(R.string.jewellery_type)){
-                findNavController().navigate(SetupStockFragmentDirections.actionSetupStockFragmentToChooseJewelleryQualityFragment(
-                    JewelleryTypeUiModel(checkedChipId.toString(),binding.tvFirstCat.text.toString())
-                ))
-            }else{
-                Toast.makeText(requireContext(),"Please choose at least one category",Toast.LENGTH_LONG).show()
+            if (binding.tvFirstCat.text != requireContext().getString(R.string.jewellery_type)) {
+                findNavController().navigate(
+                    SetupStockFragmentDirections.actionSetupStockFragmentToChooseJewelleryQualityFragment(
+                        JewelleryTypeUiModel(
+                            checkedChipId.toString(),
+                            binding.tvFirstCat.text.toString()
+                        )
+                    )
+                )
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Please choose at least one category",
+                    Toast.LENGTH_LONG
+                ).show()
             }
 
         }
-
     }
-
 
 }
 
 data class CustomChip(
-    val id:String,
-    val name:String
+    val id: String,
+    val name: String
 )

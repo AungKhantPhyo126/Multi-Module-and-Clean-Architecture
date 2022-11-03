@@ -163,6 +163,8 @@ class CollectStockFragment : Fragment() {
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
+                    Toast.makeText(requireContext(),it.message,Toast.LENGTH_LONG).show()
+
                 }
             }
         }

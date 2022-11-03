@@ -112,7 +112,7 @@ class ImageViewHolder(
                 false
             ).root
             val editView = bubble.findViewById<ImageView>(R.id.iv_edit)
-            val deleteView = bubble.findViewById<ImageView>(R.id.iv_trash)
+//            val deleteView = bubble.findViewById<ImageView>(R.id.iv_trash)
 
             val popupWindow: PopupWindow = BubblePopupHelper.create(binding.root.context, bubble)
             popupWindow.width = 300
@@ -131,10 +131,10 @@ class ImageViewHolder(
                 popupWindow.dismiss()
                 navigateToEditClick(data)
             }
-            deleteView.setOnClickListener {
-                popupWindow.dismiss()
-                deleteClick(data.id)
-            }
+//            deleteView.setOnClickListener {
+//                popupWindow.dismiss()
+//                deleteClick(data.id)
+//            }
             return@setOnLongClickListener true
         }
 

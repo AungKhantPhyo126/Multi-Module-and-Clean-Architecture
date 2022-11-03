@@ -338,15 +338,14 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_img_1"
-                android:layout_width="130dp"
-                android:layout_height="130dp"
+                android:layout_width="0dp"
+                android:layout_height="220dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="16dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/mcv_img_2"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@+id/til_service_fee"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tv_label_image"
                 app:layout_constraintTop_toBottomOf="@+id/til_service_fee">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -378,15 +377,14 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_img_3"
-                android:layout_width="130dp"
-                android:layout_height="130dp"
+                android:layout_width="0dp"
+                android:layout_height="220dp"
                 android:layout_marginTop="16dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="8dp"
-                app:layout_constraintEnd_toEndOf="@+id/mcv_img_1"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toBottomOf="@+id/mcv_img_1">
+                app:layout_constraintEnd_toEndOf="@id/mcv_img_1"
+                app:layout_constraintStart_toStartOf="@id/mcv_img_1"
+                app:layout_constraintTop_toBottomOf="@id/mcv_img_2">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -417,14 +415,14 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_img_2"
-                android:layout_width="130dp"
-                android:layout_height="130dp"
+                android:layout_width="0dp"
+                android:layout_height="220dp"
+                android:layout_marginTop="16dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="8dp"
-                app:layout_constraintEnd_toEndOf="@+id/til_service_fee"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/mcv_img_1"
-                app:layout_constraintTop_toTopOf="@+id/mcv_img_1">
+                app:layout_constraintEnd_toEndOf="@id/mcv_img_1"
+                app:layout_constraintStart_toStartOf="@id/mcv_img_1"
+                app:layout_constraintTop_toBottomOf="@id/mcv_img_1">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -438,10 +436,8 @@
                         android:src="@drawable/empty_picture"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
                         android:id="@+id/iv_remove3"
@@ -455,34 +451,16 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:id="@+id/tv_label_image"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/image_gif"
-                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
-                app:layout_constraintEnd_toStartOf="@+id/guideline2"
-                app:layout_constraintStart_toStartOf="@+id/tv_label_service_fee"
-                app:layout_constraintTop_toTopOf="@+id/mcv_img_1" />
-
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_video"
-                android:layout_width="130dp"
-                android:layout_height="130dp"
+                android:layout_width="0dp"
+                android:layout_height="220dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="16dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="8dp"
                 android:backgroundTint="@android:color/transparent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/mcv_img_2"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@+id/til_service_fee"
-                app:layout_constraintTop_toBottomOf="@+id/mcv_img_3">
+                app:cardElevation="8dp"
+                app:layout_constraintEnd_toEndOf="@id/mcv_img_1"
+                app:layout_constraintStart_toStartOf="@id/mcv_img_1"
+                app:layout_constraintTop_toBottomOf="@id/mcv_gif">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -513,15 +491,15 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_gif"
-                android:layout_width="130dp"
-                android:layout_height="130dp"
+                android:layout_width="0dp"
+                android:layout_height="220dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@android:color/transparent"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="8dp"
-                android:backgroundTint="@android:color/transparent"
-                app:layout_constraintBottom_toBottomOf="@+id/mcv_img_3"
-                app:layout_constraintEnd_toEndOf="@+id/mcv_img_2"
-                app:layout_constraintStart_toStartOf="@+id/mcv_img_2"
-                app:layout_constraintTop_toTopOf="@+id/mcv_img_3">
+                app:layout_constraintEnd_toEndOf="@id/mcv_img_1"
+                app:layout_constraintStart_toStartOf="@id/mcv_img_1"
+                app:layout_constraintTop_toBottomOf="@id/mcv_img_3">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -549,6 +527,16 @@
                         app:tint="@color/primary_color" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:id="@+id/tv_label_image"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/image_gif"
+                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                app:layout_constraintEnd_toStartOf="@+id/guideline2"
+                app:layout_constraintStart_toStartOf="@+id/tv_label_service_fee"
+                app:layout_constraintTop_toTopOf="@+id/mcv_img_1" />
 
             <TextView
                 android:id="@+id/tv_label_video_gif"

@@ -2,8 +2,8 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mcv_image_card"
-    android:layout_width="70dp"
-    android:layout_height="70dp"
+    android:layout_width="156dp"
+    android:layout_height="156dp"
     app:cardBackgroundColor="@color/based_grey"
     app:cardElevation="8dp"
     app:cardCornerRadius="8dp"
@@ -18,8 +18,8 @@
         android:gravity="center">
         <ImageView
             android:id="@+id/iv_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:src="@drawable/ic_plus"
             android:scaleType="fitXY"
             app:tint="@color/divider_grey" />

@@ -59,7 +59,6 @@ class ProductCreateFragment : Fragment() {
     private lateinit var binding:FragmentProductCreateBinding
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
-    private lateinit var adapter: RecommendStockAdapter
     private val viewModel by viewModels<FinalStockSetupViewModel>()
     private val sharedViewModel by activityViewModels<SharedViewModel>()
 
@@ -398,7 +397,7 @@ var photo1: MultipartBody.Part? = null
                 video = MultipartBody.Part.createFormData("video", selectedItem.name, requestBody)
             }else{
                 video = null
-                binding.ivVideo.setImageDrawable(requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_picture))
+                binding.ivVideo.setImageDrawable(requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_video))
             }
 
         }
@@ -585,18 +584,24 @@ var photo1: MultipartBody.Part? = null
         dialogbinding.actDiamondActualSellValue.text?.clear()
         dialogbinding.tvReset.setTextColor(requireContext().getColorStateList(R.color.edit_text_color))
         dialogbinding.btnCalculate.text = "Calculate"
-
-
     }
 
     fun calculate(dialogbinding: AddGemValueDialogBinding) {
-        val diamondPrice = dialogbinding.edtDiamondPrice.text.toString().toInt()
-        val diamondActualPrice = dialogbinding.edtDiamondActualPrice.text.toString().toInt()
-        val diamondValue = dialogbinding.edtDiamondValue.text.toString().toInt()
-        val actualSellValue = diamondActualPrice * (diamondValue / diamondPrice)
-        dialogbinding.actDiamondActualSellValue.setText(actualSellValue.toString())
-        dialogbinding.tvReset.setTextColor(requireContext().getColorStateList(R.color.primary_color))
-        dialogbinding.btnCalculate.text = "Add"
+        if (dialogbinding.edtDiamondPrice.text.isNullOrEmpty() ||
+            dialogbinding.edtDiamondActualPrice.text.isNullOrEmpty() ||
+            dialogbinding.edtDiamondValue.text.isNullOrEmpty()
+            ){
+            Toast.makeText(requireContext(), "Fill The Required Fields", Toast.LENGTH_LONG).show()
+        }else{
+            val diamondPrice = dialogbinding.edtDiamondPrice.text.toString().toDouble()
+            val diamondActualPrice = dialogbinding.edtDiamondActualPrice.text.toString().toDouble()
+            val diamondValue = dialogbinding.edtDiamondValue.text.toString().toDouble()
+            val actualSellValue = diamondActualPrice * (diamondValue / diamondPrice)
+            dialogbinding.actDiamondActualSellValue.setText(actualSellValue.toString())
+            dialogbinding.tvReset.setTextColor(requireContext().getColorStateList(R.color.primary_color))
+            dialogbinding.btnCalculate.text = "Add"
+        }
+
     }
 
     fun createProduct() {

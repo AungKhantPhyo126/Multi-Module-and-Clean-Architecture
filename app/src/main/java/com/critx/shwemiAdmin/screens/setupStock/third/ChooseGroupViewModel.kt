@@ -111,16 +111,16 @@ class ChooseGroupViewModel @Inject constructor(
 
     fun selectImage(id: String) {
 
-        _getGroupLiveData.value!!.data!!.filter {
-            it!!.id != id
+        _getGroupLiveData.value!!.data!!.filterNotNull().filter {
+            it.id != id
         }.forEach {
-            it!!.isChecked = false
+            it.isChecked = false
         }
 
-        _getGroupLiveData.value!!.data!!.find {
-            it!!.id == id
-        }?.isChecked = _getGroupLiveData.value!!.data!!.find {
-            it!!.id == id
+        _getGroupLiveData.value!!.data!!.filterNotNull().find {
+            it.id == id
+        }?.isChecked = _getGroupLiveData.value!!.data!!.filterNotNull().find {
+            it.id == id
         }?.isChecked!!.not()
 
         _getGroupLiveData.value = _getGroupLiveData.value

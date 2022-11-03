@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_buble"
-    android:layout_width="150dp"
+    android:layout_width="100dp"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:bl_arrowDirection="bottom"
@@ -23,39 +23,39 @@
         android:paddingBottom="8dp"
         >
 
-        <ImageView
-            android:id="@+id/iv_trash"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/iv_edit"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_trash_can" />
+<!--        <ImageView-->
+<!--            android:id="@+id/iv_trash"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/iv_edit"-->
+<!--            app:layout_constraintHorizontal_bias="0.5"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:srcCompat="@drawable/ic_trash_can" />-->
 
         <ImageView
             android:id="@+id/iv_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_trash"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/iv_trash"
-            app:layout_constraintTop_toTopOf="@+id/iv_trash"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_edit_outline" />
 
-        <TextView
-            android:id="@+id/tv_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Delete"
-            android:textAppearance="@style/TextAppearance.ShweMi.Caption"
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="@+id/iv_trash"
-            app:layout_constraintStart_toStartOf="@+id/iv_trash"
-            app:layout_constraintTop_toBottomOf="@+id/iv_trash" />
+<!--        <TextView-->
+<!--            android:id="@+id/tv_delete"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:text="Delete"-->
+<!--            android:textAppearance="@style/TextAppearance.ShweMi.Caption"-->
+<!--            android:textColor="@color/white"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/iv_trash"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/iv_trash"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/iv_trash" />-->
         <TextView
             android:id="@+id/tv_edit"
             android:layout_width="wrap_content"

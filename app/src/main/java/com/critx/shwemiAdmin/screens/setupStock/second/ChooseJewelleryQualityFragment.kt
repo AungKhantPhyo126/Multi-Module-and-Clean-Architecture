@@ -13,6 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -25,6 +26,7 @@ import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.BubbleCardBinding
 import com.critx.shwemiAdmin.databinding.FragmentChooseJewelleryQualityBinding
+import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryQualityUiModel
 import com.daasuu.bl.ArrowDirection
 import com.daasuu.bl.BubblePopupHelper
@@ -42,6 +44,7 @@ class ChooseJewelleryQualityFragment:Fragment() {
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
     var directNavigateList = mutableListOf<String>()
+    private val sharedViewModel by activityViewModels<SharedViewModel>()
 
 
     override fun onCreateView(
@@ -69,12 +72,8 @@ class ChooseJewelleryQualityFragment:Fragment() {
         toolbarsetup()
         loadingDialog = requireContext().getAlertDialog()
         viewModel.getJewelleryQuality()
-        binding.tvFirstCat.text = args.firstCat.name
-//        val nameList =
-//            arrayListOf("Extra Soft", "Soft", "Medium", "Hard", "Extra Hard",
-//                "Extra Soft", "Soft", "Medium", "Hard", "Extra Hard")
-//        val chipIdList = mutableListOf<Int>()
 
+        binding.tvFirstCat.text = args.firstCat.name
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
 
@@ -115,40 +114,50 @@ class ChooseJewelleryQualityFragment:Fragment() {
                 }
             }
         }
-        var checkedChipId = 0
-        binding.chipGroupJewelleryQuality.setOnCheckedStateChangeListener { group, checkedIds ->
-            for (index in 0 until group.childCount){
-                val chip = group[index] as Chip
-                if (chip.isChecked){
-                    checkedChipId = chip.id
-                    binding.tvSecondCat.isVisible=true
-                    binding.tvSecondCat.setTextColor(requireContext().getColor(R.color.primary_color))
-                    binding.tvSecondCat.text = chip.text
-                    binding.ivSecond.isVisible = true
+            var checkedChipId = 0
+            binding.chipGroupJewelleryQuality.setOnCheckedStateChangeListener { group, checkedIds ->
+                for (index in 0 until group.childCount){
+                    val chip = group[index] as Chip
+                    if (chip.isChecked){
+                        checkedChipId = chip.id
+                        binding.tvSecondCat.isVisible=true
+                        binding.tvSecondCat.setTextColor(requireContext().getColor(R.color.primary_color))
+                        binding.tvSecondCat.text = chip.text
+                        binding.ivSecond.isVisible = true
+                        if (sharedViewModel.firstCatForRecommendCat != null){
+                            sharedViewModel.secondCatForRecomendCat = JewelleryQualityUiModel(checkedChipId.toString(),chip.text.toString())
+                        }
+                    }
                 }
+                if (checkedIds.isNullOrEmpty()) sharedViewModel.secondCatForRecomendCat = null
             }
-        }
+
+
+            binding.btnNext.setOnClickListener {
+                if (directNavigateList.contains(binding.chipGroupJewelleryQuality.checkedChipId.toString())){
+                    if (sharedViewModel.firstCatForRecommendCat != null) {
+                        Toast.makeText(requireContext(),"Please choose ဒုံးထည် or အသစ်ထည်", Toast.LENGTH_LONG).show()
+                    }else{
+                        findNavController().navigate(ChooseJewelleryQualityFragmentDirections.actionChooseJewelleryQualityFragmentToProductCreateFragment())
+                    }
+                }else if (binding.tvSecondCat.isVisible){
+                    findNavController().navigate(
+                        com.critx.shwemiAdmin.screens.setupStock.second.ChooseJewelleryQualityFragmentDirections.actionChooseJewelleryQualityFragmentToChooseGroupFragment(
+                            args.firstCat,
+                            com.critx.shwemiAdmin.uiModel.setupStock.JewelleryQualityUiModel(
+                                checkedChipId.toString(),
+                                binding.tvSecondCat.text.toString()
+                            )
+                        ))
+                }
+                else{
+                    Toast.makeText(requireContext(),"Please choose at least one category", Toast.LENGTH_LONG).show()
+                }
+
+            }
 
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
-        }
-        binding.btnNext.setOnClickListener {
-             if (directNavigateList.contains(binding.chipGroupJewelleryQuality.checkedChipId.toString())){
-               findNavController().navigate(ChooseJewelleryQualityFragmentDirections.actionChooseJewelleryQualityFragmentToProductCreateFragment())
-            }else if (binding.tvSecondCat.isVisible){
-                 findNavController().navigate(
-                     com.critx.shwemiAdmin.screens.setupStock.second.ChooseJewelleryQualityFragmentDirections.actionChooseJewelleryQualityFragmentToChooseGroupFragment(
-                         args.firstCat,
-                         com.critx.shwemiAdmin.uiModel.setupStock.JewelleryQualityUiModel(
-                             checkedChipId.toString(),
-                             binding.tvSecondCat.text.toString()
-                         )
-                     ))
-             }
-             else{
-                Toast.makeText(requireContext(),"Please choose at least one category", Toast.LENGTH_LONG).show()
-            }
-
         }
 
     }

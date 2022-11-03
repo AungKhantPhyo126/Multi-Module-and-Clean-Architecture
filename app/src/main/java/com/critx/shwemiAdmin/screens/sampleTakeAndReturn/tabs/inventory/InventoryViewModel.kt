@@ -38,6 +38,11 @@ class InventoryViewModel @Inject constructor(
     val sampleLiveData: LiveData<Resource<SampleItemUIModel>>
         get() = _sampleLiveData
 
+    fun resetSampleLiveData(){
+        _sampleLiveData.value = null
+    }
+
+
     private val _scannedSampleLiveData = MutableLiveData<MutableList<SampleItemUIModel>>()
     val scannedSampleLiveData: LiveData<MutableList<SampleItemUIModel>>
         get() = _scannedSampleLiveData
@@ -89,10 +94,9 @@ class InventoryViewModel @Inject constructor(
     }
 
     fun resetSample() {
-        scannedSamples.removeAll(scannedSamples)
-        _scannedSampleLiveData.value = scannedSamples
+        _scannedSampleLiveData.value = mutableListOf<SampleItemUIModel>()
+        _sampleLiveData.value = null
         _addToHandedListLiveData.value = null
-
     }
 
     private val _voucherScanLiveData = MutableLiveData<Resource<VoucherScanDomain>>()

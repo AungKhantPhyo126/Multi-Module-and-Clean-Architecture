@@ -28,7 +28,8 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/layout-v26/include_price_by_table_small_items.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/add_gem_value_dialog.xml" value="0.16" />
-        <entry key="..\:/Shwe Mi/app/src/main/res/layout/bubble_card.xml" value="0.2" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/bubble_card.xml" value="0.4" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/bubble_card_delete.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/choice_chip.xml" value="0.2013681060282172" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/custom_tab_item.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/drawer_header.xml" value="0.22826086956521738" />
@@ -62,7 +63,7 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_outside.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_point.xml" value="0.2" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_price_by_table.xml" value="0.22826086956521738" />
-        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_product_create.xml" value="0.4" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_product_create.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_product_setup.xml" value="0.20436083796494228" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_recommend_stock.xml" value="0.20436083796494228" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_repair_stock.xml" value="0.20521590423257802" />

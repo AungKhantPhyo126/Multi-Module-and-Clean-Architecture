@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -17,9 +18,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.critx.common.ui.getAlertDialog
+import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.FragmentRecommendStockBinding
+import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
 import com.critx.shwemiAdmin.screens.setupStock.fourth.JewelleryCategoryRecyclerAdapter
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.AddCategoryViewModel
 import com.critx.shwemiAdmin.screens.setupStock.third.ChooseCategoryViewModel
@@ -32,13 +35,13 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class RecommendStockFragment:Fragment() {
+class RecommendStockFragment : Fragment() {
     private lateinit var binding: FragmentRecommendStockBinding
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
     private lateinit var adapter: RecommendStockAdapter
-    private val  viewModel by viewModels<RecommendStockViewModel> ()
-    private val  sharedViewModel by activityViewModels<AddCategoryViewModel> ()
+    private val viewModel by viewModels<RecommendStockViewModel>()
+    private val sharedViewModel by activityViewModels<SharedViewModel>()
     private val args by navArgs<RecommendStockFragmentArgs>()
 
 
@@ -69,122 +72,48 @@ class RecommendStockFragment:Fragment() {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
         loadingDialog = requireContext().getAlertDialog()
-        viewModel.getJewelleryCategory(null,null,null,null)
-
+        if (findNavController().previousBackStackEntry?.destination?.id == R.id.chooseCategoryFragment) {
+            args.categoryUIModel!!.isChecked = false
+            sharedViewModel.addRecommendCat(args.categoryUIModel!!)
+        }
+//        else if (args.categoryUIModel != null){
+//            viewModel.getRelatedCategories(args.categoryUIModel!!.id)
+//        }
         adapter = RecommendStockAdapter({
-            viewModel.selectImage(it)
-            collectSelectedImage()
-        },{
-
+            //delete click
+            sharedViewModel.removeRecommendCat(it)
+        }, {
+            //addnew click
+            findNavController().navigate(RecommendStockFragmentDirections.actionRecommendStockFragmentToSetupStockFragment())
         })
-        binding.rvRecommendStock.adapter =adapter
-        collectData()
+        binding.rvRecommendStock.adapter = adapter
+        sharedViewModel.recommendCatList.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+            adapter.notifyDataSetChanged()
 
+        }
+//        viewModel.recommendCatListLiveData.observe(viewLifecycleOwner){
+//            when(it){
+//                is Resource.Loading->{
+//                    loadingDialog.show()
+//                }
+//                is Resource.Success->{
+//                    loadingDialog.dismiss()
+////                    sharedViewModel.addRecommendCatBatch(it.data.orEmpty())
+////                    adapter.submitList(it.data)
+////                    adapter.notifyDataSetChanged()
+//                }
+//                is Resource.Error->{
+//                    loadingDialog.dismiss()
+//                    Toast.makeText(requireContext(),it.message, Toast.LENGTH_LONG).show()
+//
+//                }
+//            }
+//        }
 
 
         binding.btnOk.setOnClickListener {
-            findNavController().popBackStack()
-        }
-    }
-    fun collectSelectedImage(){
-        viewLifecycleOwner.lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-
-                //getJewelleryGroup
-                launch {
-                    viewModel.getRecommendCategory.collect {
-                        if (it.loading) {
-                            loadingDialog.show()
-                        } else loadingDialog.dismiss()
-                        if (it.successLoading != null) {
-                            adapter.submitList(it.successLoading)
-                            sharedViewModel.setSelectedRecommendCat(it.successLoading!!.filter {
-                                it.isChecked
-                            }.map { it.id.toInt() })
-                            findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                                "selected recommend categories",
-                                it.successLoading!!.filter {
-                                    it.isChecked
-                                }.map { it.id.toInt() }
-                            )
-                            adapter.notifyDataSetChanged()
-                        }
-
-                    }
-                }
-            }
-        }
-    }
-
-    fun collectData(){
-        viewLifecycleOwner.lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-
-                //getJewelleryGroup
-                launch {
-                    viewModel.getRecommendCategory.collect {
-                        if (it.loading) {
-                            loadingDialog.show()
-                        } else loadingDialog.dismiss()
-                        if (it.successLoading != null) {
-                            adapter.submitList(it.successLoading)
-                            args.catId?.let {
-                                if (sharedViewModel.selectedRecommendCat.value.isNullOrEmpty()){
-                                    viewModel.getRelatedCat(it)
-                                }else{
-                                    sharedViewModel.selectedRecommendCat.value!!.forEach {
-                                        viewModel.selectImage(it.toString())
-                                    }
-                                }
-                            }
-//                            sharedViewModel.selectedRecommendCat?.addAll(it.successLoading!!.filter {
-//                                it.isChecked
-//                            }.map { it.id.toInt() })
-                            findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                                "selected recommend categories",
-                                it.successLoading!!.filter {
-                                    it.isChecked
-                                }.map { it.id.toInt() }
-                            )
-                            adapter.notifyDataSetChanged()
-                        }
-
-                    }
-                }
-
-                launch {
-                    viewModel.getRelatedCats.collectLatest {
-                        if(it.getRelatedCatsLoading){
-                            loadingDialog.show()
-                        }else loadingDialog.dismiss()
-
-                        if (it.getRelatedCatsSuccessLoading != null){
-                            it.getRelatedCatsSuccessLoading?.forEach {
-                                viewModel.selectImage(it.id)
-                                collectSelectedImage()
-                            }
-                        }
-                    }
-                }
-
-
-
-                launch {
-                    viewModel.event.collectLatest { event ->
-                        when (event) {
-                            is UiEvent.ShowErrorSnackBar -> {
-                                snackBar?.dismiss()
-                                snackBar = Snackbar.make(
-                                    binding.root,
-                                    event.message,
-                                    Snackbar.LENGTH_LONG
-                                )
-                                snackBar?.show()
-                            }
-                        }
-                    }
-                }
-            }
+            findNavController().popBackStack(R.id.addCategoryFragment, false)
         }
     }
 

@@ -64,6 +64,7 @@ class ChooseCategoryFragment : Fragment() {
             findNavController().popBackStack()
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -88,7 +89,7 @@ class ChooseCategoryFragment : Fragment() {
     }
 
 
-    fun refreshData(){
+    fun refreshData() {
         viewModel.getJewelleryCategory(
             frequentUse,
             args.firstCat.id.toInt(),
@@ -96,6 +97,7 @@ class ChooseCategoryFragment : Fragment() {
             args.thirdCat.id.toInt()
         )
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
@@ -114,16 +116,16 @@ class ChooseCategoryFragment : Fragment() {
 //            sharedViewModel.fourthCat = it
 //            binding.btnNext.isEnabled = it != null
 //        }
-        viewModel._selectedJewelleryCategory.observe(viewLifecycleOwner){
+        viewModel._selectedJewelleryCategory.observe(viewLifecycleOwner) {
             sharedViewModel.fourthCat = it
-            if (it != null){
+            if (it != null) {
                 binding.tvFourthCat.isVisible = true
                 binding.tvFourthCat.setTextColor(requireContext().getColor(R.color.primary_color))
                 binding.tvFourthCat.text = it.name
                 binding.chipGroupChooseGp.check(it.id.toInt())
                 viewModel.selectImage(it.id)
                 collectDataForRecyclerView()
-            }else{
+            } else {
                 binding.tvFourthCat.isVisible = false
             }
             binding.btnNext.isEnabled = it != null
@@ -145,10 +147,18 @@ class ChooseCategoryFragment : Fragment() {
         setupRecyclerImage()
 
         binding.btnNext.setOnClickListener {
-            sharedViewModel.firstCat = args.firstCat
-            sharedViewModel.secondCat = args.secondCat
-            sharedViewModel.thirdCat = args.thirdCat
-            findNavController().navigate(ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToProductCreateFragment())
+            if (sharedViewModel.thirdCatForRecommendCat != null) {
+                findNavController().navigate(
+                    ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToRecommendStockFragment(
+                        sharedViewModel.fourthCat!!
+                    )
+                )
+            }else{
+                sharedViewModel.firstCat = args.firstCat
+                sharedViewModel.secondCat = args.secondCat
+                sharedViewModel.thirdCat = args.thirdCat
+                findNavController().navigate(ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToProductCreateFragment())
+            }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -156,10 +166,10 @@ class ChooseCategoryFragment : Fragment() {
                 //deleteCategory
                 launch {
                     viewModel.deleteCategoryState.collectLatest {
-                        if (it.deleteLoading){
+                        if (it.deleteLoading) {
                             loadingDialog.show()
-                        }else loadingDialog.dismiss()
-                        if (it.deleteSuccessLoading != null){
+                        } else loadingDialog.dismiss()
+                        if (it.deleteSuccessLoading != null) {
                             viewModel.setSelectedCategory(null)
                             requireContext().showSuccessDialog("Category Deleted") {
                                 it.deleteSuccessLoading = null
@@ -176,21 +186,27 @@ class ChooseCategoryFragment : Fragment() {
                             loadingDialog.show()
                         } else loadingDialog.dismiss()
                         if (it.successLoading != null) {
-                            adapter.submitList(it.successLoading)
-                            adapter.notifyDataSetChanged()
+                            if(sharedViewModel.thirdCatForRecommendCat != null){
+                                adapter.submitList(it.successLoading!!.filterNotNull())
+                                adapter.notifyDataSetChanged()
+                            }else{
+                                adapter.submitList(it.successLoading)
+                                adapter.notifyDataSetChanged()
+                            }
+
                             findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<JewelleryCategoryUiModel>(
                                 CREATED_CATEGORY_ID
                             )
                                 ?.observe(viewLifecycleOwner) {
-                                    if(
+                                    if (
                                         findNavController().previousBackStackEntry?.destination?.id == R.id.editGroupFragment ||
                                         findNavController().previousBackStackEntry?.destination?.id == R.id.chooseCategoryFragment
-                                    ){
+                                    ) {
                                         viewModel.setSelectedCategory(it)
                                     }
 
                                 }
-                            setupChipView(it.successLoading.orEmpty())
+                            setupChipView(it.successLoading?.filterNotNull().orEmpty())
                         }
                     }
                 }
@@ -265,9 +281,10 @@ class ChooseCategoryFragment : Fragment() {
         }, {
             viewModel.setSelectedCategory(it)
             navigateWithEditView()
-        },{
+        }, {
             //deleteclick
-            requireContext().showDeleteSuccessDialog("All items related to this Category will be deleted"
+            requireContext().showDeleteSuccessDialog(
+                "All items related to this Category will be deleted"
             ) {
                 viewModel.deleteJewelleryCategory(it)
             }
@@ -283,12 +300,14 @@ class ChooseCategoryFragment : Fragment() {
         addChipView.isChipIconVisible = true
         addChipView.setTextColor(requireContext().getColorStateList(R.color.primary_color))
         addChipView.chipIconTint = requireContext().getColorStateList(R.color.primary_color)
-        binding.chipGroupChooseGp.addView(addChipView)
+        if(sharedViewModel.thirdCatForRecommendCat == null){
+            binding.chipGroupChooseGp.addView(addChipView)
+        }
         for (item in list.toSet()) {
             val chip = requireContext().createChip(item.name)
             val bubble = BubbleCardBinding.inflate(layoutInflater).root
             val editView = bubble.findViewById<ImageView>(R.id.iv_edit)
-            val deleteView = bubble.findViewById<ImageView>(R.id.iv_trash)
+//            val deleteView = bubble.findViewById<ImageView>(R.id.iv_trash)
 
             val popupWindow: PopupWindow = BubblePopupHelper.create(requireContext(), bubble)
             popupWindow.width = 300
@@ -309,19 +328,20 @@ class ChooseCategoryFragment : Fragment() {
             }
             editView.setOnClickListener {
                 popupWindow.dismiss()
-                if (!binding.rvImages.isVisible){
+                if (!binding.rvImages.isVisible) {
                     viewModel.setSelectedCategory(item)
                 }
                 navigateWithEditView()
             }
 
-            deleteView.setOnClickListener {
-                popupWindow.dismiss()
-                requireContext().showDeleteSuccessDialog("All items related to this Category will be deleted"
-                ) {
-                    viewModel.deleteJewelleryCategory(item.id)
-                }
-            }
+//            deleteView.setOnClickListener {
+//                popupWindow.dismiss()
+//                requireContext().showDeleteSuccessDialog(
+//                    "All items related to this Category will be deleted"
+//                ) {
+//                    viewModel.deleteJewelleryCategory(item.id)
+//                }
+//            }
 //            val chip = ItemImageSelectionBinding.inflate(layoutInflater).root
             binding.chipGroupChooseGp.addView(chip)
         }
@@ -342,8 +362,8 @@ class ChooseCategoryFragment : Fragment() {
             }.let {
                 if (it != null) {
                     val chip = it as Chip
-                    if (!binding.rvImages.isVisible){
-                        viewModel.setSelectedCategory(list.find { it.id ==chip.id.toString() })
+                    if (!binding.rvImages.isVisible) {
+                        viewModel.setSelectedCategory(list.find { it.id == chip.id.toString() })
                     }
                 } else {
                     viewModel.setSelectedCategory(null)
@@ -352,16 +372,17 @@ class ChooseCategoryFragment : Fragment() {
             }
 
         }
-        if (viewModel.selectedJewelleryCategory.value != null){
+        if (viewModel.selectedJewelleryCategory.value != null) {
             binding.chipGroupChooseGp.check(viewModel.selectedJewelleryCategory.value!!.id.toInt())
-        }else{
-            binding.tvFourthCat.isVisible=false
+        } else {
+            binding.tvFourthCat.isVisible = false
         }
         binding.btnBack.setOnClickListener {
             viewModel.setSelectedCategory(null)
             findNavController().popBackStack()
         }
     }
+
     fun collectDataForRecyclerView() {
         viewLifecycleOwner.lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -376,7 +397,7 @@ class ChooseCategoryFragment : Fragment() {
                             adapter.submitList(uiState.successLoading)
                             adapter.notifyDataSetChanged()
 //                            setupChipView(uiState.successLoading.orEmpty())
-                            uiState.successLoading?.find { uiModel ->
+                            uiState.successLoading?.filterNotNull()?.find { uiModel ->
                                 uiModel.isChecked
                             }?.name.let { checkedName ->
                                 if (checkedName != null) {

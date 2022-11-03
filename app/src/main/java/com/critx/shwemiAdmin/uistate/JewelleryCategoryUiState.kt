@@ -5,7 +5,7 @@ import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryCategoryUiModel
 
 data class JewelleryCategoryUiState(
     var loading:Boolean = false,
-    var successLoading: List<JewelleryCategoryUiModel>? = null,
+    var successLoading: List<JewelleryCategoryUiModel?>? = null,
     var errorMessage:String? =null,
     var createLoading:Boolean = false,
     var createSuccessLoading:JewelleryCategoryUiModel? = null,

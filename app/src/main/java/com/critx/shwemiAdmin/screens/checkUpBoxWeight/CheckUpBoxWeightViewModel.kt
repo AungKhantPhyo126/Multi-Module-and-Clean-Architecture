@@ -22,7 +22,7 @@ import javax.inject.Inject
 class CheckUpBoxWeightViewModel @Inject constructor(
     private val localDatabase: LocalDatabase,
     private val getBoxDataUseCase: GetBoxDataUseCase,
-    private val getBoxWeightUseCase: GetBoxWeightUseCase
+    private val getBoxWeightUseCase: GetBoxWeightUseCase,
 ):ViewModel() {
 
     private var _scannedBoxWeightLive = MutableLiveData<MutableList<BoxWeightUiModel>>()

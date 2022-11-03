@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.critx.common.ui.loadImageWithGlide
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.BubbleCardBinding
+import com.critx.shwemiAdmin.databinding.BubbleCardDeleteBinding
 import com.critx.shwemiAdmin.databinding.ItemAddNewBinding
 import com.critx.shwemiAdmin.databinding.ItemImageSelectionBinding
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryCategoryUiModel
@@ -19,7 +20,7 @@ import com.daasuu.bl.ArrowDirection
 import com.daasuu.bl.BubblePopupHelper
 
 class RecommendStockAdapter(
-    private val onclick: (id: String) -> Unit,
+    private val onclick: (id: JewelleryCategoryUiModel) -> Unit,
     private val addNewClick: () -> Unit,
 
 ) : ListAdapter<JewelleryCategoryUiModel, RecyclerView.ViewHolder>(
@@ -34,12 +35,12 @@ class RecommendStockAdapter(
 //    var tracker: SelectionTracker<Long>? = null
     override fun getItemViewType(position: Int): Int {
 
-        return if (position == itemCount-1) addItemViewType
+        return if (getItem(position)==null) addItemViewType
         else itemViewType;
     }
 
     override fun getItemCount(): Int {
-        return super.getItemCount()+1
+        return super.getItemCount()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -88,16 +89,41 @@ class AddItemViewHolder(
 
 class ImageViewHolder(
     private val binding: ItemImageSelectionBinding,
-    private val onclick: (id: String) -> Unit,
+    private val onclick: (id: JewelleryCategoryUiModel) -> Unit,
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(data: JewelleryCategoryUiModel) {
         binding.ivImage.loadImageWithGlide(data.imageUrlList[0])
-        binding.mcvImageCard.setOnClickListener {
-            onclick(data.id)
-        }
         binding.mcvImageCard.isChecked = data.isChecked
+        binding.mcvImageCard.setOnLongClickListener {
+            val bubble = BubbleCardDeleteBinding.inflate(
+                LayoutInflater.from(binding.root.context),
+                binding.root,
+                false
+            ).root
+            val deleteView = bubble.findViewById<ImageView>(R.id.iv_trash)
+
+            val popupWindow: PopupWindow = BubblePopupHelper.create(binding.root.context, bubble)
+            popupWindow.width = 300
+            popupWindow.height = 200
+
+            val location = IntArray(2)
+            binding.mcvImageCard.getLocationInWindow(location)
+            bubble.arrowDirection = ArrowDirection.BOTTOM
+            popupWindow.showAtLocation(
+                binding.mcvImageCard,
+                Gravity.NO_GRAVITY,
+                location[0],
+                location[1] - binding.mcvImageCard.height
+            )
+
+            deleteView.setOnClickListener {
+                popupWindow.dismiss()
+                onclick(data)
+            }
+            return@setOnLongClickListener true
+        }
     }
 
     fun getItem(): ItemDetailsLookup.ItemDetails<Long> =

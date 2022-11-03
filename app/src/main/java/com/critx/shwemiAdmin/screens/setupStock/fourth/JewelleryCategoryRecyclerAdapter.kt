@@ -39,12 +39,12 @@ class JewelleryCategoryRecyclerAdapter(
 //    var tracker: SelectionTracker<Long>? = null
     override fun getItemViewType(position: Int): Int {
 
-        return if (position == 0) addItemViewType
+        return if (getItem(position) == null) addItemViewType
         else itemViewType;
     }
 
     override fun getItemCount(): Int {
-        return super.getItemCount()+1
+        return super.getItemCount()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -67,7 +67,7 @@ class JewelleryCategoryRecyclerAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ImageViewHolder -> {
-                holder.bind(getItem(position-1))
+                holder.bind(getItem(position))
             }
             is AddItemViewHolder -> {
                 holder.bind()
@@ -113,7 +113,7 @@ class ImageViewHolder(
                 false
             ).root
             val editView = bubble.findViewById<ImageView>(R.id.iv_edit)
-            val deleteView = bubble.findViewById<ImageView>(R.id.iv_trash)
+//            val deleteView = bubble.findViewById<ImageView>(R.id.iv_trash)
 
             val popupWindow: PopupWindow = BubblePopupHelper.create(binding.root.context, bubble)
             popupWindow.width = 300
@@ -132,10 +132,10 @@ class ImageViewHolder(
                 popupWindow.dismiss()
                 navigateToEditClick(data)
             }
-            deleteView.setOnClickListener {
-                popupWindow.dismiss()
-                deleteClick(data.id)
-            }
+//            deleteView.setOnClickListener {
+//                popupWindow.dismiss()
+//                deleteClick(data.id)
+//            }
             return@setOnLongClickListener true
         }
 

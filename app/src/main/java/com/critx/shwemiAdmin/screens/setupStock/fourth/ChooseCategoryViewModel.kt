@@ -102,10 +102,12 @@ class ChooseCategoryViewModel @Inject constructor(
                         )
                     }
                     is Resource.Success -> {
+                        val resultList = mutableListOf<JewelleryCategoryUiModel?>(null)
+                        resultList.addAll(result.data!!.map { it.asUiModel() })
                         _getJewelleryCategory.update { uiState ->
                             uiState.copy(
                                 loading = false,
-                                successLoading = result.data!!.map { it.asUiModel() }
+                                successLoading = resultList as List<JewelleryCategoryUiModel>
                             )
                         }
 
@@ -126,16 +128,16 @@ class ChooseCategoryViewModel @Inject constructor(
 
     fun selectImage(id: String) {
         val groupImageList = _getJewelleryCategory.value.successLoading.orEmpty()
-        groupImageList.filter {
+        groupImageList.filterNotNull().filter {
             it.id != id
         }.forEach {
             it.isChecked = false
         }
 
         _getJewelleryCategory.update { uiState ->
-            groupImageList.find {
+            groupImageList.filterNotNull().find {
                 it.id == id
-            }?.isChecked = groupImageList.find {
+            }?.isChecked = groupImageList.filterNotNull().find {
                 it.id == id
             }?.isChecked!!.not()
 

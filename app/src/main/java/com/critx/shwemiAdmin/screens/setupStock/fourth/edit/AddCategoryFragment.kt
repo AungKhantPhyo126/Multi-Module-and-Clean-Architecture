@@ -33,14 +33,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.map
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.critx.common.ui.*
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.FragmentAddCategoryBinding
+import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
 import com.critx.shwemiAdmin.screens.setupStock.third.edit.getRealPathFromUri
 import com.critx.shwemiAdmin.screens.setupStock.third.edit.persistImage
+import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryCategoryUiModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -63,6 +66,7 @@ const val CREATED_CATEGORY_ID = "created-category-id"
 class AddCategoryFragment : Fragment() {
     private lateinit var binding: FragmentAddCategoryBinding
     private val viewModel by activityViewModels<AddCategoryViewModel>()
+    private val sharedViewModel by activityViewModels<SharedViewModel>()
     private val args by navArgs<AddCategoryFragmentArgs>()
 
     private var isFrequentlyUsed = 0
@@ -82,7 +86,7 @@ class AddCategoryFragment : Fragment() {
     var photo3: MultipartBody.Part? = null
     var video: MultipartBody.Part? = null
     var selectedGif: MultipartBody.Part? = null
-    var selectedRecommendCat: MutableList<Int> = mutableListOf()
+//    var selectedRecommendCat: MutableList<Int> = mutableListOf()
 
     var image1: Bitmap? = null
     var image2: Bitmap? = null
@@ -104,7 +108,7 @@ class AddCategoryFragment : Fragment() {
             viewModel.setSelectedGif(null)
             viewModel.setSelectedVideo(null)
             viewModel.selectedDesignIds = null
-            viewModel.setSelectedRecommendCat(null)
+            sharedViewModel.resetRecommendCat()
             findNavController().popBackStack()
         }
 
@@ -271,18 +275,19 @@ class AddCategoryFragment : Fragment() {
         }
 
 
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<List<Int>>(
-            "selected recommend categories"
-        )
-            ?.observe(viewLifecycleOwner) {
-                viewModel.setSelectedRecommendCat(it)
-            }
+//        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<List<Int>>(
+//            "selected recommend categories"
+//        )
+//            ?.observe(viewLifecycleOwner) {
+//                viewModel.setSelectedRecommendCat(it)
+//            }
 
         if (args.category != null) {
-            if (viewModel.selectedRecommendCat.value ==  null){
-                viewModel.getRelatedCat(args.category!!.id)
-            }
-            binding.cbFrequentlyUsed.isChecked = args.groupInfo!!.isFrequentlyUse
+            viewModel.getRelatedCat(args.category!!.id)
+
+            binding.cbFrequentlyUsed.isChecked = args.category!!.isFrequentlyUse
+            binding.cbHasGem.isChecked = args.category!!.withGem
+            binding.cbOrderToGs.isChecked = args.category!!.orderToGs
             binding.btnConfirm.text = "Save"
             binding.edtEnterCategory.setText(args.category!!.name)
             binding.edtAvgWeight.setText(args.category!!.avgWeightPerUnitGm.toString())
@@ -290,7 +295,7 @@ class AddCategoryFragment : Fragment() {
             binding.edtK.setText(args.category!!.avgKPYUiModel.kyat.toString())
             binding.edtP.setText(args.category!!.avgKPYUiModel.pae.toString())
             binding.edtY.setText(args.category!!.avgKPYUiModel.ywae.toString())
-            if(viewModel.selectedDesignIds == null){
+            if (viewModel.selectedDesignIds == null) {
                 viewModel.selectedDesignIds = args.category!!.designsList as MutableList<Int>
             }
         } else {
@@ -388,7 +393,7 @@ class AddCategoryFragment : Fragment() {
             }
             if (selectedItem == null) {
                 selectedGif = null
-                binding.ivGif.setImageResource(com.critx.shwemiAdmin.R.drawable.empty_picture)
+                binding.ivGif.setImageResource(com.critx.shwemiAdmin.R.drawable.empty_gif)
             }
             binding.ivRemoveGif.isVisible = selectedItem != null
 
@@ -405,16 +410,16 @@ class AddCategoryFragment : Fragment() {
                 val requestBody =
                     selectedItem.asRequestBody("multipart/form-data".toMediaTypeOrNull())
                 video = MultipartBody.Part.createFormData("video", selectedItem.name, requestBody)
-            }else{
+            } else {
                 video = null
-                binding.ivVideo.setImageDrawable(requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_picture))
+                binding.ivVideo.setImageDrawable(requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_video))
             }
 
         }
-        viewModel.selectedRecommendCat.observe(viewLifecycleOwner) { result ->
-            if (!result.isNullOrEmpty()) {
-                selectedRecommendCat.clear()
-                selectedRecommendCat.addAll(result)
+        sharedViewModel.recommendCatList.observe(viewLifecycleOwner) { result ->
+            if (result.filterNotNull().isNotEmpty()) {
+//                selectedRecommendCat.clear()
+//                selectedRecommendCat.addAll(result)
                 binding.tvRecommendCat.setTextColor(requireContext().getColorStateList(com.critx.shwemiAdmin.R.color.primary_color))
             } else {
                 binding.tvRecommendCat.setTextColor(requireContext().getColorStateList(com.critx.shwemiAdmin.R.color.edit_text_color))
@@ -470,14 +475,15 @@ class AddCategoryFragment : Fragment() {
         }
         binding.mcvRecommendAhtal.setOnClickListener {
             findNavController().navigate(
-                AddCategoryFragmentDirections.actionAddCategoryFragmentToRecommendStockFragment(
-                    selectedRecommendCat.map { it.toString() }.toTypedArray(),
-                    args.category?.id
-                )
+                AddCategoryFragmentDirections.actionAddCategoryFragmentToRecommendStockFragment(args.category)
             )
         }
         binding.mcvChooseDesign.setOnClickListener {
-            findNavController().navigate(AddCategoryFragmentDirections.actionAddCategoryFragmentToDesignListFragment(args.type.id))
+            findNavController().navigate(
+                AddCategoryFragmentDirections.actionAddCategoryFragmentToDesignListFragment(
+                    args.type.id
+                )
+            )
         }
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -675,7 +681,10 @@ class AddCategoryFragment : Fragment() {
                         } else loadingDialog.dismiss()
 
                         if (it.getRelatedCatsSuccessLoading != null) {
-                            viewModel.setSelectedRecommendCat(it.getRelatedCatsSuccessLoading!!.map { it.id.toInt() })
+//                            viewModel.setSelectedRecommendCat(it.getRelatedCatsSuccessLoading!!.map { it.id.toInt() })
+                            if(sharedViewModel.hasRemoveRecord.not()){
+                                sharedViewModel.addRecommendCatBatch(it.getRelatedCatsSuccessLoading!!)
+                            }
                         }
                     }
                 }
@@ -831,7 +840,7 @@ class AddCategoryFragment : Fragment() {
                 .toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
             val recommendCat = mutableListOf<RequestBody>()
-            selectedRecommendCat.let { list ->
+            sharedViewModel.recommendCatList.value?.filterNotNull()?.map { it.id }?.let { list ->
                 list.forEach {
                     recommendCat.add(
                         it.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull())
