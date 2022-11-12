@@ -4,3 +4,16 @@ data class CreateCategoryError(
     val data: List<Any>,
     val response: Response
 )
+
+data class SimpleError(
+    val response: ResponseSimple,
+    val data: List<Any>
+)
+
+data class ResponseSimple(
+    val message: String?
+)
+
+fun ResponseSimple.getMessage():List<String?>{
+   return listOf<String?>(message)
+}

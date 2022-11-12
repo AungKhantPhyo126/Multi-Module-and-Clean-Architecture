@@ -61,6 +61,11 @@ class CheckUpStockViewModel @Inject constructor(
         _stockListLive.value = stockCodeList
     }
 
+    fun resetStockCodeList(){
+        stockCodeList.removeAll(stockCodeList)
+        _stockListLive.value = mutableListOf()
+    }
+
     fun resetScanStockLive(){
         _scanStockLive.value= null
     }

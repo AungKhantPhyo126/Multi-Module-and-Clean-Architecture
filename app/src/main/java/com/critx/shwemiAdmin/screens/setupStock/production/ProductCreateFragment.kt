@@ -56,17 +56,17 @@ import java.io.InputStream
 
 @AndroidEntryPoint
 class ProductCreateFragment : Fragment() {
-    private lateinit var binding:FragmentProductCreateBinding
+    private lateinit var binding: FragmentProductCreateBinding
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
     private val viewModel by viewModels<FinalStockSetupViewModel>()
     private val sharedViewModel by activityViewModels<SharedViewModel>()
 
-    var originalfile:File? =null
-    var originalbm :Bitmap? = null
+    var originalfile: File? = null
+    var originalbm: Bitmap? = null
 
-//    private val args by navArgs<FinalStockSetupFragmentArgs>()
-var photo1: MultipartBody.Part? = null
+    //    private val args by navArgs<FinalStockSetupFragmentArgs>()
+    var photo1: MultipartBody.Part? = null
     var photo2: MultipartBody.Part? = null
     var photo3: MultipartBody.Part? = null
     var video: MultipartBody.Part? = null
@@ -144,7 +144,7 @@ var photo1: MultipartBody.Part? = null
                                 it1
                             )
                         }
-                        viewModel.setSelectedImgUri3( SelectedImage(file!!, selectedImage!!))
+                        viewModel.setSelectedImgUri3(SelectedImage(file!!, selectedImage!!))
                     }
                 }
 
@@ -187,7 +187,7 @@ var photo1: MultipartBody.Part? = null
                                 it1
                             )
                         }
-                        viewModel.setSelectedGif( SelectedImage(file!!, selectedImage!!))
+                        viewModel.setSelectedGif(SelectedImage(file!!, selectedImage!!))
                     }
                 }
 
@@ -249,7 +249,7 @@ var photo1: MultipartBody.Part? = null
                     val mDisplayMetrics = requireActivity().windowManager.currentWindowMetrics
                     mDisplayWidth = mDisplayMetrics.bounds.width()
                     mDisplayHeight = mDisplayMetrics.bounds.height()
-                }else{
+                } else {
                     requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
                     mDisplayWidth = displayMetrics.widthPixels
                     mDisplayHeight = displayMetrics.heightPixels
@@ -298,11 +298,7 @@ var photo1: MultipartBody.Part? = null
         viewModel.selectedImgUri1?.observe(viewLifecycleOwner) { selectedItem ->
             selectedItem?.let {
                 binding.ivImage1.setImageBitmap(selectedItem.bitMap)
-                val requestBody = convertBitmapToFile(
-                    selectedItem.file.name,
-                    selectedItem.bitMap,
-                    requireContext()
-                ).asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
                 photo1 = MultipartBody.Part.createFormData(
                     "images[]",
                     selectedItem.file.name,
@@ -320,11 +316,8 @@ var photo1: MultipartBody.Part? = null
         viewModel.selectedImgUri2?.observe(viewLifecycleOwner) { selectedItem ->
             selectedItem?.let {
                 binding.ivImage2.setImageBitmap(selectedItem.bitMap)
-                val requestBody = convertBitmapToFile(
-                    selectedItem.file.name,
-                    selectedItem.bitMap,
-                    requireContext()
-                ).asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+
                 photo2 = MultipartBody.Part.createFormData(
                     "images[]",
                     selectedItem.file.name,
@@ -342,11 +335,8 @@ var photo1: MultipartBody.Part? = null
         viewModel.selectedImgUri3?.observe(viewLifecycleOwner) { selectedItem ->
             selectedItem?.let {
                 binding.ivImage3.setImageBitmap(selectedItem.bitMap)
-                val requestBody = convertBitmapToFile(
-                    selectedItem.file.name,
-                    selectedItem.bitMap,
-                    requireContext()
-                ).asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+
                 photo3 = MultipartBody.Part.createFormData(
                     "images[]",
                     selectedItem.file.name,
@@ -365,11 +355,8 @@ var photo1: MultipartBody.Part? = null
         viewModel.selectedGifUri?.observe(viewLifecycleOwner) { selectedItem ->
             selectedItem?.let {
                 binding.ivGif.setImageBitmap(selectedItem.bitMap)
-                val requestBody = convertBitmapToFile(
-                    selectedItem.file.name,
-                    selectedItem.bitMap,
-                    requireContext()
-                ).asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+
                 gif = MultipartBody.Part.createFormData(
                     "images[]",
                     selectedItem.file.name,
@@ -395,7 +382,7 @@ var photo1: MultipartBody.Part? = null
                 val requestBody =
                     selectedItem.asRequestBody("multipart/form-data".toMediaTypeOrNull())
                 video = MultipartBody.Part.createFormData("video", selectedItem.name, requestBody)
-            }else{
+            } else {
                 video = null
                 binding.ivVideo.setImageDrawable(requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_video))
             }
@@ -413,12 +400,14 @@ var photo1: MultipartBody.Part? = null
                     sharedViewModel.fourthCat?.let {
                         withContext(Dispatchers.IO) {
                             originalbm = getBitMapWithGlide(it.imageUrlList[0], requireContext())
-                            val fileName: String = it.imageUrlList[0].substring( it.imageUrlList[0].lastIndexOf('/') + 1)
-                            originalfile = convertBitmapToFile( fileName,originalbm!!, requireContext())
+                            val fileName: String =
+                                it.imageUrlList[0].substring(it.imageUrlList[0].lastIndexOf('/') + 1)
+                            originalfile =
+                                convertBitmapToFile(fileName, originalbm!!, requireContext())
                         }
                     }
-                    if (viewModel.selectedImgUri1.value == null && originalfile != null && originalbm != null){
-                        viewModel.setSelectedImgUri1(SelectedImage(originalfile!!,originalbm!!))
+                    if (viewModel.selectedImgUri1.value == null && originalfile != null && originalbm != null) {
+                        viewModel.setSelectedImgUri1(SelectedImage(originalfile!!, originalbm!!))
                     }
                 }
 
@@ -428,11 +417,11 @@ var photo1: MultipartBody.Part? = null
                         if (it.loading) {
                             loadingDialog.show()
                         } else loadingDialog.dismiss()
-                        if (it.success !=null){
+                        if (it.success != null) {
                             it.success = null
                             showSuccesDialog()
                         }
-                        if (it.getProductCodeSuccess != null){
+                        if (it.getProductCodeSuccess != null) {
                             binding.tvStockCodeNumber.text = it.getProductCodeSuccess
                         }
                     }
@@ -521,7 +510,7 @@ var photo1: MultipartBody.Part? = null
         launchChooseImage3.launch(pickIntent)
     }
 
-    fun showSuccesDialog(){
+    fun showSuccesDialog() {
         val builder = MaterialAlertDialogBuilder(requireContext())
         val inflater: LayoutInflater = LayoutInflater.from(builder.context)
         val successBinding = ProductAddedDialogBinding.inflate(
@@ -590,9 +579,9 @@ var photo1: MultipartBody.Part? = null
         if (dialogbinding.edtDiamondPrice.text.isNullOrEmpty() ||
             dialogbinding.edtDiamondActualPrice.text.isNullOrEmpty() ||
             dialogbinding.edtDiamondValue.text.isNullOrEmpty()
-            ){
+        ) {
             Toast.makeText(requireContext(), "Fill The Required Fields", Toast.LENGTH_LONG).show()
-        }else{
+        } else {
             val diamondPrice = dialogbinding.edtDiamondPrice.text.toString().toDouble()
             val diamondActualPrice = dialogbinding.edtDiamondActualPrice.text.toString().toDouble()
             val diamondValue = dialogbinding.edtDiamondValue.text.toString().toDouble()
@@ -612,29 +601,30 @@ var photo1: MultipartBody.Part? = null
             binding.edtY.text.isNullOrEmpty()
         ) {
             Toast.makeText(requireContext(), "Fill The Required Fields", Toast.LENGTH_LONG).show()
-        }else{
+        } else {
             val photoList = mutableListOf<MultipartBody.Part?>(photo1, photo2, photo3, gif)
             val photoToUpload = photoList.filterNotNull() as MutableList
 //        val videoList = mutableListOf(video!!)
 
             val productCode = binding.tvStockCodeNumber.text.toString()
                 .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val name = binding.edtEnterStockName.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val goldGemWeight = binding.edtGoldGemGm.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val gemValue = binding.edtGemValue.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val ptClipPrice = binding.edtPtClipPrice.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val serviceFee = binding.edtServiceFee.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val kyat = binding.edtK.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val pae = binding.edtP.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val ywae = binding.edtY.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val name = binding.edtEnterStockName.text?.toString()
+                ?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+
+            val goldGemWeight = binding.edtGoldGemGm.text?.toString()
+                ?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val gemValue = binding.edtGemValue.text?.toString()
+                ?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val ptClipPrice = binding.edtPtClipPrice.text?.toString()
+                ?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val serviceFee = binding.edtServiceFee.text?.toString()
+                ?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val kyat = binding.edtK.text?.toString()
+                ?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val pae = binding.edtP.text?.toString()
+                ?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val ywae = binding.edtY.text?.toString()
+                ?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
             val diamondInfo =
                 viewModel.diamondInfo?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
             val diamondPriceFromGS =
@@ -646,10 +636,12 @@ var photo1: MultipartBody.Part? = null
             val diamondPriceForSale =
                 viewModel.diamondPriceForSale?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
-            val type = sharedViewModel.firstCat!!.id.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val type =
+                sharedViewModel.firstCat!!.id.toRequestBody("multipart/form-data".toMediaTypeOrNull())
             val quality =
                 sharedViewModel.secondCat!!.id.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val group = sharedViewModel.thirdCat!!.id.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val group =
+                sharedViewModel.thirdCat!!.id.toRequestBody("multipart/form-data".toMediaTypeOrNull())
             val category =
                 sharedViewModel.fourthCat!!.id.toRequestBody("multipart/form-data".toMediaTypeOrNull())
 

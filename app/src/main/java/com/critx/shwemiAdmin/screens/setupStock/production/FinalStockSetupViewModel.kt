@@ -74,16 +74,16 @@ class FinalStockSetupViewModel @Inject constructor(
     val event = _event.asSharedFlow()
 
     fun createProduct(
-        name: RequestBody,
+        name: RequestBody?,
         productCode:RequestBody,
         type: RequestBody,
         quality: RequestBody,
         group: RequestBody?,
         categoryId: RequestBody?,
-        goldAndGemWeight: RequestBody,
-        gemWeightKyat: RequestBody,
-        gemWeightPae: RequestBody,
-        gemWeightYwae: RequestBody,
+        goldAndGemWeight: RequestBody?,
+        gemWeightKyat: RequestBody?,
+        gemWeightPae: RequestBody?,
+        gemWeightYwae: RequestBody?,
         gemValue: RequestBody?,
         ptAndClipCost: RequestBody?,
         maintenanceCost: RequestBody?,

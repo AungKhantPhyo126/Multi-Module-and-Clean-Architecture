@@ -28,6 +28,9 @@ fun Fragment.scanQrCode(context: Context,barlauncher:Any){
     gg.launch(options)
 }
 
+
+
+
 fun Fragment.getBarLauncher(context: Context):ActivityResultLauncher<ScanOptions>{
     return registerForActivityResult(ScanContract()) { result ->
             if (result.getContents() != null) {
@@ -57,4 +60,22 @@ fun Fragment.getBarLauncherTest(context: Context, scanAction:(gg:String)-> Unit)
                 .show()
         }
     }
+}
+
+fun Fragment.getBarLauncherTestRfid(context: Context):Pair<ActivityResultLauncher<ScanOptions>,String>{
+    var stringResult =""
+    val result = registerForActivityResult(ScanContract()) { result ->
+        if (result.getContents() != null) {
+            val builder: MaterialAlertDialogBuilder =MaterialAlertDialogBuilder(context)
+            builder.setTitle("Result")
+            builder.setMessage(result.contents)
+            builder.setPositiveButton("OK",
+                DialogInterface.OnClickListener { dialogInterface, i ->
+                    stringResult = result.contents
+                    dialogInterface.dismiss()
+                })
+                .show()
+        }
+    }
+    return Pair(result,stringResult)
 }

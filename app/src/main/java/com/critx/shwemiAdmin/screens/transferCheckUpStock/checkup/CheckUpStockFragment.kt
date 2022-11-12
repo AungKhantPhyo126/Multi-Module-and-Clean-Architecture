@@ -179,6 +179,7 @@ class CheckUpStockFragment : Fragment() {
                         )
                     )
                     viewModel.resetCheckUpStockLive()
+                    viewModel.resetStockCodeList()
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()

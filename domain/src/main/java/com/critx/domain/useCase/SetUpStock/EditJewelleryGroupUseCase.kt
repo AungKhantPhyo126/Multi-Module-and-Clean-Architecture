@@ -12,7 +12,7 @@ class EditJewelleryGroupUseCase @Inject constructor(
         token: String,
         method:RequestBody,
         groupId: String,
-        image: MultipartBody.Part,
+        image: MultipartBody.Part?,
         jewellery_type_id: RequestBody,
         jewellery_quality_id: RequestBody,
         is_frequently_used: RequestBody,

@@ -11,6 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.critx.common.qrscan.getBarLauncherTest
+import com.critx.common.qrscan.getBarLauncherTestRfid
+import com.critx.common.qrscan.scanQrCode
 import com.critx.common.ui.getAlertDialog
 import com.critx.common.ui.showSuccessDialog
 import com.critx.commonkotlin.util.Resource
@@ -23,6 +26,8 @@ class MatchCodeFragment :Fragment() {
     private val args by navArgs<MatchCodeFragmentArgs>()
     private val viewModel by viewModels<MatchCodeViewModel>()
     private lateinit var loadingDialog: AlertDialog
+    private lateinit var barlauncher:Any
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +42,20 @@ class MatchCodeFragment :Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadingDialog = requireContext().getAlertDialog()
-        val adapter = MatchCodeRecyclerAdapter(viewModel)
+
+        barlauncher = this.getBarLauncherTest(requireContext()){
+           viewModel.rfidScanCacheLiveData.value = it
+        }
+        val adapter = MatchCodeRecyclerAdapter(viewModel) {
+            scanQrCode(requireContext(),barlauncher)
+            viewModel.rfidScanPosition = it
+        }
+        viewModel.rfidScanCacheLiveData.observe(viewLifecycleOwner){
+            if (viewModel.rfidScanPosition != null){
+                viewModel.rfidCodeList[viewModel.rfidScanPosition!!]=it
+                adapter.notifyDataSetChanged()
+            }
+        }
         binding.rvMatchCode.adapter = adapter
 //        val dummyList =listOf(
 //            "smd 1","smd 2","smd 3",

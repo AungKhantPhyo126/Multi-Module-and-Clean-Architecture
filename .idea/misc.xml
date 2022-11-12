@@ -33,7 +33,7 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/choice_chip.xml" value="0.2013681060282172" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/custom_tab_item.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/drawer_header.xml" value="0.22826086956521738" />
-        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_add_category.xml" value="0.264" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_add_category.xml" value="0.24831867563372995" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_arrange_box.xml" value="0.3549618320610687" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_assign_goldsmith.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_assign_goldsmith_item.xml" value="0.2013681060282172" />
@@ -105,7 +105,7 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_drop_down_text.xml" value="0.16051912568306012" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_flash_sale.xml" value="0.20244565217391305" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_handed_list.xml" value="0.1996579734929457" />
-        <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_image_selection.xml" value="0.20436083796494228" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_image_selection.xml" value="0.4" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_jewellery_size.xml" value="0.20436083796494228" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_job.xml" value="0.2013681060282172" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_match_code.xml" value="0.20436083796494228" />

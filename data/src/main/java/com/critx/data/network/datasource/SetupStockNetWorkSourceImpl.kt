@@ -8,6 +8,7 @@ import com.critx.data.network.dto.SimpleResponseDto
 import com.critx.data.network.dto.setupStock.ProductCodeResponse
 import com.critx.data.network.dto.setupStock.jewelleryCategory.*
 import com.critx.data.network.dto.setupStock.jewelleryCategory.error.CreateCategoryError
+import com.critx.data.network.dto.setupStock.jewelleryCategory.error.SimpleError
 import com.critx.data.network.dto.setupStock.jewelleryCategory.error.getMessage
 import com.critx.data.network.dto.setupStock.jewelleryGroup.Data
 import com.critx.data.network.dto.setupStock.jewelleryGroup.JewelleryGroupDto
@@ -35,7 +36,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.string()?:"Bad request"
+                        response.errorBody()?.string() ?: "Bad request"
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -55,7 +56,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> response.errorBody()?.string()?:"Bad request"
+                    400 -> response.errorBody()?.string() ?: "Bad request"
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
                     403 -> "Forbidden"
@@ -80,7 +81,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> response.errorBody()?.string()?:"Bad request"
+                    400 -> response.errorBody()?.string() ?: "Bad request"
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
                     403 -> "Forbidden"
@@ -111,7 +112,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
                 when (response.code()) {
                     400 -> {
                         response.errorBody()?.parseError<CreateCategoryError>()
-                        response.errorBody()?.string()?:"Bad request"
+                        response.errorBody()?.string() ?: "Bad request"
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -128,7 +129,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         token: String,
         method: RequestBody,
         groupId: String,
-        image: MultipartBody.Part,
+        image: MultipartBody.Part?,
         jewellery_type_id: RequestBody,
         jewellery_quality_id: RequestBody,
         is_frequently_used: RequestBody,
@@ -145,7 +146,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
                 when (response.code()) {
                     400 -> {
                         response.errorBody()?.parseError<CreateCategoryError>()
-                        response.errorBody()?.string()?:"Bad request"
+                        response.errorBody()?.string() ?: "Bad request"
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -173,7 +174,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
                 when (response.code()) {
                     400 -> {
                         response.errorBody()?.parseError<CreateCategoryError>()
-                        response.errorBody()?.string()?:"Bad request"
+                        response.errorBody()?.string() ?: "Bad request"
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -200,7 +201,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.string()?:"Bad Request"
+                        response.errorBody()?.string() ?: "Bad Request"
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -232,7 +233,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> response.errorBody()?.string()?:"Bad request"
+                    400 -> response.errorBody()?.string() ?: "Bad request"
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
                     403 -> "Forbidden"
@@ -255,7 +256,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> response.errorBody()?.string()?:"Bad request"
+                    400 -> response.errorBody()?.string() ?: "Bad request"
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
                     403 -> "Forbidden"
@@ -273,7 +274,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         jewellery_quality_id: RequestBody,
         groupId: RequestBody,
         is_frequently_used: RequestBody,
-        withGem:RequestBody,
+        withGem: RequestBody,
         name: RequestBody,
         avgWeigh: RequestBody,
         avgKyat: RequestBody,
@@ -311,7 +312,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.string()?:"Bad request"
+                        response.errorBody()?.string() ?: "Bad request"
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -376,7 +377,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
 
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.string()?:"Bad request"
+                        response.errorBody()?.string() ?: "Bad request"
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -403,7 +404,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> response.errorBody()?.string()?:"Bad request"
+                    400 -> response.errorBody()?.string() ?: "Bad request"
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
                     403 -> "Forbidden"
@@ -415,7 +416,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getDesign(token: String,jewelleryType:String): DesignDto {
+    override suspend fun getDesign(token: String, jewelleryType: String): DesignDto {
         val response = setUpStockService.getDesignList(
             token,
             jewelleryType
@@ -425,7 +426,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> response.errorBody()?.string()?:"Bad request"
+                    400 -> response.errorBody()?.string() ?: "Bad request"
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
                     403 -> "Forbidden"
@@ -439,16 +440,16 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
 
     override suspend fun createProduct(
         token: String,
-        name: RequestBody,
+        name: RequestBody?,
         productCode: RequestBody,
         type: RequestBody,
         quality: RequestBody,
         group: RequestBody?,
         categoryId: RequestBody?,
-        goldAndGemWeight: RequestBody,
-        gemWeightKyat: RequestBody,
-        gemWeightPae: RequestBody,
-        gemWeightYwae: RequestBody,
+        goldAndGemWeight: RequestBody?,
+        gemWeightKyat: RequestBody?,
+        gemWeightPae: RequestBody?,
+        gemWeightYwae: RequestBody?,
         gemValue: RequestBody?,
         ptAndClipCost: RequestBody?,
         maintenanceCost: RequestBody?,
@@ -489,7 +490,15 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                       getErrorString(response.errorBody()?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!)
+//                        getErrorString(
+//                            response.errorBody()
+//                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+//                        )
+                        getErrorString(
+                            response.errorBody()
+                                ?.parseError<SimpleError>()?.response?.getMessage()!!
+                        )
+
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -513,7 +522,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
                 when (response.code()) {
                     400 -> {
                         response.errorBody()?.parseError<CreateCategoryError>()
-                        response.errorBody()?.string()?:"Bad request"
+                        response.errorBody()?.string() ?: "Bad request"
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -540,7 +549,7 @@ inline fun <reified T> ResponseBody.parseError(): T? {
     return null
 }
 
-fun getErrorString(errorList:List<String?>):String{
+fun getErrorString(errorList: List<String?>): String {
     val gg = errorList.filterNotNull()
     return gg[0]
 }

@@ -4,21 +4,29 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.ItemMatchCodeBinding
+import com.journeyapps.barcodescanner.ScanOptions
 
 
-class MatchCodeRecyclerAdapter (private val viewModel: MatchCodeViewModel)  :
+class MatchCodeRecyclerAdapter(
+    private val viewModel: MatchCodeViewModel,     private val onclick:(position:Int)->Unit
+
+) :
     ListAdapter<String, StockCodeListViewHolder>(
-    StockCodeListDiffUtil
-){
+        StockCodeListDiffUtil
+    ) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StockCodeListViewHolder {
         return StockCodeListViewHolder(
             ItemMatchCodeBinding.inflate(
-                LayoutInflater.from(parent.context),parent,false
-            ),viewModel)
+                LayoutInflater.from(parent.context), parent, false
+            ), viewModel, onclick
+        )
     }
 
     override fun onBindViewHolder(holder: StockCodeListViewHolder, position: Int) {
@@ -26,10 +34,19 @@ class MatchCodeRecyclerAdapter (private val viewModel: MatchCodeViewModel)  :
     }
 }
 
-class StockCodeListViewHolder(private val binding: ItemMatchCodeBinding,
-private val viewModel: MatchCodeViewModel): RecyclerView.ViewHolder(binding.root){
-    fun bind(data: String){
+class StockCodeListViewHolder(
+    private val binding: ItemMatchCodeBinding,
+    private val viewModel: MatchCodeViewModel,
+    private val onclick:(position:Int)->Unit
+) : RecyclerView.ViewHolder(binding.root) {
+    fun bind(data: String) {
+
         binding.tvStockCode.text = data
+        binding.tilRfidCode.setEndIconOnClickListener {
+            onclick(bindingAdapterPosition)
+//             scanQrCodeRfid(binding.root.context,barlauncher)
+//            viewModel.rfidCodeList[bindingAdapterPosition] = barlauncher.second
+        }
         binding.edtRfid.setText(viewModel.rfidCodeList[bindingAdapterPosition])
         binding.edtRfid.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {

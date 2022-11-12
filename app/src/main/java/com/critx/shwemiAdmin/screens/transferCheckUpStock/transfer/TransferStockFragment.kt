@@ -152,6 +152,7 @@ class TransferStockFragment:Fragment() {
             }else{
                 findNavController().navigate(TransferCheckUpStockFragmentDirections.actionTransferCheckUpStockFragmentToMatchCodeFragment(
                     viewModel.stockCodeList.map { it.invoiceCode }.toTypedArray(),viewModel.targetBoxCode!!,viewModel.stockCodeList.map { it.id }.toTypedArray()))
+                viewModel.resetStockListLive()
             }
 
         }

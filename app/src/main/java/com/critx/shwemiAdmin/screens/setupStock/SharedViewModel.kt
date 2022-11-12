@@ -41,6 +41,12 @@ class SharedViewModel : ViewModel() {
     var secondCatForRecomendCat: JewelleryQualityUiModel? = null
     var thirdCatForRecommendCat: ChooseGroupUIModel? = null
 
+    fun resetForRecommendCat(){
+        firstCatForRecommendCat = null
+        secondCatForRecomendCat = null
+        thirdCatForRecommendCat = null
+    }
+
     var hasRemoveRecord :Boolean = false
 
     var recommendCatList = MutableLiveData<MutableList<JewelleryCategoryUiModel?>>(mutableListOf(null))

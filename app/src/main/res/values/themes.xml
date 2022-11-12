@@ -48,4 +48,10 @@
     <style name="ChipTextStyle" parent="TextAppearance.ShweMi.Body2">
         <item name="android:textColor">@color/edit_text_color</item>
     </style>
+
+    <style name="roundedCornersImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
 </resources>

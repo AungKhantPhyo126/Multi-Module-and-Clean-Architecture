@@ -30,7 +30,6 @@ import com.critx.shwemiAdmin.databinding.FragmentOutsideBinding
 import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.GIVE_GOLD_STATE
 import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.SelectedImage
-import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.convertBitmapToFile
 import com.critx.shwemiAdmin.screens.setupStock.third.edit.getRealPathFromUri
 import com.critx.shwemiAdmin.uiModel.collectStock.CollectStockBatchUIModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -159,7 +158,7 @@ class OutSideFragment : Fragment() {
         /**  **/
 
         binding.layoutBtnGroup.btnAddToHandedList.isEnabled =
-            false
+            sharedViewModel.sampleTakeScreenUIState != GIVE_GOLD_STATE
         binding.layoutBtnGroup.btnSave.setOnClickListener {
             if (photo != null) {
                 viewModel.saveOusideSample(
@@ -186,11 +185,7 @@ class OutSideFragment : Fragment() {
 
         viewModel.selectedImgUri.observe(viewLifecycleOwner) {
             if (it != null) {
-                val requestBody = convertBitmapToFile(
-                    it.file.name,
-                    it.bitMap,
-                    requireContext()
-                ).asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
                 binding.ivOutside.setImageBitmap(it.bitMap)
                 photo = MultipartBody.Part.createFormData("image", it.file.name, requestBody)
             }

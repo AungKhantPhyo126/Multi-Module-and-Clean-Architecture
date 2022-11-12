@@ -266,11 +266,11 @@ class AddCategoryFragment : Fragment() {
         }
         orderToGs = if (binding.cbOrderToGs.isChecked) 1 else 0
         binding.cbOrderToGs.setOnCheckedChangeListener { compoundButton, ischecked ->
-            isFrequentlyUsed = if (ischecked) 1 else 0
+            orderToGs = if (ischecked) 1 else 0
         }
 
         withGem = if (binding.cbHasGem.isChecked) 1 else 0
-        binding.cbOrderToGs.setOnCheckedChangeListener { compoundButton, ischecked ->
+        binding.cbHasGem.setOnCheckedChangeListener { compoundButton, ischecked ->
             withGem = if (ischecked) 1 else 0
         }
 
@@ -313,11 +313,7 @@ class AddCategoryFragment : Fragment() {
         viewModel.selectedImgUri1?.observe(viewLifecycleOwner) { selectedItem ->
             selectedItem?.let {
                 binding.ivImage1.setImageBitmap(selectedItem.bitMap)
-                val requestBody = convertBitmapToFile(
-                    selectedItem.file.name,
-                    selectedItem.bitMap,
-                    requireContext()
-                ).asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
                 photo1 = MultipartBody.Part.createFormData(
                     "images[]",
                     selectedItem.file.name,
@@ -335,11 +331,8 @@ class AddCategoryFragment : Fragment() {
         viewModel.selectedImgUri2?.observe(viewLifecycleOwner) { selectedItem ->
             selectedItem?.let {
                 binding.ivImage2.setImageBitmap(selectedItem.bitMap)
-                val requestBody = convertBitmapToFile(
-                    selectedItem.file.name,
-                    selectedItem.bitMap,
-                    requireContext()
-                ).asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                              val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+
                 photo2 = MultipartBody.Part.createFormData(
                     "images[]",
                     selectedItem.file.name,
@@ -357,11 +350,8 @@ class AddCategoryFragment : Fragment() {
         viewModel.selectedImgUri3?.observe(viewLifecycleOwner) { selectedItem ->
             selectedItem?.let {
                 binding.ivImage3.setImageBitmap(selectedItem.bitMap)
-                val requestBody = convertBitmapToFile(
-                    selectedItem.file.name,
-                    selectedItem.bitMap,
-                    requireContext()
-                ).asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                              val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+
                 photo3 = MultipartBody.Part.createFormData(
                     "images[]",
                     selectedItem.file.name,
@@ -380,11 +370,8 @@ class AddCategoryFragment : Fragment() {
         viewModel.selectedGifUri?.observe(viewLifecycleOwner) { selectedItem ->
             selectedItem?.let {
                 binding.ivGif.setImageBitmap(selectedItem.bitMap)
-                val requestBody = convertBitmapToFile(
-                    selectedItem.file.name,
-                    selectedItem.bitMap,
-                    requireContext()
-                ).asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                              val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+
                 selectedGif = MultipartBody.Part.createFormData(
                     "images[]",
                     selectedItem.file.name,
@@ -702,6 +689,7 @@ class AddCategoryFragment : Fragment() {
                                     CREATED_CATEGORY_ID,
                                     it.createSuccessLoading
                                 )
+                                sharedViewModel.resetForRecommendCat()
                                 it.createSuccessLoading = null
                                 findNavController().popBackStack()
                             }
@@ -718,6 +706,7 @@ class AddCategoryFragment : Fragment() {
                         if (it.editSuccessLoading != null) {
                             requireContext().showSuccessDialog("Category Updated") {
                                 it.editSuccessLoading = null
+                                sharedViewModel.resetForRecommendCat()
                                 findNavController().popBackStack()
                             }
                         }

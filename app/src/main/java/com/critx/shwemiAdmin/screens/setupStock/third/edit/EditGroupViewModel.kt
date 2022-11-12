@@ -44,7 +44,7 @@ class EditGroupViewModel @Inject constructor(
     val event = _event.asSharedFlow()
 
     fun editGroup(
-        image: MultipartBody.Part,
+        image: MultipartBody.Part?,
         groupId:String,
         jewellery_type_id : RequestBody,
         jewellery_quality_id : RequestBody,

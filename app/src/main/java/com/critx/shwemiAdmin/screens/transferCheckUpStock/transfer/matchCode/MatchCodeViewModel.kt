@@ -20,6 +20,9 @@ class MatchCodeViewModel @Inject constructor(
 ) :ViewModel(){
     var rfidCodeList = mutableListOf<String>()
 
+    var rfidScanPosition:Int? =null
+    val rfidScanCacheLiveData = MutableLiveData<String>()
+
     private var _transferLiveData = MutableLiveData<Resource<String>>()
     val transferLiveData: LiveData<Resource<String>>
         get() = _transferLiveData

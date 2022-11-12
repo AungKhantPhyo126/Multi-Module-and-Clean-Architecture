@@ -37,7 +37,6 @@ import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.FragmentNewGroupBinding
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.SelectedImage
-import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.convertBitmapToFile
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.getResizedBitmap
 import com.critx.shwemiAdmin.screens.setupStock.third.ChooseGroupViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -71,8 +70,7 @@ class EditGroupFragment : Fragment() {
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
     var photo: MultipartBody.Part? = null
-    var originalfile:File? =null
-    var originalbm :Bitmap? = null
+
 
     private lateinit var launchChooseImage: ActivityResultLauncher<Intent>
     private lateinit var readStoragePermissionlauncher: ActivityResultLauncher<String>
@@ -135,6 +133,8 @@ class EditGroupFragment : Fragment() {
         if (args.groupInfo != null) {
             binding.cbFrequentlyUsed.isChecked = args.groupInfo!!.isFrequentlyUse
             binding.btnAdd.text = "Save"
+            photo = null
+            binding.ivGroupImage.loadImageWithGlide(args.groupInfo!!.imageUrl)
 
         } else {
             binding.btnAdd.text = "Create & Select"
@@ -166,19 +166,19 @@ class EditGroupFragment : Fragment() {
                 //image original
                 launch {
 
-                    args.groupInfo?.imageUrl?.let {
-                        withContext(Dispatchers.IO) {
-                             originalbm = getBitMapWithGlide(it, requireContext())
-                            val fileName: String = it.substring(it.lastIndexOf('/') + 1)
-                             originalfile = convertBitmapToFile( fileName,originalbm!!, requireContext())
-                            val requestBody =
-                                originalfile!!.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-//                            photo = MultipartBody.Part.createFormData("image", originalfile!!.name, requestBody)
-                        }
-                        if (viewModel.selectedImgUri.value == null){
-                            viewModel.setSelectedImgUri(SelectedImage(originalfile!!,originalbm!!))
-                        }
-                    }
+//                    args.groupInfo?.imageUrl?.let {
+//                        withContext(Dispatchers.IO) {
+//                             originalbm = getBitMapWithGlide(it, requireContext())
+//                            val fileName: String = it.substring(it.lastIndexOf('/') + 1)
+//                             originalfile = convertBitmapToFile( fileName,originalbm!!, requireContext())
+//                            val requestBody =
+//                                originalfile!!.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+////                            photo = MultipartBody.Part.createFormData("image", originalfile!!.name, requestBody)
+//                        }
+//                        if (viewModel.selectedImgUri.value == null){
+//                            viewModel.setSelectedImgUri(SelectedImage(originalfile!!,originalbm!!))
+//                        }
+//                    }
                 }
 
 
@@ -239,15 +239,20 @@ class EditGroupFragment : Fragment() {
 
         viewModel.selectedImgUri.observe(viewLifecycleOwner){
             binding.ivRemove.isVisible = it != null
+            if (args.groupInfo!=null){
+                photo= null
+                binding.ivGroupImage.loadImageWithGlide(args.groupInfo!!.imageUrl)
+            }
             if (it !=null){
-                val requestBody = convertBitmapToFile(
-                    it.file.name,
-                    it.bitMap,
-                    requireContext()
-                ).asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+//                val requestBody = convertBitmapToFile(
+//                    it.file.name,
+//                    it.bitMap,
+//                    requireContext()
+//                ).asRequestBody("multipart/form-data".toMediaTypeOrNull())
                 binding.ivGroupImage.setImageBitmap(it.bitMap)
                 photo = MultipartBody.Part.createFormData("image", it.file.name, requestBody)
-            }else if (originalfile != null){
+            }else if (args.groupInfo == null) {
                 photo = null
                 binding.ivGroupImage.setImageResource(R.drawable.empty_picture)
             }
@@ -265,8 +270,7 @@ class EditGroupFragment : Fragment() {
 
     fun uploadFile(actionType: String) {
 
-        if (binding.edtGroupName.text.isNullOrEmpty() ||
-               viewModel.selectedImgUri.value == null ){
+        if (binding.edtGroupName.text.isNullOrEmpty()){
             Toast.makeText(requireContext(),"Fill required Fields",Toast.LENGTH_LONG)
         } else {
             val name = binding.edtGroupName.text.toString()
@@ -283,7 +287,7 @@ class EditGroupFragment : Fragment() {
             } else {
 
                 viewModel.editGroup(
-                    photo!!,
+                    photo,
                     args.groupInfo!!.id,
                     args.type.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
                     args.quality.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
@@ -319,8 +323,8 @@ fun getRealPathFromUri(context: Context, contentUri: Uri): String? {
         val proj = arrayOf(MediaStore.Images.Media.DATA)
         cursor = context.contentResolver.query(contentUri, proj, null, null, null)
         val column_index: Int = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        cursor?.moveToFirst()
-        cursor?.getString(column_index)
+        cursor.moveToFirst()
+        cursor.getString(column_index)
     } finally {
         cursor?.close()
     }
