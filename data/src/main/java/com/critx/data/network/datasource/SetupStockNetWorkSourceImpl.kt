@@ -36,7 +36,10 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.string() ?: "Bad request"
+                       getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -56,7 +59,10 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> response.errorBody()?.string() ?: "Bad request"
+                    400 ->getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
                     403 -> "Forbidden"
@@ -81,7 +87,10 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> response.errorBody()?.string() ?: "Bad request"
+                    400 ->getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
                     403 -> "Forbidden"
@@ -112,7 +121,10 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
                 when (response.code()) {
                     400 -> {
                         response.errorBody()?.parseError<CreateCategoryError>()
-                        response.errorBody()?.string() ?: "Bad request"
+                       getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -145,8 +157,10 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.parseError<CreateCategoryError>()
-                        response.errorBody()?.string() ?: "Bad request"
+                        getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -174,7 +188,10 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
                 when (response.code()) {
                     400 -> {
                         response.errorBody()?.parseError<CreateCategoryError>()
-                        response.errorBody()?.string() ?: "Bad request"
+                       getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -233,7 +250,10 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> response.errorBody()?.string() ?: "Bad request"
+                    400 ->getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
                     403 -> "Forbidden"
@@ -256,7 +276,10 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> response.errorBody()?.string() ?: "Bad request"
+                    400 ->getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
                     403 -> "Forbidden"
@@ -312,7 +335,10 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.string() ?: "Bad request"
+                       getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -377,7 +403,10 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
 
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.string() ?: "Bad request"
+                       getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -404,7 +433,10 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> response.errorBody()?.string() ?: "Bad request"
+                    400 ->getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
                     403 -> "Forbidden"
@@ -426,7 +458,10 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> response.errorBody()?.string() ?: "Bad request"
+                    400 ->getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
                     403 -> "Forbidden"
@@ -522,7 +557,10 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
                 when (response.code()) {
                     400 -> {
                         response.errorBody()?.parseError<CreateCategoryError>()
-                        response.errorBody()?.string() ?: "Bad request"
+                       getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"

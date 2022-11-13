@@ -3,6 +3,8 @@ package com.critx.data.network.datasource
 import com.critx.data.datasource.transferCheckUp.TransferCheckUpNetWorkDataSource
 import com.critx.data.network.api.TransferCheckUpService
 import com.critx.data.network.dto.SimpleResponseDto
+import com.critx.data.network.dto.setupStock.jewelleryCategory.error.CreateCategoryError
+import com.critx.data.network.dto.setupStock.jewelleryCategory.error.getMessage
 import com.critx.data.network.dto.transferCheckUp.CheckUpDto
 import javax.inject.Inject
 
@@ -21,7 +23,10 @@ class TransferCheckUpDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.string() ?: "Bad request"
+                        getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -47,7 +52,10 @@ class TransferCheckUpDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.string() ?: "Bad request"
+                        getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"

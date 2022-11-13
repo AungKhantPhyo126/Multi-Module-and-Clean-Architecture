@@ -7,6 +7,8 @@ import com.critx.data.network.dto.collectStock.GoldSmithListDto
 import com.critx.data.network.dto.collectStock.JewellerySizeDto
 import com.critx.data.network.dto.collectStock.ProductIdListResponse
 import com.critx.data.network.dto.collectStock.ProductIdWithType
+import com.critx.data.network.dto.setupStock.jewelleryCategory.error.CreateCategoryError
+import com.critx.data.network.dto.setupStock.jewelleryCategory.error.getMessage
 import okhttp3.RequestBody
 import javax.inject.Inject
 
@@ -21,7 +23,10 @@ class CollectStockDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.string() ?: "Bad request"
+                        getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -46,7 +51,10 @@ class CollectStockDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.string() ?: "Bad request"
+                        getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -94,7 +102,10 @@ class CollectStockDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.string() ?: "Bad request"
+                        getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -115,7 +126,10 @@ class CollectStockDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.string() ?: "Bad request"
+                        getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -136,7 +150,10 @@ class CollectStockDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.string() ?: "Bad request"
+                        getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -168,7 +185,10 @@ class CollectStockDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.string() ?: "Bad request"
+                        getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"

@@ -6,6 +6,7 @@ data class Message(
     val avg_weight_per_unit_gm: List<String?>?,
     val designs: List<String?>?,
     val group_id: List<String?>?,
+    val image:List<String?>?,
     val images:ImagesError?,
     val jewellery_quality_id: List<String?>?,
     val jewellery_type_id: List<String?>?,
@@ -40,5 +41,5 @@ fun Message.getMessage():List<String?>{
     return avg_wastage_per_unit_kpy ?:avg_weight_per_unit_gm?:designs?:group_id?:images?:jewellery_quality_id?:jewellery_type_id?:name?:
     order_to_goldsmith?:specification?:video?:related_categories?:product_code?:repair_stocks?:amount?:
     gold_box_id?:order_item?:order_qty?:weight_kyat_per_unit?:weight_pae_per_unit?:weight_ywae_per_unit?:
-    gold_box_id?:gold_weight_gm?:gem_weight_gm?:gold_gem_weight_gm?:due_date?:wastage_kyat?:wastage_pae?:wastage_ywae?: listOf(message)?: emptyList()
+    gold_box_id?:gold_weight_gm?:gem_weight_gm?:gold_gem_weight_gm?:due_date?:wastage_kyat?:wastage_pae?:wastage_ywae?:image?: listOf(message)?: emptyList()
 }

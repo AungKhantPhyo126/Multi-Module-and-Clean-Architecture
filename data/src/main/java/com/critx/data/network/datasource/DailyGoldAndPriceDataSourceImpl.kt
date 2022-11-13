@@ -4,6 +4,8 @@ import com.critx.data.datasource.dailyGoldAndPrice.DailyGoldAndPriceNetWorkDataS
 import com.critx.data.network.api.DailyGoldPriceService
 import com.critx.data.network.dto.SimpleResponseDto
 import com.critx.data.network.dto.dailygoldAndPrice.GoldPriceDto
+import com.critx.data.network.dto.setupStock.jewelleryCategory.error.CreateCategoryError
+import com.critx.data.network.dto.setupStock.jewelleryCategory.error.getMessage
 import javax.inject.Inject
 
 class DailyGoldAndPriceDataSourceImpl @Inject constructor(
@@ -17,7 +19,10 @@ class DailyGoldAndPriceDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.string() ?: "Bad request"
+                        getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -41,7 +46,10 @@ class DailyGoldAndPriceDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        response.errorBody()?.string() ?: "Bad request"
+                        getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
