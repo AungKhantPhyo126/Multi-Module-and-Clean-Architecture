@@ -112,7 +112,7 @@ class DailyGoldPriceViewModel @Inject constructor(
 
     fun logout(){
         viewModelScope.launch {
-            logoutUseCase(localDatabase.getToken().orEmpty()).collect {  result->
+            logoutUseCase(localDatabase.getToken().orEmpty()).collectLatest {  result->
                 when(result){
                     is Resource.Loading->{
                         _logoutState.value =_logoutState.value.copy(
@@ -144,7 +144,7 @@ class DailyGoldPriceViewModel @Inject constructor(
     fun getProfile(){
          var count = 0
         viewModelScope.launch {
-            getProfileUsecase(localDatabase.getToken().orEmpty()).collect { result->
+            getProfileUsecase(localDatabase.getToken().orEmpty()).collectLatest { result->
                 when(result){
                     is Resource.Loading->{
                         _profileState.value =_profileState.value.copy(

@@ -148,4 +148,6 @@
     <string name="handed_list">Handed List</string>
     <string name="total_sample_taken_items">Total Sample Taken Items</string>
     <string name="item_name_dummy">အသီးကွင်း ဟန်းချိန်း</string>
+    <string name="average_weight_per_unit">Average Weight per Unit:</string>
+    <string name="tap_to_order">Tap to Order</string>
 </resources>

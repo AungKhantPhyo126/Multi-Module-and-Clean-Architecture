@@ -6,6 +6,7 @@ import com.critx.data.datasource.box.BoxNetWorkDataSource
 import com.critx.data.datasource.collectStock.CollectStockDataSource
 import com.critx.data.datasource.dailyGoldAndPrice.DailyGoldAndPriceNetWorkDataSource
 import com.critx.data.datasource.giveGold.GiveGoldDataSource
+import com.critx.data.datasource.orderStock.OrderStockDataSource
 import com.critx.data.datasource.repairStock.RepairStockDataSource
 import com.critx.data.datasource.setupstock.SetupStockNetWorkDatasource
 import com.critx.data.datasource.transferCheckUp.TransferCheckUpNetWorkDataSource
@@ -75,12 +76,13 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideDailyGoldPriceDataSource(dailyGoldPriceService: DailyGoldPriceService):DailyGoldAndPriceNetWorkDataSource{
+    fun provideDailyGoldPriceDataSource(dailyGoldPriceService: DailyGoldPriceService): DailyGoldAndPriceNetWorkDataSource {
         return DailyGoldAndPriceDataSourceImpl(dailyGoldPriceService)
     }
+
     @Provides
     @Singleton
-    fun provideDailyGoldPrice(dailyGoldAndPriceNetWorkDataSource: DailyGoldAndPriceNetWorkDataSource):DailyGoldPriceRepository{
+    fun provideDailyGoldPrice(dailyGoldAndPriceNetWorkDataSource: DailyGoldAndPriceNetWorkDataSource): DailyGoldPriceRepository {
         return DailyGoldPriceRepositoryImpl(dailyGoldAndPriceNetWorkDataSource)
     }
 
@@ -143,7 +145,20 @@ class NetworkModule {
     fun provideRepairStockRepository(repairStockDataSource: RepairStockDataSource): RepairStockRepository {
         return RepairStockRepoImpl(repairStockDataSource)
     }
-//    @Provides
+
+    @Provides
+    @Singleton
+    fun provideOrderStockDataSource(orderStockService: OrderStockService): OrderStockDataSource {
+        return OrderStockDataSourceImpl(orderStockService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOrderStockRepo(orderStockDataSource: OrderStockDataSource): OrderStockRepository {
+        return OrderStockRepoImpl(orderStockDataSource)
+    }
+
+    //    @Provides
 //    @Singleton
 //    fun provideAuthRepository(
 //        authNetWorkDataSource: AuthNetWorkDataSource
@@ -152,6 +167,9 @@ class NetworkModule {
 //            authNetWorkDataSource,
 //        )
 //    }
+    @Provides
+    @Singleton
+    fun provideOrderStockService(retrofit: Retrofit) = retrofit.create<OrderStockService>()
 
     @Provides
     @Singleton
@@ -163,7 +181,8 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideTransferCheckUpService(retrofit: Retrofit) = retrofit.create<TransferCheckUpService>()
+    fun provideTransferCheckUpService(retrofit: Retrofit) =
+        retrofit.create<TransferCheckUpService>()
 
     @Provides
     @Singleton

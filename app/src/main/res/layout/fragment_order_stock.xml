@@ -36,6 +36,7 @@
         app:layout_constraintTop_toTopOf="@+id/btn_retrieve_from_gs">
 
         <AutoCompleteTextView
+            android:id="@+id/act_jewellery_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
