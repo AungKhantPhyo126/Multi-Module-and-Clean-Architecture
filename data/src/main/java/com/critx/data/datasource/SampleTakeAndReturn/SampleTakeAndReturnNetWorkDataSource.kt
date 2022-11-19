@@ -27,7 +27,7 @@ interface SampleTakeAndReturnNetWorkDataSource {
 
     suspend fun removeFromHandedList(token:String,sampleId: String):SimpleResponseDto
 
-    suspend fun saveOutsideSample(token: String,name:RequestBody?,weight:RequestBody?,specification:RequestBody?,image:MultipartBody.Part):SimpleResponseWithData
+    suspend fun saveOutsideSample(token: String,name:RequestBody?,weight:RequestBody?,specification:RequestBody?,image:MultipartBody.Part):SampleCheckDto
 
     suspend fun returnSample(token: String,sampleId:List<String>):SimpleResponseDto
 }

@@ -35,8 +35,8 @@ class OutSideViewModel @Inject constructor(
     val getOutsideSampleLiveData: LiveData<Resource<List<OutsideSampleDomain>>>
         get() = _getOutsideSampleLiveData
 
-    private var _saveOutsideSample = MutableLiveData<Resource<SimpleData>>()
-    val saveOutsideSample: LiveData<Resource<SimpleData>>
+    private var _saveOutsideSample = MutableLiveData<Resource<String>>()
+    val saveOutsideSample: LiveData<Resource<String>>
         get() = _saveOutsideSample
 
     private var _returnSampleLiveData = MutableLiveData<Resource<String>>()
@@ -153,7 +153,7 @@ class OutSideViewModel @Inject constructor(
                         _saveOutsideSample.value = Resource.Loading()
                     }
                     is Resource.Success -> {
-                        _saveOutsideSample.value = Resource.Success(it.data!!)
+                        _saveOutsideSample.value = Resource.Success(it.data!!.sampleId!!)
 
                     }
                     is Resource.Error -> {

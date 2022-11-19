@@ -242,7 +242,7 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
         weight: RequestBody?,
         specification: RequestBody?,
         image: MultipartBody.Part
-    ): SimpleResponseWithData {
+    ): SampleCheckDto {
         val response = sampleTakeAndReturnService.saveOutsideSample(token,name,weight,specification, image)
         return if (response.isSuccessful) {
             response.body() ?: throw Exception("Response body Null")

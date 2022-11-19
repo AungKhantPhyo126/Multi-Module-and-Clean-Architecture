@@ -150,4 +150,9 @@
     <string name="item_name_dummy">အသီးကွင်း ဟန်းချိန်း</string>
     <string name="average_weight_per_unit">Average Weight per Unit:</string>
     <string name="tap_to_order">Tap to Order</string>
+    <string name="stock_name_optional">Stock Name (Optional)</string>
+    <string name="weight_gm_optional">Weight(gm) (Optional)</string>
+    <string name="specification_optional">Specification (Optional)</string>
+    <string name="taken_sample_items">Taken Sample Items</string>
+    <string name="no_sample_taken">No Sample Taken</string>
 </resources>

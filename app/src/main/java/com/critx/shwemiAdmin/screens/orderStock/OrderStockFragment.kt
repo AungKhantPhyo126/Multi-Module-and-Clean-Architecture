@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -21,6 +22,7 @@ import com.critx.common.ui.getAlertDialog
 import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentOrderStockBinding
+import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
 import com.critx.shwemiAdmin.showDropdown
 import com.critx.shwemiAdmin.uiModel.StockCodeForListUiModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +34,7 @@ import kotlinx.coroutines.launch
 class OrderStockFragment:Fragment() {
     private lateinit var binding:FragmentOrderStockBinding
     private val viewModel by viewModels<OrderStockViewModel>()
+    private val sharedViewModel by activityViewModels<SharedViewModel>()
     private lateinit var adapter :StockToOrderRecyclerAdapter
     private lateinit var loadingDialog: AlertDialog
     private var selectedJewelleryType:String? = null
@@ -63,9 +66,14 @@ class OrderStockFragment:Fragment() {
         loadingDialog = requireContext().getAlertDialog()
         viewModel.getJewelleryType()
         binding.tvEmptyList.isVisible = true
-        adapter = StockToOrderRecyclerAdapter({
-           findNavController().navigate(OrderStockFragmentDirections.actionOrderStockFragmentToFillOrderInfoFragment())
-        },{})
+        adapter = StockToOrderRecyclerAdapter {
+            sharedViewModel.selectedBookMark=it
+            findNavController().navigate(
+                OrderStockFragmentDirections.actionOrderStockFragmentToFillOrderInfoFragment(
+
+                )
+            )
+        }
         binding.rvStockToOrder.adapter=adapter
         viewModel.jewelleryTypeLiveData.observe(viewLifecycleOwner){
             when(it){

@@ -4,12 +4,14 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
+import com.critx.shwemiAdmin.uiModel.orderStock.BookMarkStockUiModel
 import com.critx.shwemiAdmin.uiModel.setupStock.ChooseGroupUIModel
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryCategoryUiModel
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryQualityUiModel
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryTypeUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class SharedViewModel : ViewModel() {
@@ -70,6 +72,33 @@ class SharedViewModel : ViewModel() {
         recommendCatList.value?.removeAll(recommendCatList.value!!)
         recommendCatList.value?.add(null)
         recommendCatList.value=recommendCatList.value
+    }
+
+    //order stock
+    var selectedBookMark :BookMarkStockUiModel? = null
+    var bookMarkAvgKyat : MultipartBody.Part? = null
+    var bookMarkAvgPae : MultipartBody.Part? = null
+    var bookMarkAvgYwae : MultipartBody.Part? = null
+    var orderGoldQuality : MultipartBody.Part? = null
+    var orderGoldSmith : MultipartBody.Part? = null
+    var bookMarkId : MultipartBody.Part? = null
+    var equivalent_pure_gold_weight_kpy : MultipartBody.Part? = null
+    var jewellery_type_size_id : MutableList<MultipartBody.Part> = mutableListOf()
+    var order_qty : MutableList<MultipartBody.Part> = mutableListOf()
+    var sample_id : MutableList<MultipartBody.Part> = mutableListOf()
+
+    fun resetOrderStockData(){
+        selectedBookMark = null
+        bookMarkAvgKyat = null
+        bookMarkAvgPae = null
+        bookMarkAvgYwae = null
+        orderGoldQuality = null
+        orderGoldSmith = null
+        bookMarkId = null
+        equivalent_pure_gold_weight_kpy = null
+        jewellery_type_size_id = mutableListOf()
+        order_qty = mutableListOf()
+        sample_id = mutableListOf()
     }
 
 }

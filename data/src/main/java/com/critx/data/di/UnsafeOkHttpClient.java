@@ -2,6 +2,7 @@ package com.critx.data.di;
 
 import java.io.IOException;
 import java.security.cert.CertificateException;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -19,7 +20,7 @@ public class UnsafeOkHttpClient {
     public static OkHttpClient getUnsafeOkHttpClient() {
         try {
             // Create a trust manager that does not validate certificate chains
-            final TrustManager[] trustAllCerts = new TrustManager[] {
+            final TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
                         @Override
                         public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
@@ -51,13 +52,15 @@ public class UnsafeOkHttpClient {
                     return chain.proceed(request);
                 }
             });
-            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager)trustAllCerts[0]);
+            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
             builder.hostnameVerifier(new HostnameVerifier() {
                 @Override
                 public boolean verify(String hostname, SSLSession session) {
                     return true;
                 }
             });
+            builder.readTimeout(600, TimeUnit.SECONDS);
+            builder.connectTimeout(600, TimeUnit.SECONDS);
 
             OkHttpClient okHttpClient = builder.build();
             return okHttpClient;

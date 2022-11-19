@@ -146,7 +146,7 @@ class InventoryViewModel @Inject constructor(
         viewModelScope.launch {
             addToHandedListUseCase(
                 localDatabase.getToken().orEmpty(),
-                scannedSamples.map { it.sampleId }).collectLatest {
+                scannedSamples.map { it.sampleId!! }).collectLatest {
                 when (it) {
                     is Resource.Loading -> {
                         _addToHandedListLiveData.value = Resource.Loading()

@@ -27,7 +27,7 @@ interface SampleTakeAndReturnRepository {
 
      fun removeFromHandedList(token:String,sampleId: String):Flow<Resource<SimpleData>>
 
-     fun saveOutsideSample(token: String,name:RequestBody?,weight:RequestBody?,specification:RequestBody?,image: MultipartBody.Part):Flow<Resource<SimpleData>>
+     fun saveOutsideSample(token: String,name:RequestBody?,weight:RequestBody?,specification:RequestBody?,image: MultipartBody.Part):Flow<Resource<SampleCheckDomain>>
 
      fun returnSample(token: String,sampleId:List<String>):Flow<Resource<SimpleData>>
 }

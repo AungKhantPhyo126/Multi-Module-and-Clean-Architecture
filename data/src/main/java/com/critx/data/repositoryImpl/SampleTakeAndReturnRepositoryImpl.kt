@@ -205,7 +205,7 @@ class SampleTakeAndReturnRepositoryImpl @Inject constructor(
         weight: RequestBody?,
         specification: RequestBody?,
         image: MultipartBody.Part
-    ): Flow<Resource<SimpleData>> =
+    ): Flow<Resource<SampleCheckDomain>> =
     flow {
         emit(Resource.Loading())
         try {

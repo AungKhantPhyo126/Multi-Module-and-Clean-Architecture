@@ -3,9 +3,9 @@ package com.critx.shwemiAdmin.uiModel.simpleTakeAndReturn
 import com.critx.domain.model.sampleTakeAndReturn.SampleCheckDomain
 
 data class SampleItemUIModel(
-    val sampleId:String,
-    val productCode:String,
-    val productId:String,
+    val sampleId:String?,
+    val productCode:String?,
+    val productId:String?,
     val imageUrl:String,
     var specification:String?
 )

@@ -22,6 +22,7 @@ import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentInventoryBinding
 import com.critx.shwemiAdmin.hideKeyboard
 import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.GIVE_GOLD_STATE
+import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.ORDER_STOCK_STATE
 import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.SAMPLE_TAKE_STATE
 import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.SampleTakeAndReturnViewModel
 import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
@@ -54,7 +55,7 @@ class InventoryFragment : Fragment() {
         val newSampleRecyclerAdapter = NewSampleRecyclerAdapter({
             viewModel.removeSample(it)
         }, viewModel)
-        val sampleReturnRecyclerAdapter = SampleReturnRecyclerAdapter{
+        val sampleReturnRecyclerAdapter = SampleReturnRecyclerAdapter {
             viewModel.removeSample(it)
         }
         binding.layoutSampleReturn.rvSampleReturnInventory.adapter = sampleReturnRecyclerAdapter
@@ -67,14 +68,14 @@ class InventoryFragment : Fragment() {
             this.scanQrCode(requireContext(), barlauncer)
         }
         binding.radioGroup.setOnCheckedChangeListener { radioGroup, checkedButtonId ->
-            if (checkedButtonId == binding.radioButtonSampleTake.id){
+            if (checkedButtonId == binding.radioButtonSampleTake.id) {
                 binding.layoutSampleLists.root.isVisible = true
                 binding.layoutSampleReturn.root.isVisible = false
                 binding.layoutBtnReturnSample.root.isVisible = false
-                viewModel.resetSample()
-            }else if (checkedButtonId == binding.radioButtonSampleReturn.id){
+//                viewModel.resetSample()
+            } else if (checkedButtonId == binding.radioButtonSampleReturn.id) {
 //                viewModel.getInventorySampleList()
-                viewModel.resetSample()
+//                viewModel.resetSample()
                 binding.layoutSampleLists.root.isVisible = false
                 binding.layoutSampleReturn.root.isVisible = true
                 binding.layoutBtnReturnSample.root.isVisible = true
@@ -83,7 +84,7 @@ class InventoryFragment : Fragment() {
 
         /**sampleReturn**/
         binding.layoutBtnReturnSample.btnSampleReturn.setOnClickListener {
-            viewModel.returnSample(sampleReturnRecyclerAdapter.currentList.map { it.sampleId })
+            viewModel.returnSample(sampleReturnRecyclerAdapter.currentList.map { it.sampleId!! })
         }
         viewModel.returnSampleLiveData.observe(viewLifecycleOwner) {
             when (it) {
@@ -92,7 +93,7 @@ class InventoryFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
-                    requireContext().showSuccessDialog(it.data!!){
+                    requireContext().showSuccessDialog(it.data!!) {
                         viewModel.resetSample()
                     }
                     viewModel.resetReturnSampleLiveData()
@@ -147,7 +148,9 @@ class InventoryFragment : Fragment() {
         }
 
         binding.layoutBtnGroup.btnAddToHandedList.isEnabled =
-            sharedViewModel.sampleTakeScreenUIState != GIVE_GOLD_STATE && newSampleRecyclerAdapter.currentList.isEmpty().not()
+            (sharedViewModel.sampleTakeScreenUIState != GIVE_GOLD_STATE ||
+                    sharedViewModel.sampleTakeScreenUIState != ORDER_STOCK_STATE) &&
+                    newSampleRecyclerAdapter.currentList.isEmpty().not()
 
 
         viewModel.scanProductCodeLive.observe(viewLifecycleOwner) {
@@ -220,15 +223,19 @@ class InventoryFragment : Fragment() {
                     if (viewModel.scannedSamples.contains(it.data!!)) {
                         Toast.makeText(requireContext(), "Stock Already Scanned", Toast.LENGTH_LONG)
                             .show()
-                    } else if (binding.radioButtonSampleTake.isChecked){
+                    } else if (binding.radioButtonSampleTake.isChecked) {
                         viewModel.addStockSample(it.data!!)
-                    }else if (binding.radioButtonSampleReturn.isChecked){
-                       if (it.data!!.specification.isNullOrEmpty().not()){
-                           viewModel.addStockSample(it.data!!)
-                       }else{
-                           Toast.makeText(requireContext(), "This Stock is not saved as sample", Toast.LENGTH_LONG)
-                               .show()
-                       }
+                    } else if (binding.radioButtonSampleReturn.isChecked) {
+                        if (it.data!!.specification.isNullOrEmpty().not()) {
+                            viewModel.addStockSample(it.data!!)
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "This Stock is not saved as sample",
+                                Toast.LENGTH_LONG
+                            )
+                                .show()
+                        }
                     }
                     viewModel.resetSampleLiveData()
                 }
@@ -242,13 +249,13 @@ class InventoryFragment : Fragment() {
 
         viewModel.scannedSampleLiveData.observe(viewLifecycleOwner) {
             binding.layoutBtnGroup.btnAddToHandedList.isEnabled = it.isNotEmpty()
-            if (binding.radioButtonSampleTake.isChecked){
+            if (binding.radioButtonSampleTake.isChecked) {
                 newSampleRecyclerAdapter.submitList(it)
                 newSampleRecyclerAdapter.notifyDataSetChanged()
                 binding.layoutBtnGroup.btnSave.isEnabled =
                     it.filter { it.specification.isNullOrEmpty() }.isNotEmpty()
 
-            }else{
+            } else {
                 sampleReturnRecyclerAdapter.submitList(it)
                 sampleReturnRecyclerAdapter.notifyDataSetChanged()
             }

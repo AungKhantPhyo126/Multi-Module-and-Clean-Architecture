@@ -15,6 +15,9 @@
 <!--        <item name="windowActionBar">false</item>-->
 <!--        <item name="windowNoTitle">true</item>-->
     </style>
+    <style name="SwitchTheme" parent="Theme.ShweMiAdmin">
+        <item name="colorAccent">@color/primary_color</item>
+    </style>
     <style name="Base.Theme.ShweMiAdmin" parent="Based.Theme.MaterialThemeBuilder">
         <item name="textAppearanceHeadline1">@style/TextAppearance.ShweMi.Headline1</item>
         <item name="textAppearanceHeadline2">@style/TextAppearance.ShweMi.Headline2</item>

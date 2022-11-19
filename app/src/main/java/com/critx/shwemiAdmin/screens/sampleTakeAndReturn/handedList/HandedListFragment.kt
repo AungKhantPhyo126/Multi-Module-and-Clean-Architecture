@@ -15,6 +15,7 @@ import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.databinding.FragmentHandedListBinding
 import com.critx.shwemiAdmin.databinding.FragmentInventoryBinding
 import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.GIVE_GOLD_STATE
+import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.ORDER_STOCK_STATE
 import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.SampleTakeAndReturnViewModel
 import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.tabs.inventory.InventoryViewModel
 import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.tabs.inventory.NewSampleRecyclerAdapter
@@ -86,12 +87,19 @@ class HandedListFragment : Fragment() {
             findNavController().popBackStack()
         }
         binding.btnConfirm.isEnabled =
-            sharedViewModel.sampleTakeScreenUIState == GIVE_GOLD_STATE
+            sharedViewModel.sampleTakeScreenUIState == GIVE_GOLD_STATE || sharedViewModel.sampleTakeScreenUIState == ORDER_STOCK_STATE
 
         binding.btnConfirm.setOnClickListener {
-            findNavController().navigate(
-                HandedListFragmentDirections.actionHandedListFragmentToGiveGoldFragment().setSampleList( adapter.currentList.map { it.id }.toTypedArray())
-            )
+            if(sharedViewModel.sampleTakeScreenUIState == GIVE_GOLD_STATE){
+                findNavController().navigate(
+                    HandedListFragmentDirections.actionHandedListFragmentToGiveGoldFragment().setSampleList( adapter.currentList.map { it.id }.toTypedArray())
+                )
+            }else{
+                findNavController().navigate(
+                    HandedListFragmentDirections.actionHandedListFragmentToFillOrderInfoFragment().setSampleList( adapter.currentList.map { it.id }.toTypedArray())
+                )
+            }
+
         }
     }
 }

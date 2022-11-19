@@ -154,5 +154,4 @@ class FinalStockSetupViewModel @Inject constructor(
             }
         }
     }
-
 }

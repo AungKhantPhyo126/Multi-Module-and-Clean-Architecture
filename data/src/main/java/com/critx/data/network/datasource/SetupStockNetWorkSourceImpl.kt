@@ -531,7 +531,7 @@ class SetupStockNetWorkSourceImpl @Inject constructor(
 //                        )
                         getErrorString(
                             response.errorBody()
-                                ?.parseError<SimpleError>()?.response?.getMessage()!!
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
                         )
 
                     }

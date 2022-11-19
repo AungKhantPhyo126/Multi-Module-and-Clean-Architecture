@@ -16,6 +16,7 @@ import javax.inject.Inject
 
 const val SAMPLE_TAKE_STATE= "sample"
 const val GIVE_GOLD_STATE= "giveGold"
+const val ORDER_STOCK_STATE= "orderStock"
 
 @HiltViewModel
 class SampleTakeAndReturnViewModel @Inject constructor(

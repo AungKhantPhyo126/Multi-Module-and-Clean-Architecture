@@ -17,3 +17,14 @@ data class ResponseSimple(
 fun ResponseSimple.getMessage():List<String?>{
    return listOf<String?>(message)
 }
+
+//hashMap Error
+data class ErrorWithHashMap(
+    val response: ResponseWithHashMap,
+    val data: List<Any>
+)
+
+data class ResponseWithHashMap(
+    val status:String,
+
+)

@@ -258,6 +258,9 @@ class AddCategoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.ibBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
         loadingDialog = requireContext().getAlertDialog()
         isFrequentlyUsed = if (binding.cbFrequentlyUsed.isChecked) 1 else 0
         binding.cbFrequentlyUsed.setOnCheckedChangeListener { compoundButton, ischecked ->

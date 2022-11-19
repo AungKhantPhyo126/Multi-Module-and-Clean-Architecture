@@ -11,6 +11,7 @@ import com.critx.domain.useCase.SetUpStock.GetJewelleryTypeUseCase
 import com.critx.domain.useCase.orderStock.GetBookMarksUseCase
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.pagingDataSource.pagingRepo.GetBookMarkPagingDataSource
+import com.critx.shwemiAdmin.uiModel.orderStock.BookMarkStockUiModel
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryTypeUiModel
 import com.critx.shwemiAdmin.uiModel.setupStock.asUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +31,7 @@ class OrderStockViewModel @Inject constructor(
 
 
 
-    fun getBookMarks(jewelleryType:String): LiveData<PagingData<BookMarkStockDomain>> {
+    fun getBookMarks(jewelleryType:String): LiveData<PagingData<BookMarkStockUiModel>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 10,
@@ -47,7 +48,7 @@ class OrderStockViewModel @Inject constructor(
         ).liveData
     }
 
-    fun getBookMarksLiveData(jewelleryType:String): LiveData<PagingData<BookMarkStockDomain>> {
+    fun getBookMarksLiveData(jewelleryType:String): LiveData<PagingData<BookMarkStockUiModel>> {
         return getBookMarks(jewelleryType).cachedIn(viewModelScope)
     }
     fun getJewelleryType(){

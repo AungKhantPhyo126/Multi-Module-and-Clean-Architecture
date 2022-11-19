@@ -254,7 +254,16 @@
     <fragment
         android:id="@+id/fillOrderInfoFragment"
         android:name="com.critx.shwemiAdmin.screens.orderStock.fillOrderInfo.FillOrderInfoFragment"
-        android:label="FillOrderInfoFragment" />
+        android:label="FillOrderInfoFragment" >
+        <action
+            android:id="@+id/action_fillOrderInfoFragment_to_sampleTakeAndReturnFragment"
+            app:destination="@id/sampleTakeAndReturnFragment" />
+        <argument
+            android:name="sampleList"
+            app:argType="string[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
     <fragment
         android:id="@+id/arrangeBoxFragment"
         android:name="com.critx.shwemiAdmin.screens.arrangeBox.ArrangeBoxFragment"
@@ -303,5 +312,8 @@
         <action
             android:id="@+id/action_handedListFragment_to_giveGoldFragment"
             app:destination="@id/giveGoldFragment" />
+        <action
+            android:id="@+id/action_handedListFragment_to_fillOrderInfoFragment"
+            app:destination="@id/fillOrderInfoFragment" />
     </fragment>
 </navigation>

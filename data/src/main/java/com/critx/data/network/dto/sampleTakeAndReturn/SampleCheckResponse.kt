@@ -6,7 +6,7 @@ data class SampleCheckResponse(
     val data:SampleCheckDto
 )
 data class SampleCheckDto(
-    val productCode:String?,
+    val productCode:String? = null,
     val productId:String?,
     val thumbnail:String?,
     val sampleId:String?,

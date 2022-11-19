@@ -10,6 +10,8 @@ import com.critx.data.network.dto.setupStock.jewelleryCategory.error.getMessage
 import com.critx.domain.model.orderStock.BookMarkStockDomain
 import com.critx.domain.model.orderStock.PagingMetaDomain
 import com.critx.domain.useCase.orderStock.GetBookMarksUseCase
+import com.critx.shwemiAdmin.uiModel.orderStock.BookMarkStockUiModel
+import com.critx.shwemiAdmin.uiModel.orderStock.asUiModel
 import kotlinx.coroutines.flow.collectLatest
 import org.threeten.bp.LocalDate
 
@@ -17,12 +19,12 @@ class GetBookMarkPagingDataSource(
     private val getBookMarksUseCase: GetBookMarksUseCase,
     private val token: String,
     private val jewelleryType:String
-) : PagingSource<Int, BookMarkStockDomain>() {
+) : PagingSource<Int, BookMarkStockUiModel>() {
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, BookMarkStockDomain> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, BookMarkStockUiModel> {
         return try {
             val currentPage = params.key ?: 1
-            var bookMarkList = mutableListOf<BookMarkStockDomain>()
+            var bookMarkList = mutableListOf<BookMarkStockUiModel>()
             var errorMessage = ""
             var metaDomain:PagingMetaDomain? = null
             getBookMarksUseCase(token,jewelleryType,currentPage).collectLatest {
@@ -32,7 +34,7 @@ class GetBookMarkPagingDataSource(
                     }
                     is Resource.Success->{
                         if (it.data!!.data!!.isNotEmpty()){
-                            bookMarkList.addAll(it.data!!.data.orEmpty())
+                            bookMarkList.addAll(it.data!!.data!!.map { it.asUiModel() })
                         }else{
                             bookMarkList = mutableListOf()
                         }
@@ -61,7 +63,7 @@ class GetBookMarkPagingDataSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, BookMarkStockDomain>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, BookMarkStockUiModel>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)

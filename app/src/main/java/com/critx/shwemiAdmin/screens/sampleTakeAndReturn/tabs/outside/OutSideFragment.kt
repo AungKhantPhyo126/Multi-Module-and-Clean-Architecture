@@ -28,6 +28,7 @@ import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentOutsideBinding
 import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.GIVE_GOLD_STATE
+import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.ORDER_STOCK_STATE
 import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.SelectedImage
 import com.critx.shwemiAdmin.screens.setupStock.third.edit.getRealPathFromUri
@@ -158,7 +159,8 @@ class OutSideFragment : Fragment() {
         /**  **/
 
         binding.layoutBtnGroup.btnAddToHandedList.isEnabled =
-            sharedViewModel.sampleTakeScreenUIState != GIVE_GOLD_STATE
+            sharedViewModel.sampleTakeScreenUIState != GIVE_GOLD_STATE ||
+                    sharedViewModel.sampleTakeScreenUIState != ORDER_STOCK_STATE
         binding.layoutBtnGroup.btnSave.setOnClickListener {
             if (photo != null) {
                 viewModel.saveOusideSample(
@@ -217,13 +219,13 @@ class OutSideFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
-                    requireContext().showSuccessDialog(it.data!!.message) {
+                    requireContext().showSuccessDialog("The sample was successfully taken.") {
 
                     }
                     viewModel.resetSaveOutSideSample()
                     binding.layoutBtnGroup.btnAddToHandedList.isEnabled = true
                     binding.layoutBtnGroup.btnAddToHandedList.setOnClickListener { view ->
-                        viewModel.addToHandedList(listOf(it.data!!.id!!))
+                        viewModel.addToHandedList(listOf(it.data!!))
                     }
                 }
                 is Resource.Error -> {

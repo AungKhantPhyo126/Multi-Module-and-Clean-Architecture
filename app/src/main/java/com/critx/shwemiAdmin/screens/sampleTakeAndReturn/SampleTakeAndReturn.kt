@@ -64,6 +64,8 @@ class SampleTakeAndReturn : Fragment() {
         viewModel.getHandedList()
        if ( findNavController().previousBackStackEntry?.destination?.id.toString() == R.id.giveGoldFragment.toString()){
            sharedViewModel.sampleTakeScreenUIState = GIVE_GOLD_STATE
+       }else if(findNavController().previousBackStackEntry?.destination?.id.toString() == R.id.fillOrderInfoFragment.toString()){
+           sharedViewModel.sampleTakeScreenUIState = ORDER_STOCK_STATE
        }else{
            sharedViewModel.sampleTakeScreenUIState = SAMPLE_TAKE_STATE
        }

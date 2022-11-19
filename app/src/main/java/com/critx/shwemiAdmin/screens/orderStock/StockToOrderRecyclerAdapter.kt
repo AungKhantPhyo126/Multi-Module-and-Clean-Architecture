@@ -7,19 +7,19 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.critx.common.ui.loadImageWithGlide
-import com.critx.domain.model.orderStock.BookMarkStockDomain
 import com.critx.shwemiAdmin.databinding.ItemStockCodeBinding
 import com.critx.shwemiAdmin.databinding.ItemStockToOrderBinding
+import com.critx.shwemiAdmin.uiModel.orderStock.BookMarkStockUiModel
 
-class StockToOrderRecyclerAdapter (private val onclick:()->Unit,private val orderClick:()->Unit) :
-    PagingDataAdapter<BookMarkStockDomain, StockCodeListViewHolder>(
+class StockToOrderRecyclerAdapter (private val orderClick:(data:BookMarkStockUiModel)->Unit) :
+    PagingDataAdapter<BookMarkStockUiModel, StockCodeListViewHolder>(
     StockCodeListDiffUtil
 ){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StockCodeListViewHolder {
         return StockCodeListViewHolder(
             ItemStockToOrderBinding.inflate(
                 LayoutInflater.from(parent.context),parent,false
-            ),onclick,orderClick)
+            ),orderClick)
     }
 
     override fun onBindViewHolder(holder: StockCodeListViewHolder, position: Int) {
@@ -28,26 +28,25 @@ class StockToOrderRecyclerAdapter (private val onclick:()->Unit,private val orde
 }
 
 class StockCodeListViewHolder(private val binding: ItemStockToOrderBinding,
-                              private val onclick: () -> Unit,
-                              private val orderClick:()->Unit): RecyclerView.ViewHolder(binding.root){
-    fun bind(data: BookMarkStockDomain){
+                              private val onclick: (data:BookMarkStockUiModel) -> Unit): RecyclerView.ViewHolder(binding.root){
+    fun bind(data: BookMarkStockUiModel){
         binding.root.setOnClickListener {
-            onclick()
+            onclick(data)
         }
-        binding.ivStock.loadImageWithGlide(data.image.url)
+        binding.ivStock.loadImageWithGlide(data.image)
         binding.tvKyatValue.text = data.avg_weight_per_unit_kyat
         binding.tvPaeValue.text = data.avg_weight_per_unit_pae
-        binding.tvYwaeValue.text = data.avg_weight_per_unit_ywae
+        binding.tvYwaeValue.text = data.avg_weight_per_unit_ywae.toDouble().toInt().toString()
     }
 }
 
 
-object StockCodeListDiffUtil : DiffUtil.ItemCallback<BookMarkStockDomain>() {
-    override fun areItemsTheSame(oldItem: BookMarkStockDomain, newItem: BookMarkStockDomain): Boolean {
+object StockCodeListDiffUtil : DiffUtil.ItemCallback<BookMarkStockUiModel>() {
+    override fun areItemsTheSame(oldItem: BookMarkStockUiModel, newItem: BookMarkStockUiModel): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: BookMarkStockDomain, newItem: BookMarkStockDomain): Boolean {
+    override fun areContentsTheSame(oldItem: BookMarkStockUiModel, newItem: BookMarkStockUiModel): Boolean {
         return oldItem == newItem
     }
 

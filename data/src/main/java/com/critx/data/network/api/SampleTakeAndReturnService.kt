@@ -82,5 +82,5 @@ suspend fun checkSamples(
         @Part("weight_gm") weight_gm: RequestBody?,
         @Part("specification") specification: RequestBody?,
         @Part image: MultipartBody.Part
-    ):Response<SimpleResponseWithData>
+    ):Response<SampleCheckDto>
 }
