@@ -12,6 +12,7 @@ interface OrderStockRepository {
     fun getBookMarkStockList(
         token: String,
         jewlleryType: String,
+        isItemFromGs:String,
         page: Int
     ): Flow<Resource<BookMarkedStocksWithPaging>>
 

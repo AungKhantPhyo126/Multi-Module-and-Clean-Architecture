@@ -31,7 +31,7 @@ class OrderStockViewModel @Inject constructor(
 
 
 
-    fun getBookMarks(jewelleryType:String): LiveData<PagingData<BookMarkStockUiModel>> {
+    fun getBookMarks(jewelleryType:String,isItemFromGs:String): LiveData<PagingData<BookMarkStockUiModel>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 10,
@@ -42,15 +42,16 @@ class OrderStockViewModel @Inject constructor(
                 GetBookMarkPagingDataSource(
                     getBookMarksUseCase,
                     localDatabase.getToken().orEmpty(),
-                    jewelleryType
+                    jewelleryType,
+                    isItemFromGs
                 )
             }
         ).liveData
     }
 
-    fun getBookMarksLiveData(jewelleryType:String): LiveData<PagingData<BookMarkStockUiModel>> {
-        return getBookMarks(jewelleryType).cachedIn(viewModelScope)
-    }
+//    fun getBookMarksLiveData(jewelleryType:String): LiveData<PagingData<BookMarkStockUiModel>> {
+//        return getBookMarks(jewelleryType).cachedIn(viewModelScope)
+//    }
     fun getJewelleryType(){
         viewModelScope.launch {
             getJewelleryTypeUseCase(localDatabase.getToken().orEmpty()).collectLatest {

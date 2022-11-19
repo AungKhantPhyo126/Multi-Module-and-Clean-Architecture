@@ -14,6 +14,7 @@ interface OrderStockService {
     suspend fun getBookMarks(
         @Header("Authorization") token: String,
         @Query("jewellery_type_id") jewelleryTypeId: String,
+        @Query("is_item_from_gs") isItemFromGs: String,
         @Query("page") page: Int,
     ): Response<BookMarkedStocksResponse>
 

@@ -17,9 +17,10 @@ class OrderStockDataSourceImpl @Inject constructor(
     override suspend fun getBookMarkStockList(
         token: String,
         jewelleryType: String,
+        isItemFromGs:String,
         page: Int
     ): BookMarkedStocksResponse {
-        val response = orderStockService.getBookMarks(token, jewelleryType, page)
+        val response = orderStockService.getBookMarks(token, jewelleryType,isItemFromGs, page)
         return if (response.isSuccessful) {
             response.body() ?: throw Exception("Response body Null")
         } else {

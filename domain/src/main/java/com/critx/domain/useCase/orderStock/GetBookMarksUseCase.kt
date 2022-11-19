@@ -10,6 +10,7 @@ class GetBookMarksUseCase @Inject constructor(
     operator fun invoke(
         token: String,
         jewelleryType:String,
+        isItemFromGs:String,
         page:Int
-    )=orderStockRepository.getBookMarkStockList(token,jewelleryType,page)
+    )=orderStockRepository.getBookMarkStockList(token,jewelleryType,isItemFromGs,page)
 }

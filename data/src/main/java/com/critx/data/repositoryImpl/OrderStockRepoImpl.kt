@@ -23,6 +23,7 @@ class OrderStockRepoImpl @Inject constructor(
     override fun getBookMarkStockList(
         token: String,
         jewlleryType: String,
+        isItemFromGs:String,
         page: Int
     ): Flow<Resource<BookMarkedStocksWithPaging>> =
         flow {
@@ -30,7 +31,7 @@ class OrderStockRepoImpl @Inject constructor(
             try {
                 emit(
                     Resource.Success(
-                        orderStockDataSource.getBookMarkStockList(token, jewlleryType, page)
+                        orderStockDataSource.getBookMarkStockList(token, jewlleryType,isItemFromGs, page)
                             .asDomain()
                     )
                 )

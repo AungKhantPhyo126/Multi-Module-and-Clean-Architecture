@@ -18,8 +18,10 @@ import org.threeten.bp.LocalDate
 class GetBookMarkPagingDataSource(
     private val getBookMarksUseCase: GetBookMarksUseCase,
     private val token: String,
-    private val jewelleryType:String
-) : PagingSource<Int, BookMarkStockUiModel>() {
+    private val jewelleryType:String,
+    private val isItemFromGs:String,
+
+    ) : PagingSource<Int, BookMarkStockUiModel>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, BookMarkStockUiModel> {
         return try {
@@ -27,7 +29,7 @@ class GetBookMarkPagingDataSource(
             var bookMarkList = mutableListOf<BookMarkStockUiModel>()
             var errorMessage = ""
             var metaDomain:PagingMetaDomain? = null
-            getBookMarksUseCase(token,jewelleryType,currentPage).collectLatest {
+            getBookMarksUseCase(token,jewelleryType,isItemFromGs,currentPage).collectLatest {
                 when(it){
                     is Resource.Loading->{
 

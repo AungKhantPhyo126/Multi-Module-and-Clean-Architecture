@@ -88,7 +88,7 @@ class OrderStockFragment:Fragment() {
                          selectedJewelleryType = it.data!!.find {
                             it.name==binding.actJewelleryType.text.toString()
                         }?.id
-                        loadBookMarks(selectedJewelleryType.orEmpty())
+                        loadBookMarks(selectedJewelleryType.orEmpty(),"0")
                     }
                     binding.actJewelleryType.setAdapter(arrayAdapter)
                     binding.actJewelleryType.setText(list[0],false)
@@ -113,7 +113,7 @@ class OrderStockFragment:Fragment() {
 
         binding.btnRetrieveFromGs.setOnClickListener {
             binding.tvEmptyList.isVisible = false
-            loadBookMarks(selectedJewelleryType.orEmpty())
+            loadBookMarks(selectedJewelleryType.orEmpty(),"1")
 //            adapter.submitList(listOf(
 //                StockCodeForListUiModel(
 //                    "1",
@@ -134,8 +134,8 @@ class OrderStockFragment:Fragment() {
 //            ))
         }
     }
-    private fun loadBookMarks(jewelleryType:String) {
-        viewModel.getBookMarks(jewelleryType).observe(viewLifecycleOwner) {
+    private fun loadBookMarks(jewelleryType:String,isItemFromGs:String) {
+        viewModel.getBookMarks(jewelleryType,isItemFromGs).observe(viewLifecycleOwner) {
             lifecycleScope.launch {
                 adapter.submitData(it)
             }

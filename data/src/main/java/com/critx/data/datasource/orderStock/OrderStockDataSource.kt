@@ -8,7 +8,7 @@ import okhttp3.MultipartBody
 import retrofit2.http.FieldMap
 
 interface OrderStockDataSource {
-    suspend fun getBookMarkStockList(token:String,jewelleryType:String,page:Int):BookMarkedStocksResponse
+    suspend fun getBookMarkStockList(token:String,jewelleryType:String,isItemFromGs:String,page:Int):BookMarkedStocksResponse
     suspend fun getBookMarkStockInfoList(token:String,bookMarkId:String):List<BookMarkStockInfoDto>
     suspend fun orderStock(
         token: String,
