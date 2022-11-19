@@ -67,10 +67,9 @@ class OrderStockFragment:Fragment() {
         viewModel.getJewelleryType()
         binding.tvEmptyList.isVisible = true
         adapter = StockToOrderRecyclerAdapter {
-            sharedViewModel.selectedBookMark=it
             findNavController().navigate(
                 OrderStockFragmentDirections.actionOrderStockFragmentToFillOrderInfoFragment(
-
+                    it
                 )
             )
         }
@@ -114,24 +113,6 @@ class OrderStockFragment:Fragment() {
         binding.btnRetrieveFromGs.setOnClickListener {
             binding.tvEmptyList.isVisible = false
             loadBookMarks(selectedJewelleryType.orEmpty(),"1")
-//            adapter.submitList(listOf(
-//                StockCodeForListUiModel(
-//                    "1",
-//                    "123456788"
-//                ),
-//                StockCodeForListUiModel(
-//                    "2",
-//                    "123456788"
-//                ),
-//                StockCodeForListUiModel(
-//                    "3",
-//                    "123456788"
-//                ),
-//                StockCodeForListUiModel(
-//                    "4",
-//                    "123456788"
-//                )
-//            ))
         }
     }
     private fun loadBookMarks(jewelleryType:String,isItemFromGs:String) {

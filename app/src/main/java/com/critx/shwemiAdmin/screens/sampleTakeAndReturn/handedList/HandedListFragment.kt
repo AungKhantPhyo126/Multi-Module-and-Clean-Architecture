@@ -95,9 +95,9 @@ class HandedListFragment : Fragment() {
                     HandedListFragmentDirections.actionHandedListFragmentToGiveGoldFragment().setSampleList( adapter.currentList.map { it.id }.toTypedArray())
                 )
             }else{
-                findNavController().navigate(
-                    HandedListFragmentDirections.actionHandedListFragmentToFillOrderInfoFragment().setSampleList( adapter.currentList.map { it.id }.toTypedArray())
-                )
+//                findNavController().navigate(
+//                    HandedListFragmentDirections.actionHandedListFragmentToFillOrderInfoFragment().setSampleList( adapter.currentList.map { it.id }.toTypedArray())
+//                )
             }
 
         }

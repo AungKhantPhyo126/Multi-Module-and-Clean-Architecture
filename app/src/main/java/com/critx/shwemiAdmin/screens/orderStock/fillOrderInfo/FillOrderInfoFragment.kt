@@ -134,11 +134,11 @@ class FillOrderInfoFragment : Fragment() {
                 return false
             }
         })
-        binding.ivStockImage.loadImageWithGlide(sharedViewModel.selectedBookMark!!.image)
-        binding.tvKyatValue.text = sharedViewModel.selectedBookMark!!.avg_weight_per_unit_kyat
-        binding.tvPaeValue.text = sharedViewModel.selectedBookMark!!.avg_weight_per_unit_pae
+        binding.ivStockImage.loadImageWithGlide(args.bookMark.image)
+        binding.tvKyatValue.text = args.bookMark.avg_weight_per_unit_kyat
+        binding.tvPaeValue.text = args.bookMark.avg_weight_per_unit_pae
         binding.tvYwaeValue.text =
-            sharedViewModel.selectedBookMark!!.avg_weight_per_unit_ywae.toDouble().toInt()
+            args.bookMark.avg_weight_per_unit_ywae.toDouble().toInt()
                 .toString()
         val adapter = StockInfoRecyclerAdapter(viewModel)
         binding.rvStockInfo.adapter = adapter
@@ -182,7 +182,7 @@ class FillOrderInfoFragment : Fragment() {
             binding.includeSampleTakeSection.outsideGroup.isVisible = b
             binding.includeSampleTakeSection.tilScanHere.isVisible = !b
         }
-        viewModel.getBookMarkStockInfo(sharedViewModel.selectedBookMark!!.id)
+        viewModel.getBookMarkStockInfo(args.bookMark.id)
 
         viewModel.saveOutsideSampleLiveData.observe(viewLifecycleOwner) {
             when (it) {
@@ -255,7 +255,6 @@ class FillOrderInfoFragment : Fragment() {
                 is Resource.Success -> {
                     loadingDialog.dismiss()
                     requireContext().showSuccessDialog(it.data!!) {
-                        sharedViewModel.resetOrderStockData()
                         findNavController().popBackStack()
                     }
                 }
@@ -344,19 +343,7 @@ class FillOrderInfoFragment : Fragment() {
                 }
             }
         }
-        if (!args.sampleList.isNullOrEmpty()) {
-//            binding.btnSampleTake.setTextColor(requireContext().getColorStateList(R.color.primary_color))
-//            repeat(args.sampleList!!.size) {
-//                sharedViewModel.sample_id.add(
-//                    MultipartBody.Part.createFormData(
-//                        "samples[${it}][sample_id]",
-//                        args.sampleList!![it]
-//                    )
-//                )
-//            }
-        } else {
-//            binding.btnSampleTake.setTextColor(requireContext().getColorStateList(R.color.edit_text_color))
-        }
+
 
 
 //        binding.btnSampleTake.setOnClickListener {
@@ -398,18 +385,18 @@ class FillOrderInfoFragment : Fragment() {
 //            findNavController().navigate(FillOrderInfoFragmentDirections.actionFillOrderInfoFragmentToSampleTakeAndReturnFragment())
 //        }
         binding.includeButton.btnApprove.setOnClickListener {
-            if (args.sampleList != null) {
-                sharedViewModel.bookMarkId = MultipartBody.Part.createFormData(
+
+                val bookMarkId= MultipartBody.Part.createFormData(
                     "order[bookmark_id]",
-                    sharedViewModel.selectedBookMark!!.id
+                    args.bookMark.id
                 )
 
-                sharedViewModel.orderGoldQuality = MultipartBody.Part.createFormData(
+                val orderGoldQuality = MultipartBody.Part.createFormData(
                     "order[gold_quality]",
                     binding.actGoldQuality.text.toString()
                 )
 
-                sharedViewModel.orderGoldSmith = MultipartBody.Part.createFormData(
+                val orderGoldSmith = MultipartBody.Part.createFormData(
                     "order[goldsmith_id]",
                     sharedViewModel.selectedGoldSmith.value!!
                 )
@@ -419,7 +406,7 @@ class FillOrderInfoFragment : Fragment() {
                     var qty = if (it.isNullOrEmpty()) 0 else it.toInt()
                     totalQty += qty
                 }
-                sharedViewModel.equivalent_pure_gold_weight_kpy = MultipartBody.Part.createFormData(
+                val equivalent_pure_gold_weight_kpy = MultipartBody.Part.createFormData(
                     "order[equivalent_pure_gold_weight_kpy]",
                     getOrderValue(
                         binding.tvKyatValue.text.toString().toDouble(),
@@ -429,12 +416,13 @@ class FillOrderInfoFragment : Fragment() {
                         totalQty
                     )
                 )
-                sharedViewModel.order_qty = mutableListOf()
+            val order_qty = mutableListOf<MultipartBody.Part>()
                 repeat(viewModel.orderQtyList.size) {
-                    sharedViewModel.order_qty.add(
+                    val orderQty = if(viewModel.orderQtyList[it].isNotEmpty()) viewModel.orderQtyList[it] else "0"
+                    order_qty.add(
                         MultipartBody.Part.createFormData(
                             "order[items][${it}][order_qty]",
-                            viewModel.orderQtyList[it]
+                            orderQty
                         )
                     )
 
@@ -443,29 +431,38 @@ class FillOrderInfoFragment : Fragment() {
 //                sharedViewModel.jewellery_type_size_id["order[items][${it}][jewellery_type_size_id]"] =
 //                    viewModel.jewellerySizeIdList[it]
                 }
-                sharedViewModel.jewellery_type_size_id = mutableListOf()
+                 val jewellery_type_size_id = mutableListOf<MultipartBody.Part>()
                 repeat(viewModel.jewellerySizeIdList.size) {
-                    sharedViewModel.jewellery_type_size_id.add(
+                    jewellery_type_size_id.add(
                         MultipartBody.Part.createFormData(
                             "order[items][${it}][jewellery_type_size_id]",
                             viewModel.jewellerySizeIdList[it]
                         )
                     )
                 }
+            val sample_id = mutableListOf<MultipartBody.Part>()
+            repeat(viewModel.sampleList.size) {
+                sample_id.add(
+                    MultipartBody.Part.createFormData(
+                        "samples[${it}][sample_id]",
+                        viewModel.sampleList[it].sampleId!!
+                    )
+                )
+            }
 
                 viewModel.orderStock(
                     null,
                     null,
                     null,
-                    sharedViewModel.orderGoldQuality!!,
-                    sharedViewModel.orderGoldSmith!!,
-                    sharedViewModel.bookMarkId!!,
-                    sharedViewModel.equivalent_pure_gold_weight_kpy!!,
-                    sharedViewModel.jewellery_type_size_id,
-                    sharedViewModel.order_qty,
-                    sharedViewModel.sample_id
+                    orderGoldQuality,
+                    orderGoldSmith,
+                    bookMarkId,
+                    equivalent_pure_gold_weight_kpy,
+                    jewellery_type_size_id,
+                    order_qty,
+                    sample_id
                 )
-            }
+
 
         }
 
