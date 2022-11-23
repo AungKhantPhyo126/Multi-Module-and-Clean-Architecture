@@ -180,6 +180,9 @@ class CheckUpStockFragment : Fragment() {
                     )
                     viewModel.resetCheckUpStockLive()
                     viewModel.resetStockCodeList()
+                    binding.edtBoxCode.text?.clear()
+                    binding.edtBoxQuantity.text?.clear()
+                    binding.actJewelleryType.text?.clear()
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()

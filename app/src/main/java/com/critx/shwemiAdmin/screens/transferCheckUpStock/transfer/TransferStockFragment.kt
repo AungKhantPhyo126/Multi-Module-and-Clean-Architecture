@@ -153,6 +153,8 @@ class TransferStockFragment:Fragment() {
                 findNavController().navigate(TransferCheckUpStockFragmentDirections.actionTransferCheckUpStockFragmentToMatchCodeFragment(
                     viewModel.stockCodeList.map { it.invoiceCode }.toTypedArray(),viewModel.targetBoxCode!!,viewModel.stockCodeList.map { it.id }.toTypedArray()))
                 viewModel.resetStockListLive()
+                binding.edtBoxCode.text?.clear()
+                binding.actJewelleryType.text?.clear()
             }
 
         }
