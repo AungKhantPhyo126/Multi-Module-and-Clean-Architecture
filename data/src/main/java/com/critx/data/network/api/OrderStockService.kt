@@ -33,12 +33,14 @@ interface OrderStockService {
         @Part bookMarkAvgKyat: MultipartBody.Part?,
         @Part bookMarkAvgPae: MultipartBody.Part?,
         @Part bookMarkAvgYwae: MultipartBody.Part?,
+        @Part bookMarkJewelleryTypeId: MultipartBody.Part?,
+        @Part bookMarkImage: MultipartBody.Part?,
         @Part goldQuality: MultipartBody.Part,
         @Part goldSmith: MultipartBody.Part,
-        @Part bookMarkId: MultipartBody.Part,
+        @Part bookMarkId: MultipartBody.Part?,
         @Part equivalent_pure_gold_weight_kpy: MultipartBody.Part,
         @Part jewellery_type_size_id: List<MultipartBody.Part>,
         @Part order_qty: List<MultipartBody.Part>,
-        @Part sample_id: List<MultipartBody.Part>,
+        @Part sample_id: List<MultipartBody.Part>?,
     ):Response<SimpleResponse>
 }

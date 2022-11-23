@@ -156,7 +156,9 @@
             app:destination="@id/productCreateFragment" />
         <action
             android:id="@+id/action_chooseCategoryFragment_to_recommendStockFragment"
-            app:destination="@id/recommendStockFragment" />
+            app:destination="@id/recommendStockFragment"
+            app:popUpTo="@id/addCategoryFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/addCategoryFragment"
@@ -250,6 +252,9 @@
         <action
             android:id="@+id/action_orderStockFragment_to_fillOrderInfoFragment"
             app:destination="@id/fillOrderInfoFragment" />
+        <action
+            android:id="@+id/action_orderStockFragment_to_newOrderInfoFragment"
+            app:destination="@id/newOrderInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/fillOrderInfoFragment"
@@ -307,5 +312,13 @@
         <action
             android:id="@+id/action_handedListFragment_to_giveGoldFragment"
             app:destination="@id/giveGoldFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newOrderInfoFragment"
+        android:name="com.critx.shwemiAdmin.screens.orderStock.newOrder.NewOrderInfoFragment"
+        android:label="NewOrderInfoFragment" >
+        <argument
+            android:name="jewelleryTypeId"
+            app:argType="string" />
     </fragment>
 </navigation>

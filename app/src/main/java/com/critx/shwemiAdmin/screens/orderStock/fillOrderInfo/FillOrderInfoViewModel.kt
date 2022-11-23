@@ -8,6 +8,7 @@ import com.critx.commonkotlin.util.Resource
 import com.critx.domain.model.collectStock.ProductIdWithTypeDomain
 import com.critx.domain.model.orderStock.BookMarkStockInfoDomain
 import com.critx.domain.useCase.collectStock.GetGoldSmithListUseCase
+import com.critx.domain.useCase.collectStock.GetJewellerySizeUseCase
 import com.critx.domain.useCase.collectStock.ScanProductCodeUseCase
 import com.critx.domain.useCase.orderStock.GetBookMarkStockInfoUseCase
 import com.critx.domain.useCase.orderStock.OrderStockUseCase
@@ -16,6 +17,7 @@ import com.critx.domain.useCase.sampleTakeAndReturn.SaveOutsideSampleUseCase
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.SelectedImage
 import com.critx.shwemiAdmin.uiModel.collectStock.GoldSmithUiModel
+import com.critx.shwemiAdmin.uiModel.collectStock.JewellerySizeUIModel
 import com.critx.shwemiAdmin.uiModel.collectStock.asUiModel
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryTypeUiModel
 import com.critx.shwemiAdmin.uiModel.setupStock.asUiModel
@@ -36,19 +38,29 @@ class FillOrderInfoViewModel @Inject constructor(
     private val orderStockUseCase: OrderStockUseCase,
     private val saveOutsideSampleUseCase: SaveOutsideSampleUseCase,
     private val checkSampleUseCase: CheckSampleUseCase,
-    private val scanProductCodeUseCase: ScanProductCodeUseCase
+    private val scanProductCodeUseCase: ScanProductCodeUseCase,
+    private val getJewellerySizeUseCase: GetJewellerySizeUseCase
 ) : ViewModel() {
     var orderQtyList = mutableListOf<String>()
     var jewellerySizeIdList = mutableListOf<String>()
 
-    var selectedImgUri= MutableLiveData<SelectedImage?>(null)
-    fun setSelectedImgUri(selectedImage: SelectedImage?){
+    var selectedImgUri = MutableLiveData<SelectedImage?>(null)
+    fun setSelectedImgUri(selectedImage: SelectedImage?) {
         selectedImgUri.value = selectedImage
     }
 
-    fun resetSelectedImg(){
+    var selectedOrderedImgUri = MutableLiveData<SelectedImage?>(null)
+    fun setSelectedOrderedImgUri(selectedImage: SelectedImage?) {
+        selectedOrderedImgUri.value = selectedImage
+    }
+
+    fun resetSelectedImg() {
         selectedImgUri.value = null
     }
+
+    private var _jewellerySizeLiveData= MutableLiveData<Resource<MutableList<JewellerySizeUIModel>>>()
+    val jewellerySizeLiveData : LiveData<Resource<MutableList<JewellerySizeUIModel>>>
+        get() = _jewellerySizeLiveData
 
     private val _checkSampleLiveData = MutableLiveData<Resource<SampleItemUIModel>>()
     val checkSampleLiveData: LiveData<Resource<SampleItemUIModel>>
@@ -60,14 +72,14 @@ class FillOrderInfoViewModel @Inject constructor(
 
     val sampleList = mutableListOf<SampleItemUIModel>()
 
-    fun addSample(item:SampleItemUIModel){
+    fun addSample(item: SampleItemUIModel) {
         sampleList.add(item)
-        _takenSampleListLiveData.value=sampleList
+        _takenSampleListLiveData.value = sampleList
     }
 
-    fun remove(item:SampleItemUIModel){
+    fun remove(item: SampleItemUIModel) {
         sampleList.remove(item)
-        _takenSampleListLiveData.value=sampleList
+        _takenSampleListLiveData.value = sampleList
     }
 
     private var _scanProductCodeLive = MutableLiveData<Resource<ProductIdWithTypeDomain>>()
@@ -112,6 +124,26 @@ class FillOrderInfoViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun getJewellerySize(type:String){
+        viewModelScope.launch {
+            getJewellerySizeUseCase(localDatabase.getToken().orEmpty(),
+                type).collectLatest {
+                when(it){
+                    is Resource.Loading->{
+                        _jewellerySizeLiveData.value = Resource.Loading()
+                    }
+                    is Resource.Success->{
+                        _jewellerySizeLiveData.value = Resource.Success(it.data?.map { it.asUiModel() } as MutableList<JewellerySizeUIModel>)
+                    }
+                    is Resource.Error->{
+                        _jewellerySizeLiveData.value = Resource.Error(it.message)
+                    }
+                }
+            }
+
         }
     }
 
@@ -162,13 +194,15 @@ class FillOrderInfoViewModel @Inject constructor(
         bookMarkAvgKyat: MultipartBody.Part?,
         bookMarkAvgPae: MultipartBody.Part?,
         bookMarkAvgYwae: MultipartBody.Part?,
+        bookMarkJewelleryTypeId: MultipartBody.Part?,
+        bookMarkImage: MultipartBody.Part?,
         goldQuality: MultipartBody.Part,
         goldSmith: MultipartBody.Part,
-        bookMarkId: MultipartBody.Part,
+        bookMarkId: MultipartBody.Part?,
         equivalent_pure_gold_weight_kpy: MultipartBody.Part,
         jewellery_type_size_id: List<MultipartBody.Part>,
         order_qty: List<MultipartBody.Part>,
-        sample_id: List<MultipartBody.Part>
+        sample_id: List<MultipartBody.Part>?
     ) {
         viewModelScope.launch {
             orderStockUseCase(
@@ -176,6 +210,8 @@ class FillOrderInfoViewModel @Inject constructor(
                 bookMarkAvgKyat,
                 bookMarkAvgPae,
                 bookMarkAvgYwae,
+                bookMarkJewelleryTypeId,
+                bookMarkImage,
                 goldQuality,
                 goldSmith,
                 bookMarkId,
@@ -198,15 +234,18 @@ class FillOrderInfoViewModel @Inject constructor(
             }
         }
     }
+
     fun saveOutsideSample(
         name: RequestBody?,
         weight: RequestBody?,
         specification: RequestBody?,
-        image:MultipartBody.Part
-    ){
+        image: MultipartBody.Part
+    ) {
         viewModelScope.launch {
-            saveOutsideSampleUseCase(localDatabase.getToken().orEmpty(),
-                name,weight, specification,image).collectLatest {
+            saveOutsideSampleUseCase(
+                localDatabase.getToken().orEmpty(),
+                name, weight, specification, image
+            ).collectLatest {
                 when (it) {
                     is Resource.Loading -> {
                         _saveOutsideSampleLiveData.value = Resource.Loading()

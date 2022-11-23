@@ -23,7 +23,7 @@ class OrderStockRepoImpl @Inject constructor(
     override fun getBookMarkStockList(
         token: String,
         jewlleryType: String,
-        isItemFromGs:String,
+        isItemFromGs: String,
         page: Int
     ): Flow<Resource<BookMarkedStocksWithPaging>> =
         flow {
@@ -31,7 +31,12 @@ class OrderStockRepoImpl @Inject constructor(
             try {
                 emit(
                     Resource.Success(
-                        orderStockDataSource.getBookMarkStockList(token, jewlleryType,isItemFromGs, page)
+                        orderStockDataSource.getBookMarkStockList(
+                            token,
+                            jewlleryType,
+                            isItemFromGs,
+                            page
+                        )
                             .asDomain()
                     )
                 )
@@ -71,13 +76,15 @@ class OrderStockRepoImpl @Inject constructor(
         bookMarkAvgKyat: MultipartBody.Part?,
         bookMarkAvgPae: MultipartBody.Part?,
         bookMarkAvgYwae: MultipartBody.Part?,
+        bookMarkJewelleryTypeId: MultipartBody.Part?,
+        bookMarkImage: MultipartBody.Part?,
         goldQuality: MultipartBody.Part,
         goldSmith: MultipartBody.Part,
-        bookMarkId: MultipartBody.Part,
+        bookMarkId: MultipartBody.Part?,
         equivalent_pure_gold_weight_kpy: MultipartBody.Part,
         jewellery_type_size_id: List<MultipartBody.Part>,
         order_qty: List<MultipartBody.Part>,
-        sample_id: List<MultipartBody.Part>
+        sample_id: List<MultipartBody.Part>?
     ): Flow<Resource<SimpleData>> =
         flow {
             emit(Resource.Loading())
@@ -89,6 +96,8 @@ class OrderStockRepoImpl @Inject constructor(
                             bookMarkAvgKyat,
                             bookMarkAvgPae,
                             bookMarkAvgYwae,
+                            bookMarkJewelleryTypeId,
+                            bookMarkImage,
                             goldQuality,
                             goldSmith,
                             bookMarkId,

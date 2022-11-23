@@ -72,10 +72,10 @@ class RecommendStockFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
         loadingDialog = requireContext().getAlertDialog()
-        if (findNavController().previousBackStackEntry?.destination?.id == R.id.chooseCategoryFragment) {
-            args.categoryUIModel!!.isChecked = false
-            sharedViewModel.addRecommendCat(args.categoryUIModel!!)
-        }
+//        if (findNavController().previousBackStackEntry?.destination?.id == R.id.chooseCategoryFragment) {
+//            args.categoryUIModel!!.isChecked = false
+//            sharedViewModel.addRecommendCat(args.categoryUIModel!!)1
+//        }
 //        else if (args.categoryUIModel != null){
 //            viewModel.getRelatedCategories(args.categoryUIModel!!.id)
 //        }

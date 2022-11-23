@@ -17,10 +17,10 @@ class OrderStockDataSourceImpl @Inject constructor(
     override suspend fun getBookMarkStockList(
         token: String,
         jewelleryType: String,
-        isItemFromGs:String,
+        isItemFromGs: String,
         page: Int
     ): BookMarkedStocksResponse {
-        val response = orderStockService.getBookMarks(token, jewelleryType,isItemFromGs, page)
+        val response = orderStockService.getBookMarks(token, jewelleryType, isItemFromGs, page)
         return if (response.isSuccessful) {
             response.body() ?: throw Exception("Response body Null")
         } else {
@@ -75,19 +75,23 @@ class OrderStockDataSourceImpl @Inject constructor(
         bookMarkAvgKyat: MultipartBody.Part?,
         bookMarkAvgPae: MultipartBody.Part?,
         bookMarkAvgYwae: MultipartBody.Part?,
+        bookMarkJewelleryTypeId: MultipartBody.Part?,
+        bookMarkImage: MultipartBody.Part?,
         goldQuality: MultipartBody.Part,
         goldSmith: MultipartBody.Part,
-        bookMarkId: MultipartBody.Part,
+        bookMarkId: MultipartBody.Part?,
         equivalent_pure_gold_weight_kpy: MultipartBody.Part,
         jewellery_type_size_id: List<MultipartBody.Part>,
         order_qty: List<MultipartBody.Part>,
-        sample_id: List<MultipartBody.Part>
+        sample_id: List<MultipartBody.Part>?
     ): SimpleResponse {
         val response = orderStockService.orderStock(
             token,
             bookMarkAvgKyat,
             bookMarkAvgPae,
             bookMarkAvgYwae,
+            bookMarkJewelleryTypeId,
+            bookMarkImage,
             goldQuality,
             goldSmith,
             bookMarkId,

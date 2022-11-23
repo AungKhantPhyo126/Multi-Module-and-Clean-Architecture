@@ -57,7 +57,7 @@ class OrderStockFragment:Fragment() {
         toolbarCenterText.isVisible=true
         toolbarCenterText.text=getString(R.string.order_stock)
         toolbarCenterImage.isVisible =false
-        toolbarEndIcon.isVisible =false
+        toolbarEndIcon.setImageDrawable(requireContext().getDrawable(R.drawable.paper_icon))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,6 +72,13 @@ class OrderStockFragment:Fragment() {
                     it
                 )
             )
+        }
+        val toolbarEndIcon: ImageView = activity!!.findViewById<View>(R.id.iv_end_icon) as ImageView
+
+        toolbarEndIcon.setOnClickListener {
+            findNavController().navigate(OrderStockFragmentDirections.actionOrderStockFragmentToNewOrderInfoFragment(
+                selectedJewelleryType!!
+            ))
         }
         binding.rvStockToOrder.adapter=adapter
         viewModel.jewelleryTypeLiveData.observe(viewLifecycleOwner){

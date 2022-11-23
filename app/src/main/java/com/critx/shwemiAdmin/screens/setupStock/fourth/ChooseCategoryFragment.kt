@@ -148,6 +148,8 @@ class ChooseCategoryFragment : Fragment() {
 
         binding.btnNext.setOnClickListener {
             if (sharedViewModel.thirdCatForRecommendCat != null) {
+                sharedViewModel.addRecommendCat(sharedViewModel.fourthCat!!)
+                sharedViewModel.resetForRecommendCat()
                 findNavController().navigate(
                     ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToRecommendStockFragment(
                         sharedViewModel.fourthCat!!

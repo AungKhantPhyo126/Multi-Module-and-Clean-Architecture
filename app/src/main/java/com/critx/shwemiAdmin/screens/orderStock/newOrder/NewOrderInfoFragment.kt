@@ -1,4 +1,4 @@
-package com.critx.shwemiAdmin.screens.orderStock.fillOrderInfo
+package com.critx.shwemiAdmin.screens.orderStock.newOrder
 
 import android.Manifest
 import android.app.Activity
@@ -14,9 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.addCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -36,13 +34,14 @@ import com.critx.commonkotlin.util.Resource
 import com.critx.commonkotlin.util.getOrderValue
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentFillOrderInfoBinding
+import com.critx.shwemiAdmin.databinding.FragmentNewOrderInfoBinding
 import com.critx.shwemiAdmin.hideKeyboard
+import com.critx.shwemiAdmin.screens.orderStock.fillOrderInfo.*
 import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.SelectedImage
 import com.critx.shwemiAdmin.screens.setupStock.third.edit.getRealPathFromUri
 import com.critx.shwemiAdmin.showDropdown
-import com.critx.shwemiAdmin.uiModel.StockCodeForListUiModel
-import com.critx.shwemiAdmin.uiModel.simpleTakeAndReturn.SampleItemUIModel
+import com.critx.shwemiAdmin.uiModel.collectStock.asBookMarkOrder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -53,20 +52,31 @@ import java.io.File
 import java.io.InputStream
 
 @AndroidEntryPoint
-class FillOrderInfoFragment : Fragment() {
-    private lateinit var binding: FragmentFillOrderInfoBinding
-    private val args by navArgs<FillOrderInfoFragmentArgs>()
+class NewOrderInfoFragment:Fragment() {
+    private lateinit var binding:FragmentNewOrderInfoBinding
     private val viewModel by viewModels<FillOrderInfoViewModel>()
     private val sharedViewModel by activityViewModels<SharedViewModel>()
     private lateinit var barlauncer: Any
     var photo: MultipartBody.Part? = null
+    var orderedPhoto: MultipartBody.Part? = null
 
     private lateinit var launchChooseImage: ActivityResultLauncher<Intent>
+    private lateinit var launchChooseOrderImage: ActivityResultLauncher<Intent>
     private lateinit var readStoragePermissionlauncher: ActivityResultLauncher<String>
 
+    private val args by navArgs<NewOrderInfoFragmentArgs>()
 
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return FragmentNewOrderInfoBinding.inflate(inflater).also {
+            binding = it
+        }.root
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,21 +103,36 @@ class FillOrderInfoFragment : Fragment() {
                 }
 
             }
+
+        launchChooseOrderImage =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                var selectedImage: Bitmap?
+                if (result.resultCode == Activity.RESULT_OK) {
+                    result.data?.data?.let {
+                        val imageStream: InputStream =
+                            requireContext().contentResolver?.openInputStream(it)!!
+                        selectedImage = BitmapFactory.decodeStream(imageStream)
+//                        selectedImage = getResizedBitmap(
+//                            selectedImage!!,
+//                            500
+//                        );// 400 is for example, replace with desired size
+                        Log.i("imageResize", selectedImage?.width.toString())
+                        val file = getRealPathFromUri(requireContext(), it)?.let { it1 ->
+                            File(
+                                it1
+                            )
+                        }
+                        viewModel.setSelectedOrderedImgUri(SelectedImage(file!!, selectedImage!!))
+                    }
+                }
+
+            }
+
         readStoragePermissionlauncher = registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) {
             if (it) chooseImage()
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return FragmentFillOrderInfoBinding.inflate(inflater).also {
-            binding = it
-        }.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -118,6 +143,7 @@ class FillOrderInfoFragment : Fragment() {
             binding.includeSampleTakeSection.edtScanHere.setText(it)
             viewModel.scanStock(it)
         }
+
         binding.includeSampleTakeSection.edtScanHere.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
 
@@ -133,12 +159,7 @@ class FillOrderInfoFragment : Fragment() {
                 return false
             }
         })
-        binding.ivStockImage.loadImageWithGlide(args.bookMark.image)
-        binding.tvKyatValue.text = args.bookMark.avg_weight_per_unit_kyat
-        binding.tvPaeValue.text = args.bookMark.avg_weight_per_unit_pae
-        binding.tvYwaeValue.text =
-            args.bookMark.avg_weight_per_unit_ywae.toDouble().toInt()
-                .toString()
+
         val adapter = StockInfoRecyclerAdapter(viewModel)
         binding.rvStockInfo.adapter = adapter
 
@@ -153,6 +174,14 @@ class FillOrderInfoFragment : Fragment() {
                 photo = MultipartBody.Part.createFormData("image", it.file.name, requestBody)
             }
         }
+        viewModel.selectedOrderedImgUri.observe(viewLifecycleOwner) {
+            if (it != null) {
+                val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                binding.ivStockImage.setImageBitmap(it.bitMap)
+                orderedPhoto = MultipartBody.Part.createFormData("bookmark[image]", it.file.name, requestBody)
+            }
+        }
+
         binding.includeSampleTakeSection.btnSaveAndTake.setOnClickListener {
             if (photo != null) {
                 viewModel.saveOutsideSample(
@@ -177,11 +206,18 @@ class FillOrderInfoFragment : Fragment() {
             }
         }
 
+        binding.ivStockImage.setOnClickListener {
+            if (isReadExternalStoragePermissionGranted()) {
+                chooseOrderedImage()
+            } else {
+                requestPermission()
+            }
+        }
+
         binding.includeSampleTakeSection.switch1.setOnCheckedChangeListener { compoundButton, b ->
             binding.includeSampleTakeSection.outsideGroup.isVisible = b
             binding.includeSampleTakeSection.tilScanHere.isVisible = !b
         }
-        viewModel.getBookMarkStockInfo(args.bookMark.id)
 
         viewModel.saveOutsideSampleLiveData.observe(viewLifecycleOwner) {
             when (it) {
@@ -269,29 +305,25 @@ class FillOrderInfoFragment : Fragment() {
                 }
             }
         }
+        viewModel.getJewellerySize(args.jewelleryTypeId)
 
-        viewModel.bookMarkStockInfoLiveData.observe(viewLifecycleOwner) {
-            when (it) {
-                is Resource.Loading -> {
+        viewModel.jewellerySizeLiveData.observe(viewLifecycleOwner){
+            when(it){
+                is Resource.Loading->{
                     loadingDialog.show()
                 }
-                is Resource.Success -> {
+                is Resource.Success->{
                     loadingDialog.dismiss()
                     repeat(it.data!!.size) {
                         viewModel.orderQtyList.add("")
                     }
                     viewModel.jewellerySizeIdList.addAll(it.data!!.map { it.id })
-                    adapter.submitList(it.data)
+                    adapter.submitList(it.data!!.map { it.asBookMarkOrder() })
                 }
-                is Resource.Error -> {
+                is Resource.Error->{
                     loadingDialog.dismiss()
-                    snackBar?.dismiss()
-                    snackBar = Snackbar.make(
-                        binding.root,
-                        it.message!!,
-                        Snackbar.LENGTH_LONG
-                    )
-                    snackBar?.show()
+                    Toast.makeText(requireContext(),it.message,Toast.LENGTH_LONG).show()
+
                 }
             }
         }
@@ -345,84 +377,108 @@ class FillOrderInfoFragment : Fragment() {
 
         binding.includeButton.btnApprove.setOnClickListener {
 
-                val bookMarkId= MultipartBody.Part.createFormData(
-                    "order[bookmark_id]",
-                    args.bookMark.id
-                )
+            val kyat = MultipartBody.Part.createFormData(
+                "bookmark[avg_weight_per_unit_kyat]",
+                binding.edtKyat.text.toString()
+            )
 
-                val orderGoldQuality = MultipartBody.Part.createFormData(
-                    "order[gold_quality]",
-                    binding.actGoldQuality.text.toString()
-                )
+            val pae = MultipartBody.Part.createFormData(
+                "bookmark[avg_weight_per_unit_pae]",
+                binding.edtPae.text.toString()
+            )
+            val ywae = MultipartBody.Part.createFormData(
+                "bookmark[avg_weight_per_unit_ywae]",
+                binding.edtYwae.text.toString()
+            )
 
-                val orderGoldSmith = MultipartBody.Part.createFormData(
-                    "order[goldsmith_id]",
-                    sharedViewModel.selectedGoldSmith.value!!
-                )
+            val jewelleryTypeId = MultipartBody.Part.createFormData(
+                "bookmark[jewellery_type_id]",
+                args.jewelleryTypeId
+            )
 
-                var totalQty = 0
-                viewModel.orderQtyList.forEach {
-                    var qty = if (it.isNullOrEmpty()) 0 else it.toInt()
-                    totalQty += qty
-                }
-                val equivalent_pure_gold_weight_kpy = MultipartBody.Part.createFormData(
-                    "order[equivalent_pure_gold_weight_kpy]",
-                    getOrderValue(
-                        binding.tvKyatValue.text.toString().toDouble(),
-                        binding.tvPaeValue.text.toString().toDouble(),
-                        binding.tvYwaeValue.text.toString().toDouble(),
-                        binding.actGoldQuality.text.toString(),
-                        totalQty
-                    )
+            val orderGoldQuality = MultipartBody.Part.createFormData(
+                "order[gold_quality]",
+                binding.actGoldQuality.text.toString()
+            )
+
+            val orderGoldSmith = MultipartBody.Part.createFormData(
+                "order[goldsmith_id]",
+                sharedViewModel.selectedGoldSmith.value!!
+            )
+
+            var totalQty = 0
+            viewModel.orderQtyList.forEach {
+                var qty = if (it.isNullOrEmpty()) 0 else it.toInt()
+                totalQty += qty
+            }
+            val equivalent_pure_gold_weight_kpy = MultipartBody.Part.createFormData(
+                "order[equivalent_pure_gold_weight_kpy]",
+                getOrderValue(
+                    binding.edtKyat.text.toString().toDouble(),
+                    binding.edtPae.text.toString().toDouble(),
+                    binding.edtYwae.text.toString().toDouble(),
+                    binding.actGoldQuality.text.toString(),
+                    totalQty
                 )
+            )
             val order_qty = mutableListOf<MultipartBody.Part>()
-                repeat(viewModel.orderQtyList.size) {
-                    val orderQty = if(viewModel.orderQtyList[it].isNotEmpty()) viewModel.orderQtyList[it] else "0"
-                    order_qty.add(
-                        MultipartBody.Part.createFormData(
-                            "order[items][${it}][order_qty]",
-                            orderQty
-                        )
+            repeat(viewModel.orderQtyList.size) {
+                val orderQty = if(viewModel.orderQtyList[it].isNotEmpty()) viewModel.orderQtyList[it] else "0"
+                order_qty.add(
+                    MultipartBody.Part.createFormData(
+                        "order[items][${it}][order_qty]",
+                        orderQty
                     )
+                )
 
 //                sharedViewModel.orderGoldQuality["order[items][${it}][order_qty]"] =
 //                    viewModel.orderQtyList[it]
 //                sharedViewModel.jewellery_type_size_id["order[items][${it}][jewellery_type_size_id]"] =
 //                    viewModel.jewellerySizeIdList[it]
-                }
-                 val jewellery_type_size_id = mutableListOf<MultipartBody.Part>()
-                repeat(viewModel.jewellerySizeIdList.size) {
-                    jewellery_type_size_id.add(
-                        MultipartBody.Part.createFormData(
-                            "order[items][${it}][jewellery_type_size_id]",
-                            viewModel.jewellerySizeIdList[it]
-                        )
-                    )
-                }
-            val sample_id = mutableListOf<MultipartBody.Part>()
-            repeat(viewModel.sampleList.size) {
-                sample_id.add(
+            }
+            val jewellery_type_size_id = mutableListOf<MultipartBody.Part>()
+            repeat(viewModel.jewellerySizeIdList.size) {
+                jewellery_type_size_id.add(
                     MultipartBody.Part.createFormData(
-                        "samples[${it}][sample_id]",
-                        viewModel.sampleList[it].sampleId!!
+                        "order[items][${it}][jewellery_type_size_id]",
+                        viewModel.jewellerySizeIdList[it]
                     )
                 )
             }
+            val sample_id =
+            if (viewModel.sampleList.isNullOrEmpty()){
+                null
+            }else{
+                mutableListOf<MultipartBody.Part>()
+            }
+            if (viewModel.sampleList.isNullOrEmpty().not()){
+                repeat(viewModel.sampleList.size) {
+                    sample_id!!.add(
+                        MultipartBody.Part.createFormData(
+                            "samples[${it}][sample_id]",
+                            viewModel.sampleList[it].sampleId!!
+                        )
+                    )
+                }
+            }
 
-                viewModel.orderStock(
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    orderGoldQuality,
-                    orderGoldSmith,
-                    bookMarkId,
-                    equivalent_pure_gold_weight_kpy,
-                    jewellery_type_size_id,
-                    order_qty,
-                    sample_id
-                )
+
+            viewModel.orderStock(
+                kyat,
+                pae,
+                ywae,
+                jewelleryTypeId,
+                orderedPhoto,
+                orderGoldQuality,
+                orderGoldSmith,
+                null,
+                equivalent_pure_gold_weight_kpy,
+                jewellery_type_size_id,
+                order_qty,
+                sample_id
+            )
+
+
         }
 
         binding.ibBack.setOnClickListener {
@@ -434,6 +490,12 @@ class FillOrderInfoFragment : Fragment() {
         val pickIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         pickIntent.type = "image/*"
         launchChooseImage.launch(pickIntent)
+    }
+
+    fun chooseOrderedImage() {
+        val pickIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        pickIntent.type = "image/*"
+        launchChooseOrderImage.launch(pickIntent)
     }
 
     private fun isReadExternalStoragePermissionGranted(): Boolean {
