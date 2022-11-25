@@ -4,21 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.work.WorkManager
 import com.critx.commonkotlin.util.Resource
+import com.critx.domain.model.dailyGoldAndPrice.RebuyPriceSmallAndLargeDomain
 import com.critx.domain.useCase.auth.LogoutUseCase
 import com.critx.domain.useCase.auth.RefreshTokenUseCase
-import com.critx.domain.useCase.dailygoldprice.GetGoldPriceUseCase
-import com.critx.domain.useCase.dailygoldprice.GetProfileUsecase
-import com.critx.domain.useCase.dailygoldprice.UpdateGoldPriceUseCase
+import com.critx.domain.useCase.dailygoldprice.*
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.uiModel.dailygoldandprice.GoldPriceUIModel
 import com.critx.shwemiAdmin.uiModel.dailygoldandprice.asUiModel
-import com.critx.shwemiAdmin.uistate.LoginUiState
 import com.critx.shwemiAdmin.uistate.LogoutUiState
 import com.critx.shwemiAdmin.uistate.ProfileUiState
-import com.critx.shwemiAdmin.workerManager.RefreshTokenWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -31,8 +27,10 @@ class DailyGoldPriceViewModel @Inject constructor(
     private val getProfileUsecase: GetProfileUsecase,
     private val getGoldPriceUseCase: GetGoldPriceUseCase,
     private val updateGoldPriceUseCase: UpdateGoldPriceUseCase,
-    private val refreshTokenUseCase: RefreshTokenUseCase
-): ViewModel() {
+    private val refreshTokenUseCase: RefreshTokenUseCase,
+    private val updateRebuyPriceUseCase: UpdateRebuyPriceUseCase,
+    private val getRebuyPriceUseCase: GetRebuyPriceUseCase
+) : ViewModel() {
     private val _logoutState = MutableStateFlow(LogoutUiState())
     val logoutState = _logoutState.asStateFlow()
 
@@ -43,46 +41,72 @@ class DailyGoldPriceViewModel @Inject constructor(
     val event = _event.asSharedFlow()
 
     private val _isLogin = MutableLiveData<Boolean>()
-    val isLogin:LiveData<Boolean>
-    get() = _isLogin
+    val isLogin: LiveData<Boolean>
+        get() = _isLogin
+
+    private val _getRebuyPriceLive = MutableLiveData<Resource<RebuyPriceSmallAndLargeDomain>>()
+    val getRebuyPriceLive: LiveData<Resource<RebuyPriceSmallAndLargeDomain>>
+        get() = _getRebuyPriceLive
 
     private val _getGoldPriceLive = MutableLiveData<Resource<List<GoldPriceUIModel>>>()
-    val getGoldPriceLive : LiveData<Resource<List<GoldPriceUIModel>>>
-        get()  = _getGoldPriceLive
+    val getGoldPriceLive: LiveData<Resource<List<GoldPriceUIModel>>>
+        get() = _getGoldPriceLive
 
     private val _updateGoldLive = MutableLiveData<Resource<String>>()
-    val updateGoldLive : LiveData<Resource<String>>
-        get()  = _updateGoldLive
+    val updateGoldLive: LiveData<Resource<String>>
+        get() = _updateGoldLive
 
-    fun resetUpdateGoldLive(){
+    private val _updateRebuyPrice = MutableLiveData<Resource<String>>()
+    val updateRebuyPrice: LiveData<Resource<String>>
+        get() = _updateRebuyPrice
+
+    fun resetUpdateGoldLive() {
         _updateGoldLive.value = null
     }
 
-    fun isloggedIn(){
-        _isLogin.value=localDatabase.isLogin()
+    fun isloggedIn() {
+        _isLogin.value = localDatabase.isLogin()
 //        return true
     }
+
     init {
         isloggedIn()
     }
 
-    fun isRefreshTokenExpire():Boolean{
+    fun isRefreshTokenExpire(): Boolean {
         return localDatabase.isRefreshTokenExpire()
     }
 
-    fun updateGoldPrice(price: HashMap<String,String>){
+
+
+    fun updateRebuyPrice(
+        horizontal_option_name: HashMap<String, String>,
+        vertical_option_name: HashMap<String, String>,
+        horizontal_option_level: HashMap<String, String>,
+        vertical_option_level: HashMap<String, String>,
+        size: HashMap<String, String>,
+        price: HashMap<String, String>
+    ) {
         viewModelScope.launch {
-            updateGoldPriceUseCase(localDatabase.getToken().orEmpty(),price).collectLatest {
-                when(it){
-                    is Resource.Loading->{
-                        _updateGoldLive.value  = Resource.Loading()
+            updateRebuyPriceUseCase(
+                localDatabase.getToken().orEmpty(),
+                horizontal_option_name,
+                vertical_option_name,
+                horizontal_option_level,
+                vertical_option_level,
+                size,
+                price
+            ).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _updateRebuyPrice.value = Resource.Loading()
                     }
-                    is Resource.Success->{
-                        _updateGoldLive.value  = Resource.Success(it.data!!.message)
+                    is Resource.Success -> {
+                        _updateRebuyPrice.value = Resource.Success(it.data!!.message)
 
                     }
-                    is Resource.Error->{
-                        _updateGoldLive.value  = Resource.Error(it.message)
+                    is Resource.Error -> {
+                        _updateRebuyPrice.value = Resource.Error(it.message)
 
                     }
                 }
@@ -90,19 +114,39 @@ class DailyGoldPriceViewModel @Inject constructor(
         }
     }
 
-    fun getGoldPrice(){
+    fun updateGoldPrice(price: HashMap<String, String>) {
+        viewModelScope.launch {
+            updateGoldPriceUseCase(localDatabase.getToken().orEmpty(), price).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _updateGoldLive.value = Resource.Loading()
+                    }
+                    is Resource.Success -> {
+                        _updateGoldLive.value = Resource.Success(it.data!!.message)
+
+                    }
+                    is Resource.Error -> {
+                        _updateGoldLive.value = Resource.Error(it.message)
+
+                    }
+                }
+            }
+        }
+    }
+
+    fun getGoldPrice() {
         viewModelScope.launch {
             getGoldPriceUseCase(localDatabase.getToken().orEmpty()).collectLatest {
-                when(it){
-                    is Resource.Loading->{
-                        _getGoldPriceLive.value  = Resource.Loading()
+                when (it) {
+                    is Resource.Loading -> {
+                        _getGoldPriceLive.value = Resource.Loading()
                     }
-                    is Resource.Success->{
-                        _getGoldPriceLive.value  = Resource.Success(it.data!!.map { it.asUiModel() })
+                    is Resource.Success -> {
+                        _getGoldPriceLive.value = Resource.Success(it.data!!.map { it.asUiModel() })
 
                     }
-                    is Resource.Error->{
-                        _getGoldPriceLive.value  = Resource.Error(it.message)
+                    is Resource.Error -> {
+                        _getGoldPriceLive.value = Resource.Error(it.message)
 
                     }
                 }
@@ -110,25 +154,45 @@ class DailyGoldPriceViewModel @Inject constructor(
         }
     }
 
-    fun logout(){
+    fun getRebuyPrice() {
         viewModelScope.launch {
-            logoutUseCase(localDatabase.getToken().orEmpty()).collectLatest {  result->
-                when(result){
-                    is Resource.Loading->{
-                        _logoutState.value =_logoutState.value.copy(
+            getRebuyPriceUseCase(localDatabase.getToken().orEmpty()).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _getRebuyPriceLive.value = Resource.Loading()
+                    }
+                    is Resource.Success -> {
+                        _getRebuyPriceLive.value = Resource.Success(it.data!!)
+
+                    }
+                    is Resource.Error -> {
+                        _getRebuyPriceLive.value = Resource.Error(it.message)
+
+                    }
+                }
+            }
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            logoutUseCase(localDatabase.getToken().orEmpty()).collectLatest { result ->
+                when (result) {
+                    is Resource.Loading -> {
+                        _logoutState.value = _logoutState.value.copy(
                             loading = true
                         )
                     }
-                    is Resource.Success->{
-                        _logoutState.value =_logoutState.value.copy(
+                    is Resource.Success -> {
+                        _logoutState.value = _logoutState.value.copy(
                             loading = false,
                             successMessage = "Login Success"
                         )
                         localDatabase.clearuser()
                         isloggedIn()
                     }
-                    is Resource.Error->{
-                        _logoutState.value =_logoutState.value.copy(
+                    is Resource.Error -> {
+                        _logoutState.value = _logoutState.value.copy(
                             loading = false,
                         )
                         result.message?.let {
@@ -141,29 +205,29 @@ class DailyGoldPriceViewModel @Inject constructor(
         }
     }
 
-    fun getProfile(){
-         var count = 0
+    fun getProfile() {
+        var count = 0
         viewModelScope.launch {
-            getProfileUsecase(localDatabase.getToken().orEmpty()).collectLatest { result->
-                when(result){
-                    is Resource.Loading->{
-                        _profileState.value =_profileState.value.copy(
+            getProfileUsecase(localDatabase.getToken().orEmpty()).collectLatest { result ->
+                when (result) {
+                    is Resource.Loading -> {
+                        _profileState.value = _profileState.value.copy(
                             loading = true
                         )
                     }
-                    is Resource.Success->{
+                    is Resource.Success -> {
                         getGoldPrice()
-                        _profileState.value =_profileState.value.copy(
+                        _profileState.value = _profileState.value.copy(
                             loading = false,
                             successLoading = result.data!!.asUiModel()
                         )
                     }
-                    is Resource.Error->{
-                        if (count == 0){
+                    is Resource.Error -> {
+                        if (count == 0) {
                             getProfile()
                             count++
                         }
-                        _profileState.value =_profileState.value.copy(
+                        _profileState.value = _profileState.value.copy(
                             loading = false,
                         )
 //                        result.message?.let {errorString->

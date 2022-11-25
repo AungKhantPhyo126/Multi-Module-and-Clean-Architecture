@@ -19,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.work.*
 import com.critx.common.ui.getAlertDialog
 import com.critx.common.ui.showSuccessDialog
+import com.critx.common.ui.validatePrice
 import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
@@ -32,13 +33,13 @@ import java.util.concurrent.TimeUnit
 
 
 @AndroidEntryPoint
-class DailyGoldPriceFragment:Fragment() {
-    private lateinit var binding:FragmentDailyGoldPriceBinding
+class DailyGoldPriceFragment : Fragment() {
+    private lateinit var binding: FragmentDailyGoldPriceBinding
     private val viewModel by viewModels<DailyGoldPriceViewModel>()
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
-    lateinit var workManager:WorkManager
-    lateinit var repeatingRequest:PeriodicWorkRequest
+    lateinit var workManager: WorkManager
+    lateinit var repeatingRequest: PeriodicWorkRequest
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,18 +51,20 @@ class DailyGoldPriceFragment:Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return FragmentDailyGoldPriceBinding.inflate(inflater).also {
-            binding=it
+            binding = it
         }.root
     }
 
-    private fun toolbarsetup(){
+    private fun toolbarsetup() {
 
-        val toolbarCenterImage: ImageView = activity!!.findViewById<View>(R.id.center_image) as ImageView
-        val toolbarCenterText: TextView = activity!!.findViewById<View>(R.id.center_text_title) as TextView
+        val toolbarCenterImage: ImageView =
+            activity!!.findViewById<View>(R.id.center_image) as ImageView
+        val toolbarCenterText: TextView =
+            activity!!.findViewById<View>(R.id.center_text_title) as TextView
         val toolbarEndIcon: ImageView = activity!!.findViewById<View>(R.id.iv_end_icon) as ImageView
-        toolbarCenterText.isVisible=false
+        toolbarCenterText.isVisible = false
 //        toolbarCenterText.text=getString(R.string.daily_gold_price)
-        toolbarCenterImage.isVisible =true
+        toolbarCenterImage.isVisible = true
         toolbarEndIcon.isVisible = true
         toolbarEndIcon.setImageDrawable(requireContext().getDrawable(R.drawable.ic_logout))
     }
@@ -83,10 +86,10 @@ class DailyGoldPriceFragment:Fragment() {
                 .build()
 
         workManager.getWorkInfoByIdLiveData(repeatingRequest.id).observe(viewLifecycleOwner) {
-            Log.i("refresh success",it.state.toString())
-            if (it.state == WorkInfo.State.ENQUEUED){
+            Log.i("refresh success", it.state.toString())
+            if (it.state == WorkInfo.State.ENQUEUED) {
                 viewModel.getProfile()
-                Log.i("refresh success","reached")
+                Log.i("refresh success", "reached")
             }
         }
 
@@ -95,14 +98,25 @@ class DailyGoldPriceFragment:Fragment() {
             viewModel.logout()
         }
         binding.btnUpdate.setOnClickListener {
-            val map: HashMap<String, String> = HashMap()
-            map["price[1]"] = binding.layoutDailyGoldPriceInput.edtGoldBlock.text.toString()
-            map["price[2]"] = binding.layoutDailyGoldPriceInput.edt15pGq.text.toString()
-            map["price[3]"] = binding.layoutDailyGoldPriceInput.edt22kGq.text.toString()
-            map["price[4]"] = binding.layoutDailyGoldPriceInput.edtDiamond.text.toString()
-            map["price[5]"] = binding.layoutDailyGoldPriceInput.edtWg.text.toString()
-            map["price[6]"] = binding.layoutDailyGoldPriceInput.edtRebuy.text.toString()
-            viewModel.updateGoldPrice(map)
+            if (
+                validatePrice(binding.layoutDailyGoldPriceInput.edtGoldBlock, requireContext()) &&
+                validatePrice(binding.layoutDailyGoldPriceInput.edt15pGq, requireContext()) &&
+                validatePrice(binding.layoutDailyGoldPriceInput.edt22kGq, requireContext()) &&
+                validatePrice(binding.layoutDailyGoldPriceInput.edtDiamond, requireContext()) &&
+                validatePrice( binding.layoutDailyGoldPriceInput.edtWg, requireContext()) &&
+                validatePrice(binding.layoutDailyGoldPriceInput.edtRebuy, requireContext()) &&
+                validatePrice(binding.layoutDailyGoldPriceInput.edtGoldBlock, requireContext())
+                    ){
+                val map: HashMap<String, String> = HashMap()
+                map["price[1]"] = binding.layoutDailyGoldPriceInput.edtGoldBlock.text.toString()
+                map["price[2]"] = binding.layoutDailyGoldPriceInput.edt15pGq.text.toString()
+                map["price[3]"] = binding.layoutDailyGoldPriceInput.edt22kGq.text.toString()
+                map["price[4]"] = binding.layoutDailyGoldPriceInput.edtDiamond.text.toString()
+                map["price[5]"] = binding.layoutDailyGoldPriceInput.edtWg.text.toString()
+                map["price[6]"] = binding.layoutDailyGoldPriceInput.edtRebuy.text.toString()
+                viewModel.updateGoldPrice(map)
+            }
+
         }
 
         viewModel.updateGoldLive.observe(viewLifecycleOwner) {
@@ -124,21 +138,21 @@ class DailyGoldPriceFragment:Fragment() {
                 }
             }
         }
-        viewModel.getGoldPriceLive.observe(viewLifecycleOwner){
-            when(it){
-                is Resource.Loading->{
+        viewModel.getGoldPriceLive.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
                     loadingDialog.show()
                 }
-                is Resource.Success->{
+                is Resource.Success -> {
                     loadingDialog.dismiss()
-                    binding.layoutDailyGoldPriceInput.edtGoldBlock.setText(it.data?.get(0)!!.price )
-                    binding.layoutDailyGoldPriceInput.edt15pGq.setText(it.data?.get(1)!!.price )
-                    binding.layoutDailyGoldPriceInput.edt22kGq.setText(it.data?.get(2)!!.price  )
+                    binding.layoutDailyGoldPriceInput.edtGoldBlock.setText(it.data?.get(0)!!.price)
+                    binding.layoutDailyGoldPriceInput.edt15pGq.setText(it.data?.get(1)!!.price)
+                    binding.layoutDailyGoldPriceInput.edt22kGq.setText(it.data?.get(2)!!.price)
                     binding.layoutDailyGoldPriceInput.edtDiamond.setText(it.data?.get(3)!!.price)
-                    binding.layoutDailyGoldPriceInput.edtWg.setText(it.data?.get(4)!!.price )
-                    binding.layoutDailyGoldPriceInput.edtRebuy.setText(it.data?.get(4)!!.price )
+                    binding.layoutDailyGoldPriceInput.edtWg.setText(it.data?.get(4)!!.price)
+                    binding.layoutDailyGoldPriceInput.edtRebuy.setText(it.data?.get(5)!!.price)
                 }
-                is Resource.Error->{
+                is Resource.Error -> {
                     loadingDialog.dismiss()
                     binding.layoutDailyGoldPriceInput.edtGoldBlock.setText("")
                     binding.layoutDailyGoldPriceInput.edt15pGq.setText("")
@@ -146,21 +160,21 @@ class DailyGoldPriceFragment:Fragment() {
                     binding.layoutDailyGoldPriceInput.edtDiamond.setText("")
                     binding.layoutDailyGoldPriceInput.edtWg.setText("")
                     binding.layoutDailyGoldPriceInput.edtRebuy.setText("")
-                    Toast.makeText(requireContext(),it.message,Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
 
                 }
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 //logout
                 launch {
                     viewModel.logoutState.collectLatest {
-                        if (it.loading){
+                        if (it.loading) {
                             loadingDialog.show()
-                        }else loadingDialog.dismiss()
+                        } else loadingDialog.dismiss()
                         if (!it.successMessage.isNullOrEmpty()) {
                             workManager.cancelUniqueWork(RefreshTokenWorker.REFRESH_TOKEN_WORK)
 //                            findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
@@ -180,7 +194,7 @@ class DailyGoldPriceFragment:Fragment() {
                                     Snackbar.LENGTH_LONG
                                 )
                                 snackBar?.show()
-                                if (event.message == "refresh token fail"){
+                                if (event.message == "refresh token fail") {
                                     workManager.cancelUniqueWork(RefreshTokenWorker.REFRESH_TOKEN_WORK)
                                 }
                             }
@@ -191,9 +205,9 @@ class DailyGoldPriceFragment:Fragment() {
                 //getProfile
                 launch {
                     viewModel.profileState.collectLatest {
-                        if (it.successLoading != null){
-                            binding.tvLogginedBy.isVisible=true
-                            binding.tvUserName.text= it.successLoading!!.name
+                        if (it.successLoading != null) {
+                            binding.tvLogginedBy.isVisible = true
+                            binding.tvUserName.text = it.successLoading!!.name
                             binding.tvTodayDate.text = it.successLoading!!.todayDate
                             binding.tvTodayName.text = it.successLoading!!.todayName
                         }
@@ -202,12 +216,12 @@ class DailyGoldPriceFragment:Fragment() {
             }
         }
 
-        viewModel.isLogin.observe(viewLifecycleOwner){
-            if (it){
-                    enqueueRefreshTokenWork()
-                    viewModel.getProfile()
+        viewModel.isLogin.observe(viewLifecycleOwner) {
+            if (it) {
+                enqueueRefreshTokenWork()
+                viewModel.getProfile()
 
-            }else{
+            } else {
                 findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
             }
         }
@@ -226,6 +240,7 @@ class DailyGoldPriceFragment:Fragment() {
             findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToPriceByTableFragment())
         }
     }
+
     private fun enqueueRefreshTokenWork() {
         workManager.enqueueUniquePeriodicWork(
             RefreshTokenWorker.REFRESH_TOKEN_WORK,
