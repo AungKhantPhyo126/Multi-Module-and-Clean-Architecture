@@ -33,11 +33,7 @@
     <fragment
         android:id="@+id/sampleTakeAndReturnFragment"
         android:name="com.critx.shwemiAdmin.screens.sampleTakeAndReturn.SampleTakeAndReturn"
-        android:label="SampleTakeAndReturn" >
-        <action
-            android:id="@+id/action_sampleTakeAndReturnFragment_to_handedListFragment"
-            app:destination="@id/handedListFragment" />
-    </fragment>
+        android:label="SampleTakeAndReturn" />
     <fragment
         android:id="@+id/confirmVoucherFragment"
         android:name="com.critx.shwemiAdmin.screens.confirmVoucher.ConfirmVoucherFragment"
@@ -280,9 +276,6 @@
         android:id="@+id/giveGoldFragment"
         android:name="com.critx.shwemiAdmin.screens.giveGold.GiveGoldFragment"
         android:label="GiveGoldFragment" >
-        <action
-            android:id="@+id/action_giveGoldFragment_to_sampleTakeAndReturnFragment"
-            app:destination="@id/sampleTakeAndReturnFragment" />
         <argument
             android:name="sampleList"
             app:argType="string[]"
@@ -304,14 +297,6 @@
         <argument
             android:name="goldSmith"
             app:argType="string" />
-    </fragment>
-    <fragment
-        android:id="@+id/handedListFragment"
-        android:name="com.critx.shwemiAdmin.screens.sampleTakeAndReturn.handedList.HandedListFragment"
-        android:label="HandedListFragment" >
-        <action
-            android:id="@+id/action_handedListFragment_to_giveGoldFragment"
-            app:destination="@id/giveGoldFragment" />
     </fragment>
     <fragment
         android:id="@+id/newOrderInfoFragment"

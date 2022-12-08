@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 class SampleTakeAndReturnRepositoryImpl @Inject constructor(
     private val sampleTakeAndReturnNetWorkDataSource: SampleTakeAndReturnNetWorkDataSource
-):SampleTakeAndReturnRepository {
+) : SampleTakeAndReturnRepository {
     override fun scanInvoice(
         token: String,
         invoiceCode: String
@@ -28,7 +28,8 @@ class SampleTakeAndReturnRepositoryImpl @Inject constructor(
             try {
                 emit(
                     Resource.Success(
-                        sampleTakeAndReturnNetWorkDataSource.scanInvoice(token, invoiceCode).asDomain()
+                        sampleTakeAndReturnNetWorkDataSource.scanInvoice(token, invoiceCode)
+                            .asDomain()
                     )
                 )
             } catch (e: HttpException) {
@@ -44,13 +45,14 @@ class SampleTakeAndReturnRepositoryImpl @Inject constructor(
     override fun getVoucherSample(
         token: String,
         invoiceId: String
-    ): Flow<Resource<List<VoucherSampleDomain>>>  =
+    ): Flow<Resource<List<VoucherSampleDomain>>> =
         flow {
             emit(Resource.Loading())
             try {
                 emit(
                     Resource.Success(
-                        sampleTakeAndReturnNetWorkDataSource.getVoucherSample(token, invoiceId).map { it.asDomain() }
+                        sampleTakeAndReturnNetWorkDataSource.getVoucherSample(token, invoiceId)
+                            .map { it.asDomain() }
                     )
                 )
             } catch (e: HttpException) {
@@ -68,7 +70,8 @@ class SampleTakeAndReturnRepositoryImpl @Inject constructor(
             try {
                 emit(
                     Resource.Success(
-                        sampleTakeAndReturnNetWorkDataSource.getOutsideSample(token).map { it.asDomain() }
+                        sampleTakeAndReturnNetWorkDataSource.getOutsideSample(token)
+                            .map { it.asDomain() }
                     )
                 )
             } catch (e: HttpException) {
@@ -86,7 +89,8 @@ class SampleTakeAndReturnRepositoryImpl @Inject constructor(
             try {
                 emit(
                     Resource.Success(
-                        sampleTakeAndReturnNetWorkDataSource.getInventorySample(token).map { it.asDomain() }
+                        sampleTakeAndReturnNetWorkDataSource.getInventorySample(token)
+                            .map { it.asDomain() }
                     )
                 )
             } catch (e: HttpException) {
@@ -102,22 +106,45 @@ class SampleTakeAndReturnRepositoryImpl @Inject constructor(
         token: String,
         invoiceId: String
     ): Flow<Resource<SampleCheckDomain>> =
-    flow {
-        emit(Resource.Loading())
-        try {
-            emit(
-                Resource.Success(
-                    sampleTakeAndReturnNetWorkDataSource.checkSample(token, invoiceId).asDomain()
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        sampleTakeAndReturnNetWorkDataSource.checkSample(token, invoiceId)
+                            .asDomain()
+                    )
                 )
-            )
-        } catch (e: HttpException) {
-            emit(Resource.Error(GetErrorMessage.fromException(e)))
-        } catch (e: IOException) {
-            emit(Resource.Error(GetErrorMessage.fromException(e)))
-        } catch (e: Exception) {
-            emit(Resource.Error(e.message ?: "Unhandled Error"))
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
         }
-    }
+    override fun checkSampleWithVoucher(
+        token: String,
+        invoiceId: String
+    ): Flow<Resource<List<SampleCheckDomain>>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        sampleTakeAndReturnNetWorkDataSource.checkSampleWithVoucher(token, invoiceId)
+                            .map { it.asDomain() }
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
+
     override fun saveSample(
         token: String,
         sample: HashMap<String, String>
@@ -145,7 +172,8 @@ class SampleTakeAndReturnRepositoryImpl @Inject constructor(
             try {
                 emit(
                     Resource.Success(
-                        sampleTakeAndReturnNetWorkDataSource.getHandedList(token).map { it.asDomain() }
+                        sampleTakeAndReturnNetWorkDataSource.getHandedList(token)
+                            .map { it.asDomain() }
                     )
                 )
             } catch (e: HttpException) {
@@ -166,7 +194,8 @@ class SampleTakeAndReturnRepositoryImpl @Inject constructor(
             try {
                 emit(
                     Resource.Success(
-                        sampleTakeAndReturnNetWorkDataSource.addToHandedList(token, sampleId).asDomain()
+                        sampleTakeAndReturnNetWorkDataSource.addToHandedList(token, sampleId)
+                            .asDomain()
                     )
                 )
             } catch (e: HttpException) {
@@ -187,7 +216,8 @@ class SampleTakeAndReturnRepositoryImpl @Inject constructor(
             try {
                 emit(
                     Resource.Success(
-                        sampleTakeAndReturnNetWorkDataSource.removeFromHandedList(token, sampleId).asDomain()
+                        sampleTakeAndReturnNetWorkDataSource.removeFromHandedList(token, sampleId)
+                            .asDomain()
                     )
                 )
             } catch (e: HttpException) {
@@ -206,22 +236,28 @@ class SampleTakeAndReturnRepositoryImpl @Inject constructor(
         specification: RequestBody?,
         image: MultipartBody.Part
     ): Flow<Resource<SampleCheckDomain>> =
-    flow {
-        emit(Resource.Loading())
-        try {
-            emit(
-                Resource.Success(
-                    sampleTakeAndReturnNetWorkDataSource.saveOutsideSample(token, name,weight, specification, image).asDomain()
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        sampleTakeAndReturnNetWorkDataSource.saveOutsideSample(
+                            token,
+                            name,
+                            weight,
+                            specification,
+                            image
+                        ).asDomain()
+                    )
                 )
-            )
-        } catch (e: HttpException) {
-            emit(Resource.Error(GetErrorMessage.fromException(e)))
-        } catch (e: IOException) {
-            emit(Resource.Error(GetErrorMessage.fromException(e)))
-        } catch (e: Exception) {
-            emit(Resource.Error(e.message ?: "Unhandled Error"))
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
         }
-    }
 
     override fun returnSample(token: String, sampleId: List<String>): Flow<Resource<SimpleData>> =
         flow {
@@ -229,7 +265,8 @@ class SampleTakeAndReturnRepositoryImpl @Inject constructor(
             try {
                 emit(
                     Resource.Success(
-                        sampleTakeAndReturnNetWorkDataSource.returnSample(token, sampleId).asDomain()
+                        sampleTakeAndReturnNetWorkDataSource.returnSample(token, sampleId)
+                            .asDomain()
                     )
                 )
             } catch (e: HttpException) {

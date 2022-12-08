@@ -165,7 +165,7 @@ class FillOrderInfoFragment : Fragment() {
                     photo!!
                 )
             } else {
-                Toast.makeText(requireContext(), "Please upload a photo", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Please Fill Required Data", Toast.LENGTH_LONG).show()
             }
 
         }
@@ -193,6 +193,7 @@ class FillOrderInfoFragment : Fragment() {
                     viewModel.addSample(it.data!!)
                 }
                 is Resource.Error -> {
+                    Toast.makeText(requireContext(),it.message,Toast.LENGTH_LONG).show()
                     loadingDialog.dismiss()
                 }
             }
@@ -211,7 +212,7 @@ class FillOrderInfoFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
-                    if (it.data!!.sampleId == null){
+                    if (it.data!!.sampleId.isNullOrEmpty()){
                         Toast.makeText(requireContext(),"Sample Not Found", Toast.LENGTH_LONG).show()
                     }else if (viewModel.sampleList.contains(it.data!!)) {
                         Toast.makeText(requireContext(), "Stock Already Scanned", Toast.LENGTH_LONG)

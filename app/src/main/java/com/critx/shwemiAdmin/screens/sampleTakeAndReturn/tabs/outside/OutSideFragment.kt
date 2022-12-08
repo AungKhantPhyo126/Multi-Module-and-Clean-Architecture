@@ -158,9 +158,9 @@ class OutSideFragment : Fragment() {
         }
         /**  **/
 
-        binding.layoutBtnGroup.btnAddToHandedList.isEnabled =
-            sharedViewModel.sampleTakeScreenUIState != GIVE_GOLD_STATE ||
-                    sharedViewModel.sampleTakeScreenUIState != ORDER_STOCK_STATE
+//        binding.layoutBtnGroup.btnAddToHandedList.isEnabled =
+//            sharedViewModel.sampleTakeScreenUIState != GIVE_GOLD_STATE ||
+//                    sharedViewModel.sampleTakeScreenUIState != ORDER_STOCK_STATE
         binding.layoutBtnGroup.btnSave.setOnClickListener {
             if (photo != null) {
                 viewModel.saveOusideSample(
@@ -211,6 +211,9 @@ class OutSideFragment : Fragment() {
                 }
             }
         }
+        binding.layoutBtnGroup.btnClear.setOnClickListener {
+            clearText()
+        }
 //
         viewModel.saveOutsideSample.observe(viewLifecycleOwner) {
             when (it) {
@@ -223,10 +226,10 @@ class OutSideFragment : Fragment() {
 
                     }
                     viewModel.resetSaveOutSideSample()
-                    binding.layoutBtnGroup.btnAddToHandedList.isEnabled = true
-                    binding.layoutBtnGroup.btnAddToHandedList.setOnClickListener { view ->
-                        viewModel.addToHandedList(listOf(it.data!!))
-                    }
+//                    binding.layoutBtnGroup.btnAddToHandedList.isEnabled = true
+//                    binding.layoutBtnGroup.btnAddToHandedList.setOnClickListener { view ->
+//                        viewModel.addToHandedList(listOf(it.data!!))
+//                    }
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()

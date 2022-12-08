@@ -25,9 +25,9 @@ class SampleTakeAndReturnViewModel @Inject constructor(
     private val removeFromHandedListUseCase: RemoveFromHandedListUseCase
 ) :ViewModel(){
 
-    private val _getHandedListLiveData = MutableLiveData<Resource<List<HandedListDomain>>>()
-    val getHandedListLiveData: LiveData<Resource<List<HandedListDomain>>>
-        get() = _getHandedListLiveData
+//    private val _getHandedListLiveData = MutableLiveData<Resource<List<HandedListDomain>>>()
+//    val getHandedListLiveData: LiveData<Resource<List<HandedListDomain>>>
+//        get() = _getHandedListLiveData
 
     private val _removeHandedListItemLiveData = MutableLiveData<Resource<String>>()
     val removeHandedListItemLiveData: LiveData<Resource<String>>
@@ -52,22 +52,22 @@ class SampleTakeAndReturnViewModel @Inject constructor(
         }
     }
 
-    fun getHandedList() {
-        viewModelScope.launch {
-            getHandedListUseCase(
-                localDatabase.getToken().orEmpty()).collectLatest {
-                when (it) {
-                    is Resource.Loading -> {
-                        _getHandedListLiveData.value = Resource.Loading()
-                    }
-                    is Resource.Success -> {
-                        _getHandedListLiveData.value = Resource.Success(it.data!!)
-                    }
-                    is Resource.Error -> {
-                        _getHandedListLiveData.value = Resource.Error(it.message)
-                    }
-                }
-            }
-        }
-    }
+//    fun getHandedList() {
+//        viewModelScope.launch {
+//            getHandedListUseCase(
+//                localDatabase.getToken().orEmpty()).collectLatest {
+//                when (it) {
+//                    is Resource.Loading -> {
+//                        _getHandedListLiveData.value = Resource.Loading()
+//                    }
+//                    is Resource.Success -> {
+//                        _getHandedListLiveData.value = Resource.Success(it.data!!)
+//                    }
+//                    is Resource.Error -> {
+//                        _getHandedListLiveData.value = Resource.Error(it.message)
+//                    }
+//                }
+//            }
+//        }
+//    }
 }

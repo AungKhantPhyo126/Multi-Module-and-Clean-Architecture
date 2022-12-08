@@ -248,7 +248,7 @@ class NewOrderInfoFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
-                    if (it.data!!.sampleId == null) {
+                    if (it.data!!.sampleId.isNullOrEmpty()) {
                         Toast.makeText(requireContext(), "Sample Not Found", Toast.LENGTH_LONG)
                             .show()
                     } else if (viewModel.sampleList.contains(it.data!!)) {

@@ -40,6 +40,12 @@ suspend fun checkSamples(
         @Path("invoiceId") invoiceId: String
     ): Response<SampleCheckResponse>
 
+    @GET("api/sales/{invoiceId}/check-samples")
+    suspend fun checkSamplesWithVoucher(
+        @Header("Authorization") token: String,
+        @Path("invoiceId") invoiceId: String
+    ): Response<SampleCheckWithVoucherResponse>
+
     @FormUrlEncoded
     @POST("api/samples/inventory/take")
     suspend fun saveSample(
@@ -82,5 +88,5 @@ suspend fun checkSamples(
         @Part("weight_gm") weight_gm: RequestBody?,
         @Part("specification") specification: RequestBody?,
         @Part image: MultipartBody.Part
-    ):Response<SampleCheckDto>
+    ):Response<SampleCheckResponse>
 }

@@ -19,6 +19,8 @@ interface SampleTakeAndReturnRepository {
 
      fun checkSample(token: String,invoiceId: String):Flow<Resource<SampleCheckDomain>>
 
+     fun checkSampleWithVoucher(token: String,invoiceId: String):Flow<Resource<List<SampleCheckDomain>>>
+
      fun saveSample(token: String ,sample:HashMap<String,String>):Flow<Resource<SimpleData>>
 
      fun getHandedList(token: String):Flow<Resource<List<HandedListDomain>>>

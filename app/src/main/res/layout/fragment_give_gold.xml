@@ -587,31 +587,53 @@
                 android:textAppearance="@style/TextAppearance.ShweMi.Caption"
                 app:layout_constraintStart_toStartOf="@+id/tv_label_making_charges"
                 app:layout_constraintTop_toBottomOf="@+id/tv_label_making_charges" />
+            <include
+                android:id="@+id/include_sample_take_section"
+                layout="@layout/include_sample_take_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/til_k_2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_sample_take"
-                android:layout_width="0dp"
+
+            <TextView
+                android:id="@+id/tv_label_sample_items"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
-                app:rippleColor="@color/edit_text_color"
-                android:text="Sample Take"
-                android:textAllCaps="false"
+                android:layout_marginTop="16dp"
                 android:textAppearance="@style/TextAppearance.ShweMi.Body2"
-                android:textColor="@color/primary_color"
-                app:backgroundTint="@color/white"
-                app:icon="@drawable/ic_right_arrow"
-                app:iconGravity="end"
-                app:iconTint="@color/primary_color"
+                android:text="@string/taken_sample_items"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/include_sample_take_section" />
+            <TextView
+                android:id="@+id/tv_empty_sample"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:textAppearance="@style/TextAppearance.ShweMi.Headline6"
+                android:textColor="@color/edit_text_color"
+                android:textAlignment="center"
+                android:text="@string/no_sample_taken"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/til_k_2" />
+                app:layout_constraintTop_toBottomOf="@id/tv_label_sample_items" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_sample_list"
+                android:layout_width="0dp"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_label_sample_items"
+                tools:listitem="@layout/item_sample_image" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

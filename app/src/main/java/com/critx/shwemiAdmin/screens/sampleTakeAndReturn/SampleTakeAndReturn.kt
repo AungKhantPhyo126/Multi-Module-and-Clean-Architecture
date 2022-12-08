@@ -53,79 +53,67 @@ class SampleTakeAndReturn : Fragment() {
         toolbarCenterText.isVisible = true
         toolbarCenterText.text = getString(R.string.sample_take_amp_return)
         toolbarCenterImage.isVisible = false
-        toolbarEndIcon.isVisible = true
-        toolbarEndIcon.setImageDrawable(requireContext().getDrawable(R.drawable.cart_box))
+        toolbarEndIcon.isVisible = false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
         loadingDialog = requireContext().getAlertDialog()
-        viewModel.getHandedList()
-       if ( findNavController().previousBackStackEntry?.destination?.id.toString() == R.id.giveGoldFragment.toString()){
-           sharedViewModel.sampleTakeScreenUIState = GIVE_GOLD_STATE
-       }else if(findNavController().previousBackStackEntry?.destination?.id.toString() == R.id.fillOrderInfoFragment.toString()){
-           sharedViewModel.sampleTakeScreenUIState = ORDER_STOCK_STATE
-       }else{
-           sharedViewModel.sampleTakeScreenUIState = SAMPLE_TAKE_STATE
-       }
-        viewModel.getHandedListLiveData.observe(viewLifecycleOwner) {
-            when (it) {
-                is Resource.Loading -> {
-                    loadingDialog.show()
-                }
-                is Resource.Success -> {
-                    loadingDialog.dismiss()
-                    val toolbarEndIcon: ImageView =
-                        activity!!.findViewById<View>(R.id.iv_end_icon) as ImageView
-                    if (it.data.isNullOrEmpty().not()) {
-                        toolbarEndIcon.setImageDrawable(
-                            requireContext().getDrawable(R.drawable.cart_box_red)
-                        )
-                    }else{
-                        toolbarEndIcon.setImageDrawable(
-                            requireContext().getDrawable(R.drawable.cart_box)
-                        )
-                    }
-                    toolbarEndIcon.setOnClickListener {
-                        findNavController().navigate(SampleTakeAndReturnDirections.actionSampleTakeAndReturnFragmentToHandedListFragment())
-                    }
+//        viewModel.getHandedList()
 
-                }
-                is Resource.Error -> {
-                    loadingDialog.dismiss()
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
-
-                }
-            }
-        }
+//        viewModel.getHandedListLiveData.observe(viewLifecycleOwner) {
+//            when (it) {
+//                is Resource.Loading -> {
+//                    loadingDialog.show()
+//                }
+//                is Resource.Success -> {
+//                    loadingDialog.dismiss()
+//                    val toolbarEndIcon: ImageView =
+//                        activity!!.findViewById<View>(R.id.iv_end_icon) as ImageView
+//                    if (it.data.isNullOrEmpty().not()) {
+//                        toolbarEndIcon.setImageDrawable(
+//                            requireContext().getDrawable(R.drawable.cart_box_red)
+//                        )
+//                    }else{
+//                        toolbarEndIcon.setImageDrawable(
+//                            requireContext().getDrawable(R.drawable.cart_box)
+//                        )
+//                    }
+//                    toolbarEndIcon.setOnClickListener {
+//                        findNavController().navigate(SampleTakeAndReturnDirections.actionSampleTakeAndReturnFragmentToHandedListFragment())
+//                    }
+//
+//                }
+//                is Resource.Error -> {
+//                    loadingDialog.dismiss()
+//                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+//
+//                }
+//            }
+//        }
         binding.vpSampleTakeAndReturn.adapter = SampleTakeAndReturnPagerAdapter(this)
         TabLayoutMediator(
             binding.tlSampleTakeAndReturn,
             binding.vpSampleTakeAndReturn
         ) { tab, position ->
+
             when (position) {
                 0 -> {
                     val customTab = CustomTabItemBinding.inflate(
                         layoutInflater, ConstraintLayout(requireContext()), false
                     )
                     tab.customView = customTab.root
-                    customTab.tvTabItem.text = "Voucher"
+                    customTab.tvTabItem.text = "Inventory"
                 }
                 1 -> {
                     val customTab = CustomTabItemBinding.inflate(
                         layoutInflater, ConstraintLayout(requireContext()), false
                     )
                     tab.customView = customTab.root
-                    customTab.tvTabItem.text = "Inventory"
-                }
-                2 -> {
-                    val customTab = CustomTabItemBinding.inflate(
-                        layoutInflater, ConstraintLayout(requireContext()), false
-                    )
-                    tab.customView = customTab.root
                     customTab.tvTabItem.text = "Outside"
                 }
+
             }
         }.attach()
     }

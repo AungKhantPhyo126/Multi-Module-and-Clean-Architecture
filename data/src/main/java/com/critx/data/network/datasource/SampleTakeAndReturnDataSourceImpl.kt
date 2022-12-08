@@ -134,6 +134,30 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun checkSampleWithVoucher(token: String, invoiceId: String): List<SampleCheckDto> {
+        val response = sampleTakeAndReturnService.checkSamplesWithVoucher(token,invoiceId)
+        return if (response.isSuccessful) {
+            response.body()?.data ?: throw Exception("Response body Null")
+        } else {
+            throw  Exception(
+                when (response.code()) {
+                    400 -> {
+                        getErrorString(
+                            response.errorBody()
+                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
+                        )
+                    }
+                    401 -> "You are not Authorized"
+                    402 -> "Payment required!!!"
+                    403 -> "Forbidden"
+                    404 -> "You request not found"
+                    405 -> "Method is not allowed!!!"
+                    else -> "Unhandled error occurred!!!"
+                }
+            )
+        }
+    }
+
     override suspend fun saveSample(
         token: String,
         sample: HashMap<String, String>
@@ -245,7 +269,7 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
     ): SampleCheckDto {
         val response = sampleTakeAndReturnService.saveOutsideSample(token,name,weight,specification, image)
         return if (response.isSuccessful) {
-            response.body() ?: throw Exception("Response body Null")
+            response.body()?.data ?: throw Exception("Response body Null")
         } else {
             throw  Exception(
                 when (response.code()) {

@@ -23,6 +23,7 @@ class InventoryViewModel @Inject constructor(
     private val localDatabase: LocalDatabase,
     private val scanInvoiceUseCase: ScanInvoiceUseCase,
     private val checkSampleUseCase: CheckSampleUseCase,
+    private val checkSampleWithVoucherUseCase: CheckSampleWithVoucherUseCase,
     private val scanProductCodeUseCase: ScanProductCodeUseCase,
     private val addToHandedListUseCase: AddToHandedListUseCase,
     private val saveSampleUseCase: SaveSampleUseCase,
@@ -38,10 +39,21 @@ class InventoryViewModel @Inject constructor(
     val sampleLiveData: LiveData<Resource<SampleItemUIModel>>
         get() = _sampleLiveData
 
+    private val _sampleLiveDataFromVoucher = MutableLiveData<Resource<List<SampleItemUIModel>>>()
+    val sampleLiveDataFromVoucher: LiveData<Resource<List<SampleItemUIModel>>>
+        get() = _sampleLiveDataFromVoucher
+
+    fun resetSampleLiveDataFromVoucher(){
+        _sampleLiveDataFromVoucher.value = null
+    }
+
     fun resetSampleLiveData(){
         _sampleLiveData.value = null
     }
 
+    private val _scannedSampleForReturnLiveData = MutableLiveData<MutableList<SampleItemUIModel>>()
+    val scannedSampleForReturnLiveData: LiveData<MutableList<SampleItemUIModel>>
+        get() = _scannedSampleForReturnLiveData
 
     private val _scannedSampleLiveData = MutableLiveData<MutableList<SampleItemUIModel>>()
     val scannedSampleLiveData: LiveData<MutableList<SampleItemUIModel>>
@@ -51,13 +63,14 @@ class InventoryViewModel @Inject constructor(
     val scanProductCodeLive: LiveData<Resource<ProductIdWithTypeDomain>>
         get() = _scanProductCodeLive
 
-    private val _addToHandedListLiveData = MutableLiveData<Resource<String>>()
-    val addToHandedListLiveData: LiveData<Resource<String>>
-        get() = _addToHandedListLiveData
 
     private val _saveSampleLiveData = MutableLiveData<Resource<String>>()
     val saveSampleLiveData: LiveData<Resource<String>>
         get() = _saveSampleLiveData
+
+    private val _voucherScanLiveData = MutableLiveData<Resource<VoucherScanDomain>>()
+    val voucherScanLiveData: LiveData<Resource<VoucherScanDomain>>
+        get() = _voucherScanLiveData
 
     private var _returnSampleLiveData = MutableLiveData<Resource<String>>()
     val returnSampleLiveData: LiveData<Resource<String>>
@@ -70,38 +83,52 @@ class InventoryViewModel @Inject constructor(
         _saveSampleLiveData.value = null
     }
 
+    fun resetVoucherScanLive() {
+        _voucherScanLiveData.value = null
+    }
+
     fun resetScanProductCodeLive() {
         _scanProductCodeLive.value = null
     }
 
     var scannedSamples = mutableListOf<SampleItemUIModel>()
+    var scannedSamplesForReturn = mutableListOf<SampleItemUIModel>()
     var specificationList = mutableListOf<String>()
 
     fun addStockSample(item: SampleItemUIModel) {
         scannedSamples.add(item)
             specificationList.add("")
-
         _scannedSampleLiveData.value = scannedSamples
-//        _scannedSampleLiveData.notifyObserverWithResource()
     }
 
     fun removeSample(item: SampleItemUIModel) {
         specificationList.removeAt(scannedSamples.indexOf(item))
         scannedSamples.remove(item)
         _scannedSampleLiveData.value = scannedSamples
+    }
 
-//        _scannedSampleLiveData.notifyObserverWithResource()
+    fun addStockSampleForReturn(item: SampleItemUIModel) {
+        scannedSamplesForReturn.add(item)
+        _scannedSampleForReturnLiveData.value = scannedSamplesForReturn
+    }
+
+    fun removeSampleForReturn(item: SampleItemUIModel) {
+        specificationList.removeAt(scannedSamplesForReturn.indexOf(item))
+        scannedSamplesForReturn.remove(item)
+        _scannedSampleForReturnLiveData.value = scannedSamplesForReturn
+    }
+
+    fun resetSampleForReturn() {
+        _scannedSampleForReturnLiveData.value = mutableListOf<SampleItemUIModel>()
+        _sampleLiveData.value = null
     }
 
     fun resetSample() {
         _scannedSampleLiveData.value = mutableListOf<SampleItemUIModel>()
         _sampleLiveData.value = null
-        _addToHandedListLiveData.value = null
     }
 
-    private val _voucherScanLiveData = MutableLiveData<Resource<VoucherScanDomain>>()
-    val voucherScanLiveData: LiveData<Resource<VoucherScanDomain>>
-        get() = _voucherScanLiveData
+
 
     fun returnSample(sampleIdList:List<String>){
         viewModelScope.launch {
@@ -142,26 +169,6 @@ class InventoryViewModel @Inject constructor(
         }
     }
 
-    fun addToHandedList() {
-        viewModelScope.launch {
-            addToHandedListUseCase(
-                localDatabase.getToken().orEmpty(),
-                scannedSamples.map { it.sampleId!! }).collectLatest {
-                when (it) {
-                    is Resource.Loading -> {
-                        _addToHandedListLiveData.value = Resource.Loading()
-                    }
-                    is Resource.Success -> {
-                        _addToHandedListLiveData.value = Resource.Success(it.data!!.message)
-                    }
-                    is Resource.Error -> {
-                        _addToHandedListLiveData.value = Resource.Error(it.message)
-                    }
-                }
-            }
-        }
-    }
-
     fun saveSamples() {
         viewModelScope.launch {
             val sampleIdHashMap: HashMap<String, String> = HashMap()
@@ -190,25 +197,6 @@ class InventoryViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         _saveSampleLiveData.value = Resource.Error(it.message)
-                    }
-                }
-            }
-        }
-    }
-
-    fun scanVoucher(invoiceCode: String) {
-        viewModelScope.launch {
-            scanInvoiceUseCase(localDatabase.getToken().orEmpty(), invoiceCode).collectLatest {
-                when (it) {
-                    is Resource.Loading -> {
-                        _voucherScanLiveData.value = Resource.Loading()
-                    }
-                    is Resource.Success -> {
-                        _voucherScanLiveData.value = Resource.Success(it.data)
-//                        checkSampleUseCase(localDatabase.getToken().orEmpty(), it.data!!.id)
-                    }
-                    is Resource.Error -> {
-                        _voucherScanLiveData.value = Resource.Error(it.message)
                     }
                 }
             }
@@ -251,4 +239,43 @@ class InventoryViewModel @Inject constructor(
             }
         }
     }
+
+    fun checkSampleWithVoucher(stockId: String) {
+        viewModelScope.launch {
+            checkSampleWithVoucherUseCase(localDatabase.getToken().orEmpty(), stockId).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _sampleLiveDataFromVoucher.value = Resource.Loading()
+                    }
+                    is Resource.Success -> {
+                        _sampleLiveDataFromVoucher.value =
+                            Resource.Success(it.data!!.map { it.asUIModel() })
+                    }
+                    is Resource.Error -> {
+                        _sampleLiveDataFromVoucher.value = Resource.Error(it.message)
+                    }
+                }
+            }
+        }
+    }
+
+    fun scanVoucher(invoiceCode: String) {
+        viewModelScope.launch {
+            scanInvoiceUseCase(localDatabase.getToken().orEmpty(), invoiceCode).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _voucherScanLiveData.value = Resource.Loading()
+                    }
+                    is Resource.Success -> {
+                        _voucherScanLiveData.value = Resource.Success(it.data)
+//                        checkSampleUseCase(localDatabase.getToken().orEmpty(), it.data!!.id)
+                    }
+                    is Resource.Error -> {
+                        _voucherScanLiveData.value = Resource.Error(it.message)
+                    }
+                }
+            }
+        }
+    }
+
 }

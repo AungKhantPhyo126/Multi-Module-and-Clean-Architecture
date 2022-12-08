@@ -390,14 +390,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <include
-            android:id="@+id/include_button"
-            layout="@layout/include_fill_order_info_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+
         <TextView
             android:id="@+id/tv_label_sample_items"
             android:layout_width="wrap_content"
@@ -435,6 +428,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_label_sample_items"
             tools:listitem="@layout/item_sample_image" />
-
+        <include
+            android:id="@+id/include_button"
+            layout="@layout/include_fill_order_info_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
