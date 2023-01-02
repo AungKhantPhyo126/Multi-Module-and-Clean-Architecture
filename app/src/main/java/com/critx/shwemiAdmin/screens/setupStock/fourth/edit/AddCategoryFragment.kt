@@ -108,7 +108,6 @@ class AddCategoryFragment : Fragment() {
             viewModel.setSelectedGif(null)
             viewModel.setSelectedVideo(null)
             viewModel.selectedDesignIds = null
-            sharedViewModel.resetRecommendCat()
             findNavController().popBackStack()
         }
 
@@ -670,12 +669,7 @@ class AddCategoryFragment : Fragment() {
                             loadingDialog.show()
                         } else loadingDialog.dismiss()
 
-                        if (it.getRelatedCatsSuccessLoading != null) {
-//                            viewModel.setSelectedRecommendCat(it.getRelatedCatsSuccessLoading!!.map { it.id.toInt() })
-                            if(sharedViewModel.hasRemoveRecord.not()){
-                                sharedViewModel.addRecommendCatBatch(it.getRelatedCatsSuccessLoading!!)
-                            }
-                        }
+
                     }
                 }
 
@@ -692,7 +686,6 @@ class AddCategoryFragment : Fragment() {
                                     CREATED_CATEGORY_ID,
                                     it.createSuccessLoading
                                 )
-                                sharedViewModel.resetForRecommendCat()
                                 it.createSuccessLoading = null
                                 findNavController().popBackStack()
                             }
@@ -709,7 +702,6 @@ class AddCategoryFragment : Fragment() {
                         if (it.editSuccessLoading != null) {
                             requireContext().showSuccessDialog("Category Updated") {
                                 it.editSuccessLoading = null
-                                sharedViewModel.resetForRecommendCat()
                                 findNavController().popBackStack()
                             }
                         }
@@ -832,13 +824,7 @@ class AddCategoryFragment : Fragment() {
                 .toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
             val recommendCat = mutableListOf<RequestBody>()
-            sharedViewModel.recommendCatList.value?.filterNotNull()?.map { it.id }?.let { list ->
-                list.forEach {
-                    recommendCat.add(
-                        it.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull())
-                    )
-                }
-            }
+
 
             if (actionType == CREATE_CATEGORY) {
                 viewModel.createJewelleryCategory(

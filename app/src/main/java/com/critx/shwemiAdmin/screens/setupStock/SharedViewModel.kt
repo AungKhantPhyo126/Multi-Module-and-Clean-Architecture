@@ -38,41 +38,41 @@ class SharedViewModel : ViewModel() {
 //    var wastageY = MutableLiveData<String>()
 //    var dueDate = MutableLiveData<String>()
 
-    //adding RecommendCat
-    var firstCatForRecommendCat: JewelleryTypeUiModel? = null
-    var secondCatForRecomendCat: JewelleryQualityUiModel? = null
-    var thirdCatForRecommendCat: ChooseGroupUIModel? = null
-
-    fun resetForRecommendCat(){
-        firstCatForRecommendCat = null
-        secondCatForRecomendCat = null
-        thirdCatForRecommendCat = null
-    }
+//    //adding RecommendCat
+//    var firstCatForRecommendCat: JewelleryTypeUiModel? = null
+//    var secondCatForRecomendCat: JewelleryQualityUiModel? = null
+//    var thirdCatForRecommendCat: ChooseGroupUIModel? = null
+//
+//    fun resetForRecommendCat(){
+//        firstCatForRecommendCat = null
+//        secondCatForRecomendCat = null
+//        thirdCatForRecommendCat = null
+//    }
 
     var hasRemoveRecord :Boolean = false
 
-    var recommendCatList = MutableLiveData<MutableList<JewelleryCategoryUiModel?>>(mutableListOf(null))
-    fun addRecommendCat(item:JewelleryCategoryUiModel){
-        recommendCatList.value?.add(item)
-        recommendCatList.value=recommendCatList.value!!.toSet().toMutableList()
-    }
-    fun addRecommendCatBatch(itemList:List<JewelleryCategoryUiModel?>){
-        recommendCatList.value?.addAll(itemList)
-        recommendCatList.value=recommendCatList.value!!.toSet().toMutableList()
-    }
-
-    fun removeRecommendCat(itemList:JewelleryCategoryUiModel){
-        hasRemoveRecord = true
-        recommendCatList.value?.remove(itemList)
-        recommendCatList.value=recommendCatList.value!!.toSet().toMutableList()
-    }
-
-    fun resetRecommendCat(){
-        hasRemoveRecord = false
-        recommendCatList.value?.removeAll(recommendCatList.value!!)
-        recommendCatList.value?.add(null)
-        recommendCatList.value=recommendCatList.value
-    }
+//    var recommendCatList = MutableLiveData<MutableList<JewelleryCategoryUiModel?>>(mutableListOf(null))
+//    fun addRecommendCat(item:JewelleryCategoryUiModel){
+//        recommendCatList.value?.add(item)
+//        recommendCatList.value=recommendCatList.value!!.toSet().toMutableList()
+//    }
+//    fun addRecommendCatBatch(itemList:List<JewelleryCategoryUiModel?>){
+//        recommendCatList.value?.addAll(itemList)
+//        recommendCatList.value=recommendCatList.value!!.toSet().toMutableList()
+//    }
+//
+//    fun removeRecommendCat(itemList:JewelleryCategoryUiModel){
+//        hasRemoveRecord = true
+//        recommendCatList.value?.remove(itemList)
+//        recommendCatList.value=recommendCatList.value!!.toSet().toMutableList()
+//    }
+//
+//    fun resetRecommendCat(){
+//        hasRemoveRecord = false
+//        recommendCatList.value?.removeAll(recommendCatList.value!!)
+//        recommendCatList.value?.add(null)
+//        recommendCatList.value=recommendCatList.value
+//    }
 
 //    //order stock
 //    var selectedBookMark :BookMarkStockUiModel? = null

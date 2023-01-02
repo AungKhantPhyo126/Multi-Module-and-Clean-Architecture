@@ -1,5 +1,6 @@
 package com.critx.shwemiAdmin.screens.setupStock.third.edit
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +10,7 @@ import com.critx.domain.useCase.SetUpStock.EditJewelleryGroupUseCase
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.SelectedImage
+import com.critx.shwemiAdmin.uiModel.setupStock.ChooseGroupUIModel
 import com.critx.shwemiAdmin.uiModel.setupStock.asUiModel
 import com.critx.shwemiAdmin.uistate.JewelleryGroupUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,17 +29,17 @@ class EditGroupViewModel @Inject constructor(
     private val editJewelleryGroupUseCase: EditJewelleryGroupUseCase,
     private val localDatabase: LocalDatabase
 ):ViewModel() {
-    var selectedImgUri= MutableLiveData<SelectedImage?>(null)
-    fun setSelectedImgUri(selectedImage: SelectedImage?){
-        selectedImgUri.value = selectedImage
-    }
+    var selectedImgUri: File? = null
 
 
-    private val _createJewelleryGroupState = MutableStateFlow(JewelleryGroupUiState())
-    val createJewelleryGroupState = _createJewelleryGroupState.asStateFlow()
 
-    private val _editJewelleryGroupState = MutableStateFlow(JewelleryGroupUiState())
-    val editJewelleryGroupState = _editJewelleryGroupState.asStateFlow()
+    private val _createJewelleryGroupState = MutableLiveData<Resource<ChooseGroupUIModel>>()
+    val createJewelleryGroupState :LiveData<Resource<ChooseGroupUIModel>>
+    get() = _createJewelleryGroupState
+
+    private val _editJewelleryGroupState = MutableLiveData<Resource<String>>()
+    val editJewelleryGroupState :LiveData<Resource<String>>
+    get() = _editJewelleryGroupState
 
 
     private var _event = MutableSharedFlow<UiEvent>()
@@ -60,24 +62,15 @@ class EditGroupViewModel @Inject constructor(
             ).collectLatest {
                 when(it){
                     is Resource.Loading->{
-                        _editJewelleryGroupState.value =_editJewelleryGroupState.value.copy(
-                            editGroupLoading = true
-                        )
+                        _editJewelleryGroupState.value =Resource.Loading()
                     }
                     is Resource.Success->{
 
-                        _editJewelleryGroupState.value =_editJewelleryGroupState.value.copy(
-                            editGroupLoading = false,
-                            editSuccessLoading = "Group Created"
-                        )
+                        _editJewelleryGroupState.value =Resource.Success(it.data!!.message)
                     }
                     is Resource.Error->{
-                        _editJewelleryGroupState.value =_editJewelleryGroupState.value.copy(
-                            editGroupLoading = false,
-                        )
-                        it.message?.let {errorString->
-                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
-                        }
+                        _editJewelleryGroupState.value =Resource.Error(it.message)
+
                     }
                 }
             }
@@ -98,23 +91,13 @@ class EditGroupViewModel @Inject constructor(
             ).collectLatest {
                 when(it){
                     is Resource.Loading->{
-                        _createJewelleryGroupState.value =_createJewelleryGroupState.value.copy(
-                            createGroupLoading = true
-                        )
+                        _createJewelleryGroupState.value =Resource.Loading()
                     }
                     is Resource.Success->{
-                        _createJewelleryGroupState.value =_createJewelleryGroupState.value.copy(
-                            createGroupLoading = false,
-                            createSuccessLoading = it.data!!.asUiModel()
-                        )
+                        _createJewelleryGroupState.value =Resource.Success(it.data!!.asUiModel())
                     }
                     is Resource.Error->{
-                        _createJewelleryGroupState.value =_createJewelleryGroupState.value.copy(
-                            createGroupLoading = false,
-                        )
-                        it.message?.let {errorString->
-                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
-                        }
+                        _createJewelleryGroupState.value =Resource.Error(it.message)
                     }
                 }
             }

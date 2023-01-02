@@ -146,22 +146,22 @@ class ChooseCategoryFragment : Fragment() {
         binding.tvThirdCat.text = args.thirdCat.name
         setupRecyclerImage()
 
-        binding.btnNext.setOnClickListener {
-            if (sharedViewModel.thirdCatForRecommendCat != null) {
-                sharedViewModel.addRecommendCat(sharedViewModel.fourthCat!!)
-                sharedViewModel.resetForRecommendCat()
-                findNavController().navigate(
-                    ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToRecommendStockFragment(
-                        sharedViewModel.fourthCat!!
-                    )
-                )
-            }else{
-                sharedViewModel.firstCat = args.firstCat
-                sharedViewModel.secondCat = args.secondCat
-                sharedViewModel.thirdCat = args.thirdCat
-                findNavController().navigate(ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToProductCreateFragment())
-            }
-        }
+//        binding.btnNext.setOnClickListener {
+//            if (sharedViewModel.thirdCatForRecommendCat != null) {
+//                sharedViewModel.addRecommendCat(sharedViewModel.fourthCat!!)
+//                sharedViewModel.resetForRecommendCat()
+//                findNavController().navigate(
+//                    ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToRecommendStockFragment(
+//                        sharedViewModel.fourthCat!!
+//                    )
+//                )
+//            }else{
+//                sharedViewModel.firstCat = args.firstCat
+//                sharedViewModel.secondCat = args.secondCat
+//                sharedViewModel.thirdCat = args.thirdCat
+//                findNavController().navigate(ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToProductCreateFragment())
+//            }
+//        }
         viewLifecycleOwner.lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
@@ -188,14 +188,8 @@ class ChooseCategoryFragment : Fragment() {
                             loadingDialog.show()
                         } else loadingDialog.dismiss()
                         if (it.successLoading != null) {
-                            if(sharedViewModel.thirdCatForRecommendCat != null){
-                                adapter.submitList(it.successLoading!!.filterNotNull())
-                                adapter.notifyDataSetChanged()
-                            }else{
-                                adapter.submitList(it.successLoading)
-                                adapter.notifyDataSetChanged()
-                            }
-
+                            adapter.submitList(it.successLoading)
+                            adapter.notifyDataSetChanged()
                             findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<JewelleryCategoryUiModel>(
                                 CREATED_CATEGORY_ID
                             )
@@ -302,9 +296,6 @@ class ChooseCategoryFragment : Fragment() {
         addChipView.isChipIconVisible = true
         addChipView.setTextColor(requireContext().getColorStateList(R.color.primary_color))
         addChipView.chipIconTint = requireContext().getColorStateList(R.color.primary_color)
-        if(sharedViewModel.thirdCatForRecommendCat == null){
-            binding.chipGroupChooseGp.addView(addChipView)
-        }
         for (item in list.toSet()) {
             val chip = requireContext().createChip(item.name)
             val bubble = BubbleCardBinding.inflate(layoutInflater).root

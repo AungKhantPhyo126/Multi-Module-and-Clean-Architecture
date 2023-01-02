@@ -51,7 +51,6 @@ class ChooseGroupFragment : Fragment() {
     private lateinit var adapter: ImageRecyclerAdapter
     private var frequentUse = 0
     var selectedGroupModel: ChooseGroupUIModel? = null
-    private val sharedViewModel by activityViewModels<SharedViewModel>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -139,13 +138,8 @@ class ChooseGroupFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
-                    if (sharedViewModel.secondCatForRecomendCat!=null) {
-                        adapter.submitList(it.data!!.filterNotNull())
-                        adapter.notifyDataSetChanged()
-                    }else{
-                        adapter.submitList(it.data)
-                        adapter.notifyDataSetChanged()
-                    }
+                    adapter.submitList(it.data)
+                    adapter.notifyDataSetChanged()
 
                     setupChipView(it.data?.filterNotNull().orEmpty())
                     val selectedItem = it.data!!.filterNotNull().find { it.isChecked }
@@ -159,11 +153,7 @@ class ChooseGroupFragment : Fragment() {
                             binding.tvThirdCat.setTextColor(requireContext().getColor(R.color.primary_color))
                             binding.tvThirdCat.text = it
                         }
-                        if (sharedViewModel.secondCatForRecomendCat!=null){
-                            sharedViewModel.thirdCatForRecommendCat = selectedGroupModel!!
-                        }
                     } else {
-                        sharedViewModel.thirdCatForRecommendCat = null
                         binding.tvThirdCat.isVisible = false
                         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<ChooseGroupUIModel>(
                             CREATEED_GROUP_ID
@@ -189,76 +179,6 @@ class ChooseGroupFragment : Fragment() {
         }
 
 
-
-
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-
-                //getJewelleryGroup
-//                launch {
-//                    viewModel.getGroupState.collect {
-//                        if (it.loading) {
-//                            loadingDialog.show()
-//                        } else loadingDialog.dismiss()
-//                        if (it.successLoading != null) {
-//                            adapter.submitList(it.successLoading)
-//                            adapter.notifyDataSetChanged()
-//                            findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<ChooseGroupUIModel>(
-//                                CREATEED_GROUP_ID
-//                            )
-//                                ?.observe(viewLifecycleOwner) {
-//                                    if(
-//                                        findNavController().previousBackStackEntry?.destination?.id == R.id.editGroupFragment ||
-//                                        findNavController().previousBackStackEntry?.destination?.id == R.id.chooseCategoryFragment
-//                                    ){
-//                                        viewModel.setSelectGroup(it)
-//                                    }
-//                                }
-//                            setupChipView(it.successLoading.orEmpty())
-//                        }
-//                    }
-//                }
-
-                launch {
-                    viewModel.deleteGroupState.collectLatest {
-                        if (it.deleteGroupLoading) {
-                            loadingDialog.show()
-                        } else loadingDialog.dismiss()
-
-                        if (it.deleteSuccessLoading != null) {
-                            viewModel.getJewelleryGroup(
-                                frequentUse,
-                                args.firstCat.id.toInt(),
-                                args.secondCat.id.toInt()
-                            )
-                            requireContext().showSuccessDialog("Group Deleted") {
-
-                                it.deleteSuccessLoading = null
-//                                refreshData()
-                            }
-                        }
-                    }
-                }
-
-                launch {
-                    viewModel.event.collectLatest { event ->
-                        when (event) {
-                            is UiEvent.ShowErrorSnackBar -> {
-                                snackBar?.dismiss()
-                                snackBar = Snackbar.make(
-                                    binding.root,
-                                    event.message,
-                                    Snackbar.LENGTH_LONG
-                                )
-                                snackBar?.show()
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         binding.cbImageView.setOnCheckedChangeListener { compoundButton, isChecked ->
             if (isChecked) {
                 binding.rvImages.visibility = View.VISIBLE
@@ -280,12 +200,12 @@ class ChooseGroupFragment : Fragment() {
         )
     }
 
-    fun navigateWithEditView() {
+    fun navigateWithEditView(selectedItem:ChooseGroupUIModel) {
         findNavController().navigate(
             ChooseGroupFragmentDirections.actionChooseGroupFragmentToEditGroupFragment(
                 args.firstCat,
                 args.secondCat,
-                selectedGroupModel
+                selectedItem
             )
         )
     }
@@ -318,8 +238,7 @@ class ChooseGroupFragment : Fragment() {
                 navigateWithAddView()
             }, {
                 //navigateToEditClick
-//                viewModel.setSelectGroup(it)
-                navigateWithEditView()
+                navigateWithEditView(it)
 
             })
         binding.rvImages.adapter = adapter
@@ -334,9 +253,8 @@ class ChooseGroupFragment : Fragment() {
         addChipView.isChipIconVisible = true
         addChipView.setTextColor(requireContext().getColorStateList(R.color.primary_color))
         addChipView.chipIconTint = requireContext().getColorStateList(R.color.primary_color)
-        if (sharedViewModel.secondCatForRecomendCat ==null) {
-            binding.chipGroupChooseGp.addView(addChipView)
-        }
+        binding.chipGroupChooseGp.addView(addChipView)
+
         for (item in list.toSet()) {
             val chip = requireContext().createChip(item.name)
             val bubble = BubbleCardBinding.inflate(layoutInflater).root
@@ -362,10 +280,7 @@ class ChooseGroupFragment : Fragment() {
             chip.isChecked = item.isChecked
             editView.setOnClickListener {
                 popupWindow.dismiss()
-//                if (!binding.rvImages.isVisible) {
-//                    viewModel.setSelectGroup(item)
-//                }
-                navigateWithEditView()
+                navigateWithEditView(item)
             }
 
 //            deleteView.setOnClickListener {

@@ -81,17 +81,13 @@ class RecommendStockFragment : Fragment() {
 //        }
         adapter = RecommendStockAdapter({
             //delete click
-            sharedViewModel.removeRecommendCat(it)
+
         }, {
             //addnew click
             findNavController().navigate(RecommendStockFragmentDirections.actionRecommendStockFragmentToSetupStockFragment())
         })
         binding.rvRecommendStock.adapter = adapter
-        sharedViewModel.recommendCatList.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
-            adapter.notifyDataSetChanged()
 
-        }
 //        viewModel.recommendCatListLiveData.observe(viewLifecycleOwner){
 //            when(it){
 //                is Resource.Loading->{

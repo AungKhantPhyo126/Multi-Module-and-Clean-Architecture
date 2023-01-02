@@ -16,6 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -29,10 +30,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.critx.common.ui.getAlertDialog
-import com.critx.common.ui.getBitMapWithGlide
-import com.critx.common.ui.loadImageWithGlide
-import com.critx.common.ui.showSuccessDialog
+import com.critx.common.ui.*
+import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.FragmentNewGroupBinding
@@ -47,6 +46,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
@@ -69,7 +69,6 @@ class EditGroupFragment : Fragment() {
     private var isFrequentlyUsed = 0
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
-    var photo: MultipartBody.Part? = null
 
 
     private lateinit var launchChooseImage: ActivityResultLauncher<Intent>
@@ -78,30 +77,20 @@ class EditGroupFragment : Fragment() {
     private val sharedViewModel by activityViewModels<ChooseGroupViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        launchChooseImage =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                var selectedImage: Bitmap?
-                if (result.resultCode == Activity.RESULT_OK) {
-                    result.data?.data?.let {
-                        val imageStream: InputStream =
-                            requireContext().contentResolver?.openInputStream(it)!!
-                        selectedImage = BitmapFactory.decodeStream(imageStream)
-//                        selectedImage = getResizedBitmap(
-//                            selectedImage!!,
-//                            500
-//                        );// 400 is for example, replace with desired size
-                        binding.ivGroupImage.setImageBitmap(selectedImage)
-                        Log.i("imageResize",selectedImage?.width.toString())
-                        val file = getRealPathFromUri(requireContext(), it)?.let { it1 ->
-                            File(
-                                it1
-                            )
-                        }
-                        viewModel.setSelectedImgUri(SelectedImage(file!!, selectedImage!!))
+        launchChooseImage = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                if (data != null && data.data != null) {
+                    getRealPathFromUri(requireContext(), data.data!!)?.let { path ->
+                        viewModel.selectedImgUri = File(path)
                     }
+                    binding.ivGroupImage.setImageURI(data.data)
                 }
-
             }
+        }
+
 
         readStoragePermissionlauncher = registerForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -127,13 +116,13 @@ class EditGroupFragment : Fragment() {
         checkEditOrAddnewAndBind()
 
         binding.ivRemove.setOnClickListener {
-            viewModel.setSelectedImgUri(null)
+            viewModel.selectedImgUri = null
+            binding.ivGroupImage.setImageDrawable(requireContext().getDrawable(R.drawable.empty_picture))
         }
 
         if (args.groupInfo != null) {
             binding.cbFrequentlyUsed.isChecked = args.groupInfo!!.isFrequentlyUse
             binding.btnAdd.text = "Save"
-            photo = null
             binding.ivGroupImage.loadImageWithGlide(args.groupInfo!!.imageUrl)
 
         } else {
@@ -160,103 +149,57 @@ class EditGroupFragment : Fragment() {
             }
 
         }
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-
-                //image original
-                launch {
-
-//                    args.groupInfo?.imageUrl?.let {
-//                        withContext(Dispatchers.IO) {
-//                             originalbm = getBitMapWithGlide(it, requireContext())
-//                            val fileName: String = it.substring(it.lastIndexOf('/') + 1)
-//                             originalfile = convertBitmapToFile( fileName,originalbm!!, requireContext())
-//                            val requestBody =
-//                                originalfile!!.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-////                            photo = MultipartBody.Part.createFormData("image", originalfile!!.name, requestBody)
-//                        }
-//                        if (viewModel.selectedImgUri.value == null){
-//                            viewModel.setSelectedImgUri(SelectedImage(originalfile!!,originalbm!!))
-//                        }
-//                    }
+        viewModel.editJewelleryGroupState.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
                 }
-
-
-                //editgroup
-                launch {
-                    viewModel.editJewelleryGroupState.collectLatest {
-                        if (it.editGroupLoading) {
-                            loadingDialog.show()
-                        } else loadingDialog.dismiss()
-                        if (!it.editSuccessLoading.isNullOrEmpty()) {
-                            requireContext().showSuccessDialog("Group Updated") {
-//                                sharedViewModel.selectedChooseGroupUIModel = ChooseGroupUIModel(
-
-//                                )
-                                findNavController().popBackStack()
-                            }
-                        }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    requireContext().showSuccessDialog(it.data.orEmpty()) {
+                        findNavController().popBackStack()
                     }
                 }
-
-                //createGroup
-                launch {
-                    viewModel.createJewelleryGroupState.collectLatest {
-                        if (it.createGroupLoading) {
-                            loadingDialog.show()
-                        } else loadingDialog.dismiss()
-                        if (it.createSuccessLoading != null) {
-                            requireContext().showSuccessDialog("Group Created") {
-//                                sharedViewModel.setSelectGroup(it.createSuccessLoading)
-                                findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                                    CREATEED_GROUP_ID,
-                                    it.createSuccessLoading
-                                )
-                                it.createSuccessLoading = null
-                                findNavController().popBackStack()
-                            }
-                        }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    snackBar?.dismiss()
+                    snackBar = Snackbar.make(
+                        binding.root,
+                        it.message.orEmpty(),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackBar?.show()
+                }
+            }
+        }
+        viewModel.createJewelleryGroupState.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    requireContext().showSuccessDialog("Group Created") {
+                        findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                            CREATEED_GROUP_ID,
+                            it.data
+                        )
+                        findNavController().popBackStack()
                     }
                 }
-
-                launch {
-                    viewModel.event.collectLatest { event ->
-                        when (event) {
-                            is UiEvent.ShowErrorSnackBar -> {
-                                snackBar?.dismiss()
-                                snackBar = Snackbar.make(
-                                    binding.root,
-                                    event.message,
-                                    Snackbar.LENGTH_LONG
-                                )
-                                snackBar?.show()
-                            }
-                        }
-                    }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    snackBar?.dismiss()
+                    snackBar = Snackbar.make(
+                        binding.root,
+                        it.message.orEmpty(),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackBar?.show()
                 }
             }
         }
 
-        viewModel.selectedImgUri.observe(viewLifecycleOwner){
-            binding.ivRemove.isVisible = it != null
-            if (args.groupInfo!=null){
-                photo= null
-                binding.ivGroupImage.loadImageWithGlide(args.groupInfo!!.imageUrl)
-            }
-            if (it !=null){
-                val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-//                val requestBody = convertBitmapToFile(
-//                    it.file.name,
-//                    it.bitMap,
-//                    requireContext()
-//                ).asRequestBody("multipart/form-data".toMediaTypeOrNull())
-                binding.ivGroupImage.setImageBitmap(it.bitMap)
-                photo = MultipartBody.Part.createFormData("image", it.file.name, requestBody)
-            }else if (args.groupInfo == null) {
-                photo = null
-                binding.ivGroupImage.setImageResource(R.drawable.empty_picture)
-            }
-        }
         binding.ibBack.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -270,24 +213,48 @@ class EditGroupFragment : Fragment() {
 
     fun uploadFile(actionType: String) {
 
-        if (binding.edtGroupName.text.isNullOrEmpty()){
-            Toast.makeText(requireContext(),"Fill required Fields",Toast.LENGTH_LONG)
+        if (binding.edtGroupName.text.isNullOrEmpty()) {
+            Toast.makeText(requireContext(), "Fill required Fields", Toast.LENGTH_LONG)
         } else {
             val name = binding.edtGroupName.text.toString()
                 .toRequestBody("multipart/form-data".toMediaTypeOrNull())
             if (actionType == CREATE_GROUP) {
-                viewModel.createGroup(
-                    photo!!,
-                    args.type.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                    args.quality.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                    isFrequentlyUsed.toString()
-                        .toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                    name
-                )
-            } else {
+                var imageToUpload: MultipartBody.Part? = null
+                var requestBody :RequestBody?= null
+                viewModel.selectedImgUri?.let {
+                    requestBody = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                    imageToUpload = MultipartBody.Part.createFormData(
+                        "image",
+                        it.name,
+                        requestBody!!
+                    )
+                }
+                if (imageToUpload == null){
+                    Toast.makeText(requireContext(),"Please select an image",Toast.LENGTH_LONG).show()
+                }else{
+                    viewModel.createGroup(
+                        imageToUpload!!,
+                        args.type.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                        args.quality.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                        isFrequentlyUsed.toString()
+                            .toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                        name
+                    )
+                }
 
+            } else {
+                var imageToUpload: MultipartBody.Part? = null
+                var requestBody :RequestBody?= null
+                viewModel.selectedImgUri?.let {
+                    requestBody = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                    imageToUpload = MultipartBody.Part.createFormData(
+                        "image",
+                        it.name,
+                        requestBody!!
+                    )
+                }
                 viewModel.editGroup(
-                    photo,
+                    imageToUpload,
                     args.groupInfo!!.id,
                     args.type.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
                     args.quality.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
@@ -322,9 +289,9 @@ fun getRealPathFromUri(context: Context, contentUri: Uri): String? {
     return try {
         val proj = arrayOf(MediaStore.Images.Media.DATA)
         cursor = context.contentResolver.query(contentUri, proj, null, null, null)
-        val column_index: Int = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        val columnIndex: Int = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
         cursor.moveToFirst()
-        cursor.getString(column_index)
+        cursor.getString(columnIndex)
     } finally {
         cursor?.close()
     }

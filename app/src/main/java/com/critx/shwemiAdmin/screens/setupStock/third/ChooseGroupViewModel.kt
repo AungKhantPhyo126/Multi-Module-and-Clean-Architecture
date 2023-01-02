@@ -38,8 +38,9 @@ class ChooseGroupViewModel @Inject constructor(
     val getGroupLiveData: LiveData<Resource<List<ChooseGroupUIModel?>>>
         get() = _getGroupLiveData
 
-    private val _deleteGroupState = MutableStateFlow(JewelleryGroupUiState())
-    val deleteGroupState = _deleteGroupState.asStateFlow()
+    private val _deleteLiveData = MutableLiveData<Resource<String>>()
+    val deleteLiveData :LiveData<Resource<String>>
+    get() = _deleteLiveData
 
     private var _event = MutableSharedFlow<UiEvent>()
     val event = _event.asSharedFlow()
@@ -81,28 +82,13 @@ class ChooseGroupViewModel @Inject constructor(
             ).collectLatest { result ->
                 when (result) {
                     is Resource.Loading -> {
-                        _deleteGroupState.value = _deleteGroupState.value.copy(
-                            deleteGroupLoading = true
-                        )
+                        _deleteLiveData.value = Resource.Loading()
                     }
                     is Resource.Success -> {
-                        _deleteGroupState.update { uiState ->
-                            uiState.copy(
-                                deleteGroupLoading = false,
-                                deleteSuccessLoading = "Successfully Deleted"
-                            )
-
-                        }
-
-
+                        _deleteLiveData.value = Resource.Success(result.data!!.message)
                     }
                     is Resource.Error -> {
-                        _deleteGroupState.value = _deleteGroupState.value.copy(
-                            deleteGroupLoading = false,
-                        )
-                        result.message?.let { errorString ->
-                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
-                        }
+                       _deleteLiveData.value = Resource.Error(result.message)
                     }
                 }
             }

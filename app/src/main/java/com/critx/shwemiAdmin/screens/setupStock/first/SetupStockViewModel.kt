@@ -1,5 +1,7 @@
 package com.critx.shwemiAdmin.screens.setupStock.first
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
@@ -7,6 +9,7 @@ import com.critx.domain.useCase.SetUpStock.GetJewelleryTypeUseCase
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.uiModel.dailygoldandprice.asUiModel
+import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryTypeUiModel
 import com.critx.shwemiAdmin.uiModel.setupStock.asUiModel
 import com.critx.shwemiAdmin.uistate.JewelleryTypeUiState
 import com.critx.shwemiAdmin.uistate.LogoutUiState
@@ -21,12 +24,10 @@ class SetupStockViewModel @Inject constructor(
     private val getJewelleryTypeUseCase: GetJewelleryTypeUseCase,
     private val localDatabase: LocalDatabase
 ):ViewModel() {
-    private val _jewelleryTypeState = MutableStateFlow(JewelleryTypeUiState())
-    val jewelleryTypeState = _jewelleryTypeState.asStateFlow()
+    private val _jewelleryTypeLiveData = MutableLiveData<Resource<List<JewelleryTypeUiModel>>>()
+    val jewelleryTypeState :LiveData<Resource<List<JewelleryTypeUiModel>>>
+get() = _jewelleryTypeLiveData
 
-
-    private var _event = MutableSharedFlow<UiEvent>()
-    val event = _event.asSharedFlow()
 
     init {
         getJewelleryType()
@@ -37,23 +38,13 @@ class SetupStockViewModel @Inject constructor(
             getJewelleryTypeUseCase(localDatabase.getToken().orEmpty()).collectLatest { result->
                 when(result){
                     is Resource.Loading->{
-                        _jewelleryTypeState.value =_jewelleryTypeState.value.copy(
-                            loading = true
-                        )
+                        _jewelleryTypeLiveData.value =Resource.Loading()
                     }
                     is Resource.Success->{
-                        _jewelleryTypeState.value =_jewelleryTypeState.value.copy(
-                            loading = false,
-                            successLoading = result.data!!.map { it.asUiModel() }
-                        )
+                        _jewelleryTypeLiveData.value =Resource.Success(result.data!!.map { it.asUiModel() })
                     }
                     is Resource.Error->{
-                        _jewelleryTypeState.value =_jewelleryTypeState.value.copy(
-                            loading = false,
-                        )
-                        result.message?.let {errorString->
-                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
-                        }
+                        _jewelleryTypeLiveData.value =Resource.Error(result.message)
                     }
                 }
             }

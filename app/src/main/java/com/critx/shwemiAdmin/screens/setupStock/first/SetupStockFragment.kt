@@ -19,6 +19,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.critx.common.ui.createChip
 import com.critx.common.ui.getAlertDialog
+import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.FragmentSetUpStocklBinding
@@ -66,45 +67,33 @@ class SetupStockFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
         loadingDialog = requireContext().getAlertDialog()
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-
-                //getJewelleryType
-                launch {
-                    viewModel.jewelleryTypeState.collectLatest {
-                        if (it.loading) {
-                            loadingDialog.show()
-                        } else loadingDialog.dismiss()
-                        if (!it.successLoading.isNullOrEmpty()) {
-                            binding.chipGroupJewelleryType.removeAllViews()
-                            for (item in it.successLoading!!) {
-                                val chip = requireContext().createChip(item.name)
-                                chip.id = item.id.toInt()
-                                binding.chipGroupJewelleryType.addView(chip)
-                            }
-                        }
+        viewModel.jewelleryTypeState.observe(viewLifecycleOwner){
+            when(it){
+                is Resource.Loading->{
+                    loadingDialog.show()
+                }
+                is Resource.Success->{
+                    loadingDialog.dismiss()
+                    binding.chipGroupJewelleryType.removeAllViews()
+                    for (item in it.data!!) {
+                        val chip = requireContext().createChip(item.name)
+                        chip.id = item.id.toInt()
+                        binding.chipGroupJewelleryType.addView(chip)
                     }
                 }
-
-                //Error Event
-                launch {
-                    viewModel.event.collectLatest { event ->
-                        when (event) {
-                            is UiEvent.ShowErrorSnackBar -> {
-                                snackBar?.dismiss()
-                                snackBar = Snackbar.make(
-                                    binding.root,
-                                    event.message,
-                                    Snackbar.LENGTH_LONG
-                                )
-                                snackBar?.show()
-                            }
-                        }
-                    }
+                is Resource.Error->{
+                    loadingDialog.dismiss()
+                    snackBar?.dismiss()
+                    snackBar = Snackbar.make(
+                        binding.root,
+                        it.message.orEmpty(),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackBar?.show()
                 }
             }
         }
+
 
         var checkedChipId = 0
         binding.chipGroupJewelleryType.setOnCheckedStateChangeListener { group, checkedIds ->
@@ -115,13 +104,9 @@ class SetupStockFragment : Fragment() {
                     binding.tvFirstCat.setTextColor(requireContext().getColor(R.color.primary_color))
                     binding.tvFirstCat.text = chip.text
                     binding.ivFirst.isVisible = true
-                    if (findNavController().previousBackStackEntry?.destination?.id == R.id.recommendStockFragment) {
-                        sharedViewModel.firstCatForRecommendCat =
-                            JewelleryTypeUiModel(checkedChipId.toString(), chip.text.toString())
-                    }
-                }
+                }else binding.ivFirst.isVisible = false
             }
-            if (checkedIds.isNullOrEmpty()) sharedViewModel.firstCatForRecommendCat = null
+
 
         }
         binding.btnNext.setOnClickListener {
@@ -137,7 +122,7 @@ class SetupStockFragment : Fragment() {
             } else {
                 Toast.makeText(
                     requireContext(),
-                    "Please choose at least one category",
+                    "Please choose at least one item",
                     Toast.LENGTH_LONG
                 ).show()
             }
