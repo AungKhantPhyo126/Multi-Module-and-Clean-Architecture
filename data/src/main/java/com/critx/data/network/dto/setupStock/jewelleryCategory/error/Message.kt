@@ -43,7 +43,7 @@ data class Message(
     val orderGoldSmith: List<String?>?,
 
     @SerializedName("order.gold_quality")
-val orderGoldQuality: List<String?>?
+val orderGoldQuality: List<String?>?,
 
 )
 
@@ -57,5 +57,5 @@ fun Message.getMessage(): List<String?> {
     ?: order_item ?: order_qty ?: weight_kyat_per_unit ?: weight_pae_per_unit
     ?: weight_ywae_per_unit ?: gold_box_id ?: gold_weight_gm ?: gem_weight_gm ?: gold_gem_weight_gm
     ?: due_date ?: wastage_kyat ?: wastage_pae ?: wastage_ywae ?: image ?: gem_value
-    ?: orderGoldSmith ?: listOf(message) ?: emptyList()
+    ?: orderGoldSmith?:goldsmith_id ?: listOf(message) ?: emptyList()
 }

@@ -19,7 +19,7 @@ interface CollectStockRepository {
 
     fun getJewellerySize(token: String,type:String):Flow<Resource<List<JewellerySizeDomain>>>
 
-    fun getGoldSmithList(token:String):Flow<Resource<List<GoldSmithListDomain>>>
+    fun getGoldSmithList(token:String,type: String):Flow<Resource<List<GoldSmithListDomain>>>
 
     fun collectBatch(
         token: String,

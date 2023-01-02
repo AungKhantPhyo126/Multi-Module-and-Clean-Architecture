@@ -180,7 +180,7 @@ class GiveGoldViewModel @Inject constructor(
 
     fun getGoldSmithList(){
         viewModelScope.launch {
-            getGoldSmithListUseCase(localDatabase.getToken().orEmpty()).collectLatest {
+            getGoldSmithListUseCase(localDatabase.getToken().orEmpty(),"in").collectLatest {
                 when(it){
                     is Resource.Loading->{
                         _goldSmithListLiveData.value = Resource.Loading()

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <ProgressBar
+    <ImageView
         android:id="@+id/loading_bar"
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -13,7 +13,7 @@
         android:layout_marginBottom="48dp"
         android:indeterminate="true"
         android:indeterminateTint="#BF1E2E"
-        style="?android:attr/progressBarStyle"
+        android:src="@drawable/loading_animation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

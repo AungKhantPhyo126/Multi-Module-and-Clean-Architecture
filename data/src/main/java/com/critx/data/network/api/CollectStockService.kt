@@ -62,5 +62,6 @@ interface CollectStockService {
     @GET("api/goldsmiths/quicklist")
     suspend fun getGoldSmitList(
         @Header("Authorization") token: String,
+        @Query("type") type:String,
     ):Response<GoldSmithListResponse>
 }

@@ -197,6 +197,7 @@
         android:insetRight="0dp"
         android:insetTop="0dp"
         android:text="Assign Goldsmith"
+        android:enabled="false"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

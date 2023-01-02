@@ -368,7 +368,7 @@ class GiveGoldFragment : Fragment() {
             binding.mcvHundredPercent.isChecked = false
         }
         binding.mcvDueDate.setOnClickListener {
-            datePicker.show(childFragmentManager, "choose resign date")
+            datePicker.show(childFragmentManager, "choose date")
         }
         datePicker.addOnPositiveButtonClickListener {
             val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"))

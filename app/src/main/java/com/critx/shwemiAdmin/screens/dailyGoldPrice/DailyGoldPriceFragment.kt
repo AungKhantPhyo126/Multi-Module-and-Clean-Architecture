@@ -20,6 +20,7 @@ import androidx.work.*
 import com.critx.common.ui.getAlertDialog
 import com.critx.common.ui.showSuccessDialog
 import com.critx.common.ui.validatePrice
+import com.critx.common.ui.validatePriceForWeight
 import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
@@ -75,7 +76,30 @@ class DailyGoldPriceFragment : Fragment() {
         workManager = WorkManager.getInstance(requireContext())
         loadingDialog = requireContext().getAlertDialog()
         viewModel.isloggedIn()
+        viewModel.getProfile()
+        viewModel.profileLivedata.observe(viewLifecycleOwner){
+            when(it){
+                is Resource.Loading->{
+                    loadingDialog.show()
+                }
+                is Resource.Success->{
+                    loadingDialog.dismiss()
+                    enqueueRefreshTokenWork()
+                    binding.tvLogginedBy.isVisible = true
+                    binding.tvUserName.text = it.data!!.name
+                    binding.tvTodayDate.text = it.data!!.todayDate
+                    binding.tvTodayName.text = it.data!!.todayName
+                    viewModel.resetProfileLiveData()
+                }
+                is Resource.Error->{
+                    loadingDialog.dismiss()
+                    viewModel.resetProfileLiveData()
+                    Toast.makeText(requireContext(),it.message,Toast.LENGTH_LONG).show()
+                            findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
 
+                }
+            }
+        }
         val workConstraints = Constraints
             .Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -85,13 +109,13 @@ class DailyGoldPriceFragment : Fragment() {
                 .setConstraints(workConstraints)
                 .build()
 
-        workManager.getWorkInfoByIdLiveData(repeatingRequest.id).observe(viewLifecycleOwner) {
-            Log.i("refresh success", it.state.toString())
-            if (it.state == WorkInfo.State.ENQUEUED) {
-                viewModel.getProfile()
-                Log.i("refresh success", "reached")
-            }
-        }
+//        workManager.getWorkInfoByIdLiveData(repeatingRequest.id).observe(viewLifecycleOwner) {
+//            Log.i("refresh success", it.state.toString())
+//            if (it.state == WorkInfo.State.ENQUEUED) {
+//                viewModel.getProfile()
+//                Log.i("refresh success", "reached")
+//            }
+//        }
 
         val toolbarEndIcon: ImageView = activity!!.findViewById<View>(R.id.iv_end_icon) as ImageView
         toolbarEndIcon.setOnClickListener {
@@ -103,7 +127,7 @@ class DailyGoldPriceFragment : Fragment() {
                 validatePrice(binding.layoutDailyGoldPriceInput.edt15pGq, requireContext()) &&
                 validatePrice(binding.layoutDailyGoldPriceInput.edt22kGq, requireContext()) &&
                 validatePrice(binding.layoutDailyGoldPriceInput.edtDiamond, requireContext()) &&
-                validatePrice( binding.layoutDailyGoldPriceInput.edtWg, requireContext()) &&
+                validatePriceForWeight( binding.layoutDailyGoldPriceInput.edtWg, requireContext()) &&
                 validatePrice(binding.layoutDailyGoldPriceInput.edtRebuy, requireContext()) &&
                 validatePrice(binding.layoutDailyGoldPriceInput.edtGoldBlock, requireContext())
                     ){
@@ -133,6 +157,26 @@ class DailyGoldPriceFragment : Fragment() {
                 is Resource.Error -> {
                     loadingDialog.dismiss()
                     viewModel.resetUpdateGoldLive()
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+
+                }
+            }
+        }
+
+        viewModel.logOutLivedata.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    workManager.cancelUniqueWork(RefreshTokenWorker.REFRESH_TOKEN_WORK)
+                    viewModel.resetLogOutLiveData()
+                    findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    viewModel.resetLogOutLiveData()
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
 
                 }
@@ -177,7 +221,7 @@ class DailyGoldPriceFragment : Fragment() {
                         } else loadingDialog.dismiss()
                         if (!it.successMessage.isNullOrEmpty()) {
                             workManager.cancelUniqueWork(RefreshTokenWorker.REFRESH_TOKEN_WORK)
-//                            findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
+                            findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
                         }
                     }
                 }
@@ -203,28 +247,22 @@ class DailyGoldPriceFragment : Fragment() {
                 }
 
                 //getProfile
-                launch {
-                    viewModel.profileState.collectLatest {
-                        if (it.successLoading != null) {
-                            binding.tvLogginedBy.isVisible = true
-                            binding.tvUserName.text = it.successLoading!!.name
-                            binding.tvTodayDate.text = it.successLoading!!.todayDate
-                            binding.tvTodayName.text = it.successLoading!!.todayName
-                        }
-                    }
-                }
+//                launch {
+//                    viewModel.profileState.collectLatest {
+//                        if (it.successLoading != null) {
+//                            binding.tvLogginedBy.isVisible = true
+//                            binding.tvUserName.text = it.successLoading!!.name
+//                            binding.tvTodayDate.text = it.successLoading!!.todayDate
+//                            binding.tvTodayName.text = it.successLoading!!.todayName
+//                        }else{
+//                            findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
+//                        }
+//                    }
+//                }
             }
         }
 
-        viewModel.isLogin.observe(viewLifecycleOwner) {
-            if (it) {
-                enqueueRefreshTokenWork()
-                viewModel.getProfile()
 
-            } else {
-                findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
-            }
-        }
 
 //        if (!viewModel.isLogin()){
 //            findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())

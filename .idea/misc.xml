@@ -18,6 +18,7 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/drawable/ic_expand_less.xml" value="0.11" />
         <entry key="..\:/Shwe Mi/app/src/main/res/drawable/ic_give_gold.xml" value="0.1115" />
         <entry key="..\:/Shwe Mi/app/src/main/res/drawable/ic_logout.xml" value="0.114" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/drawable/ic_menu.xml" value="0.177" />
         <entry key="..\:/Shwe Mi/app/src/main/res/drawable/ic_point.xml" value="0.1115" />
         <entry key="..\:/Shwe Mi/app/src/main/res/drawable/ic_qr_scan.xml" value="0.12" />
         <entry key="..\:/Shwe Mi/app/src/main/res/drawable/ic_sample_take_and_return.xml" value="0.1165" />
@@ -68,7 +69,7 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_product_create.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_product_setup.xml" value="0.20436083796494228" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_recommend_stock.xml" value="0.20436083796494228" />
-        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_repair_stock.xml" value="0.20521590423257802" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_repair_stock.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_repair_stocl.xml" value="0.2" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_sample_take_and_return.xml" value="0.14767932489451477" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_set_up_stockl.xml" value="0.264" />
@@ -81,6 +82,7 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_check_up_box_weight_list.xml" value="0.20436083796494228" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_check_up_stock_button_layout.xml" value="0.20436083796494228" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_check_up_stock_list.xml" value="0.20436083796494228" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_choose_recommend_category.xml" value="0.20436083796494228" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_collect_stock_batch.xml" value="0.1" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_daily_gold_price_input.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_discount_list_layout.xml" value="0.25" />

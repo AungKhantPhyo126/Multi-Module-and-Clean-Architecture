@@ -149,7 +149,7 @@ class FillOrderInfoViewModel @Inject constructor(
 
     fun getGoldSmithList() {
         viewModelScope.launch {
-            getGoldSmithListUseCase(localDatabase.getToken().orEmpty()).collectLatest {
+            getGoldSmithListUseCase(localDatabase.getToken().orEmpty(),"out").collectLatest {
                 when (it) {
                     is Resource.Loading -> {
                         _goldSmithListLiveData.value = Resource.Loading()

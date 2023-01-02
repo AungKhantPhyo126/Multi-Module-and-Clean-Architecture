@@ -119,12 +119,15 @@ class InventoryViewModel @Inject constructor(
     }
 
     fun resetSampleForReturn() {
+        scannedSamplesForReturn = mutableListOf<SampleItemUIModel>()
         _scannedSampleForReturnLiveData.value = mutableListOf<SampleItemUIModel>()
         _sampleLiveData.value = null
     }
 
     fun resetSample() {
+        scannedSamples = mutableListOf<SampleItemUIModel>()
         _scannedSampleLiveData.value = mutableListOf<SampleItemUIModel>()
+        specificationList = mutableListOf<String>()
         _sampleLiveData.value = null
     }
 
@@ -172,34 +175,40 @@ class InventoryViewModel @Inject constructor(
     fun saveSamples() {
         viewModelScope.launch {
             val sampleIdHashMap: HashMap<String, String> = HashMap()
-            repeat(scannedSamples.filter { it.specification.isNullOrEmpty() }.map { it.sampleId }.size) {
-                sampleIdHashMap["sample[${scannedSamples.map { it.productId }[it]}]"] =
-                    specificationList.filter { it.isNotEmpty() }[it]
+            if (specificationList.filter { it.isNotEmpty() }.isEmpty()){
+                _saveSampleLiveData.value = Resource.Error("Please Enter Specification")
             }
+            else{
+                repeat(scannedSamples.filter { it.specification.isNullOrEmpty() }.map { it.sampleId }.size) {
+                    sampleIdHashMap["sample[${scannedSamples.map { it.productId }[it]}]"] =
+                        specificationList.filter { it.isNotEmpty() }[it]
+                }
 
-            saveSampleUseCase(localDatabase.getToken().orEmpty(), sampleIdHashMap).collectLatest {
-                when (it) {
-                    is Resource.Loading -> {
-                        _saveSampleLiveData.value = Resource.Loading()
-                    }
-                    is Resource.Success -> {
-                        _saveSampleLiveData.value = Resource.Success(it.data!!.message)
-                        scannedSamples.filter { it.specification.isNullOrEmpty() }.forEach { sampleItemUIModel ->
-                            specificationList.filter { it.isNotEmpty() }.forEach {
-                                sampleItemUIModel.specification = it
-                            }
+                saveSampleUseCase(localDatabase.getToken().orEmpty(), sampleIdHashMap).collectLatest {
+                    when (it) {
+                        is Resource.Loading -> {
+                            _saveSampleLiveData.value = Resource.Loading()
                         }
+                        is Resource.Success -> {
+                            _saveSampleLiveData.value = Resource.Success(it.data!!.message)
+                            scannedSamples.filter { it.specification.isNullOrEmpty() }.forEach { sampleItemUIModel ->
+                                specificationList.filter { it.isNotEmpty() }.forEach {
+                                    sampleItemUIModel.specification = it
+                                }
+                            }
 //                            repeat(scannedSamples.filter { it.specification.isNullOrEmpty() }
 //                            .size) {
 //                              scannedSamples[it].specification = specificationList.filter { it.isNotEmpty() }[it]
 //                        }
-                        _scannedSampleLiveData.value = scannedSamples
-                    }
-                    is Resource.Error -> {
-                        _saveSampleLiveData.value = Resource.Error(it.message)
+                            _scannedSampleLiveData.value = scannedSamples
+                        }
+                        is Resource.Error -> {
+                            _saveSampleLiveData.value = Resource.Error(it.message)
+                        }
                     }
                 }
             }
+
         }
     }
 

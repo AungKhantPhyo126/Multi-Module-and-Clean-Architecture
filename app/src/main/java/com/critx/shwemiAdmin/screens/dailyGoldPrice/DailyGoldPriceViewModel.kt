@@ -12,6 +12,7 @@ import com.critx.domain.useCase.dailygoldprice.*
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.uiModel.dailygoldandprice.GoldPriceUIModel
+import com.critx.shwemiAdmin.uiModel.dailygoldandprice.ProfileUIModel
 import com.critx.shwemiAdmin.uiModel.dailygoldandprice.asUiModel
 import com.critx.shwemiAdmin.uistate.LogoutUiState
 import com.critx.shwemiAdmin.uistate.ProfileUiState
@@ -34,8 +35,24 @@ class DailyGoldPriceViewModel @Inject constructor(
     private val _logoutState = MutableStateFlow(LogoutUiState())
     val logoutState = _logoutState.asStateFlow()
 
+    private val _logOutLivedata = MutableLiveData<Resource<String>>()
+    val logOutLivedata : LiveData<Resource<String>>
+        get() = _logOutLivedata
+
+    fun resetLogOutLiveData(){
+        _logOutLivedata.value = null
+    }
+
     private val _profileState = MutableStateFlow(ProfileUiState())
     val profileState = _profileState.asStateFlow()
+
+    private val _profileLivedata = MutableLiveData<Resource<ProfileUIModel>>()
+val profileLivedata : LiveData<Resource<ProfileUIModel>>
+    get() = _profileLivedata
+    
+    fun resetProfileLiveData(){
+        _profileLivedata.value = null
+    }
 
     private var _event = MutableSharedFlow<UiEvent>()
     val event = _event.asSharedFlow()
@@ -177,81 +194,41 @@ class DailyGoldPriceViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             logoutUseCase(localDatabase.getToken().orEmpty()).collectLatest { result ->
-                when (result) {
-                    is Resource.Loading -> {
-                        _logoutState.value = _logoutState.value.copy(
-                            loading = true
-                        )
-                    }
-                    is Resource.Success -> {
-                        _logoutState.value = _logoutState.value.copy(
-                            loading = false,
-                            successMessage = "Login Success"
-                        )
-                        localDatabase.clearuser()
-                        isloggedIn()
-                    }
-                    is Resource.Error -> {
-                        _logoutState.value = _logoutState.value.copy(
-                            loading = false,
-                        )
-                        result.message?.let {
-                            _event.emit(UiEvent.ShowErrorSnackBar(it))
+                    when (result) {
+                        is Resource.Loading -> {
+                            _logOutLivedata.value = Resource.Loading()
+                        }
+                        is Resource.Success -> {
+                            _logOutLivedata.value = Resource.Success(result.data!!.message)
+
+                        }
+                        is Resource.Error -> {
+                            _logOutLivedata.value = Resource.Error(result.message)
+
                         }
                     }
-                }
+
 
             }
         }
     }
 
     fun getProfile() {
-        var count = 0
         viewModelScope.launch {
             getProfileUsecase(localDatabase.getToken().orEmpty()).collectLatest { result ->
                 when (result) {
                     is Resource.Loading -> {
-                        _profileState.value = _profileState.value.copy(
-                            loading = true
-                        )
+                        _profileLivedata.value = Resource.Loading()
                     }
                     is Resource.Success -> {
                         getGoldPrice()
-                        _profileState.value = _profileState.value.copy(
-                            loading = false,
-                            successLoading = result.data!!.asUiModel()
-                        )
+                        _profileLivedata.value = Resource.Success(result.data!!.asUiModel())
+
                     }
                     is Resource.Error -> {
-                        if (count == 0) {
-                            getProfile()
-                            count++
-                        }
-                        _profileState.value = _profileState.value.copy(
-                            loading = false,
-                        )
-//                        result.message?.let {errorString->
-//                            if (errorString == "You are not Authorized" || errorString == "Bad request"){
-//                                refreshTokenUseCase(localDatabase.getToken().orEmpty()).collect { result
-//                                    when(result){
-//                                        is Resource.Loading->{
+                        _profileLivedata.value = Resource.Error(result.message)
+
 //
-//                                        }
-//                                        is Resource.Success->{
-//                                            localDatabase.deleteToken()
-//                                            localDatabase.saveToken(it.data?.token.orEmpty())
-//                                            getProfile()
-//                                        }
-//                                        is Resource.Error->{
-//                                            localDatabase.clearuser()
-//                                            isloggedIn()
-//                                            _event.emit(UiEvent.ShowErrorSnackBar("refresh token fail"))
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
-//                        }
                     }
                 }
             }

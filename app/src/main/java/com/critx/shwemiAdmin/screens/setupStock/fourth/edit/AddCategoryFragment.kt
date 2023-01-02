@@ -305,11 +305,11 @@ class AddCategoryFragment : Fragment() {
             binding.btnConfirm.text = "Create & Select"
         }
 
-        if (viewModel.selectedDesignIds != null) {
-            binding.tvChooseDesign.setTextColor(requireContext().getColorStateList(com.critx.shwemiAdmin.R.color.primary_color))
-        } else {
-            binding.tvChooseDesign.setTextColor(requireContext().getColorStateList(com.critx.shwemiAdmin.R.color.edit_text_color))
-        }
+//        if (viewModel.selectedDesignIds != null) {
+//            binding.tvChooseDesign.setTextColor(requireContext().getColorStateList(com.critx.shwemiAdmin.R.color.primary_color))
+//        } else {
+//            binding.tvChooseDesign.setTextColor(requireContext().getColorStateList(com.critx.shwemiAdmin.R.color.edit_text_color))
+//        }
 
 
 
@@ -406,15 +406,15 @@ class AddCategoryFragment : Fragment() {
             }
 
         }
-        sharedViewModel.recommendCatList.observe(viewLifecycleOwner) { result ->
-            if (result.filterNotNull().isNotEmpty()) {
-//                selectedRecommendCat.clear()
-//                selectedRecommendCat.addAll(result)
-                binding.tvRecommendCat.setTextColor(requireContext().getColorStateList(com.critx.shwemiAdmin.R.color.primary_color))
-            } else {
-                binding.tvRecommendCat.setTextColor(requireContext().getColorStateList(com.critx.shwemiAdmin.R.color.edit_text_color))
-            }
-        }
+//        sharedViewModel.recommendCatList.observe(viewLifecycleOwner) { result ->
+//            if (result.filterNotNull().isNotEmpty()) {
+////                selectedRecommendCat.clear()
+////                selectedRecommendCat.addAll(result)
+//                binding.tvRecommendCat.setTextColor(requireContext().getColorStateList(com.critx.shwemiAdmin.R.color.primary_color))
+//            } else {
+//                binding.tvRecommendCat.setTextColor(requireContext().getColorStateList(com.critx.shwemiAdmin.R.color.edit_text_color))
+//            }
+//        }
 
 
         binding.ivImage1.setOnClickListener {
@@ -463,18 +463,18 @@ class AddCategoryFragment : Fragment() {
                 uploadFile(EDIT_CATEGORY)
             }
         }
-        binding.mcvRecommendAhtal.setOnClickListener {
-            findNavController().navigate(
-                AddCategoryFragmentDirections.actionAddCategoryFragmentToRecommendStockFragment(args.category)
-            )
-        }
-        binding.mcvChooseDesign.setOnClickListener {
-            findNavController().navigate(
-                AddCategoryFragmentDirections.actionAddCategoryFragmentToDesignListFragment(
-                    args.type.id
-                )
-            )
-        }
+//        binding.mcvRecommendAhtal.setOnClickListener {
+//            findNavController().navigate(
+//                AddCategoryFragmentDirections.actionAddCategoryFragmentToRecommendStockFragment(args.category)
+//            )
+//        }
+//        binding.mcvChooseDesign.setOnClickListener {
+//            findNavController().navigate(
+//                AddCategoryFragmentDirections.actionAddCategoryFragmentToDesignListFragment(
+//                    args.type.id
+//                )
+//            )
+//        }
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
 

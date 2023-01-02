@@ -142,8 +142,8 @@ class CollectStockDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getGoldSmithList(token: String): List<GoldSmithListDto> {
-        val response = collectStockService.getGoldSmitList(token)
+    override suspend fun getGoldSmithList(token: String,type: String): List<GoldSmithListDto> {
+        val response = collectStockService.getGoldSmitList(token,type)
         return if (response.isSuccessful) {
             response.body()?.data ?: throw Exception("Response body Null")
         } else {

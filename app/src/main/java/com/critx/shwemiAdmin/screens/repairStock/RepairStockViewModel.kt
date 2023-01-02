@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
+import com.critx.domain.model.repairStock.JobDomain
 import com.critx.domain.model.repairStock.JobDoneDomain
 import com.critx.domain.useCase.collectStock.GetGoldSmithListUseCase
 import com.critx.domain.useCase.repairStock.ChargeRepairStockUseCase
@@ -34,6 +35,13 @@ class RepairStockViewModel @Inject constructor(
         get() = _jobDoneLiveData
     fun resetJobDoneLiveData(){
         _jobDoneLiveData.value = null
+    }
+    fun removeJobDone(item:String){
+        val itemToRemove = _jobDoneLiveData.value!!.data!!.data.toMutableList().find { it.id == item }
+        _jobDoneLiveData.value!!.data!!.data.toMutableList().remove(
+            itemToRemove
+        )
+        _jobDoneLiveData.value = _jobDoneLiveData.value
     }
 
     private var _chargeRepairStockLivedata= MutableLiveData<Resource<String>>()
@@ -97,7 +105,7 @@ class RepairStockViewModel @Inject constructor(
 
     fun getGoldSmithList(){
         viewModelScope.launch {
-            getGoldSmithListUseCase(localDatabase.getToken().orEmpty()).collectLatest {
+            getGoldSmithListUseCase(localDatabase.getToken().orEmpty(),"in").collectLatest {
                 when(it){
                     is Resource.Loading->{
                         _goldSmithListLiveData.value = Resource.Loading()

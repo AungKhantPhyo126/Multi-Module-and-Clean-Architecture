@@ -6,6 +6,6 @@ import javax.inject.Inject
 class GetGoldSmithListUseCase @Inject constructor(
     private val collectStockRepository: CollectStockRepository
 ) {
-    operator fun invoke(token: String) =
-        collectStockRepository.getGoldSmithList(token)
+    operator fun invoke(token: String,type:String) =
+        collectStockRepository.getGoldSmithList(token,type)
 }

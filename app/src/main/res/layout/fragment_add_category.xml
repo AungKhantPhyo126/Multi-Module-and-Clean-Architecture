@@ -480,7 +480,8 @@
             app:layout_constraintEnd_toStartOf="@+id/cb_order_to_gs"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="@+id/tv_label_category"
-            app:layout_constraintTop_toBottomOf="@+id/cb_has_gem" />
+            app:layout_constraintTop_toBottomOf="@+id/cb_has_gem"
+            app:layout_constraintBottom_toTopOf="@id/include_recommend_category"/>
 
         <CheckBox
             android:id="@+id/cb_order_to_gs"
@@ -494,87 +495,6 @@
             app:layout_constraintStart_toEndOf="@+id/cb_frequently_used"
             app:layout_constraintTop_toTopOf="@+id/cb_frequently_used" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/mcv_recommend_ahtal"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="16dp"
-            app:layout_constraintBottom_toTopOf="@+id/mcv_choose_design"
-            app:layout_constraintEnd_toEndOf="@id/cb_order_to_gs"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@id/cb_frequently_used"
-            app:layout_constraintTop_toBottomOf="@+id/cb_frequently_used">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:weightSum="8">
-
-                <TextView
-                    android:id="@+id/tv_recommend_cat"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="7"
-                    android:gravity="center"
-                    android:text="@string/reconmend_ahtal"
-                    android:textAppearance="@style/TextAppearance.ShweMi.Body2"
-                    android:textColor="@color/edit_text_color" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|center"
-                    android:src="@drawable/ic_right_arrow"
-                    app:tint="@color/primary_color" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/mcv_choose_design"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="16dp"
-            app:layout_constraintBottom_toTopOf="@+id/btn_confirm"
-            app:layout_constraintEnd_toEndOf="@id/cb_order_to_gs"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@id/cb_frequently_used"
-            app:layout_constraintTop_toBottomOf="@+id/mcv_recommend_ahtal">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:weightSum="8">
-
-                <TextView
-                    android:id="@+id/tv_choose_design"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="7"
-                    android:gravity="center"
-                    android:text="@string/choose_design"
-                    android:textAppearance="@style/TextAppearance.ShweMi.Body2"
-                    android:textColor="@color/edit_text_color" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|center"
-                    android:src="@drawable/ic_right_arrow"
-                    app:tint="@color/primary_color" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
         <CheckBox
             android:id="@+id/cb_has_gem"
             android:layout_width="wrap_content"
@@ -584,5 +504,21 @@
             android:text="With Gem"
             app:layout_constraintStart_toStartOf="@+id/tv_label_video_gif"
             app:layout_constraintTop_toBottomOf="@+id/mcv_video" />
+        <include
+            layout="@layout/include_sample_take_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/include_choose_design"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btn_confirm"/>
+        <include
+            layout="@layout/include_sample_take_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/include_recommend_category"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/include_choose_design"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -14,6 +14,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.critx.common.ui.createChip
 import com.critx.common.ui.getAlertDialog
 import com.critx.common.ui.showSuccessDialog
@@ -29,10 +31,32 @@ import okhttp3.RequestBody.Companion.toRequestBody
 @AndroidEntryPoint
 class RepairStockFragment:Fragment() {
     private lateinit var binding: FragmentRepairStockBinding
+    private lateinit var adapter :RepairStockJobRecyclerAdapter
+
     private val viewModel by viewModels<RepairStockViewModel>()
     private lateinit var loadingDialog: AlertDialog
     var checkedGoldSmith = ""
 
+    val swipeFlag =ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+    val callback = object : ItemTouchHelper.SimpleCallback(0,swipeFlag) {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            return false
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            viewModel.removeJobDone(viewHolder.itemId.toString())
+        }
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
 
     private fun toolbarsetup(){
 
@@ -63,10 +87,12 @@ class RepairStockFragment:Fragment() {
         binding.btnAssignGs.setOnClickListener {
             findNavController().navigate(RepairStockFragmentDirections.actionRepairStockFragmentToAssignGsFragment(checkedGoldSmith))
         }
-        val adapter = RepairStockJobRecyclerAdapter()
+        adapter = RepairStockJobRecyclerAdapter()
         binding.rvJob.adapter=adapter
-
+        val helper =ItemTouchHelper(callback)
+        helper.attachToRecyclerView(binding.rvJob)
         binding.chipGroupGs.setOnCheckedStateChangeListener { group, checkedIds ->
+            binding.btnAssignGs.isEnabled = checkedIds.isNotEmpty()
             if (checkedIds.isNotEmpty()){
                 checkedGoldSmith = checkedIds[0].toString()
                 viewModel.getJobDone(checkedIds[0].toString())
@@ -74,6 +100,8 @@ class RepairStockFragment:Fragment() {
                 checkedGoldSmith = ""
             }
         }
+
+
 
         binding.mcvServiceGs.setOnClickListener {
             if (checkedGoldSmith.isNullOrEmpty()){
@@ -113,7 +141,7 @@ class RepairStockFragment:Fragment() {
                     loadingDialog.dismiss()
                     binding.tvJobDoneValue.text = it.data!!.number_of_job_done
                     adapter.submitList(it.data!!.data)
-                    viewModel.resetJobDoneLiveData()
+//                    viewModel.resetJobDoneLiveData()
                 }
                 is Resource.Error->{
                     loadingDialog.dismiss()

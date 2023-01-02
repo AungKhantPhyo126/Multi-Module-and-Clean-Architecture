@@ -103,13 +103,13 @@ class CollectStockRepositoryImpl @Inject constructor(
             }
         }
 
-    override fun getGoldSmithList(token: String): Flow<Resource<List<GoldSmithListDomain>>> =
+    override fun getGoldSmithList(token: String,type: String): Flow<Resource<List<GoldSmithListDomain>>> =
         flow {
             emit(Resource.Loading())
             try {
                 emit(
                     Resource.Success(
-                        collectStockDataSource.getGoldSmithList(token).map { it.asDomain() }
+                        collectStockDataSource.getGoldSmithList(token,type).map { it.asDomain() }
                     )
                 )
             } catch (e: HttpException) {

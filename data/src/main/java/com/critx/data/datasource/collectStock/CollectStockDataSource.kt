@@ -16,7 +16,7 @@ interface CollectStockDataSource {
 
     suspend fun getJewellerySize(token: String, type: String): List<JewellerySizeDto>
 
-    suspend fun getGoldSmithList(token: String):List<GoldSmithListDto>
+    suspend fun getGoldSmithList(token: String, type: String):List<GoldSmithListDto>
 
     suspend fun collectBatch(
         token: String,

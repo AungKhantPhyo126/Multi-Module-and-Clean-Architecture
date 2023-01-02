@@ -134,7 +134,7 @@ class AssignGsFragment :Fragment(){
                 binding.tvLabelSecond.background = requireContext().getDrawable(R.drawable.circle_bg_grey)
             }else{
                 binding.btnAssignGs.text = "Step 2"
-                viewModel.getRepairJobs("4")
+                viewModel.getRepairJobs(it)
                 binding.tvLabelSecond.background =requireContext().getDrawable(R.drawable.circle_bg_text)
             }
         }
