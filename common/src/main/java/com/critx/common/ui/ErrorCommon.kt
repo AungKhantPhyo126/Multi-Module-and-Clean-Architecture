@@ -13,6 +13,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.critx.common.R
+import com.github.chrisbanes.photoview.PhotoView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 fun Context.showErrorCommonUI(errorMessage:String){
@@ -77,5 +78,15 @@ fun getBitMapWithGlide(url: String?,context: Context) =Glide.with(context).asBit
 fun AutoCompleteTextView.showDropdown(adapter: ArrayAdapter<String>?) {
     if (!TextUtils.isEmpty(this.text.toString())) {
         adapter?.filter?.filter(null)
+    }
+}
+
+fun loadImageUrlPhotoView(photoView: PhotoView, imgUrl: String?) {
+    imgUrl?.let {
+        Glide.with(photoView.context).load(it)
+            .apply(
+                RequestOptions.placeholderOf(R.drawable.loading_animation)
+                    .error(R.drawable.ic_broken_image)
+            ).into(photoView)
     }
 }

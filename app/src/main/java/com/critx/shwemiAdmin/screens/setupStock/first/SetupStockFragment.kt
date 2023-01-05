@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.children
 import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -97,18 +98,22 @@ class SetupStockFragment : Fragment() {
 
         var checkedChipId = 0
         binding.chipGroupJewelleryType.setOnCheckedStateChangeListener { group, checkedIds ->
-            for (index in 0 until group.childCount) {
-                val chip = group[index] as Chip
-                if (chip.isChecked) {
+            val selectedChip = binding.chipGroupJewelleryType.children.toList().find {
+                (it as Chip).isChecked
+            }
+            if (selectedChip!=null){
+                    val chip = selectedChip as Chip
                     checkedChipId = chip.id
                     binding.tvFirstCat.setTextColor(requireContext().getColor(R.color.primary_color))
                     binding.tvFirstCat.text = chip.text
                     binding.ivFirst.isVisible = true
-                }else binding.ivFirst.isVisible = false
+            }else{
+                binding.tvFirstCat.text = requireContext().getString(R.string.jewellery_type)
+                binding.ivFirst.isVisible = false
             }
 
-
         }
+
         binding.btnNext.setOnClickListener {
             if (binding.tvFirstCat.text != requireContext().getString(R.string.jewellery_type)) {
                 findNavController().navigate(

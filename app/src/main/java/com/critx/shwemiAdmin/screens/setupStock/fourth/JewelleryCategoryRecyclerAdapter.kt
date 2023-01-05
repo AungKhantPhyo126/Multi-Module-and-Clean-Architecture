@@ -25,7 +25,9 @@ class JewelleryCategoryRecyclerAdapter(
     private val onclick: (id: JewelleryCategoryUiModel) -> Unit,
     private val addNewClick: () -> Unit,
     private val navigateToEditClick:(item:JewelleryCategoryUiModel)->Unit,
-    private val deleteClick:(id:String)->Unit
+    private val deleteClick:(id:String)->Unit,
+    private val eyeClick:(imageUrl:String)->Unit
+
 
 ) : ListAdapter<JewelleryCategoryUiModel, RecyclerView.ViewHolder>(
     ChooseJewelleryCategoryDiffUtil
@@ -52,7 +54,7 @@ class JewelleryCategoryRecyclerAdapter(
             ImageViewHolder(
                 ItemImageSelectionBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
-                ), onclick,navigateToEditClick,deleteClick
+                ), onclick,navigateToEditClick,deleteClick,eyeClick
             )
         } else {
             AddItemViewHolder(
@@ -95,13 +97,18 @@ class ImageViewHolder(
     private val binding: ItemImageSelectionBinding,
     private val onclick: (id: JewelleryCategoryUiModel) -> Unit,
     private val navigateToEditClick:(item:JewelleryCategoryUiModel)->Unit,
-    private val deleteClick:(id:String)->Unit
+    private val deleteClick:(id:String)->Unit,
+    private val eyeClick:(imageUrl:String)->Unit
+
 
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(data: JewelleryCategoryUiModel) {
         binding.ivImage.loadImageWithGlide(data.imageUrlList[0])
+        binding.ivEye.setOnClickListener {
+            eyeClick(data.imageUrlList[0])
+        }
         binding.mcvImageCard.setOnClickListener {
             onclick(data)
         }

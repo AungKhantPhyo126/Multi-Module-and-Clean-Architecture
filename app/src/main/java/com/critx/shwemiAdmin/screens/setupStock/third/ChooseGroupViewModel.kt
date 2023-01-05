@@ -113,6 +113,12 @@ class ChooseGroupViewModel @Inject constructor(
 
 
     }
+    fun deSelectAll() {
+        _getGroupLiveData.value!!.data!!.filterNotNull().forEach {
+            it.isChecked = false
+        }
+        _getGroupLiveData.value = _getGroupLiveData.value
+    }
 
 
 }

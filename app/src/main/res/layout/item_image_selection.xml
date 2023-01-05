@@ -15,13 +15,25 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ImageView
-            android:id="@+id/iv_image"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:src="@drawable/dummy_chip_image"
-            android:scaleType="fitXY"
-            />
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/iv_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:src="@drawable/dummy_chip_image"
+                android:scaleType="fitXY"
+                />
+            <ImageView
+                android:id="@+id/iv_eye"
+                android:layout_margin="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/eye" />
+
+        </FrameLayout>
+
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
 

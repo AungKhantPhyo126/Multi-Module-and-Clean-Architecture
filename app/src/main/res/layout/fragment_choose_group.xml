@@ -5,82 +5,90 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_first_cat"
-        android:layout_width="wrap_content"
+    <HorizontalScrollView
+        android:id="@+id/selection_scroll"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="14dp"
-        android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
-        android:textColor="@color/primary_color"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/jewellery_type" />
-
-    <ImageView
-        android:id="@+id/iv_first"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_first_cat"
-        app:layout_constraintStart_toEndOf="@+id/tv_first_cat"
-        app:layout_constraintTop_toTopOf="@+id/tv_first_cat"
-        app:srcCompat="@drawable/ic_right_arrow" />
-
-    <TextView
-        android:id="@+id/tv_second_cat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="14dp"
-        android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
-        android:textColor="@color/primary_color"
-        app:layout_constraintStart_toEndOf="@id/iv_first"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/item" />
-
-    <ImageView
-        android:id="@+id/iv_second"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_second_cat"
-        app:layout_constraintStart_toEndOf="@+id/tv_second_cat"
-        app:layout_constraintTop_toTopOf="@+id/tv_second_cat"
-        app:srcCompat="@drawable/ic_right_arrow" />
-
-    <TextView
-        android:id="@+id/tv_third_cat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="14dp"
-        android:text="@string/item"
-        android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
-        android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@id/iv_second"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/iv_third_cat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_third_cat"
-        app:layout_constraintStart_toEndOf="@+id/tv_third_cat"
-        app:layout_constraintTop_toTopOf="@+id/tv_third_cat"
-        app:srcCompat="@drawable/ic_right_arrow" />
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_margin="12dp"
-        android:background="@color/divider_grey"
+        android:layout_margin="16dp"
+        android:fillViewport="true"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_first_cat" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_first_cat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/jewellery_type"
+                android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2" />
+
+            <ImageView
+                android:id="@+id/iv_first"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_right_arrow" />
+
+            <TextView
+                android:id="@+id/tv_second_cat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/item"
+                android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2" />
+
+            <ImageView
+                android:id="@+id/iv_second"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_right_arrow" />
+
+            <TextView
+                android:id="@+id/tv_third_cat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/item"
+                android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/iv_third_cat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/ic_right_arrow" />
+
+            <TextView
+                android:id="@+id/tv_fourth_cat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/item"
+                android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/iv_fourth_cat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/ic_right_arrow" />
+
+            <!--            <View-->
+            <!--                android:id="@+id/view"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="1dp"-->
+            <!--                android:background="@color/divider_grey"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@id/tv_first_cat" />-->
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </HorizontalScrollView>
+
 
     <TextView
         android:id="@+id/tv_label_group"
@@ -89,17 +97,19 @@
         android:layout_marginTop="16dp"
         android:text="@string/group"
         android:textAppearance="@style/TextAppearance.ShweMi.Headline6"
-        app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        app:layout_constraintStart_toStartOf="@+id/selection_scroll"
+        app:layout_constraintTop_toBottomOf="@+id/selection_scroll" />
+
     <ScrollView
-        android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
+        android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@id/btn_next"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cb_frequently_used">
+
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group_choose_gp"
             android:layout_width="wrap_content"
@@ -114,21 +124,18 @@
     </ScrollView>
 
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_images"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="invisible"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/btn_next"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cb_frequently_used"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        tools:listitem="@layout/item_image_selection"
-        app:spanCount="2"/>
-
-
+        app:spanCount="2"
+        tools:listitem="@layout/item_image_selection" />
 
 
     <com.google.android.material.button.MaterialButton
@@ -151,8 +158,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:text="@string/next"
         android:paddingVertical="14dp"
+        android:text="@string/next"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -174,8 +181,8 @@
         android:id="@+id/cb_image_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/image_view"
         android:buttonTint="@color/primary_color"
+        android:text="@string/image_view"
         app:layout_constraintBottom_toBottomOf="@+id/cb_frequently_used"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

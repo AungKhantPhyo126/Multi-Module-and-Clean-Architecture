@@ -1,91 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <TextView
-            android:id="@+id/tv_first_cat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="14dp"
-            android:textColor="@color/primary_color"
-            tools:text="@string/jewellery_type"
-            android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/iv_first"
-            android:layout_width="wrap_content"
+        <HorizontalScrollView
+            android:id="@+id/selection_scroll"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_first_cat"
-            app:layout_constraintStart_toEndOf="@+id/tv_first_cat"
-            app:layout_constraintTop_toTopOf="@+id/tv_first_cat"
-            app:srcCompat="@drawable/ic_right_arrow" />
-
-        <TextView
-            android:id="@+id/tv_second_cat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="14dp"
-            android:text="@string/item"
-            android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
-            android:visibility="invisible"
-            app:layout_constraintStart_toEndOf="@id/iv_first"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/iv_second"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_second_cat"
-            app:layout_constraintStart_toEndOf="@+id/tv_second_cat"
-            app:layout_constraintTop_toTopOf="@+id/tv_second_cat"
-            app:srcCompat="@drawable/ic_right_arrow" />
-
-        <TextView
-            android:id="@+id/tv_third_cat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="14dp"
-            android:text="@string/item"
-            android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
-            android:visibility="invisible"
-            app:layout_constraintStart_toEndOf="@id/iv_second"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/iv_third_cat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_third_cat"
-            app:layout_constraintStart_toEndOf="@+id/tv_third_cat"
-            app:layout_constraintTop_toTopOf="@+id/tv_third_cat"
-            app:srcCompat="@drawable/ic_right_arrow" />
-
-        <View
-            android:id="@+id/view"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_margin="12dp"
-            android:background="@color/divider_grey"
+            android:layout_margin="16dp"
+            android:fillViewport="true"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_first_cat" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_first_cat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/jewellery_type"
+                    android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2" />
+
+                <ImageView
+                    android:id="@+id/iv_first"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_right_arrow" />
+
+                <TextView
+                    android:id="@+id/tv_second_cat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/item"
+                    android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_second"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/ic_right_arrow" />
+
+                <TextView
+                    android:id="@+id/tv_third_cat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/item"
+                    android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_third_cat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/ic_right_arrow" />
+
+                <TextView
+                    android:id="@+id/tv_fourth_cat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/item"
+                    android:textAppearance="@style/TextAppearance.ShweMi.Subtitle2"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_fourth_cat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/ic_right_arrow" />
+
+                <!--            <View-->
+                <!--                android:id="@+id/view"-->
+                <!--                android:layout_width="match_parent"-->
+                <!--                android:layout_height="1dp"-->
+                <!--                android:background="@color/divider_grey"-->
+                <!--                app:layout_constraintEnd_toEndOf="parent"-->
+                <!--                app:layout_constraintStart_toStartOf="parent"-->
+                <!--                app:layout_constraintTop_toBottomOf="@id/tv_first_cat" />-->
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </HorizontalScrollView>
+
 
         <TextView
             android:id="@+id/tv_label_jewellery_quality"
@@ -94,29 +104,31 @@
             android:layout_marginTop="16dp"
             android:text="Jewellery Quality"
             android:textAppearance="@style/TextAppearance.ShweMi.Headline6"
-            app:layout_constraintStart_toStartOf="@+id/view"
-            app:layout_constraintTop_toBottomOf="@+id/view" />
-<ScrollView
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:orientation="vertical"
-    android:fillViewport="true"
-    app:layout_constraintTop_toBottomOf="@id/tv_label_jewellery_quality"
-    app:layout_constraintBottom_toTopOf="@id/btn_next"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    android:layout_margin="16dp">
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chip_group_jewellery_quality"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:chipSpacing="8dp"
-        app:singleLine="false"
-        app:singleSelection="true">
+            app:layout_constraintStart_toStartOf="@+id/selection_scroll"
+            app:layout_constraintTop_toBottomOf="@+id/selection_scroll" />
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="16dp"
+            android:fillViewport="true"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@id/btn_next"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_label_jewellery_quality">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_jewellery_quality"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipSpacing="8dp"
+                app:singleLine="false"
+                app:singleSelection="true">
 
 
-    </com.google.android.material.chip.ChipGroup>
-</ScrollView>
+            </com.google.android.material.chip.ChipGroup>
+        </ScrollView>
 
 
         <com.google.android.material.button.MaterialButton

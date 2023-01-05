@@ -34,38 +34,7 @@ class AddCategoryViewModel @Inject constructor(
     private val getRelatedCategoryUseCase: GetRelatedCategoryUseCase,
     private val localDatabase: LocalDatabase
 ) : ViewModel() {
-    var selectedImgUri1 = MutableLiveData<SelectedImage?>(null)
-    var selectedImgUri2 = MutableLiveData<SelectedImage?>(null)
-    var selectedImgUri3 = MutableLiveData<SelectedImage?>(null)
-    var selectedVideoUri = MutableLiveData<File?>(null)
-    var selectedGifUri = MutableLiveData<SelectedImage?>(null)
-    var calculatedKPYtoGram: Double? = null
-    var selectedDesignIds: MutableList<Int>? = null
-//    var selectedRecommendCat = MutableLiveData<List<Int>?>(null)
 
-    fun setSelectedImgUri1(selectedImage: SelectedImage?) {
-        selectedImgUri1.value = selectedImage
-    }
-
-    fun setSelectedImgUri2(selectedImage: SelectedImage?) {
-        selectedImgUri2?.value = selectedImage
-    }
-
-    fun setSelectedImgUri3(selectedImage: SelectedImage?) {
-        selectedImgUri3?.value = selectedImage
-    }
-
-    fun setSelectedGif(selectedImage: SelectedImage?) {
-        selectedGifUri?.value = selectedImage
-    }
-
-    fun setSelectedVideo(selectedVideo: File?) {
-        selectedVideoUri?.value = selectedVideo
-    }
-
-//    fun setSelectedRecommendCat(selectedCats: List<Int>?) {
-//        selectedRecommendCat?.value = selectedCats
-//    }
 
     private val _createJewelleryCategory = MutableStateFlow(JewelleryCategoryUiState())
     val createJewelleryCategoryState = _createJewelleryCategory.asStateFlow()

@@ -25,7 +25,8 @@ class ImageRecyclerAdapter(
     private val deleteClick:(id:String)->Unit,
     private val onclick: (id: ChooseGroupUIModel) -> Unit,
     private val addNewClick: () -> Unit,
-    private val navigateToEditClick:(item:ChooseGroupUIModel)->Unit
+    private val navigateToEditClick:(item:ChooseGroupUIModel)->Unit,
+    private val eyeClick:(imageUrl:String)->Unit
 
 ) : ListAdapter<ChooseGroupUIModel, RecyclerView.ViewHolder>(
     ChooseGroupDiffUtil
@@ -52,7 +53,7 @@ class ImageRecyclerAdapter(
             ImageViewHolder(
                 ItemImageSelectionBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
-                ),deleteClick, onclick,navigateToEditClick
+                ),deleteClick, onclick,navigateToEditClick,eyeClick
             )
         } else {
             AddItemViewHolder(
@@ -95,12 +96,17 @@ class ImageViewHolder(
     private val binding: ItemImageSelectionBinding,
     private val deleteClick: (id: String) -> Unit,
     private val onclick: (id: ChooseGroupUIModel) -> Unit,
-    private val navigateToEditClick:(item:ChooseGroupUIModel)->Unit
+    private val navigateToEditClick:(item:ChooseGroupUIModel)->Unit,
+    private val eyeClick:(imageUrl:String)->Unit
+
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(data: ChooseGroupUIModel) {
         binding.ivImage.loadImageWithGlide(data.imageUrl)
+        binding.ivEye.setOnClickListener {
+            eyeClick(data.imageUrl)
+        }
         binding.mcvImageCard.setOnClickListener {
             onclick(data)
         }

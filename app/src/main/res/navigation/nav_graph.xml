@@ -306,4 +306,15 @@
             android:name="jewelleryTypeId"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/photoViewFragment"
+        android:name="com.critx.shwemiAdmin.screens.PhotoViewFragment"
+        android:label="PhotoViewFragment" >
+        <argument
+            android:name="imageUrl"
+            app:argType="string" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_photoViewFragment"
+        app:destination="@id/photoViewFragment" />
 </navigation>

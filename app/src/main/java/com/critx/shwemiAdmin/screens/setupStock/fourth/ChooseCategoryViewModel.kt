@@ -1,23 +1,13 @@
 package com.critx.shwemiAdmin.screens.setupStock.third
 
 import androidx.lifecycle.*
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import androidx.paging.map
 import com.critx.commonkotlin.util.Resource
-import com.critx.domain.model.SetupStock.jewelleryCategory.JewelleryCategory
-import com.critx.domain.useCase.SetUpStock.CreateJewelleryGroupUseCase
 import com.critx.domain.useCase.SetUpStock.DeleteJewelleryCategoryUseCase
 import com.critx.domain.useCase.SetUpStock.GetJewelleryCategoryUseCase
-import com.critx.domain.useCase.SetUpStock.GetJewelleryGroupUseCase
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
-import com.critx.shwemiAdmin.uiModel.setupStock.ChooseGroupUIModel
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryCategoryUiModel
 import com.critx.shwemiAdmin.uiModel.setupStock.asUiModel
-import com.critx.shwemiAdmin.uistate.JewelleryCategoryUiState
-import com.critx.shwemiAdmin.uistate.JewelleryGroupUiState
-import com.critx.shwemiAdmin.uistate.JewelleryQualityUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -33,53 +23,32 @@ class ChooseCategoryViewModel @Inject constructor(
 ) : ViewModel() {
     //forselection
 
-    var selectedJewelleryCategory = MutableLiveData<JewelleryCategoryUiModel?>(null)
-    val _selectedJewelleryCategory:LiveData<JewelleryCategoryUiModel?>
-    get() = selectedJewelleryCategory
-
-    fun setSelectedCategory(item:JewelleryCategoryUiModel?){
-        selectedJewelleryCategory.value = item
-    }
-
-    private val _getJewelleryCategory = MutableStateFlow(JewelleryCategoryUiState())
-    val getJewelleryCategory = _getJewelleryCategory.asStateFlow()
-
-    private val _deleteCategoryState = MutableStateFlow(JewelleryCategoryUiState())
-    val deleteCategoryState = _deleteCategoryState.asStateFlow()
+    private val _getJewelleryCategoryLiveData = MutableLiveData<Resource<List<JewelleryCategoryUiModel>>>()
+    val getJewelleryCategoryLiveData :LiveData<Resource<List<JewelleryCategoryUiModel>>>
+get() = _getJewelleryCategoryLiveData
+    private val _deleteLiveData = MutableLiveData<Resource<String>>()
+    val deleteLiveData :LiveData<Resource<String>>
+        get() = _deleteLiveData
 
     private var _event = MutableSharedFlow<UiEvent>()
     val event = _event.asSharedFlow()
 
-    fun deleteJewelleryCategory(id:String){
+    fun deleteJewelleryCategory(id: String) {
         val method = "DELETE"
-        val methodRequestBody =method.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val methodRequestBody = method.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         viewModelScope.launch {
-            deleteJewelleryCategoryUseCase(localDatabase.getToken().orEmpty(),methodRequestBody,id
-            ).collectLatest {result->
+            deleteJewelleryCategoryUseCase(
+                localDatabase.getToken().orEmpty(), methodRequestBody, id
+            ).collectLatest { result ->
                 when (result) {
                     is Resource.Loading -> {
-                        _deleteCategoryState.value = _deleteCategoryState.value.copy(
-                            deleteLoading = true
-                        )
+                        _deleteLiveData.value = Resource.Loading()
                     }
                     is Resource.Success -> {
-                        _deleteCategoryState.update { uiState ->
-                            uiState.copy(
-                                deleteLoading = false,
-                                deleteSuccessLoading = "Successfully Deleted"
-                            )
-
-                        }
-
-
+                        _deleteLiveData.value = Resource.Success(result.data!!.message)
                     }
                     is Resource.Error -> {
-                        _deleteCategoryState.value = _deleteCategoryState.value.copy(
-                            deleteLoading = false,
-                        )
-                        result.message?.let { errorString ->
-                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
-                        }
+                        _deleteLiveData.value = Resource.Error(result.message)
                     }
                 }
             }
@@ -97,66 +66,44 @@ class ChooseCategoryViewModel @Inject constructor(
             ).collectLatest { result ->
                 when (result) {
                     is Resource.Loading -> {
-                        _getJewelleryCategory.value = _getJewelleryCategory.value.copy(
-                            loading = true
-                        )
+                        _getJewelleryCategoryLiveData.value = Resource.Loading()
                     }
                     is Resource.Success -> {
-                        val resultList = mutableListOf<JewelleryCategoryUiModel?>(null)
-                        resultList.addAll(result.data!!.map { it.asUiModel() })
-                        _getJewelleryCategory.update { uiState ->
-                            uiState.copy(
-                                loading = false,
-                                successLoading = resultList as List<JewelleryCategoryUiModel>
-                            )
-                        }
+                        _getJewelleryCategoryLiveData.value =Resource.Success(result.data!!.map { it.asUiModel() })
 
 
                     }
                     is Resource.Error -> {
-                        _getJewelleryCategory.value = _getJewelleryCategory.value.copy(
-                            loading = false,
-                        )
-                        result.message?.let { errorString ->
-                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
-                        }
+                        _getJewelleryCategoryLiveData.value = Resource.Error(result.message)
                     }
                 }
             }
         }
     }
 
+
     fun selectImage(id: String) {
-        val groupImageList = _getJewelleryCategory.value.successLoading.orEmpty()
-        groupImageList.filterNotNull().filter {
+
+        _getJewelleryCategoryLiveData.value!!.data!!.filterNotNull().filter {
             it.id != id
         }.forEach {
             it.isChecked = false
         }
 
-        _getJewelleryCategory.update { uiState ->
-            groupImageList.filterNotNull().find {
-                it.id == id
-            }?.isChecked = groupImageList.filterNotNull().find {
-                it.id == id
-            }?.isChecked!!.not()
+        _getJewelleryCategoryLiveData.value!!.data!!.filterNotNull().find {
+            it.id == id
+        }?.isChecked = _getJewelleryCategoryLiveData.value!!.data!!.filterNotNull().find {
+            it.id == id
+        }?.isChecked!!.not()
 
-//            groupImageList.find {
-//                it.id == id
-//            }?.let {
-//                selectedJewelleryCategory.value = if (it.isChecked){
-//                    it
-//                }else{
-//                    null
-//                }
-//            }
+        _getJewelleryCategoryLiveData.value = _getJewelleryCategoryLiveData.value
 
-            uiState.copy(
-                successLoading = groupImageList
-            )
-
+    }
+    fun deSelectAll() {
+        _getJewelleryCategoryLiveData.value!!.data!!.filterNotNull().forEach {
+            it.isChecked = false
         }
-
+        _getJewelleryCategoryLiveData.value = _getJewelleryCategoryLiveData.value
     }
 
 

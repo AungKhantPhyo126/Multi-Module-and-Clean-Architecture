@@ -10,6 +10,7 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.children
 import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -109,15 +110,21 @@ class ChooseJewelleryQualityFragment : Fragment() {
 
         var checkedChipId = 0
         binding.chipGroupJewelleryQuality.setOnCheckedStateChangeListener { group, checkedIds ->
-            for (index in 0 until group.childCount) {
-                val chip = group[index] as Chip
-                if (chip.isChecked) {
-                    checkedChipId = chip.id
-                    binding.tvSecondCat.isVisible = true
-                    binding.tvSecondCat.setTextColor(requireContext().getColor(R.color.primary_color))
-                    binding.tvSecondCat.text = chip.text
-                    binding.ivSecond.isVisible = true
-                } else binding.ivSecond.isVisible = false
+            val selectedChip = binding.chipGroupJewelleryQuality.children.toList().find {
+                (it as Chip).isChecked
+            }
+            if (selectedChip!=null){
+                val chip = selectedChip as Chip
+                checkedChipId = chip.id
+                binding.tvSecondCat.setTextColor(requireContext().getColor(R.color.primary_color))
+                binding.tvSecondCat.text = chip.text
+                binding.ivSecond.isVisible = true
+                binding.tvSecondCat.isVisible = true
+
+            }else{
+                binding.tvSecondCat.text =""
+                binding.tvSecondCat.isVisible = false
+                binding.ivSecond.isVisible = false
             }
         }
 

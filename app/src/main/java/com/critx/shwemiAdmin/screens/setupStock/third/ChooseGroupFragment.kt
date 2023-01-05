@@ -150,11 +150,13 @@ class ChooseGroupFragment : Fragment() {
                         binding.chipGroupChooseGp.check(selectedItem.id.toInt())
                         selectedItem.name.let {
                             binding.tvThirdCat.isVisible = true
+                            binding.ivThirdCat.isVisible = true
                             binding.tvThirdCat.setTextColor(requireContext().getColor(R.color.primary_color))
                             binding.tvThirdCat.text = it
                         }
                     } else {
                         binding.tvThirdCat.isVisible = false
+                        binding.ivThirdCat.isVisible = false
                         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<ChooseGroupUIModel>(
                             CREATEED_GROUP_ID
                         )
@@ -240,6 +242,9 @@ class ChooseGroupFragment : Fragment() {
                 //navigateToEditClick
                 navigateWithEditView(it)
 
+            },{
+                //eye click
+                findNavController().navigate(ChooseGroupFragmentDirections.actionGlobalPhotoViewFragment(it))
             })
         binding.rvImages.adapter = adapter
 
@@ -297,11 +302,7 @@ class ChooseGroupFragment : Fragment() {
         }
 
 
-//        if (viewModel.selectedChooseGroupUIModel.value != null) {
-//            binding.chipGroupChooseGp.check(viewModel.selectedChooseGroupUIModel.value!!.id.toInt())
-//        } else {
-//            binding.tvThirdCat.isVisible = false
-//        }
+
 
         addChipView.setOnClickListener {
             navigateWithAddView()
@@ -309,21 +310,21 @@ class ChooseGroupFragment : Fragment() {
 
 
         binding.chipGroupChooseGp.setOnCheckedStateChangeListener { group, checkedIds ->
-            binding.chipGroupChooseGp.children.toList().find {
+            val selectedChip = binding.chipGroupChooseGp.children.toList().find {
                 (it as Chip).isChecked
-            }.let {
-                if (it != null) {
-                    val chip = it as Chip
-                    viewModel.selectImage(chip.id.toString())
-                }
+            }
+            if (selectedChip!=null){
+               viewModel.selectImage(selectedChip.id.toString())
+            }else{
+               viewModel.deSelectAll()
             }
 
-            binding.btnBack.setOnClickListener {
-//            viewModel.setSelectGroup(null)
-                findNavController().popBackStack()
-            }
+
         }
-
+        binding.btnBack.setOnClickListener {
+//            viewModel.setSelectGroup(null)
+            findNavController().popBackStack()
+        }
         fun refreshData() {
             viewModel.getJewelleryGroup(
                 frequentUse,
@@ -331,38 +332,6 @@ class ChooseGroupFragment : Fragment() {
                 args.secondCat.id.toInt()
             )
         }
-
-//    fun collectDataForRecyclerView() {
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//
-//                //getJewelleryGroup
-//                launch {
-//                    viewModel.getGroupState.collect { uiState ->
-//                        if (uiState.loading) {
-//                            loadingDialog.show()
-//                        } else loadingDialog.dismiss()
-//                        if (uiState.successLoading != null) {
-//                            adapter.submitList(uiState.successLoading)
-//                            adapter.notifyDataSetChanged()
-////                            setupChipView(uiState.successLoading.orEmpty())
-//                            uiState.successLoading?.find { uiModel ->
-//                                uiModel.isChecked
-//                            }?.let { checkedModel ->
-//                                if (checkedModel != null) {
-//                                    binding.tvThirdCat.isVisible = true
-//                                    binding.tvThirdCat.setTextColor(requireContext().getColor(R.color.primary_color))
-//                                    binding.tvThirdCat.text = checkedModel.name
-//                                } else {
-//                                    binding.tvThirdCat.isVisible = false
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
     }
 
 }
