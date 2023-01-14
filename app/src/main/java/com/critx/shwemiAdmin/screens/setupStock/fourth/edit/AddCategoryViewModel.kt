@@ -70,10 +70,18 @@ class AddCategoryViewModel @Inject constructor(
         _designInCatLiveData.value!!.add(item)
         _designInCatLiveData.value = _designInCatLiveData.value
     }
+    fun removeDesignByItem(item:DesignUiModel){
+        _designInCatLiveData.value!!.remove(item)
+        _designInCatLiveData.value = _designInCatLiveData.value
+    }
 
     private val _getRelatedCats = MutableLiveData<Resource<MutableList<JewelleryCategoryUiModel>>>()
     val getRelatedCats : LiveData<Resource<MutableList<JewelleryCategoryUiModel>>>
     get() = _getRelatedCats
+    fun resetLiveDataForBackPress(){
+        _getRelatedCats.value = null
+        _getDesign.value = null
+    }
 
     private var _event = MutableSharedFlow<UiEvent>()
     val event = _event.asSharedFlow()
