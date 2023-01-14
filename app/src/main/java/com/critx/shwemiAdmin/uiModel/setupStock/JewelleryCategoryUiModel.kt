@@ -19,7 +19,7 @@ data class JewelleryCategoryUiModel(
     val avgWeightPerUnitGm:Double?,
     val avgWastagePerUnitKpy:Double?,
     val avgKPYUiModel:AvgKPYUiModel,
-    val designsList:List<Int>
+    val designsList:List<DesignUiModel>
 ):Parcelable
 
 @Parcelize
@@ -43,7 +43,7 @@ fun JewelleryCategory.asUiModel():JewelleryCategoryUiModel{
         avgWastagePerUnitKpy =avgWastagePerUnitKpy,
         video = fileList.find { it.type == "video" }?.url,
         avgKPYUiModel = avgKPY.asUiModel(),
-        designsList = designs
+        designsList = designs.map { it.asUiModel() }
     )
 }
 

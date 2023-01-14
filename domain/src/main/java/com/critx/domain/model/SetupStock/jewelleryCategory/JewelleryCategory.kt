@@ -18,7 +18,7 @@ data class JewelleryCategory(
     val jewelleryQuality: JewelleryQuality,
     val jewelleryGroup:JewelleryGroup,
     val fileList:List<CategoryFile>,
-    val designs:List<Int>
+    val designs:List<DesignDomain>
 )
 data class AverageKPYDomain(
     val kyat:Double,

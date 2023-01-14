@@ -2,16 +2,17 @@ package com.critx.shwemiAdmin.screens.setupStock.fourth.edit
 
 import android.graphics.Bitmap
 import android.net.Uri
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
 import com.critx.domain.model.SetupStock.jewelleryCategory.CalculateKPY
+import com.critx.domain.model.SetupStock.jewelleryCategory.DesignDomain
 import com.critx.domain.useCase.SetUpStock.*
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.localDatabase.LocalDatabase
-import com.critx.shwemiAdmin.uiModel.setupStock.DesignUiModel
-import com.critx.shwemiAdmin.uiModel.setupStock.asUiModel
+import com.critx.shwemiAdmin.uiModel.setupStock.*
 import com.critx.shwemiAdmin.uistate.DesignUiState
 import com.critx.shwemiAdmin.uistate.JewelleryCategoryUiState
 import com.critx.shwemiAdmin.uistate.JewelleryGroupUiState
@@ -32,61 +33,84 @@ class AddCategoryViewModel @Inject constructor(
     private val calculateKPYUseCase: CalculateKPYUseCase,
     private val getDesignListUseCase: GetDesignListUseCase,
     private val getRelatedCategoryUseCase: GetRelatedCategoryUseCase,
-    private val localDatabase: LocalDatabase
-) : ViewModel() {
+    private val localDatabase: LocalDatabase,
+    private val getJewelleryTypeUseCase: GetJewelleryTypeUseCase,
+    private val getJewelleryQualityUseCase: GetJewelleryQualityUseCase,
+    private val getJewelleryGroupUseCase: GetJewelleryGroupUseCase,
+    private val getJewelleryCategoryUseCase: GetJewelleryCategoryUseCase,
 
 
-    private val _createJewelleryCategory = MutableStateFlow(JewelleryCategoryUiState())
-    val createJewelleryCategoryState = _createJewelleryCategory.asStateFlow()
+    ) : ViewModel() {
+    var selectedImgUri1: File? = null
+    var selectedImgUri2: File? = null
+    var selectedImgUri3: File? = null
+    var selectedGifUri: File? = null
+    var selectedVideoUri: File? = null
 
 
-    private val _getDesign = MutableStateFlow(DesignUiState())
-    val getDesign = _getDesign.asStateFlow()
+    private val _createJewelleryCategoryLiveData = MutableLiveData<Resource<JewelleryCategoryUiModel>>()
+    val createJewelleryCategoryLiveData :LiveData<Resource<JewelleryCategoryUiModel>>
+    get() = _createJewelleryCategoryLiveData
+    fun resetCreateLiveData(){
+        _createJewelleryCategoryLiveData.value = null
+    }
 
+    private val _getDesign =  MutableLiveData<Resource<List<DesignUiModel>>>()
+    val getDesignLiveData :LiveData<Resource<List<DesignUiModel>>>
+    get() = _getDesign
 
-    private val _getRelatedCats = MutableStateFlow(JewelleryCategoryUiState())
-    val getRelatedCats = _getRelatedCats.asStateFlow()
+    private val _designInCatLiveData =  MutableLiveData<MutableList<DesignUiModel>>()
+    val designInCatLiveDataLiveData :LiveData<MutableList<DesignUiModel>>
+        get() = _designInCatLiveData
+
+    fun addDesignWithList(list: MutableList<DesignUiModel>){
+        _designInCatLiveData.value = list
+    }
+    fun addDesignByItem(item:DesignUiModel){
+        _designInCatLiveData.value!!.add(item)
+        _designInCatLiveData.value = _designInCatLiveData.value
+    }
+
+    private val _getRelatedCats = MutableLiveData<Resource<MutableList<JewelleryCategoryUiModel>>>()
+    val getRelatedCats : LiveData<Resource<MutableList<JewelleryCategoryUiModel>>>
+    get() = _getRelatedCats
 
     private var _event = MutableSharedFlow<UiEvent>()
     val event = _event.asSharedFlow()
 
-    private val _editJewelleryCategoryState = MutableStateFlow(JewelleryCategoryUiState())
-    val editJewelleryCategoryState = _editJewelleryCategoryState.asStateFlow()
+    private val _editJewelleryCategoryState = MutableLiveData<Resource<String>>()
+    val editJewelleryCategoryState :LiveData<Resource<String>>
+    get() = _editJewelleryCategoryState
+    fun resetEditLiveData(){
+        _editJewelleryCategoryState.value = null
+    }
 
     fun getRelatedCat(id:String){
         viewModelScope.launch {
             getRelatedCategoryUseCase(localDatabase.getToken().orEmpty(),id).collectLatest { result ->
                 when (result) {
                     is Resource.Loading -> {
-                        _getRelatedCats.value = _getRelatedCats.value.copy(
-                            getRelatedCatsLoading = true
-                        )
+                        _getRelatedCats.value = Resource.Loading()
                     }
                     is Resource.Success -> {
-                        _getRelatedCats.update { uiState ->
-
-                            uiState.copy(
-                                getRelatedCatsLoading = false,
-                                getRelatedCatsSuccessLoading = result.data!!.map { it.asUiModel() }
-                            )
-                        }
-
-//                        result.data?.forEach {
-//                            selectImage(it.id)
-//                        }
+                        _getRelatedCats.value = Resource.Success(result.data!!.map { it.asUiModel() }.toMutableList())
                     }
                     is Resource.Error -> {
-                        _getRelatedCats.value = _getRelatedCats.value.copy(
-                            getRelatedCatsLoading = false,
-                        )
-                        result.message?.let { errorString ->
-                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
-                        }
+                        _getRelatedCats.value = Resource.Error(result.message)
                     }
                 }
 
             }
         }
+    }
+
+    fun removeRelatedCat(item:JewelleryCategoryUiModel){
+        _getRelatedCats.value!!.data!!.remove(item)
+        _getRelatedCats.value = _getRelatedCats.value
+    }
+    fun addRelatedCat(item:JewelleryCategoryUiModel){
+        _getRelatedCats.value!!.data!!.add(item)
+        _getRelatedCats.value = _getRelatedCats.value
     }
 
 
@@ -132,23 +156,13 @@ class AddCategoryViewModel @Inject constructor(
             ).collectLatest {
                 when (it) {
                     is Resource.Loading -> {
-                        _createJewelleryCategory.value = _createJewelleryCategory.value.copy(
-                            createLoading = true
-                        )
+                        _createJewelleryCategoryLiveData.value = Resource.Loading()
                     }
                     is Resource.Success -> {
-                        _createJewelleryCategory.value = _createJewelleryCategory.value.copy(
-                            createLoading = false,
-                            createSuccessLoading = it.data!!.asUiModel()
-                        )
+                        _createJewelleryCategoryLiveData.value = Resource.Success(it.data!!.asUiModel())
                     }
                     is Resource.Error -> {
-                        _createJewelleryCategory.value = _createJewelleryCategory.value.copy(
-                            createLoading = false
-                        )
-                        it.message?.let { errorString ->
-                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
-                        }
+                        _createJewelleryCategoryLiveData.value = Resource.Error(it.message)
                     }
                 }
             }
@@ -202,26 +216,13 @@ class AddCategoryViewModel @Inject constructor(
             ).collectLatest { result ->
                 when (result) {
                     is Resource.Loading -> {
-                        _editJewelleryCategoryState.value =
-                            _editJewelleryCategoryState.value.copy(
-                                editLoading = true
-                            )
+                        _editJewelleryCategoryState.value = Resource.Loading()
                     }
                     is Resource.Success -> {
-                        _editJewelleryCategoryState.value =
-                            _editJewelleryCategoryState.value.copy(
-                                editLoading = false,
-                                editSuccessLoading = "Category Updated"
-                            )
+                        _editJewelleryCategoryState.value = Resource.Success(result.data!!.message)
                     }
                     is Resource.Error -> {
-                        _editJewelleryCategoryState.value =
-                            _editJewelleryCategoryState.value.copy(
-                                editLoading = false
-                            )
-                        result.message?.let { errorString ->
-                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
-                        }
+                        _editJewelleryCategoryState.value = Resource.Error(result.message)
                     }
                 }
             }
@@ -236,30 +237,121 @@ class AddCategoryViewModel @Inject constructor(
             getDesignListUseCase(localDatabase.getToken().orEmpty(),jewelleryType).collectLatest {
                 when (it) {
                     is Resource.Loading -> {
-                        _getDesign.value = _getDesign.value.copy(
-                            loading = true
-                        )
+                        _getDesign.value = Resource.Loading()
                     }
                     is Resource.Success -> {
-                        _getDesign.value = _getDesign.value.copy(
-                            loading = false,
-                            success = it.data!!.map { it.asUiModel() }
-                        )
+                        _getDesign.value = Resource.Success(it.data!!.map { it.asUiModel() })
                     }
                     is Resource.Error -> {
-                        _getDesign.value = _getDesign.value.copy(
-                            loading = false,
-                        )
-                        it.message?.let { errorString ->
-                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
-                        }
+                        _getDesign.value = Resource.Error(it.message)
                     }
                 }
             }
         }
     }
 
+    private val _jewelleryTypeLiveData = MutableLiveData<Resource<List<JewelleryTypeUiModel>>>()
+    val jewelleryTypeState :LiveData<Resource<List<JewelleryTypeUiModel>>>
+        get() = _jewelleryTypeLiveData
 
+    fun getJewelleryType(){
+        viewModelScope.launch {
+            getJewelleryTypeUseCase(localDatabase.getToken().orEmpty()).collectLatest { result->
+                when(result){
+                    is Resource.Loading->{
+                        _jewelleryTypeLiveData.value =Resource.Loading()
+                    }
+                    is Resource.Success->{
+                        _jewelleryTypeLiveData.value =Resource.Success(result.data!!.map { it.asUiModel() })
+                    }
+                    is Resource.Error->{
+                        _jewelleryTypeLiveData.value =Resource.Error(result.message)
+                    }
+                }
+            }
+        }
+    }
+
+    private val _jewlleryQualityLiveData =MutableLiveData<Resource<List<JewelleryQualityUiModel>>>()
+    val jewelleryQualityLiveData :LiveData<Resource<List<JewelleryQualityUiModel>>>
+        get() = _jewlleryQualityLiveData
+
+    fun getJewelleryQuality(){
+        viewModelScope.launch {
+            getJewelleryQualityUseCase(localDatabase.getToken().orEmpty()).collectLatest { result->
+                when(result){
+                    is Resource.Loading->{
+                        _jewlleryQualityLiveData.value = Resource.Loading()
+                    }
+                    is Resource.Success->{
+                        _jewlleryQualityLiveData.value =Resource.Success(result.data!!.map { it.asUiModel() })
+                    }
+                    is Resource.Error->{
+                        _jewlleryQualityLiveData.value =Resource.Error(result.message)
+                    }
+                }
+            }
+        }
+    }
+
+    private val _getGroupLiveData = MutableLiveData<Resource<List<ChooseGroupUIModel>>>()
+    val getGroupLiveData: LiveData<Resource<List<ChooseGroupUIModel>>>
+        get() = _getGroupLiveData
+    fun getJewelleryGroup(isFrequentlyUse: Int, firstCatId: Int, secondCatId: Int) {
+        viewModelScope.launch {
+            getJewelleryGroupUseCase(
+                localDatabase.getToken().orEmpty(),
+                isFrequentlyUse,
+                firstCatId,
+                secondCatId
+            ).collectLatest { result ->
+                when (result) {
+                    is Resource.Loading -> {
+                        _getGroupLiveData.value = Resource.Loading()
+                    }
+                    is Resource.Success -> {
+                        _getGroupLiveData.value =
+                            Resource.Success(result.data!!.data.map { it.asUiModel() })
+                    }
+                    is Resource.Error -> {
+                        _getGroupLiveData.value = Resource.Error(result.message)
+                    }
+                }
+            }
+        }
+    }
+
+    private val _getJewelleryCategoryLiveData = MutableLiveData<Resource<List<JewelleryCategoryUiModel>>>()
+    val getJewelleryCategoryLiveData :LiveData<Resource<List<JewelleryCategoryUiModel>>>
+        get() = _getJewelleryCategoryLiveData
+    fun getJewelleryCategory(isFrequentlyUse: Int,firstCatId:Int,secondCatId:Int,thirdCatId:Int) {
+        viewModelScope.launch {
+            getJewelleryCategoryUseCase(
+                localDatabase.getToken().orEmpty(),
+                isFrequentlyUse,
+                firstCatId,
+                secondCatId,
+                thirdCatId
+            ).collectLatest { result ->
+                when (result) {
+                    is Resource.Loading -> {
+                        _getJewelleryCategoryLiveData.value = Resource.Loading()
+                    }
+                    is Resource.Success -> {
+                        _getJewelleryCategoryLiveData.value =Resource.Success(result.data!!.map { it.asUiModel() })
+                    }
+                    is Resource.Error -> {
+                        _getJewelleryCategoryLiveData.value = Resource.Error(result.message)
+                    }
+                }
+            }
+        }
+    }
+    fun resetLiveData(){
+        _jewelleryTypeLiveData.value=null
+        _jewlleryQualityLiveData.value=null
+        _getGroupLiveData.value=null
+    }
 }
 
 data class SelectedImage(

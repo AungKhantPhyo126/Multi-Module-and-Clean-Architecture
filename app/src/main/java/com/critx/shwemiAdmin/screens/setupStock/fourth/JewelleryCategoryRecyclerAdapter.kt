@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupWindow
+import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
@@ -26,8 +27,8 @@ class JewelleryCategoryRecyclerAdapter(
     private val addNewClick: () -> Unit,
     private val navigateToEditClick:(item:JewelleryCategoryUiModel)->Unit,
     private val deleteClick:(id:String)->Unit,
-    private val eyeClick:(imageUrl:String)->Unit
-
+    private val eyeClick:(imageUrl:String)->Unit,
+    private val isEyeVisible:Boolean
 
 ) : ListAdapter<JewelleryCategoryUiModel, RecyclerView.ViewHolder>(
     ChooseJewelleryCategoryDiffUtil
@@ -54,7 +55,7 @@ class JewelleryCategoryRecyclerAdapter(
             ImageViewHolder(
                 ItemImageSelectionBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
-                ), onclick,navigateToEditClick,deleteClick,eyeClick
+                ), onclick,navigateToEditClick,deleteClick,eyeClick,isEyeVisible
             )
         } else {
             AddItemViewHolder(
@@ -98,13 +99,14 @@ class ImageViewHolder(
     private val onclick: (id: JewelleryCategoryUiModel) -> Unit,
     private val navigateToEditClick:(item:JewelleryCategoryUiModel)->Unit,
     private val deleteClick:(id:String)->Unit,
-    private val eyeClick:(imageUrl:String)->Unit
-
+    private val eyeClick:(imageUrl:String)->Unit,
+    private val isEyeVisible:Boolean
 
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(data: JewelleryCategoryUiModel) {
+        binding.ivEye.isVisible = isEyeVisible
         binding.ivImage.loadImageWithGlide(data.imageUrlList[0])
         binding.ivEye.setOnClickListener {
             eyeClick(data.imageUrlList[0])

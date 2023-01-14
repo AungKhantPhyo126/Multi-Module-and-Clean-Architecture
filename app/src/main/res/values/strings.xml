@@ -156,4 +156,5 @@
     <string name="taken_sample_items">Taken Sample Items</string>
     <string name="no_sample_taken">No Sample Taken</string>
     <string name="new_order">New Order</string>
+    <string name="remove">remove</string>
 </resources>

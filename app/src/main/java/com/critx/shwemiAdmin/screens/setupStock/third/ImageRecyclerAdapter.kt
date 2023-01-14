@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupWindow
+import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
@@ -26,7 +27,9 @@ class ImageRecyclerAdapter(
     private val onclick: (id: ChooseGroupUIModel) -> Unit,
     private val addNewClick: () -> Unit,
     private val navigateToEditClick:(item:ChooseGroupUIModel)->Unit,
-    private val eyeClick:(imageUrl:String)->Unit
+    private val eyeClick:(imageUrl:String)->Unit,
+    private val isEyeVisible:Boolean
+
 
 ) : ListAdapter<ChooseGroupUIModel, RecyclerView.ViewHolder>(
     ChooseGroupDiffUtil
@@ -53,7 +56,7 @@ class ImageRecyclerAdapter(
             ImageViewHolder(
                 ItemImageSelectionBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
-                ),deleteClick, onclick,navigateToEditClick,eyeClick
+                ),deleteClick, onclick,navigateToEditClick,eyeClick,isEyeVisible
             )
         } else {
             AddItemViewHolder(
@@ -97,13 +100,15 @@ class ImageViewHolder(
     private val deleteClick: (id: String) -> Unit,
     private val onclick: (id: ChooseGroupUIModel) -> Unit,
     private val navigateToEditClick:(item:ChooseGroupUIModel)->Unit,
-    private val eyeClick:(imageUrl:String)->Unit
+    private val eyeClick:(imageUrl:String)->Unit,
+    private val isEyeVisible:Boolean
 
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(data: ChooseGroupUIModel) {
         binding.ivImage.loadImageWithGlide(data.imageUrl)
+        binding.ivEye.isVisible = isEyeVisible
         binding.ivEye.setOnClickListener {
             eyeClick(data.imageUrl)
         }
@@ -156,18 +161,6 @@ class ImageViewHolder(
 //        }
 
     }
-
-//    fun getItem(): ItemDetailsLookup.ItemDetails<Long> =
-//
-//        //1
-//        object : ItemDetailsLookup.ItemDetails<Long>() {
-//
-//            //2
-//            override fun getPosition(): Int = adapterPosition
-//
-//            //3
-//            override fun getSelectionKey(): Long = itemId
-//        }
 
 }
 

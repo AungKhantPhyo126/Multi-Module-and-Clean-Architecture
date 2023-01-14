@@ -228,7 +228,7 @@ class ChooseCategoryFragment : Fragment() {
         },{
             //eye click
             findNavController().navigate(ChooseCategoryFragmentDirections.actionGlobalPhotoViewFragment(it))
-        })
+        },true)
         binding.rvImages.adapter = adapter
     }
 

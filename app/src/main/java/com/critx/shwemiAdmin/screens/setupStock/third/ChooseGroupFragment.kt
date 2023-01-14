@@ -245,7 +245,7 @@ class ChooseGroupFragment : Fragment() {
             },{
                 //eye click
                 findNavController().navigate(ChooseGroupFragmentDirections.actionGlobalPhotoViewFragment(it))
-            })
+            },true)
         binding.rvImages.adapter = adapter
 
     }

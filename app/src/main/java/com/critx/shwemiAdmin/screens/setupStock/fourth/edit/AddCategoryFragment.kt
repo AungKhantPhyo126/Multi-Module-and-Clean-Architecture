@@ -22,12 +22,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
+import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -37,13 +40,23 @@ import androidx.lifecycle.map
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.critx.common.databinding.ShwemiSuccessDialogBinding
 import com.critx.common.ui.*
+import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.UiEvent
+import com.critx.shwemiAdmin.databinding.DialogChooseDesignBinding
+import com.critx.shwemiAdmin.databinding.DialogChooseJewelleryTypeBinding
 import com.critx.shwemiAdmin.databinding.FragmentAddCategoryBinding
 import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
+import com.critx.shwemiAdmin.screens.setupStock.fourth.ChooseCategoryFragmentDirections
+import com.critx.shwemiAdmin.screens.setupStock.fourth.JewelleryCategoryRecyclerAdapter
+import com.critx.shwemiAdmin.screens.setupStock.third.ChooseGroupFragmentDirections
+import com.critx.shwemiAdmin.screens.setupStock.third.ImageRecyclerAdapter
 import com.critx.shwemiAdmin.screens.setupStock.third.edit.getRealPathFromUri
 import com.critx.shwemiAdmin.screens.setupStock.third.edit.persistImage
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryCategoryUiModel
+import com.google.android.material.chip.Chip
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -66,8 +79,9 @@ const val CREATED_CATEGORY_ID = "created-category-id"
 class AddCategoryFragment : Fragment() {
     private lateinit var binding: FragmentAddCategoryBinding
     private val viewModel by activityViewModels<AddCategoryViewModel>()
-    private val sharedViewModel by activityViewModels<SharedViewModel>()
     private val args by navArgs<AddCategoryFragmentArgs>()
+    private lateinit var adapter: ImageRecyclerAdapter
+    private lateinit var categoryAdapter: JewelleryCategoryRecyclerAdapter
 
     private var isFrequentlyUsed = 0
     private var orderToGs = 0
@@ -81,162 +95,84 @@ class AddCategoryFragment : Fragment() {
     private lateinit var launchChooseGif: ActivityResultLauncher<Intent>
     private lateinit var readStoragePermissionlauncher: ActivityResultLauncher<String>
 
-    var photo1: MultipartBody.Part? = null
-    var photo2: MultipartBody.Part? = null
-    var photo3: MultipartBody.Part? = null
-    var video: MultipartBody.Part? = null
-    var selectedGif: MultipartBody.Part? = null
 //    var selectedRecommendCat: MutableList<Int> = mutableListOf()
-
-    var image1: Bitmap? = null
-    var image2: Bitmap? = null
-    var image3: Bitmap? = null
-    var gif: Bitmap? = null
-    var file1: File? = null
-    var file2: File? = null
-    var file3: File? = null
-    var fileGif: File? = null
-    var fileVideo: File? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
-            viewModel.setSelectedImgUri1(null)
-            viewModel.setSelectedImgUri2(null)
-            viewModel.setSelectedImgUri3(null)
-            viewModel.setSelectedGif(null)
-            viewModel.setSelectedVideo(null)
-            viewModel.selectedDesignIds = null
             findNavController().popBackStack()
         }
 
-        launchChooseImage1 =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                var selectedImage: Bitmap?
-                if (result.resultCode == Activity.RESULT_OK) {
-                    result.data?.data?.let {
-                        val imageStream: InputStream =
-                            requireContext().contentResolver?.openInputStream(it)!!
-                        selectedImage = BitmapFactory.decodeStream(imageStream)
-                        selectedImage = getResizedBitmap(
-                            selectedImage!!,
-                            600
-                        );// 400 is for example, replace with desired size
-//                        binding.ivImage1.setImageBitmap(selectedImage)
-                        val file = getRealPathFromUri(requireContext(), it)?.let { it1 ->
-                            File(
-                                it1
-                            )
-                        }
-                        viewModel.setSelectedImgUri1(SelectedImage(file!!, selectedImage!!))
+        launchChooseImage1 = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                if (data != null && data.data != null) {
+                    getRealPathFromUri(requireContext(), data.data!!)?.let { path ->
+                        viewModel.selectedImgUri1 = File(path)
                     }
-                }
-
-            }
-        launchChooseImage2 =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                var selectedImage: Bitmap?
-                if (result.resultCode == Activity.RESULT_OK) {
-                    result.data?.data?.let {
-                        val imageStream: InputStream =
-                            requireContext().contentResolver?.openInputStream(it)!!
-                        selectedImage = BitmapFactory.decodeStream(imageStream)
-                        selectedImage = getResizedBitmap(
-                            selectedImage!!,
-                            500
-                        );// 400 is for example, replace with desired size
-//                        binding.ivImage2.setImageBitmap(selectedImage)
-                        val file = getRealPathFromUri(requireContext(), it)?.let { it1 ->
-                            File(
-                                it1
-                            )
-                        }
-                        viewModel.setSelectedImgUri2(SelectedImage(file!!, selectedImage!!))
-                    }
-                }
-
-            }
-        launchChooseImage3 =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                var selectedImage: Bitmap?
-                if (result.resultCode == Activity.RESULT_OK) {
-                    result.data?.data?.let {
-                        val imageStream: InputStream =
-                            requireContext().contentResolver?.openInputStream(it)!!
-                        selectedImage = BitmapFactory.decodeStream(imageStream)
-                        selectedImage = getResizedBitmap(
-                            selectedImage!!,
-                            500
-                        );// 400 is for example, replace with desired size
-//                        binding.ivImage3.setImageBitmap(selectedImage)
-                        val file = getRealPathFromUri(requireContext(), it)?.let { it1 ->
-                            File(
-                                it1
-                            )
-                        }
-                        viewModel.setSelectedImgUri3(SelectedImage(file!!, selectedImage!!))
-                    }
-                }
-
-            }
-
-        launchChooseVideo =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-
-                if (result.resultCode == Activity.RESULT_OK) {
-                    result.data?.data?.let {
-
-                        getRealPathFromUri(requireContext(), it)?.let { it1 ->
-
-                            viewModel.setSelectedVideo(
-                                File(
-                                    it1
-                                )
-                            )
-                        }
-                    }
-//                    if (result.data != null && result?.data?.data != null) {
-//                        val selectedImageUri: Uri? = result.data!!.data
-////                        binding.ivVideo.setVideoURI(selectedImageUri)
-////                        binding.ivVideo.pause()
-//                        getRealVideoPathFromUri(
-//                            requireContext(),
-//                            result.data!!.data!!
-//                        ).let {
-//                            val thumbnail = ThumbnailUtils.createVideoThumbnail(
-//                                File(it!!),
-//                                Size(500, 500), CancellationSignal()
-//                            )
-////                            binding.ivVideo.setImageBitmap(thumbnail)
-//                        }
-//                    }
+                    binding.ivImage1.setImageURI(data.data)
                 }
             }
+        }
+        launchChooseImage2 = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                if (data != null && data.data != null) {
+                    getRealPathFromUri(requireContext(), data.data!!)?.let { path ->
+                        viewModel.selectedImgUri2 = File(path)
+                    }
+                    binding.ivImage2.setImageURI(data.data)
+                }
+            }
+        }
+        launchChooseImage3 = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                if (data != null && data.data != null) {
+                    getRealPathFromUri(requireContext(), data.data!!)?.let { path ->
+                        viewModel.selectedImgUri3 = File(path)
+                    }
 
-        launchChooseGif =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                var selectedImage: Bitmap?
-                if (result.resultCode == Activity.RESULT_OK) {
-                    result.data?.data?.let {
-                        val imageStream: InputStream =
-                            requireContext().contentResolver?.openInputStream(it)!!
-                        selectedImage = BitmapFactory.decodeStream(imageStream)
-                        selectedImage = getResizedBitmap(
-                            selectedImage!!,
-                            500
-                        );// 400 is for example, replace with desired size
-//                        binding.ivGif.setImageBitmap(selectedImage)
-                        val file = getRealPathFromUri(requireContext(), it)?.let { it1 ->
-                            File(
-                                it1
-                            )
-                        }
-                        viewModel.setSelectedGif(SelectedImage(file!!, selectedImage!!))
+                }
+            }
+        }
+        launchChooseGif = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                if (data != null && data.data != null) {
+                    getRealPathFromUri(requireContext(), data.data!!)?.let { path ->
+                        viewModel.selectedGifUri = File(path)
+                    }
+                    binding.ivGif.setImageURI(data.data)
+                }
+            }
+        }
+        launchChooseVideo = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                if (data != null && data.data != null) {
+                    getRealPathFromUri(requireContext(), data.data!!)?.let { path ->
+                        viewModel.selectedVideoUri = File(path)
+                        binding.ivVideo.getThumbnail(path)
                     }
                 }
-
             }
+        }
+
+
+
+
 
         readStoragePermissionlauncher = registerForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -259,6 +195,12 @@ class AddCategoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.ibBack.setOnClickListener {
             findNavController().popBackStack()
+        }
+        binding.includeRecommendCategory.btnAdd.setOnClickListener {
+            showChooseRelatedCategoryDialog()
+        }
+        binding.btnConfirm.setOnClickListener {
+
         }
         loadingDialog = requireContext().getAlertDialog()
         isFrequentlyUsed = if (binding.cbFrequentlyUsed.isChecked) 1 else 0
@@ -286,7 +228,7 @@ class AddCategoryFragment : Fragment() {
 
         if (args.category != null) {
             viewModel.getRelatedCat(args.category!!.id)
-
+            viewModel.addDesignWithList(args.category!!.designsList.toMutableList())
             binding.cbFrequentlyUsed.isChecked = args.category!!.isFrequentlyUse
             binding.cbHasGem.isChecked = args.category!!.withGem
             binding.cbOrderToGs.isChecked = args.category!!.orderToGs
@@ -297,124 +239,37 @@ class AddCategoryFragment : Fragment() {
             binding.edtK.setText(args.category!!.avgKPYUiModel.kyat.toString())
             binding.edtP.setText(args.category!!.avgKPYUiModel.pae.toString())
             binding.edtY.setText(args.category!!.avgKPYUiModel.ywae.toString())
-            if (viewModel.selectedDesignIds == null) {
-                viewModel.selectedDesignIds = args.category!!.designsList as MutableList<Int>
+            val imageList = args.category!!.imageUrlList
+            if (imageList.isNotEmpty()){
+               binding.ivImage1.loadImageWithGlide(imageList[0])
+            }else if (imageList.size >= 2){
+                binding.ivImage1.loadImageWithGlide(imageList[0])
+                binding.ivImage2.loadImageWithGlide(imageList[1])
+
+            }else if (imageList.size >= 3){
+                binding.ivImage1.loadImageWithGlide(imageList[0])
+                binding.ivImage2.loadImageWithGlide(imageList[1])
+                binding.ivImage3.loadImageWithGlide(imageList[2])
+            }else if (imageList.size>= 4){
+                binding.ivImage1.loadImageWithGlide(imageList[0])
+                binding.ivImage2.loadImageWithGlide(imageList[1])
+                binding.ivImage3.loadImageWithGlide(imageList[2])
+                binding.ivGif.loadImageWithGlide(imageList[3])
+            }
+            if(args.category!!.video.isNullOrEmpty().not()){
+                args.category!!.video?.let { binding.ivVideo.getThumbnail(it) }
             }
         } else {
             binding.btnConfirm.text = "Create & Select"
         }
-
-//        if (viewModel.selectedDesignIds != null) {
-//            binding.tvChooseDesign.setTextColor(requireContext().getColorStateList(com.critx.shwemiAdmin.R.color.primary_color))
-//        } else {
-//            binding.tvChooseDesign.setTextColor(requireContext().getColorStateList(com.critx.shwemiAdmin.R.color.edit_text_color))
-//        }
-
-
-
-        viewModel.selectedImgUri1?.observe(viewLifecycleOwner) { selectedItem ->
-            selectedItem?.let {
-                binding.ivImage1.setImageBitmap(selectedItem.bitMap)
-                val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-                photo1 = MultipartBody.Part.createFormData(
-                    "images[]",
-                    selectedItem.file.name,
-                    requestBody
-                )
+        viewModel.designInCatLiveDataLiveData.observe(viewLifecycleOwner){
+            binding.includeChooseDesign.chipGroup.removeAllViews()
+            for (item in it) {
+                val chip = requireContext().createChip(item.name)
+                chip.id = item.id.toInt()
+                binding.includeChooseDesign.chipGroup.addView(chip)
             }
-            if (selectedItem == null) {
-                photo1 = null
-                binding.ivImage1.setImageResource(com.critx.shwemiAdmin.R.drawable.empty_picture)
-            }
-            binding.ivRemove1.isVisible = selectedItem != null
-
-
         }
-        viewModel.selectedImgUri2?.observe(viewLifecycleOwner) { selectedItem ->
-            selectedItem?.let {
-                binding.ivImage2.setImageBitmap(selectedItem.bitMap)
-                              val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-
-                photo2 = MultipartBody.Part.createFormData(
-                    "images[]",
-                    selectedItem.file.name,
-                    requestBody
-                )
-            }
-            if (selectedItem == null) {
-                photo2 = null
-                binding.ivImage2.setImageResource(com.critx.shwemiAdmin.R.drawable.empty_picture)
-            }
-
-            binding.ivRemove2.isVisible = selectedItem != null
-
-        }
-        viewModel.selectedImgUri3?.observe(viewLifecycleOwner) { selectedItem ->
-            selectedItem?.let {
-                binding.ivImage3.setImageBitmap(selectedItem.bitMap)
-                              val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-
-                photo3 = MultipartBody.Part.createFormData(
-                    "images[]",
-                    selectedItem.file.name,
-                    requestBody
-                )
-            }
-            if (selectedItem == null) {
-                photo3 = null
-                binding.ivImage3.setImageResource(com.critx.shwemiAdmin.R.drawable.empty_picture)
-            }
-
-            binding.ivRemove3.isVisible = selectedItem != null
-
-        }
-
-        viewModel.selectedGifUri?.observe(viewLifecycleOwner) { selectedItem ->
-            selectedItem?.let {
-                binding.ivGif.setImageBitmap(selectedItem.bitMap)
-                              val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-
-                selectedGif = MultipartBody.Part.createFormData(
-                    "images[]",
-                    selectedItem.file.name,
-                    requestBody
-                )
-            }
-            if (selectedItem == null) {
-                selectedGif = null
-                binding.ivGif.setImageResource(com.critx.shwemiAdmin.R.drawable.empty_gif)
-            }
-            binding.ivRemoveGif.isVisible = selectedItem != null
-
-        }
-        viewModel.selectedVideoUri?.observe(viewLifecycleOwner) { selectedItem ->
-            binding.ivRemoveVideo.isVisible = selectedItem != null
-//            binding.ivRemoveVideo.isVisible = binding.ivVideo.drawable != requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_picture)
-            if (selectedItem != null) {
-//                val thumbnail = ThumbnailUtils.createVideoThumbnail(
-//                    selectedItem,
-//                    Size(500, 500), CancellationSignal()
-//                )
-                binding.ivVideo.getThumbnail(selectedItem.path)
-                val requestBody =
-                    selectedItem.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-                video = MultipartBody.Part.createFormData("video", selectedItem.name, requestBody)
-            } else {
-                video = null
-                binding.ivVideo.setImageDrawable(requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_video))
-            }
-
-        }
-//        sharedViewModel.recommendCatList.observe(viewLifecycleOwner) { result ->
-//            if (result.filterNotNull().isNotEmpty()) {
-////                selectedRecommendCat.clear()
-////                selectedRecommendCat.addAll(result)
-//                binding.tvRecommendCat.setTextColor(requireContext().getColorStateList(com.critx.shwemiAdmin.R.color.primary_color))
-//            } else {
-//                binding.tvRecommendCat.setTextColor(requireContext().getColorStateList(com.critx.shwemiAdmin.R.color.edit_text_color))
-//            }
-//        }
-
 
         binding.ivImage1.setOnClickListener {
             uploadImageClick("iv1")
@@ -440,19 +295,19 @@ class AddCategoryFragment : Fragment() {
             }
         }
         binding.ivRemove1.setOnClickListener {
-            viewModel.setSelectedImgUri1(null)
+
         }
         binding.ivRemove2.setOnClickListener {
-            viewModel.setSelectedImgUri2(null)
+
         }
         binding.ivRemove3.setOnClickListener {
-            viewModel.setSelectedImgUri3(null)
+
         }
         binding.ivRemoveGif.setOnClickListener {
-            viewModel.setSelectedGif(null)
+
         }
         binding.ivRemoveVideo.setOnClickListener {
-            viewModel.setSelectedVideo(null)
+
         }
 
         binding.btnConfirm.setOnClickListener {
@@ -461,273 +316,101 @@ class AddCategoryFragment : Fragment() {
             } else {
                 uploadFile(EDIT_CATEGORY)
             }
+
         }
-//        binding.mcvRecommendAhtal.setOnClickListener {
-//            findNavController().navigate(
-//                AddCategoryFragmentDirections.actionAddCategoryFragmentToRecommendStockFragment(args.category)
-//            )
-//        }
-//        binding.mcvChooseDesign.setOnClickListener {
-//            findNavController().navigate(
-//                AddCategoryFragmentDirections.actionAddCategoryFragmentToDesignListFragment(
-//                    args.type.id
-//                )
-//            )
-//        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+        val relatedCatRecyclerAdapter = RelatedCatRecyclerAdapter{item->
+            viewModel.removeRelatedCat(item)
+            snackBar?.dismiss()
+            snackBar = Snackbar.make(
+                binding.root,
+               "Related Category Removed",
+                Snackbar.LENGTH_LONG
+            ).setAction("Undo"){
+                viewModel.addRelatedCat(item)
+            }
+            snackBar?.show()
+        }
+        binding.includeRecommendCategory.rvCatItems.adapter = relatedCatRecyclerAdapter
+        viewModel.getRelatedCats.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
 
-                launch {
-                    if (args.category != null) {
-                        val imageList = args.category!!.imageUrlList
-//            if ( findNavController().previousBackStackEntry?.destination?.id == R.id.chooseCategoryFragment){
-                        when (args.category!!.imageUrlList.size) {
-
-                            1 -> {
-                                if (viewModel.selectedImgUri1.value == null) {
-                                    var bm: Bitmap?
-                                    withContext(Dispatchers.IO) {
-                                        bm = getBitMapWithGlide(imageList[0], requireContext())
-                                        val fileName: String =
-                                            imageList[0].substring(imageList[0].lastIndexOf('/') + 1)
-                                        val resizedBitmap = getResizedBitmap(bm!!, 600)
-                                        file1 = persistImage(
-                                            resizedBitmap!!,
-                                            fileName,
-                                            requireContext()
-                                        )
-//                                        setPhoto(imageList, 0, binding.ivImage1, bm)
-                                    }
-                                    viewModel.setSelectedImgUri1(SelectedImage(file1!!, bm!!))
-                                }
-                            }
-                            2 -> {
-                                if (viewModel.selectedImgUri1.value == null) {
-                                    var bm: Bitmap?
-                                    withContext(Dispatchers.IO) {
-                                        bm = getBitMapWithGlide(imageList[0], requireContext())
-                                        val fileName: String =
-                                            imageList[0].substring(imageList[0].lastIndexOf('/') + 1)
-                                        val resizedBitmap = getResizedBitmap(bm!!, 600)
-                                        file1 = persistImage(
-                                            resizedBitmap!!,
-                                            fileName,
-                                            requireContext()
-                                        )
-//                                        setPhoto(imageList, 0, binding.ivImage1, bm)
-                                    }
-                                    viewModel.setSelectedImgUri1(SelectedImage(file1!!, bm!!))
-                                }
-                                if (viewModel.selectedImgUri2.value == null) {
-                                    var bm: Bitmap?
-                                    withContext(Dispatchers.IO) {
-                                        bm = getBitMapWithGlide(imageList[1], requireContext())
-                                        val fileName: String =
-                                            imageList[1].substring(imageList[1].lastIndexOf('/') + 1)
-                                        val resizedBitmap = getResizedBitmap(bm!!, 600)
-                                        file2 = persistImage(
-                                            resizedBitmap!!,
-                                            fileName,
-                                            requireContext()
-                                        )
-//                                        setPhoto(imageList, 0, binding.ivImage1, bm)
-                                    }
-                                    viewModel.setSelectedImgUri2(SelectedImage(file2!!, bm!!))
-                                }
-
-                            }
-                            3 -> {
-                                if (viewModel.selectedImgUri1.value == null) {
-                                    var bm: Bitmap?
-                                    withContext(Dispatchers.IO) {
-                                        bm = getBitMapWithGlide(imageList[0], requireContext())
-                                        val fileName: String =
-                                            imageList[0].substring(imageList[0].lastIndexOf('/') + 1)
-                                        val resizedBitmap = getResizedBitmap(bm!!, 600)
-                                        file1 = persistImage(
-                                            resizedBitmap!!,
-                                            fileName,
-                                            requireContext()
-                                        )
-//                                        setPhoto(imageList, 0, binding.ivImage1, bm)
-                                    }
-                                    viewModel.setSelectedImgUri1(SelectedImage(file1!!, bm!!))
-                                }
-                                if (viewModel.selectedImgUri2.value == null) {
-                                    var bm: Bitmap?
-                                    withContext(Dispatchers.IO) {
-                                        bm = getBitMapWithGlide(imageList[1], requireContext())
-                                        val fileName: String =
-                                            imageList[1].substring(imageList[1].lastIndexOf('/') + 1)
-                                        val resizedBitmap = getResizedBitmap(bm!!, 600)
-                                        file2 = persistImage(
-                                            resizedBitmap!!,
-                                            fileName,
-                                            requireContext()
-                                        )
-//                                        setPhoto(imageList, 0, binding.ivImage1, bm)
-                                    }
-                                    viewModel.setSelectedImgUri2(SelectedImage(file2!!, bm!!))
-                                }
-                                if (viewModel.selectedImgUri3.value == null) {
-                                    var bm: Bitmap?
-                                    withContext(Dispatchers.IO) {
-                                        bm = getBitMapWithGlide(imageList[2], requireContext())
-                                        val fileName: String =
-                                            imageList[2].substring(imageList[2].lastIndexOf('/') + 1)
-                                        val resizedBitmap = getResizedBitmap(bm!!, 600)
-                                        file3 = persistImage(
-                                            resizedBitmap!!,
-                                            fileName,
-                                            requireContext()
-                                        )
-//                                        setPhoto(imageList, 0, binding.ivImage1, bm)
-                                    }
-                                    viewModel.setSelectedImgUri3(SelectedImage(file3!!, bm!!))
-                                }
-                            }
-                            4 -> {
-                                if (viewModel.selectedImgUri1.value == null) {
-                                    var bm: Bitmap?
-                                    withContext(Dispatchers.IO) {
-                                        bm = getBitMapWithGlide(imageList[0], requireContext())
-                                        val fileName: String =
-                                            imageList[0].substring(imageList[0].lastIndexOf('/') + 1)
-                                        val resizedBitmap = getResizedBitmap(bm!!, 600)
-                                        file1 = persistImage(
-                                            resizedBitmap!!,
-                                            fileName,
-                                            requireContext()
-                                        )
-//                                        setPhoto(imageList, 0, binding.ivImage1, bm)
-                                    }
-                                    viewModel.setSelectedImgUri1(SelectedImage(file1!!, bm!!))
-                                }
-                                if (viewModel.selectedImgUri2.value == null) {
-                                    var bm: Bitmap?
-                                    withContext(Dispatchers.IO) {
-                                        bm = getBitMapWithGlide(imageList[1], requireContext())
-                                        val fileName: String =
-                                            imageList[1].substring(imageList[1].lastIndexOf('/') + 1)
-                                        val resizedBitmap = getResizedBitmap(bm!!, 600)
-                                        file2 = persistImage(
-                                            resizedBitmap!!,
-                                            fileName,
-                                            requireContext()
-                                        )
-//                                        setPhoto(imageList, 0, binding.ivImage1, bm)
-                                    }
-                                    viewModel.setSelectedImgUri2(SelectedImage(file2!!, bm!!))
-                                }
-                                if (viewModel.selectedImgUri3.value == null) {
-                                    var bm: Bitmap?
-                                    withContext(Dispatchers.IO) {
-                                        bm = getBitMapWithGlide(imageList[2], requireContext())
-                                        val fileName: String =
-                                            imageList[2].substring(imageList[2].lastIndexOf('/') + 1)
-                                        val resizedBitmap = getResizedBitmap(bm!!, 600)
-                                        file3 = persistImage(
-                                            resizedBitmap!!,
-                                            fileName,
-                                            requireContext()
-                                        )
-//                                        setPhoto(imageList, 0, binding.ivImage1, bm)
-                                    }
-                                    viewModel.setSelectedImgUri3(SelectedImage(file3!!, bm!!))
-                                }
-                                if (viewModel.selectedGifUri.value == null) {
-
-                                    var bm: Bitmap?
-                                    withContext(Dispatchers.IO) {
-                                        bm = getBitMapWithGlide(imageList[3], requireContext())
-                                        val fileName: String =
-                                            imageList[3].substring(imageList[3].lastIndexOf('/') + 1)
-                                        val resizedBitmap = getResizedBitmap(bm!!, 600)
-                                        fileGif = persistImage(
-                                            resizedBitmap!!,
-                                            fileName,
-                                            requireContext()
-                                        )
-//                                        setPhoto(imageList, 0, binding.ivImage1, bm)
-                                    }
-                                    viewModel.setSelectedGif(SelectedImage(fileGif!!, bm!!))
-                                }
-//                    }
-                            }
-
-                        }
-                        if (args.category?.video != null && viewModel.selectedVideoUri.value == null) {
-                            binding.ivVideo.getThumbnail(args.category!!.video!!)
-                        }
-                    }
                 }
-
-                //getRelatedCats
-                launch {
-                    viewModel.getRelatedCats.collectLatest {
-                        if (it.getRelatedCatsLoading) {
-                            loadingDialog.show()
-                        } else loadingDialog.dismiss()
-
-
-                    }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    relatedCatRecyclerAdapter.submitList(it.data)
+                    relatedCatRecyclerAdapter.notifyDataSetChanged()
                 }
-
-                //createCategory
-                launch {
-                    viewModel.createJewelleryCategoryState.collectLatest {
-                        if (it.createLoading) {
-                            loadingDialog.show()
-                        } else loadingDialog.dismiss()
-
-                        if (it.createSuccessLoading != null) {
-                            requireContext().showSuccessDialog("Category Created") {
-                                findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                                    CREATED_CATEGORY_ID,
-                                    it.createSuccessLoading
-                                )
-                                it.createSuccessLoading = null
-                                findNavController().popBackStack()
-                            }
-                        }
-                    }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    snackBar?.dismiss()
+                    snackBar = Snackbar.make(
+                        binding.root,
+                        it.message.orEmpty(),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackBar?.show()
                 }
-
-                //editCategory
-                launch {
-                    viewModel.editJewelleryCategoryState.collectLatest {
-                        if (it.editLoading) {
-                            loadingDialog.show()
-                        } else loadingDialog.dismiss()
-                        if (it.editSuccessLoading != null) {
-                            requireContext().showSuccessDialog("Category Updated") {
-                                it.editSuccessLoading = null
-                                findNavController().popBackStack()
-                            }
-                        }
-                    }
-                }
-
-                launch {
-                    viewModel.event.collectLatest { event ->
-                        when (event) {
-                            is UiEvent.ShowErrorSnackBar -> {
-                                snackBar?.dismiss()
-                                snackBar = Snackbar.make(
-                                    binding.root,
-                                    event.message,
-                                    Snackbar.LENGTH_LONG
-                                )
-                                snackBar?.show()
-                            }
-                        }
-                    }
-                }
-
             }
         }
 
+        binding.includeChooseDesign.btnAdd.setOnClickListener {
+            showChooseDesignListDialog()
+        }
 
+        viewModel.createJewelleryCategoryLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    requireContext().showSuccessDialog("Category Created") {
+                        findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                            CREATED_CATEGORY_ID,
+                            it.data
+                        )
+                        viewModel.resetCreateLiveData()
+                        findNavController().popBackStack()
+                    }
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    snackBar?.dismiss()
+                    snackBar = Snackbar.make(
+                        binding.root,
+                        it.message.orEmpty(),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackBar?.show()
+                }
+            }
+        }
+        viewModel.editJewelleryCategoryState.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    requireContext().showSuccessDialog("Category Updated") {
+                        viewModel.resetEditLiveData()
+                        findNavController().popBackStack()
+                    }
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    snackBar?.dismiss()
+                    snackBar = Snackbar.make(
+                        binding.root,
+                        it.message.orEmpty(),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackBar?.show()
+                }
+            }
+        }
     }
 
 
@@ -785,26 +468,81 @@ class AddCategoryFragment : Fragment() {
 
     fun uploadFile(actionType: String) {
 
-
         if (binding.edtEnterCategory.text.isNullOrEmpty() ||
             binding.edtSpecification.text.isNullOrEmpty() ||
             binding.edtAvgWeight.text.isNullOrEmpty() ||
             binding.edtK.text.isNullOrEmpty() ||
             binding.edtP.text.isNullOrEmpty() ||
-            binding.edtY.text.isNullOrEmpty() ||
-            viewModel.selectedDesignIds.isNullOrEmpty()
-        ) {
+            binding.edtY.text.isNullOrEmpty()
+
+                ) {
             Toast.makeText(requireContext(), "Fill The Required Fields", Toast.LENGTH_LONG).show()
         } else {
+            var photo1: MultipartBody.Part? = null
+            var requestBody1 :RequestBody?= null
+            viewModel.selectedImgUri1?.let {
+                requestBody1 = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                photo1 = MultipartBody.Part.createFormData(
+                    "images[]",
+                    it.name,
+                    requestBody1!!
+                )
+            }
+
+            var photo2: MultipartBody.Part? = null
+            var requestBody2 :RequestBody?= null
+            viewModel.selectedImgUri2?.let {
+                requestBody2 = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                photo2 = MultipartBody.Part.createFormData(
+                    "images[]",
+                    it.name,
+                    requestBody2!!
+                )
+            }
+
+            var photo3: MultipartBody.Part? = null
+            var requestBody3 :RequestBody?= null
+            viewModel.selectedImgUri3?.let {
+                requestBody3 = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                photo3 = MultipartBody.Part.createFormData(
+                    "images[]",
+                    it.name,
+                    requestBody3!!
+                )
+            }
+
+            var selectedGif: MultipartBody.Part? = null
+            var requestBody4 :RequestBody?= null
+            viewModel.selectedGifUri?.let {
+                requestBody4 = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                selectedGif = MultipartBody.Part.createFormData(
+                    "images[]",
+                    it.name,
+                    requestBody4!!
+                )
+            }
+
+            var video: MultipartBody.Part? = null
+            var requestBody5 :RequestBody?= null
+            viewModel.selectedVideoUri?.let {
+                requestBody5 = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                video = MultipartBody.Part.createFormData(
+                    "video",
+                    it.name,
+                    requestBody5!!
+                )
+            }
+
+
             val photoList = mutableListOf<MultipartBody.Part?>(photo1, photo2, photo3, selectedGif)
             val photoToUpload = photoList.filterNotNull() as MutableList
 
 //        val videoList = mutableListOf(video!!)
             val designList = mutableListOf<RequestBody>()
-            viewModel.selectedDesignIds?.let { list ->
+            viewModel.designInCatLiveDataLiveData.value?.let { list ->
                 list.forEach {
                     designList.add(
-                        it.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                        it.id.toRequestBody("multipart/form-data".toMediaTypeOrNull())
                     )
                 }
             }
@@ -874,25 +612,339 @@ class AddCategoryFragment : Fragment() {
         }
     }
 
-    private fun setPhoto(imageList: List<String>, index: Int, imageView: ImageView, bm: Bitmap) {
-        val fileName: String =
-            imageList[index].substring(imageList[index].lastIndexOf('/') + 1)
-        val resizedBitmap = getResizedBitmap(bm, 600)
-        val file = persistImage(resizedBitmap!!, fileName, requireContext())
-        val requestBody =
-            file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-        when (index) {
-            0 -> {
-                photo1 = MultipartBody.Part.createFormData("images[]", file.name, requestBody)
+    fun showChooseRelatedCategoryDialog() {
+
+        var firstCatId = ""
+        var secondCatId = ""
+        val builder = MaterialAlertDialogBuilder(requireContext())
+        val inflater: LayoutInflater = LayoutInflater.from(builder.context)
+        val relatedCatDialogBinding = DialogChooseJewelleryTypeBinding.inflate(
+            inflater, ConstraintLayout(builder.context), false
+        )
+        builder.setView(relatedCatDialogBinding.root)
+        val alertDialog = builder.create()
+        alertDialog.setCancelable(false)
+
+        var frequentUse = 0
+        relatedCatDialogBinding.cbFrequentlyUsed.setOnCheckedChangeListener { compoundButton, isChecked ->
+            frequentUse = if (isChecked) 1 else 0
+        }
+
+        /** choose jewellery type */
+        viewModel.getJewelleryType()
+        viewModel.jewelleryTypeState.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    relatedCatDialogBinding.chipGroup.removeAllViews()
+                    for (item in it.data!!) {
+                        val chip = requireContext().createChip(item.name)
+                        chip.id = item.id.toInt()
+                        chip.setOnClickListener {
+                            firstCatId = chip.id.toString()
+                            relatedCatDialogBinding.tvFirstCat.text = item.name
+                            relatedCatDialogBinding.ivFirst.isVisible = true
+                            viewModel.getJewelleryQuality()
+                        }
+                        relatedCatDialogBinding.chipGroup.addView(chip)
+                    }
+
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    snackBar?.dismiss()
+                    snackBar = Snackbar.make(
+                        relatedCatDialogBinding.root,
+                        it.message.orEmpty(),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackBar?.show()
+                }
             }
-            1 -> {
-                photo2 = MultipartBody.Part.createFormData("images[]", file.name, requestBody)
+        }
+
+        /** choose Jewellery Quality*/
+        viewModel.jewelleryQualityLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    relatedCatDialogBinding.chipGroup.removeAllViews()
+                    relatedCatDialogBinding.ivBack.isVisible = true
+                    relatedCatDialogBinding.ivBack.setOnClickListener {
+                        relatedCatDialogBinding.ivSecond.isVisible = false
+                        relatedCatDialogBinding.tvSecondCat.isVisible = false
+                        viewModel.getJewelleryType()
+                    }
+                    for (item in it.data!!) {
+                        val chip = requireContext().createChip(item.name)
+                        chip.id = item.id.toInt()
+                        relatedCatDialogBinding.chipGroup.addView(chip)
+                        if (item.name == "18K" || item.name == "စိန်ထည်" || item.name == "အခေါက်ထည်") {
+                            chip.setOnClickListener {
+                                Toast.makeText(requireContext(), "Choose other", Toast.LENGTH_LONG)
+                                    .show()
+                            }
+                        } else {
+                            chip.setOnClickListener {
+                                relatedCatDialogBinding.tvSecondCat.text = item.name
+                                relatedCatDialogBinding.ivSecond.isVisible = true
+                                relatedCatDialogBinding.tvSecondCat.isVisible = true
+
+                                secondCatId = item.id
+                                viewModel.getJewelleryGroup(
+                                    frequentUse,
+                                    firstCatId.toInt(),
+                                    item.id.toInt()
+                                )
+                                secondCatId = chip.id.toString()
+                            }
+                        }
+
+                    }
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    snackBar?.dismiss()
+                    snackBar = Snackbar.make(
+                        relatedCatDialogBinding.root,
+                        it.message.orEmpty(),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackBar?.show()
+                }
             }
-            2 -> {
-                photo3 = MultipartBody.Part.createFormData("images[]", file.name, requestBody)
+        }
+        /** choose Jewellery Group*/
+
+        viewModel.getGroupLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    adapter = ImageRecyclerAdapter({
+                        //deleteClick
+
+                    },
+                        {
+                            relatedCatDialogBinding.tvThirdCat.text = it.name
+                            relatedCatDialogBinding.ivThirdCat.isVisible = true
+                            relatedCatDialogBinding.tvThirdCat.isVisible = true
+
+                            viewModel.getJewelleryCategory(
+                                frequentUse,
+                                firstCatId.toInt(),
+                                it.id.toInt(),
+                                it.id.toInt()
+                            )
+
+                        }, {
+                            //addNewClick
+
+                        }, {
+                            //navigateToEditClick
+
+                        },{
+                            //eye click
+
+                        },
+                        false)
+                    relatedCatDialogBinding.rvImages.adapter = adapter
+                    adapter.submitList(it.data)
+                    relatedCatDialogBinding.chipGroup.removeAllViews()
+                    relatedCatDialogBinding.cbImageView.setOnCheckedChangeListener { compoundButton, isChecked ->
+                        if (isChecked) {
+                            relatedCatDialogBinding.rvImages.visibility = View.VISIBLE
+                            relatedCatDialogBinding.chipGroup.visibility = View.INVISIBLE
+                        } else {
+                            relatedCatDialogBinding.rvImages.visibility = View.INVISIBLE
+                            relatedCatDialogBinding.chipGroup.visibility = View.VISIBLE
+                        }
+                    }
+                    relatedCatDialogBinding.ivBack.isVisible = true
+                    relatedCatDialogBinding.cbFrequentlyUsed.isVisible = true
+                    relatedCatDialogBinding.cbImageView.isVisible = true
+                    relatedCatDialogBinding.ivBack.setOnClickListener {
+                        relatedCatDialogBinding.ivThirdCat.isVisible = false
+                        relatedCatDialogBinding.tvThirdCat.isVisible = false
+                        relatedCatDialogBinding.cbFrequentlyUsed.isVisible = false
+                        relatedCatDialogBinding.cbImageView.isVisible = false
+                        viewModel.getJewelleryQuality()
+                    }
+                    for (item in it.data!!) {
+                        val chip = requireContext().createChip(item.name)
+                        chip.id = item.id.toInt()
+                        relatedCatDialogBinding.chipGroup.addView(chip)
+                        chip.setOnClickListener {
+                            relatedCatDialogBinding.tvThirdCat.text = item.name
+                            relatedCatDialogBinding.ivThirdCat.isVisible = true
+                            relatedCatDialogBinding.tvThirdCat.isVisible = true
+
+                            viewModel.getJewelleryCategory(
+                                frequentUse,
+                                firstCatId.toInt(),
+                                secondCatId.toInt(),
+                                item.id.toInt()
+                            )
+
+                        }
+
+
+                    }
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    snackBar?.dismiss()
+                    snackBar = Snackbar.make(
+                        relatedCatDialogBinding.root,
+                        it.message.orEmpty(),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackBar?.show()
+                }
             }
-            3 -> {
-                selectedGif = MultipartBody.Part.createFormData("images[]", file.name, requestBody)
+        }
+
+        /** choose Jewellery Category*/
+
+        viewModel.getJewelleryCategoryLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    categoryAdapter = JewelleryCategoryRecyclerAdapter({
+
+                    }, {
+
+                    }, {
+                        relatedCatDialogBinding.tvFourthCat.text = it.name
+                        relatedCatDialogBinding.ivFourthCat.isVisible = true
+                        relatedCatDialogBinding.tvFourthCat.isVisible = true
+                        viewModel.addRelatedCat(it)
+                        alertDialog.dismiss()
+                        //To Do
+                    }, {
+                        //deleteclick
+
+                    },{
+                        //eye click
+
+                    },false)
+                    relatedCatDialogBinding.rvImages.adapter = categoryAdapter
+                    categoryAdapter.submitList(it.data)
+                    relatedCatDialogBinding.chipGroup.removeAllViews()
+                    relatedCatDialogBinding.cbImageView.setOnCheckedChangeListener { compoundButton, isChecked ->
+                        if (isChecked) {
+                            relatedCatDialogBinding.rvImages.visibility = View.VISIBLE
+                            relatedCatDialogBinding.chipGroup.visibility = View.INVISIBLE
+                        } else {
+                            relatedCatDialogBinding.rvImages.visibility = View.INVISIBLE
+                            relatedCatDialogBinding.chipGroup.visibility = View.VISIBLE
+                        }
+                    }
+                    relatedCatDialogBinding.ivBack.isVisible = true
+                    relatedCatDialogBinding.cbFrequentlyUsed.isVisible = true
+                    relatedCatDialogBinding.cbImageView.isVisible = true
+                    relatedCatDialogBinding.ivBack.setOnClickListener {
+                        relatedCatDialogBinding.ivFourthCat.isVisible = false
+                        relatedCatDialogBinding.tvFourthCat.isVisible = false
+                        viewModel.getJewelleryGroup(isFrequentlyUsed,firstCatId.toInt(),secondCatId.toInt())
+
+                    }
+                    for (item in it.data!!) {
+                        val chip = requireContext().createChip(item.name)
+                        chip.id = item.id.toInt()
+                        relatedCatDialogBinding.chipGroup.addView(chip)
+                        chip.setOnClickListener {
+                            relatedCatDialogBinding.tvFourthCat.text = item.name
+                            relatedCatDialogBinding.ivFourthCat.isVisible = true
+                            relatedCatDialogBinding.tvFourthCat.isVisible = true
+                            viewModel.addRelatedCat(item)
+                            alertDialog.dismiss()
+                            //To Do
+                        }
+
+
+                    }
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    snackBar?.dismiss()
+                    snackBar = Snackbar.make(
+                        relatedCatDialogBinding.root,
+                        it.message.orEmpty(),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackBar?.show()
+                }
+            }
+        }
+
+
+        relatedCatDialogBinding.ivExit.setOnClickListener {
+            relatedCatDialogBinding.cbFrequentlyUsed.isVisible = false
+            relatedCatDialogBinding.cbImageView.isVisible = false
+            viewModel.resetLiveData()
+            alertDialog.dismiss()
+        }
+        alertDialog.show()
+    }
+
+    fun showChooseDesignListDialog() {
+        val builder = MaterialAlertDialogBuilder(requireContext())
+        val inflater: LayoutInflater = LayoutInflater.from(builder.context)
+        val designBinding = DialogChooseDesignBinding.inflate(
+            inflater, ConstraintLayout(builder.context), false
+        )
+        builder.setView(designBinding.root)
+        val alertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        viewModel.getDesign(args.type.id)
+        designBinding.ivExit.setOnClickListener {
+            alertDialog.dismiss()
+        }
+        viewModel.getDesignLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    for (item in it.data!!) {
+                        val chip = requireContext().createChip(item.name)
+                        chip.id = item.id.toInt()
+                        designBinding.chipGroup.addView(chip)
+                        chip.setOnClickListener {
+                            if (viewModel.designInCatLiveDataLiveData.value!!.contains(item)){
+                                Toast.makeText(requireContext(),"This Design is Already Chosen",Toast.LENGTH_LONG).show()
+                            }else{
+                                viewModel.addDesignByItem(item)
+                                alertDialog.dismiss()
+                            }
+
+                        }
+                    }
+                    alertDialog.show()
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    snackBar?.dismiss()
+                    snackBar = Snackbar.make(
+                        binding.root,
+                        it.message.orEmpty(),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackBar?.show()
+                }
             }
         }
 
@@ -901,19 +953,19 @@ class AddCategoryFragment : Fragment() {
 
 }
 
-fun getRealVideoPathFromUri(context: Context, contentUri: Uri): String? {
-    var cursor: Cursor? = null
-    return try {
-        val proj = arrayOf(MediaStore.Video.Media.DATA)
-        cursor = context.contentResolver.query(contentUri, proj, null, null, null)
-        val column_index: Int = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        cursor?.moveToFirst()
-        cursor?.getString(column_index)
-    } finally {
-        cursor?.close()
-    }
-
-}
+//fun getRealVideoPathFromUri(context: Context, contentUri: Uri): String? {
+//    var cursor: Cursor? = null
+//    return try {
+//        val proj = arrayOf(MediaStore.Video.Media.DATA)
+//        cursor = context.contentResolver.query(contentUri, proj, null, null, null)
+//        val column_index: Int = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+//        cursor?.moveToFirst()
+//        cursor?.getString(column_index)
+//    } finally {
+//        cursor?.close()
+//    }
+//
+//}
 
 fun getResizedBitmap(image: Bitmap, maxSize: Int): Bitmap? {
     var width = 600

@@ -59,7 +59,7 @@ fun JewelleryCategoryData.asDomain():JewelleryCategory{
         jewelleryGroup = group,
         fileList = files.map { it.asDomain() },
         avgKPY = avg_KPY.asDomain(),
-        designs = designs.map { it.id.toInt() }
+        designs = designs.map { it.asDomain() }
     )
 }
 

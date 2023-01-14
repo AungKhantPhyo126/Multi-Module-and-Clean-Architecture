@@ -370,7 +370,7 @@ class ProductCreateFragment : Fragment() {
             binding.ivRemoveGif.isVisible = selectedItem != null
 
         }
-        viewModel.selectedVideoUri?.observe(viewLifecycleOwner) { selectedItem ->
+        viewModel.selectedVideoUri.observe(viewLifecycleOwner) { selectedItem ->
             binding.ivRemoveVideo.isVisible = selectedItem != null
 //            binding.ivRemoveVideo.isVisible = binding.ivVideo.drawable != requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_picture)
             if (selectedItem != null) {

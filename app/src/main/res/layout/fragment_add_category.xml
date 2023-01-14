@@ -313,7 +313,7 @@
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:id="@+id/iv_image2"
+                    android:id="@+id/iv_image3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
@@ -329,7 +329,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:src="@drawable/ic_trash_can"
-                    app:layout_constraintEnd_toEndOf="@id/iv_image2"
+                    app:layout_constraintEnd_toEndOf="@id/iv_image3"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tint="@color/primary_color" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -351,7 +351,7 @@
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:id="@+id/iv_image3"
+                    android:id="@+id/iv_image2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
@@ -367,7 +367,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:src="@drawable/ic_trash_can"
-                    app:layout_constraintEnd_toEndOf="@id/iv_image3"
+                    app:layout_constraintEnd_toEndOf="@id/iv_image2"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tint="@color/primary_color" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -505,7 +505,7 @@
             app:layout_constraintStart_toStartOf="@+id/tv_label_video_gif"
             app:layout_constraintTop_toBottomOf="@+id/mcv_video" />
         <include
-            layout="@layout/include_sample_take_section"
+            layout="@layout/include_design_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/include_choose_design"
@@ -513,7 +513,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/btn_confirm"/>
         <include
-            layout="@layout/include_sample_take_section"
+            layout="@layout/include_related_cat_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/include_recommend_category"
