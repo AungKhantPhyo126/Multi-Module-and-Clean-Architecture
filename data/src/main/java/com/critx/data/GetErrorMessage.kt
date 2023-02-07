@@ -2,10 +2,13 @@ package com.critx.data
 
 import retrofit2.HttpException
 import java.io.IOException
+import java.net.ConnectException
 
 object GetErrorMessage {
     fun fromException(e: IOException): String{
-        return "No internet! Please check your internet connection."
+        return   if(e is ConnectException){
+            "No internet Connection"
+        }else e.message.orEmpty()
     }
     fun fromException(e: HttpException): String{
         return when(e.code()){

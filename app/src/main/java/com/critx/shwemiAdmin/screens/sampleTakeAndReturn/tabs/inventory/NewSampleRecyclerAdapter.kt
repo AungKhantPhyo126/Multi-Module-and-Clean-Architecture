@@ -68,9 +68,10 @@ class SaveSampleViewHolder(
         binding.ibCross.setOnClickListener {
             onclick(data)
         }
-        binding.ivSample.loadImageWithGlide(data.imageUrl)
+        binding.ivSample.loadImageWithGlide(data.thumbnail)
         binding.tvStockCodeNumber.text = data.productCode
         binding.tvSampleSpec.text = data.specification
+        binding.tvWeightGm.text = data.weight_gm + "gm"
     }
 }
 
@@ -83,7 +84,7 @@ class NewSampleViewHolder(
         binding.ibCross.setOnClickListener {
             onclick(data)
         }
-        binding.ivSample.loadImageWithGlide(data.imageUrl)
+        binding.ivSample.loadImageWithGlide(data.thumbnail)
         binding.tvStockCodeNumber.text = data.productCode
         binding.tieSpecification.setText(viewModel.specificationList[bindingAdapterPosition])
         binding.tieSpecification.addTextChangedListener(object : TextWatcher {
@@ -104,7 +105,7 @@ class NewSampleViewHolder(
 
 object NewSampleDiffUtil : DiffUtil.ItemCallback<SampleItemUIModel>() {
     override fun areItemsTheSame(oldItem: SampleItemUIModel, newItem: SampleItemUIModel): Boolean {
-        return oldItem.productId == newItem.productId
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(

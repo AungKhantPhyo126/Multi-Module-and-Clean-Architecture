@@ -27,23 +27,26 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:text="@string/create"
         android:paddingVertical="14dp"
+        android:text="@string/create"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btn_back" />
+        app:layout_constraintStart_toEndOf="@+id/btn_back"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintBottom_toTopOf="@id/btn_next"
+        app:layout_constraintBottom_toTopOf="@+id/btn_next"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_chainStyle="packed">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -165,65 +168,65 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_y"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="70dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                app:hintEnabled="false"
                 app:expandedHintEnabled="false"
-                app:suffixText="Y"
+                app:hintEnabled="false"
                 app:layout_constraintEnd_toEndOf="@id/til_stock_name"
-                app:layout_constraintTop_toBottomOf="@id/til_gold_gem_gm">
+                app:layout_constraintTop_toBottomOf="@id/til_gold_gem_gm"
+                app:suffixText="Y">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_y"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
+                    android:inputType="numberDecimal"
                     android:text="0"
-                    android:inputType="numberDecimal" />
+                    android:textAlignment="center" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_p"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="70dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                app:hintEnabled="false"
                 app:expandedHintEnabled="false"
-                app:suffixText="P"
+                app:hintEnabled="false"
                 app:layout_constraintEnd_toStartOf="@id/til_y"
                 app:layout_constraintStart_toEndOf="@+id/til_k"
-                app:layout_constraintTop_toBottomOf="@id/til_gold_gem_gm">
+                app:layout_constraintTop_toBottomOf="@id/til_gold_gem_gm"
+                app:suffixText="P">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_p"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
+                    android:inputType="numberDecimal"
                     android:text="0"
-                    android:inputType="numberDecimal" />
+                    android:textAlignment="center" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_k"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="70dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                app:hintEnabled="false"
                 app:expandedHintEnabled="false"
-                app:suffixText="K"
+                app:hintEnabled="false"
                 app:layout_constraintStart_toStartOf="@id/guideline2"
-                app:layout_constraintTop_toBottomOf="@id/til_gold_gem_gm">
+                app:layout_constraintTop_toBottomOf="@id/til_gold_gem_gm"
+                app:suffixText="K">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_k"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
+                    android:inputType="numberDecimal"
                     android:text="0"
-                    android:inputType="numberDecimal" />
+                    android:textAlignment="center" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -235,14 +238,14 @@
                 app:layout_constraintBottom_toBottomOf="@+id/til_k"
                 app:layout_constraintStart_toStartOf="@+id/tv_label_stock_name"
                 app:layout_constraintTop_toTopOf="@+id/til_k" />
-
-            <CheckBox
-                android:id="@+id/cb_gem_value"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_gem_value"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:buttonTint="@color/primary_color"
                 android:text="GemValue"
+                android:layout_marginEnd="8dp"
+                android:textAppearance="@style/TextAppearance.ShweMi.Caption"
                 app:layout_constraintEnd_toStartOf="@+id/guideline2"
                 app:layout_constraintStart_toStartOf="@+id/tv_label_avg_wastage"
                 app:layout_constraintTop_toBottomOf="@+id/til_k" />
@@ -253,10 +256,10 @@
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 app:hintEnabled="false"
-                app:layout_constraintBottom_toBottomOf="@id/cb_gem_value"
+                app:layout_constraintBottom_toBottomOf="@id/btn_gem_value"
                 app:layout_constraintEnd_toEndOf="@+id/til_stock_name"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toTopOf="@id/cb_gem_value">
+                app:layout_constraintTop_toTopOf="@id/btn_gem_value">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_gem_value"
@@ -290,7 +293,7 @@
                 app:hintEnabled="false"
                 app:layout_constraintEnd_toEndOf="@+id/til_stock_name"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toBottomOf="@id/cb_gem_value">
+                app:layout_constraintTop_toBottomOf="@id/btn_gem_value">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_pt_clip_price"
@@ -338,7 +341,7 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_img_1"
-                android:layout_width="0dp"
+                android:layout_width="220dp"
                 android:layout_height="220dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
@@ -456,8 +459,10 @@
                 android:layout_width="0dp"
                 android:layout_height="220dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 android:backgroundTint="@android:color/transparent"
                 app:cardElevation="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/mcv_img_1"
                 app:layout_constraintStart_toStartOf="@id/mcv_img_1"
                 app:layout_constraintTop_toBottomOf="@id/mcv_gif">
@@ -494,7 +499,7 @@
                 android:layout_width="0dp"
                 android:layout_height="220dp"
                 android:layout_marginTop="16dp"
-                android:backgroundTint="@android:color/transparent"
+                app:cardBackgroundColor="@color/based_grey"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="8dp"
                 app:layout_constraintEnd_toEndOf="@id/mcv_img_1"
@@ -505,7 +510,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <ImageView
+                    <pl.droidsonroids.gif.GifImageView
                         android:id="@+id/iv_gif"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -522,11 +527,12 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:src="@drawable/ic_trash_can"
-                        app:layout_constraintEnd_toEndOf="@id/iv_gif"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:tint="@color/primary_color" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
+
             <TextView
                 android:id="@+id/tv_label_image"
                 android:layout_width="0dp"

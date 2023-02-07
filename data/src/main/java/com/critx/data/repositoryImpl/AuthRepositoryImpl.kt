@@ -3,6 +3,7 @@ package com.critx.data.repositoryImpl
 import com.critx.commonkotlin.util.Resource
 import com.critx.data.GetErrorMessage
 import com.critx.data.datasource.auth.AuthNetWorkDataSource
+import com.critx.data.localdatabase.LocalDatabase
 import com.critx.data.network.dto.asDomain
 import com.critx.data.network.dto.auth.asDomain
 import com.critx.domain.model.LogInSuccess
@@ -15,7 +16,8 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
-class AuthRepositoryImpl @Inject constructor(private val authNetWorkDataSource: AuthNetWorkDataSource) :
+class AuthRepositoryImpl @Inject constructor(private val authNetWorkDataSource: AuthNetWorkDataSource,
+private val localDatabase: LocalDatabase) :
     AuthRepository {
     override fun login(name: String, password: String): Flow<Resource<LogInSuccess>> =
         flow {
@@ -53,31 +55,13 @@ class AuthRepositoryImpl @Inject constructor(private val authNetWorkDataSource: 
             }
         }
 
-    override fun refreshToken(token: String): Flow<Resource<LogInSuccess>> =
+    override fun getProfile(): Flow<Resource<Profile>> =
         flow {
             emit(Resource.Loading())
             try {
                 emit(
                     Resource.Success(
-                        authNetWorkDataSource.refreshToken(token).asDomain()
-                    )
-                )
-            } catch (e: HttpException) {
-                emit(Resource.Error(GetErrorMessage.fromException(e)))
-            } catch (e: IOException) {
-                emit(Resource.Error(GetErrorMessage.fromException(e)))
-            }catch (e: Exception) {
-                emit(Resource.Error(e.message?:"Unhandled Error"))
-            }
-        }
-
-    override fun getProfile(token: String): Flow<Resource<Profile>> =
-        flow {
-            emit(Resource.Loading())
-            try {
-                emit(
-                    Resource.Success(
-                        authNetWorkDataSource.getProfile(token).data.asDomain()
+                        authNetWorkDataSource.getProfile().data.asDomain()
                     )
                 )
             } catch (e: HttpException) {

@@ -43,7 +43,7 @@ class OrderStockFragment:Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
       return FragmentOrderStockBinding.inflate(inflater).also {
           binding = it
       }.root
@@ -58,6 +58,7 @@ class OrderStockFragment:Fragment() {
         toolbarCenterText.text=getString(R.string.order_stock)
         toolbarCenterImage.isVisible =false
         toolbarEndIcon.setImageDrawable(requireContext().getDrawable(R.drawable.paper_icon))
+        toolbarEndIcon.isVisible = true
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -114,16 +115,22 @@ class OrderStockFragment:Fragment() {
             {
                 binding.tvEmptyList.isVisible = adapter.itemCount < 1
             }
-
         }
 
         binding.btnRetrieveFromGs.setOnClickListener {
             binding.tvEmptyList.isVisible = false
-            loadBookMarks(selectedJewelleryType.orEmpty(),"1")
+            loadGsNewItems(selectedJewelleryType.orEmpty())
         }
     }
     private fun loadBookMarks(jewelleryType:String,isItemFromGs:String) {
         viewModel.getBookMarks(jewelleryType,isItemFromGs).observe(viewLifecycleOwner) {
+            lifecycleScope.launch {
+                adapter.submitData(it)
+            }
+        }
+    }
+    private fun loadGsNewItems(jewelleryType:String) {
+        viewModel.getGsNewItems(jewelleryType).observe(viewLifecycleOwner) {
             lifecycleScope.launch {
                 adapter.submitData(it)
             }

@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
+import com.critx.data.localdatabase.LocalDatabase
 import com.critx.domain.useCase.box.GetBoxDataUseCase
 import com.critx.domain.useCase.box.GetBoxWeightUseCase
-import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.uiModel.checkUpTransfer.BoxScanUIModel
 import com.critx.shwemiAdmin.uiModel.checkUpTransfer.asUiModel
 import com.critx.shwemiAdmin.uiModel.checkupBoxWeight.BoxWeightUiModel

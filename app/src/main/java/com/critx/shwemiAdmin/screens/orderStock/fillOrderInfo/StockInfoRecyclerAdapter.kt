@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.critx.domain.model.orderStock.BookMarkStockInfoDomain
 import com.critx.shwemiAdmin.databinding.ItemStockInfoInFillOrderInfoBinding
+import com.critx.shwemiAdmin.uiModel.orderStock.SizeInfoUiModel
 
 class StockInfoRecyclerAdapter(private val viewModel: FillOrderInfoViewModel) :
-    ListAdapter<BookMarkStockInfoDomain, StockCodeListViewHolder>(
+    ListAdapter<SizeInfoUiModel, StockCodeListViewHolder>(
         StockCodeListDiffUtil
     ) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StockCodeListViewHolder {
@@ -31,7 +31,7 @@ class StockCodeListViewHolder(
     private val binding: ItemStockInfoInFillOrderInfoBinding,
     private val viewModel: FillOrderInfoViewModel
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(data: BookMarkStockInfoDomain) {
+    fun bind(data: SizeInfoUiModel) {
         binding.tvSizeValue.text = data.size
         binding.tvInstockQty.text = data.stock
         binding.edtOrderQty.setText(viewModel.orderQtyList[bindingAdapterPosition])
@@ -52,17 +52,17 @@ class StockCodeListViewHolder(
 }
 
 
-object StockCodeListDiffUtil : DiffUtil.ItemCallback<BookMarkStockInfoDomain>() {
+object StockCodeListDiffUtil : DiffUtil.ItemCallback<SizeInfoUiModel>() {
     override fun areItemsTheSame(
-        oldItem: BookMarkStockInfoDomain,
-        newItem: BookMarkStockInfoDomain
+        oldItem: SizeInfoUiModel,
+        newItem: SizeInfoUiModel
     ): Boolean {
         return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(
-        oldItem: BookMarkStockInfoDomain,
-        newItem: BookMarkStockInfoDomain
+        oldItem: SizeInfoUiModel,
+        newItem: SizeInfoUiModel
     ): Boolean {
         return oldItem == newItem
     }

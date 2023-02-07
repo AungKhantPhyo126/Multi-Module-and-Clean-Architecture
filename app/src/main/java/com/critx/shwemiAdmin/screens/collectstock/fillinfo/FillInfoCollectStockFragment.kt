@@ -19,6 +19,7 @@ import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentCollectStockBinding
 import com.critx.shwemiAdmin.databinding.FragmentFillInfoCollectStockBinding
+import com.critx.shwemiAdmin.getYwaeFromKPY
 import com.critx.shwemiAdmin.showDropdown
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -155,19 +156,24 @@ class FillInfoCollectStockFragment : Fragment() {
     }
 
     fun collectBatch() {
-        val kyat: RequestBody? = if (binding.edtK.text.isNullOrEmpty()) {
-            null
-        } else binding.edtK.text.toString()
-            .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val kyat = if (binding.edtK.text.isNullOrEmpty()) {
+            0
+        } else binding.edtK.text.toString().toInt()
 
-        val pae: RequestBody? = if (binding.edtP.text.isNullOrEmpty()) {
-            null
-        } else binding.edtP.text.toString()
-            .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val pae = if (binding.edtP.text.isNullOrEmpty()) {
+            0
+        } else binding.edtP.text.toString().toInt()
+
+        val ywaeNumber = if (binding.edtY.text.isNullOrEmpty()) {
+            0.0
+        } else binding.edtY.text.toString().toDouble()
+
+        val ywaeFromKpy = getYwaeFromKPY(kyat,
+            pae,ywaeNumber)
 
         val ywae: RequestBody? = if (binding.edtY.text.isNullOrEmpty()) {
             null
-        } else binding.edtY.text.toString()
+        } else ywaeFromKpy.toString()
             .toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
         val goldSmith:  RequestBody? = if (viewModel.selectedGoldSmith.isNullOrEmpty()) {
@@ -192,8 +198,6 @@ class FillInfoCollectStockFragment : Fragment() {
         }
 
         viewModel.collectBatch(
-            kyat,
-            pae,
             ywae,
             goldSmith,
             bonus,

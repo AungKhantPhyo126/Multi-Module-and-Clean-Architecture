@@ -2,11 +2,11 @@ package com.critx.shwemiAdmin.screens.collectstock
 
 import androidx.lifecycle.*
 import com.critx.commonkotlin.util.Resource
+import com.critx.data.localdatabase.LocalDatabase
 import com.critx.domain.model.collectStock.ProductIdWithTypeDomain
 import com.critx.domain.useCase.collectStock.CollectSingleUseCase
 import com.critx.domain.useCase.collectStock.GetProductIdUseCase
 import com.critx.domain.useCase.collectStock.ScanProductCodeUseCase
-import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.uiModel.collectStock.CollectStockBatchUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest

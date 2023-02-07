@@ -4,17 +4,17 @@ fun getOrderValue(kyat:Double,pae:Double,ywae:Double,jewelleryType:String,totalO
     var result = ""
     when(jewelleryType){
         "A"->{
-            result = ((totalOrderQty * kyat* 16)/16).toString()
+            result = ((totalOrderQty * kyat* 16)*128/16).toString()
         }
         "B"->{
-            result = ((totalOrderQty * kyat* 16)/17).toString()
+            result = ((totalOrderQty * kyat* 16)*128/17).toString()
 
         }
         "C"->{
-            result = ((totalOrderQty * kyat* 16)/17.5).toString()
+            result = ((totalOrderQty * kyat* 16)*128/17.5).toString()
 
         }else->{
-        result = ((totalOrderQty * kyat* 16)/18).toString()
+        result = ((totalOrderQty * kyat* 16)*128/18).toString()
         }
     }
 

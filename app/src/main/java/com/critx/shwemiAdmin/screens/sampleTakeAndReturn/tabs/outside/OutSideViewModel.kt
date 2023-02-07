@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
+import com.critx.data.localdatabase.LocalDatabase
 import com.critx.domain.model.SimpleData
 import com.critx.domain.model.collectStock.ProductIdWithTypeDomain
 import com.critx.domain.model.sampleTakeAndReturn.OutsideSampleDomain
@@ -12,13 +13,13 @@ import com.critx.domain.useCase.sampleTakeAndReturn.AddToHandedListUseCase
 import com.critx.domain.useCase.sampleTakeAndReturn.GetOutsideSampleUseCase
 import com.critx.domain.useCase.sampleTakeAndReturn.ReturnSampleUseCase
 import com.critx.domain.useCase.sampleTakeAndReturn.SaveOutsideSampleUseCase
-import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.SelectedImage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,14 +52,8 @@ class OutSideViewModel @Inject constructor(
         _saveOutsideSample.value = null
     }
 
-    var selectedImgUri= MutableLiveData<SelectedImage?>(null)
-    fun setSelectedImgUri(selectedImage: SelectedImage?){
-        selectedImgUri.value = selectedImage
-    }
+    var selectedImgUri: File?= null
 
-    fun resetSelectedImg(){
-        selectedImgUri.value = null
-    }
 
     private val _addToHandedListLiveData = MutableLiveData<Resource<String>>()
     val addToHandedListLiveData: LiveData<Resource<String>>
@@ -153,7 +148,7 @@ class OutSideViewModel @Inject constructor(
                         _saveOutsideSample.value = Resource.Loading()
                     }
                     is Resource.Success -> {
-                        _saveOutsideSample.value = Resource.Success(it.data!!.sampleId!!)
+                        _saveOutsideSample.value = Resource.Success(it.data!!.id!!)
 
                     }
                     is Resource.Error -> {

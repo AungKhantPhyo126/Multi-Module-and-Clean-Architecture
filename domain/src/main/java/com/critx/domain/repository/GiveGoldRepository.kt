@@ -12,17 +12,13 @@ interface GiveGoldRepository {
         goldSmithId: String,
         orderItem: String,
         orderQty: String,
-        weightK: String,
-        weighP: String,
         weightY: String,
         goldBoxId: String,
         goldWeight: String,
         gemWeight: String,
         goldAndGemWeight:String,
-        wastageK: String,
-        wastageP: String,
         wastageY: String,
-        dueDate: String,
+        dueDate: String?,
         sampleList: List<String>?
     ):Flow<Resource<SimpleData>>
 

@@ -27,7 +27,6 @@ import com.critx.shwemiAdmin.databinding.FragmentSetUpStocklBinding
 import com.critx.shwemiAdmin.screens.dailyGoldPrice.DailyGoldPriceFragmentDirections
 import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryTypeUiModel
-import com.critx.shwemiAdmin.workerManager.RefreshTokenWorker
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint

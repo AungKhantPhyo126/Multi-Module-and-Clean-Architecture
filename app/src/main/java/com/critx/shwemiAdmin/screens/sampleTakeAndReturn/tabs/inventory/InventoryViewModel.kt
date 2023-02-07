@@ -5,12 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
+import com.critx.data.localdatabase.LocalDatabase
 import com.critx.domain.model.collectStock.ProductIdWithTypeDomain
 import com.critx.domain.model.sampleTakeAndReturn.*
 import com.critx.domain.useCase.collectStock.ScanProductCodeUseCase
 import com.critx.domain.useCase.sampleTakeAndReturn.*
-import com.critx.shwemiAdmin.localDatabase.LocalDatabase
-import com.critx.shwemiAdmin.notifyObserverWithResource
 import com.critx.shwemiAdmin.uiModel.simpleTakeAndReturn.SampleItemUIModel
 import com.critx.shwemiAdmin.uiModel.simpleTakeAndReturn.asUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -125,10 +124,9 @@ class InventoryViewModel @Inject constructor(
     }
 
     fun resetSample() {
-        scannedSamples = mutableListOf<SampleItemUIModel>()
-        _scannedSampleLiveData.value = mutableListOf<SampleItemUIModel>()
-        specificationList = mutableListOf<String>()
-        _sampleLiveData.value = null
+        specificationList.removeAll(specificationList)
+        scannedSamples.removeAll(scannedSamples)
+        _scannedSampleLiveData.value = scannedSamples
     }
 
 
@@ -179,8 +177,8 @@ class InventoryViewModel @Inject constructor(
                 _saveSampleLiveData.value = Resource.Error("Please Enter Specification")
             }
             else{
-                repeat(scannedSamples.filter { it.specification.isNullOrEmpty() }.map { it.sampleId }.size) {
-                    sampleIdHashMap["sample[${scannedSamples.map { it.productId }[it]}]"] =
+                repeat(scannedSamples.filter { it.specification.isNullOrEmpty() }.map { it.id }.size) {
+                    sampleIdHashMap["sample[${scannedSamples.map { it.id }[it]}]"] =
                         specificationList.filter { it.isNotEmpty() }[it]
                 }
 

@@ -22,13 +22,14 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_stock_filter"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         app:hintEnabled="false"
         android:elevation="8dp"
+        app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
         app:endIconTint="@color/primary_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

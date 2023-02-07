@@ -20,12 +20,14 @@ data class VoucherSampleDto(
 )
 
 data class FileShweMiDto(
+    val id:String?,
     val type: String?,
     val url:String?
 )
 
 fun FileShweMiDto.asDomain():FileShweMiDomain{
     return  FileShweMiDomain(
+        id = id.orEmpty(),
         type = type.orEmpty(),
         url = url.orEmpty()
     )

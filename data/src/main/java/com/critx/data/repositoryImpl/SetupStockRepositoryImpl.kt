@@ -11,6 +11,7 @@ import com.critx.data.network.dto.setupStock.jewelleryQuality.asDomain
 import com.critx.data.network.dto.setupStock.jewelleryType.asDomain
 import com.critx.domain.model.SetupStock.JewelleryType.JewelleryType
 import com.critx.domain.model.SetupStock.ProductCodeDomain
+import com.critx.domain.model.SetupStock.ProductSingleDomain
 import com.critx.domain.model.SetupStock.jewelleryCategory.CalculateKPY
 import com.critx.domain.model.SetupStock.jewelleryCategory.DesignDomain
 import com.critx.domain.model.SetupStock.jewelleryCategory.JewelleryCategory
@@ -25,6 +26,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.HttpException
 import java.io.IOException
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 class SetupStockRepositoryImpl @Inject constructor(
@@ -66,13 +68,23 @@ class SetupStockRepositoryImpl @Inject constructor(
             }
         }
 
-    override fun getJewelleryGroup(token: String,frequentUse:Int,firstCatId:Int,secondCatId:Int): Flow<Resource<JewelleryGroupDomain>> =
+    override fun getJewelleryGroup(
+        token: String,
+        frequentUse: Int,
+        firstCatId: Int,
+        secondCatId: Int
+    ): Flow<Resource<JewelleryGroupDomain>> =
         flow {
             emit(Resource.Loading())
             try {
                 emit(
                     Resource.Success(
-                        setupStockNetWorkDatasource.getJewelleryGroup(token,frequentUse,firstCatId,secondCatId).asDomain()
+                        setupStockNetWorkDatasource.getJewelleryGroup(
+                            token,
+                            frequentUse,
+                            firstCatId,
+                            secondCatId
+                        ).asDomain()
                     )
                 )
             } catch (e: HttpException) {
@@ -114,21 +126,21 @@ class SetupStockRepositoryImpl @Inject constructor(
 
     override fun editJewelleryGroup(
         token: String,
-        method:RequestBody,
+        method: RequestBody,
         groupId: String,
         image: MultipartBody.Part?,
         jewellery_type_id: RequestBody,
         jewellery_quality_id: RequestBody,
         is_frequently_used: RequestBody,
         name: RequestBody
-    ): Flow<Resource<SimpleData>>  =
+    ): Flow<Resource<SimpleData>> =
         flow {
             emit(Resource.Loading())
             try {
                 emit(
                     Resource.Success(
                         setupStockNetWorkDatasource.editJewelleryGroup(
-                            token,method,
+                            token, method,
                             groupId,
                             image, jewellery_type_id, jewellery_quality_id, is_frequently_used, name
                         ).response.asDomain()
@@ -154,7 +166,7 @@ class SetupStockRepositoryImpl @Inject constructor(
                 emit(
                     Resource.Success(
                         setupStockNetWorkDatasource.deleteJewelleryGroup(
-                            token,method,
+                            token, method,
                             groupId,
                         ).response.asDomain()
                     )
@@ -179,7 +191,7 @@ class SetupStockRepositoryImpl @Inject constructor(
                 emit(
                     Resource.Success(
                         setupStockNetWorkDatasource.deleteJewelleryCategory(
-                            token,method,
+                            token, method,
                             catId,
                         ).response.asDomain()
                     )
@@ -205,7 +217,13 @@ class SetupStockRepositoryImpl @Inject constructor(
             try {
                 emit(
                     Resource.Success(
-                        setupStockNetWorkDatasource.getJewelleryCategory(token,frequentUse,firstCatId,secondCatId,thirdCatId).data.map { it.asDomain() }
+                        setupStockNetWorkDatasource.getJewelleryCategory(
+                            token,
+                            frequentUse,
+                            firstCatId,
+                            secondCatId,
+                            thirdCatId
+                        ).data.map { it.asDomain() }
                     )
                 )
             } catch (e: HttpException) {
@@ -223,18 +241,16 @@ class SetupStockRepositoryImpl @Inject constructor(
         jewellery_quality_id: RequestBody,
         groupId: RequestBody,
         is_frequently_used: RequestBody,
-        withGem:RequestBody,
+        withGem: RequestBody,
         name: RequestBody,
         avgWeigh: RequestBody,
-        avgKyat:RequestBody,
-        avgPae:RequestBody,
-        avgYwae:RequestBody,
+        avgYwae: RequestBody,
         images: MutableList<MultipartBody.Part>,
         video: MultipartBody.Part?,
         specification: RequestBody,
         design: MutableList<RequestBody>,
-        orderToGs:RequestBody,
-        recommendCat:MutableList<RequestBody>?
+        orderToGs: RequestBody,
+        recommendCat: MutableList<RequestBody>?
 
     ): Flow<Resource<JewelleryCategory>> =
         flow {
@@ -243,8 +259,22 @@ class SetupStockRepositoryImpl @Inject constructor(
                 emit(
                     Resource.Success(
                         setupStockNetWorkDatasource.createJewelleryCategory(
-                            token, jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used,withGem, name, avgWeigh, avgKyat,avgPae,avgYwae, images, video, specification, design,orderToGs
-                        ,recommendCat).data.asDomain()
+                            token,
+                            jewellery_type_id,
+                            jewellery_quality_id,
+                            groupId,
+                            is_frequently_used,
+                            withGem,
+                            name,
+                            avgWeigh,
+                            avgYwae,
+                          images,
+                            video,
+                            specification,
+                            design,
+                            orderToGs,
+                            recommendCat
+                        ).data.asDomain()
                     )
                 )
             } catch (e: HttpException) {
@@ -267,10 +297,15 @@ class SetupStockRepositoryImpl @Inject constructor(
         withGem: RequestBody,
         name: RequestBody,
         avgWeigh: RequestBody,
-        avgKyat:RequestBody,
-        avgPae:RequestBody,
-        avgYwae:RequestBody,
-        images: MutableList<MultipartBody.Part>,
+        avgYwae: RequestBody,
+        image1: MultipartBody.Part?,
+        image1Id: MultipartBody.Part?,
+        image2: MultipartBody.Part?,
+        image2Id: MultipartBody.Part?,
+        image3: MultipartBody.Part?,
+        image3Id: MultipartBody.Part?,
+        gif: MultipartBody.Part?,
+        gifId: MultipartBody.Part?,
         video: MultipartBody.Part?,
         specification: RequestBody,
         design: MutableList<RequestBody>,
@@ -283,8 +318,31 @@ class SetupStockRepositoryImpl @Inject constructor(
                 emit(
                     Resource.Success(
                         setupStockNetWorkDatasource.editJewelleryCategory(
-                            token, method,categoryId,jewellery_type_id, jewellery_quality_id, groupId, is_frequently_used,withGem, name, avgWeigh, avgKyat,avgPae,avgYwae, images, video, specification, design,orderToGs
-                            ,recommendCat).response.asDomain()
+                            token,
+                            method,
+                            categoryId,
+                            jewellery_type_id,
+                            jewellery_quality_id,
+                            groupId,
+                            is_frequently_used,
+                            withGem,
+                            name,
+                            avgWeigh,
+                            avgYwae,
+                            image1,
+                            image1Id,
+                            image2,
+                            image2Id,
+                            image3,
+                            image3Id,
+                            gif,
+                            gifId,
+                            video,
+                            specification,
+                            design,
+                            orderToGs,
+                            recommendCat
+                        ).response.asDomain()
                     )
                 )
             } catch (e: HttpException) {
@@ -305,7 +363,10 @@ class SetupStockRepositoryImpl @Inject constructor(
             try {
                 emit(
                     Resource.Success(
-                        setupStockNetWorkDatasource.getRelatedJewelleryCategories(token,categoryId).data.map { it.asDomain() }
+                        setupStockNetWorkDatasource.getRelatedJewelleryCategories(
+                            token,
+                            categoryId
+                        ).data.map { it.asDomain() }
                     )
                 )
             } catch (e: HttpException) {
@@ -342,7 +403,10 @@ class SetupStockRepositoryImpl @Inject constructor(
             }
         }
 
-    override fun getDesignList(token: String,jewelleryType:String): Flow<Resource<List<DesignDomain>>> =
+    override fun getDesignList(
+        token: String,
+        jewelleryType: String
+    ): Flow<Resource<List<DesignDomain>>> =
         flow {
             emit(Resource.Loading())
             try {
@@ -366,14 +430,12 @@ class SetupStockRepositoryImpl @Inject constructor(
     override fun createProduct(
         token: String,
         name: RequestBody?,
-        productCode:RequestBody,
+        productCode: RequestBody,
         type: RequestBody,
         quality: RequestBody,
         group: RequestBody?,
         categoryId: RequestBody?,
         goldAndGemWeight: RequestBody?,
-        gemWeightKyat: RequestBody?,
-        gemWeightPae: RequestBody?,
         gemWeightYwae: RequestBody?,
         gemValue: RequestBody?,
         ptAndClipCost: RequestBody?,
@@ -383,16 +445,40 @@ class SetupStockRepositoryImpl @Inject constructor(
         diamondValueFromGS: RequestBody?,
         diamondPriceForSale: RequestBody?,
         diamondValueForSale: RequestBody?,
-        images: List<MultipartBody.Part>,
+        image1: MultipartBody.Part?,
+        image1Id: MultipartBody.Part?,
+        image2: MultipartBody.Part?,
+        image2Id: MultipartBody.Part?,
+        image3: MultipartBody.Part?,
+        image3Id: MultipartBody.Part?,
+        gif: MultipartBody.Part?,
+        gifId: MultipartBody.Part?,
         video: MultipartBody.Part?
-    ): Flow<Resource<SimpleData>>  =
+    ): Flow<Resource<SimpleData>> =
         flow {
             emit(Resource.Loading())
             try {
                 emit(
                     Resource.Success(
                         setupStockNetWorkDatasource.createProduct(
-                            token,name,productCode, type, quality, group, categoryId, goldAndGemWeight, gemWeightKyat, gemWeightPae, gemWeightYwae, gemValue, ptAndClipCost, maintenanceCost, diamondInfo, diamondPriceFromGS, diamondValueFromGS, diamondPriceForSale, diamondValueForSale, images, video
+                            token,
+                            name,
+                            productCode,
+                            type,
+                            quality,
+                            group,
+                            categoryId,
+                            goldAndGemWeight,
+                            gemWeightYwae,
+                            gemValue,
+                            ptAndClipCost,
+                            maintenanceCost,
+                            diamondInfo,
+                            diamondPriceFromGS,
+                            diamondValueFromGS,
+                            diamondPriceForSale,
+                            diamondValueForSale,
+                            image1, image1Id, image2, image2Id, image3, image3Id, gif, gifId, video
                         ).response.asDomain()
                     )
                 )
@@ -405,15 +491,106 @@ class SetupStockRepositoryImpl @Inject constructor(
             }
         }
 
-    override fun getProductCode(token: String): Flow<Resource<ProductCodeDomain>>  =
+    override suspend fun editProduct(
+        token: String,
+        method: RequestBody,
+        productCode: String,
+        name: RequestBody?,
+        type: RequestBody,
+        quality: RequestBody,
+        group: RequestBody?,
+        categoryId: RequestBody?,
+        goldAndGemWeight: RequestBody?,
+        gemWeightYwae: RequestBody?,
+        gemValue: RequestBody?,
+        ptAndClipCost: RequestBody?,
+        maintenanceCost: RequestBody?,
+        diamondInfo: RequestBody?,
+        diamondPriceFromGS: RequestBody?,
+        diamondValueFromGS: RequestBody?,
+        diamondPriceForSale: RequestBody?,
+        diamondValueForSale: RequestBody?,
+        image1: MultipartBody.Part?,
+        image1Id: MultipartBody.Part?,
+        image2: MultipartBody.Part?,
+        image2Id: MultipartBody.Part?,
+        image3: MultipartBody.Part?,
+        image3Id: MultipartBody.Part?,
+        gif: MultipartBody.Part?,
+        gifId: MultipartBody.Part?,
+        video: MultipartBody.Part?
+    ): Resource<SimpleData>{
+          return try {
+
+                    Resource.Success(
+                        setupStockNetWorkDatasource.editProduct(
+                            token,
+                            method,
+                            productCode,
+                            name,
+                            type,
+                            quality,
+                            group,
+                            categoryId,
+                            goldAndGemWeight,
+                            gemWeightYwae,
+                            gemValue,
+                            ptAndClipCost,
+                            maintenanceCost,
+                            diamondInfo,
+                            diamondPriceFromGS,
+                            diamondValueFromGS,
+                            diamondPriceForSale,
+                            diamondValueForSale,
+                            image1, image1Id, image2, image2Id, image3, image3Id, gif, gifId, video).response.asDomain()
+                    )
+
+            } catch (e: HttpException) {
+                Resource.Error(GetErrorMessage.fromException(e))
+            } catch (e: IOException) {
+                Resource.Error(GetErrorMessage.fromException(e))
+            } catch (e: Exception) {
+                Resource.Error(e.message ?: "Unhandled Error")
+            }
+        }
+
+
+
+    override fun getProductCode(token: String,jewelleryQualityId:String): Flow<Resource<ProductCodeDomain>> =
         flow {
             emit(Resource.Loading())
             try {
                 emit(
                     Resource.Success(
                         setupStockNetWorkDatasource.getProductCode(
-                            token
+                            token,
+                            jewelleryQualityId
                         ).data.asDomain()
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }catch (e:SocketTimeoutException){
+                emit(Resource.Error(e.message))
+            }
+        }
+
+    override fun getProduct(
+        token: String,
+        productCode: String
+    ): Flow<Resource<ProductSingleDomain>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        setupStockNetWorkDatasource.getProduct(
+                            token, productCode
+                        ).asDomain()
                     )
                 )
             } catch (e: HttpException) {

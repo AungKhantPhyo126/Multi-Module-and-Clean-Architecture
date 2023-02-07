@@ -3,17 +3,11 @@ package com.critx.shwemiAdmin.pagingDataSource.pagingRepo
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.critx.commonkotlin.util.Resource
-import com.critx.data.network.datasource.getErrorString
-import com.critx.data.network.datasource.parseError
-import com.critx.data.network.dto.setupStock.jewelleryCategory.error.CreateCategoryError
-import com.critx.data.network.dto.setupStock.jewelleryCategory.error.getMessage
-import com.critx.domain.model.orderStock.BookMarkStockDomain
 import com.critx.domain.model.orderStock.PagingMetaDomain
 import com.critx.domain.useCase.orderStock.GetBookMarksUseCase
 import com.critx.shwemiAdmin.uiModel.orderStock.BookMarkStockUiModel
 import com.critx.shwemiAdmin.uiModel.orderStock.asUiModel
 import kotlinx.coroutines.flow.collectLatest
-import org.threeten.bp.LocalDate
 
 class GetBookMarkPagingDataSource(
     private val getBookMarksUseCase: GetBookMarksUseCase,

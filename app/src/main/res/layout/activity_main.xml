@@ -27,7 +27,7 @@
                 android:minHeight="?attr/actionBarSize"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_connection_state"
                 app:navigationIcon="@drawable/ic_menu">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -81,6 +81,20 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/materialToolbar"
                 app:navGraph="@navigation/nav_graph" />
+
+            <TextView
+                android:id="@+id/tv_connection_state"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="No internet Connection"
+                android:background="@color/primary_color"
+                android:textColor="@color/white"
+                android:padding="8dp"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

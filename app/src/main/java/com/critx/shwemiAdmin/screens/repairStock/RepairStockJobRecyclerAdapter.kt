@@ -8,24 +8,24 @@ import androidx.recyclerview.widget.RecyclerView
 import com.critx.domain.model.repairStock.JobDomain
 import com.critx.shwemiAdmin.databinding.ItemJobBinding
 
-class RepairStockJobRecyclerAdapter : ListAdapter<JobDomain, CollectStockViewHolder>(
+class RepairStockJobRecyclerAdapter : ListAdapter<JobDomain, RepairStockJobViewHolder>(
     CollectStockDiffUtil
 )  {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CollectStockViewHolder {
-        return CollectStockViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepairStockJobViewHolder {
+        return RepairStockJobViewHolder(
             ItemJobBinding.inflate(
                 LayoutInflater.from(parent.context),parent,false
             ))
     }
 
-    override fun onBindViewHolder(holder: CollectStockViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RepairStockJobViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
 
 }
 
-class CollectStockViewHolder(private val binding: ItemJobBinding): RecyclerView.ViewHolder(binding.root){
+class RepairStockJobViewHolder(private val binding: ItemJobBinding): RecyclerView.ViewHolder(binding.root){
     fun bind(data: JobDomain){
        binding.tvJob.text = data.repair_job_id.name
        binding.tvItem.text = data.jewellery_type_id.name

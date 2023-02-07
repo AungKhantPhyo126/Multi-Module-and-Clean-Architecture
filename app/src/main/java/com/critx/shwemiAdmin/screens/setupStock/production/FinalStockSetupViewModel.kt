@@ -1,15 +1,14 @@
 package com.critx.shwemiAdmin.screens.setupStock.production
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
+import com.critx.data.localdatabase.LocalDatabase
 import com.critx.domain.useCase.SetUpStock.CreateProductUseCase
 import com.critx.domain.useCase.SetUpStock.GetProductCodeUseCase
 import com.critx.shwemiAdmin.UiEvent
-import com.critx.shwemiAdmin.localDatabase.LocalDatabase
-import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.SelectedImage
-import com.critx.shwemiAdmin.uistate.CreateProductUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -23,66 +22,57 @@ class FinalStockSetupViewModel @Inject constructor(
     private val localDatabase: LocalDatabase,
     private val createProductUseCase: CreateProductUseCase,
     private val getProductCodeUseCase: GetProductCodeUseCase
-) :ViewModel(){
+) : ViewModel() {
 
-    var selectedImgUri1 = MutableLiveData<SelectedImage?>(null)
-    var selectedImgUri2 = MutableLiveData<SelectedImage?>(null)
-    var selectedImgUri3 = MutableLiveData<SelectedImage?>(null)
-    var selectedVideoUri = MutableLiveData<File?>(null)
-    var selectedGifUri= MutableLiveData<SelectedImage?>(null)
+    var selectedImgUri1: File? = null
+    var selectedImgUri2: File? = null
+    var selectedImgUri3: File? = null
+    var selectedGifUri: File? = null
+    var selectedVideoUri: File? = null
 
-    fun setSelectedImgUri1(selectedImage: SelectedImage?) {
-        selectedImgUri1.value = selectedImage
+
+    var diamondInfo: String? = null
+    var diamondPriceFromGS: String? = null
+    var diamondValueFromGS: String? = null
+    var diamondPriceForSale: String? = null
+    var diamondValueForSale: String? = null
+    var gemValue: String? = null
+
+    fun resetDimaondData() {
+        diamondInfo = null
+        diamondPriceFromGS = null
+        diamondValueFromGS = null
+        diamondPriceForSale = null
+        diamondValueForSale = null
     }
 
-    fun setSelectedImgUri2(selectedImage: SelectedImage?) {
-        selectedImgUri2?.value = selectedImage
+    private val _createProductLiveData = MutableLiveData<Resource<String>>()
+    val createProductLiveData: LiveData<Resource<String>>
+        get() = _createProductLiveData
+
+    fun resetCreateLiveData() {
+        _createProductLiveData.value = null
     }
 
-    fun setSelectedImgUri3(selectedImage: SelectedImage?) {
-        selectedImgUri3?.value = selectedImage
+    private val _getProductLiveData = MutableLiveData<Resource<String>>()
+    val getProductLiveData: LiveData<Resource<String>>
+        get() = _getProductLiveData
+
+    fun resetGetProductLiveData() {
+        _getProductLiveData.value = null
     }
-
-    fun setSelectedGif(selectedImage: SelectedImage?) {
-        selectedGifUri?.value = selectedImage
-    }
-
-    fun setSelectedVideo(selectedVideo: File?) {
-        selectedVideoUri?.value = selectedVideo
-    }
-
-    var diamondInfo:String? = null
-    var diamondPriceFromGS:String? = null
-    var diamondValueFromGS:String? = null
-    var diamondPriceForSale:String? = null
-    var diamondValueForSale:String? = null
-    var gemValue:String? = null
-
-    fun resetDimaondData(){
-         diamondInfo = null
-         diamondPriceFromGS = null
-         diamondValueFromGS = null
-         diamondPriceForSale = null
-         diamondValueForSale = null
-    }
-
-    private val _createProductUiState = MutableStateFlow(CreateProductUiState())
-    val createProductState = _createProductUiState.asStateFlow()
-
 
     private var _event = MutableSharedFlow<UiEvent>()
     val event = _event.asSharedFlow()
 
     fun createProduct(
         name: RequestBody?,
-        productCode:RequestBody,
+        productCode: RequestBody,
         type: RequestBody,
         quality: RequestBody,
         group: RequestBody?,
         categoryId: RequestBody?,
         goldAndGemWeight: RequestBody?,
-        gemWeightKyat: RequestBody?,
-        gemWeightPae: RequestBody?,
         gemWeightYwae: RequestBody?,
         gemValue: RequestBody?,
         ptAndClipCost: RequestBody?,
@@ -92,63 +82,73 @@ class FinalStockSetupViewModel @Inject constructor(
         diamondValueFromGS: RequestBody?,
         diamondPriceForSale: RequestBody?,
         diamondValueForSale: RequestBody?,
-        images: List<MultipartBody.Part>,
+        image1: MultipartBody.Part?,
+        image1Id: MultipartBody.Part?,
+        image2: MultipartBody.Part?,
+        image2Id: MultipartBody.Part?,
+        image3: MultipartBody.Part?,
+        image3Id: MultipartBody.Part?,
+        gif: MultipartBody.Part?,
+        gifId: MultipartBody.Part?,
         video: MultipartBody.Part?
-    ){
+    ) {
         viewModelScope.launch {
-            createProductUseCase(localDatabase.getToken().orEmpty(),
-            name,productCode, type, quality, group, categoryId, goldAndGemWeight,
-                gemWeightKyat, gemWeightPae, gemWeightYwae, gemValue,
-                ptAndClipCost, maintenanceCost, diamondInfo, diamondPriceFromGS,
-                diamondValueFromGS, diamondPriceForSale, diamondValueForSale, images, video).collectLatest {
-                    when(it){
-                        is Resource.Loading->{
-                            _createProductUiState.update { uiState->
-                                uiState.copy(loading = true)
-                            }
-                        }
-                        is Resource.Success->{
-                            _createProductUiState.update { uiState->
-                                uiState.copy(loading = false, success = "success")
-                            }
-                        }
-                        is Resource.Error->{
-                            _createProductUiState.update { uiState->
-                                uiState.copy(loading = false, error = "success", success = null)
-                            }
-                            it.message?.let {errorString->
-                                _event.emit(UiEvent.ShowErrorSnackBar(errorString))
-                            }
-                        }
+            createProductUseCase(
+                localDatabase.getToken().orEmpty(),
+                name,
+                productCode,
+                type,
+                quality,
+                group,
+                categoryId,
+                goldAndGemWeight,
+                gemWeightYwae,
+                gemValue,
+                ptAndClipCost,
+                maintenanceCost,
+                diamondInfo,
+                diamondPriceFromGS,
+                diamondValueFromGS,
+                diamondPriceForSale,
+                diamondValueForSale,
+                image1,
+                image1Id,
+                image2,
+                image2Id,
+                image3,
+                image3Id,
+                gif,
+                gifId,
+                video
+            ).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _createProductLiveData.value = Resource.Loading()
                     }
+                    is Resource.Success -> {
+                        _createProductLiveData.value = Resource.Success(it.data!!.message)
+                    }
+                    is Resource.Error -> {
+                        _createProductLiveData.value = Resource.Error(it.message)
+                    }
+                }
             }
         }
     }
 
-    init {
-        getProductCode()
-    }
-    fun getProductCode(){
+
+    fun getProductCode(jewelleryQualityId:String) {
         viewModelScope.launch {
-            getProductCodeUseCase(localDatabase.getToken().orEmpty()).collectLatest {
-                when(it){
-                    is Resource.Loading->{
-                        _createProductUiState.update { uiState->
-                            uiState.copy(getProductCodeLoading = true)
-                        }
+            getProductCodeUseCase(localDatabase.getToken().orEmpty(),jewelleryQualityId).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _getProductLiveData.value = Resource.Loading()
                     }
-                    is Resource.Success->{
-                        _createProductUiState.update { uiState->
-                            uiState.copy(getProductCodeLoading = false, getProductCodeSuccess = it.data?.code)
-                        }
+                    is Resource.Success -> {
+                        _getProductLiveData.value = Resource.Success(it.data!!.code)
                     }
-                    is Resource.Error->{
-                        _createProductUiState.update { uiState->
-                            uiState.copy(getProductCodeLoading = false, getProductCodeError = it.message, getProductCodeSuccess = null)
-                        }
-                        it.message?.let {errorString->
-                            _event.emit(UiEvent.ShowErrorSnackBar(errorString))
-                        }
+                    is Resource.Error -> {
+                        _getProductLiveData.value = Resource.Error(it.message)
                     }
                 }
             }

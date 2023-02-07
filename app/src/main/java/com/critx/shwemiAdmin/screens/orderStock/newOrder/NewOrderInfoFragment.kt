@@ -27,25 +27,25 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.critx.common.qrscan.getBarLauncherTest
+import com.critx.common.qrscan.scanQrCode
 import com.critx.common.ui.getAlertDialog
 import com.critx.common.ui.loadImageWithGlide
 import com.critx.common.ui.showSuccessDialog
 import com.critx.commonkotlin.util.Resource
 import com.critx.commonkotlin.util.getOrderValue
-import com.critx.shwemiAdmin.R
+import com.critx.shwemiAdmin.*
 import com.critx.shwemiAdmin.databinding.FragmentFillOrderInfoBinding
 import com.critx.shwemiAdmin.databinding.FragmentNewOrderInfoBinding
-import com.critx.shwemiAdmin.hideKeyboard
 import com.critx.shwemiAdmin.screens.orderStock.fillOrderInfo.*
 import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.SelectedImage
 import com.critx.shwemiAdmin.screens.setupStock.third.edit.getRealPathFromUri
-import com.critx.shwemiAdmin.showDropdown
-import com.critx.shwemiAdmin.uiModel.collectStock.asBookMarkOrder
+import com.critx.shwemiAdmin.uiModel.collectStock.asSizeInfo
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
@@ -57,8 +57,7 @@ class NewOrderInfoFragment : Fragment() {
     private val viewModel by viewModels<FillOrderInfoViewModel>()
     private val sharedViewModel by activityViewModels<SharedViewModel>()
     private lateinit var barlauncer: Any
-    var photo: MultipartBody.Part? = null
-    var orderedPhoto: MultipartBody.Part? = null
+    private lateinit var barLauncherVoucher: Any
 
     private lateinit var launchChooseImage: ActivityResultLauncher<Intent>
     private lateinit var launchChooseOrderImage: ActivityResultLauncher<Intent>
@@ -82,23 +81,14 @@ class NewOrderInfoFragment : Fragment() {
         super.onCreate(savedInstanceState)
         launchChooseImage =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                var selectedImage: Bitmap?
                 if (result.resultCode == Activity.RESULT_OK) {
-                    result.data?.data?.let {
-                        val imageStream: InputStream =
-                            requireContext().contentResolver?.openInputStream(it)!!
-                        selectedImage = BitmapFactory.decodeStream(imageStream)
-//                        selectedImage = getResizedBitmap(
-//                            selectedImage!!,
-//                            500
-//                        );// 400 is for example, replace with desired size
-                        Log.i("imageResize", selectedImage?.width.toString())
-                        val file = getRealPathFromUri(requireContext(), it)?.let { it1 ->
-                            File(
-                                it1
-                            )
+                    val data = result.data
+                    if (data != null && data.data != null) {
+                        getRealPathFromUri(requireContext(), data.data!!)?.let { path ->
+                            viewModel.selectedImgOutsideUri = File(path)
+
                         }
-                        viewModel.setSelectedImgUri(SelectedImage(file!!, selectedImage!!))
+                        binding.includeSampleTakeSection.ivOutside.setImageURI(data.data)
                     }
                 }
 
@@ -108,21 +98,14 @@ class NewOrderInfoFragment : Fragment() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 var selectedImage: Bitmap?
                 if (result.resultCode == Activity.RESULT_OK) {
-                    result.data?.data?.let {
-                        val imageStream: InputStream =
-                            requireContext().contentResolver?.openInputStream(it)!!
-                        selectedImage = BitmapFactory.decodeStream(imageStream)
-//                        selectedImage = getResizedBitmap(
-//                            selectedImage!!,
-//                            500
-//                        );// 400 is for example, replace with desired size
-                        Log.i("imageResize", selectedImage?.width.toString())
-                        val file = getRealPathFromUri(requireContext(), it)?.let { it1 ->
-                            File(
-                                it1
-                            )
+                    if (result.resultCode == Activity.RESULT_OK) {
+                        val data = result.data
+                        if (data != null && data.data != null) {
+                            getRealPathFromUri(requireContext(), data.data!!)?.let { path ->
+                                viewModel.selectedOrderImgUri = File(path)
+                            }
+                            binding.ivStockImage.setImageURI(data.data)
                         }
-                        viewModel.setSelectedOrderedImgUri(SelectedImage(file!!, selectedImage!!))
                     }
                 }
 
@@ -143,6 +126,9 @@ class NewOrderInfoFragment : Fragment() {
             binding.includeSampleTakeSection.edtScanHere.setText(it)
             viewModel.scanStock(it)
         }
+        binding.includeSampleTakeSection.tilScanHere.setEndIconOnClickListener {
+            scanQrCode(requireContext(),barlauncer)
+        }
 
         binding.includeSampleTakeSection.edtScanHere.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
@@ -160,6 +146,96 @@ class NewOrderInfoFragment : Fragment() {
             }
         })
 
+        barLauncherVoucher = this.getBarLauncherTest(requireContext()) {
+            binding.includeSampleTakeSection.edtScanVoucherHere.setText(it)
+            viewModel.scanVoucher(it)
+        }
+        binding.includeSampleTakeSection.tilScanVoucherHere.setEndIconOnClickListener {
+            scanQrCode(requireContext(), barLauncherVoucher)
+        }
+        binding.includeSampleTakeSection.edtScanVoucherHere.setOnKeyListener(object :
+            View.OnKeyListener {
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
+
+                // If the event is a key-down event on the "enter" button
+                if (event.action == KeyEvent.ACTION_DOWN &&
+                    keyCode == KeyEvent.KEYCODE_ENTER
+                ) {
+                    // Perform action on key press
+                    viewModel.scanVoucher(binding.includeSampleTakeSection.edtScanHere.text.toString())
+                    hideKeyboard(activity, binding.includeSampleTakeSection.edtScanHere)
+                    return true
+                }
+                return false
+            }
+        })
+
+        viewModel.voucherScanLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    viewModel.checkSampleWithVoucher(it.data!!.id)
+                    viewModel.resetVoucherScanLive()
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+
+                }
+            }
+        }
+        viewModel.sampleLiveDataFromVoucher.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    it.data!!.forEach { sampleItem ->
+                        if (viewModel.sampleList.contains(sampleItem)) {
+                            Toast.makeText(requireContext(), "Stock Already Scanned", Toast.LENGTH_LONG)
+                                .show()
+                        }else if (sampleItem.specification.isNullOrEmpty().not()){
+                            viewModel.addSample(sampleItem)
+                        }
+                    }
+                    viewModel.resetSampleLiveDataFromVoucher()
+
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+        viewModel.checkSampleLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    if (it.data!!.id.isNullOrEmpty()){
+                        Toast.makeText(requireContext(),"Sample Not Found", Toast.LENGTH_LONG).show()
+                    }else if (viewModel.sampleList.contains(it.data!!)) {
+                        Toast.makeText(requireContext(), "Stock Already Scanned", Toast.LENGTH_LONG)
+                            .show()
+                    }else{
+                        viewModel.addSample(it.data!!)
+
+                    }
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+
+                }
+            }
+        }
+
         val adapter = StockInfoRecyclerAdapter(viewModel)
         binding.rvStockInfo.adapter = adapter
 
@@ -167,24 +243,16 @@ class NewOrderInfoFragment : Fragment() {
             viewModel.remove(it)
         }
         binding.rvSampleList.adapter = sampleImageRecyclerAdapter
-        viewModel.selectedImgUri.observe(viewLifecycleOwner) {
-            if (it != null) {
-                val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-                binding.includeSampleTakeSection.ivOutside.setImageBitmap(it.bitMap)
-                photo = MultipartBody.Part.createFormData("image", it.file.name, requestBody)
-            }
-        }
-        viewModel.selectedOrderedImgUri.observe(viewLifecycleOwner) {
-            if (it != null) {
-                val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-                binding.ivStockImage.setImageBitmap(it.bitMap)
-                orderedPhoto =
-                    MultipartBody.Part.createFormData("bookmark[image]", it.file.name, requestBody)
-            }
-        }
-
         binding.includeSampleTakeSection.btnSaveAndTake.setOnClickListener {
-            if (photo != null) {
+            var outSideimageToUpload: MultipartBody.Part? = null
+            var requestBody: RequestBody? = null
+            viewModel.selectedImgOutsideUri?.let {
+                requestBody = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                outSideimageToUpload = MultipartBody.Part.createFormData(
+                    "image",
+                    it.name,
+                    requestBody!!
+                )
                 viewModel.saveOutsideSample(
                     binding.includeSampleTakeSection.edtStockName.text.toString()
                         .toRequestBody("multipart/form-data".toMediaTypeOrNull()),
@@ -192,11 +260,9 @@ class NewOrderInfoFragment : Fragment() {
                         .toRequestBody("multipart/form-data".toMediaTypeOrNull()),
                     binding.includeSampleTakeSection.edtSpecification.text.toString()
                         .toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                    photo!!
+                    outSideimageToUpload!!
                 )
-            } else {
-                Toast.makeText(requireContext(), "Please upload a photo", Toast.LENGTH_LONG).show()
-            }
+            } ?: Toast.makeText(requireContext(), "Please upload a photo", Toast.LENGTH_LONG).show()
 
         }
         binding.includeSampleTakeSection.ivOutside.setOnClickListener {
@@ -216,8 +282,19 @@ class NewOrderInfoFragment : Fragment() {
         }
 
         binding.includeSampleTakeSection.switch1.setOnCheckedChangeListener { compoundButton, b ->
-            binding.includeSampleTakeSection.outsideGroup.isVisible = b
+//            binding.includeSampleTakeSection.outsideGroup.isVisible = b
+            if (!b) binding.includeSampleTakeSection.outsideGroup.isVisible = false
+            if (!b) binding.includeSampleTakeSection.tilScanVoucherHere.isVisible = false
             binding.includeSampleTakeSection.tilScanHere.isVisible = !b
+            binding.includeSampleTakeSection.chooseOutsideOrVoucher.isVisible = b
+        }
+        binding.includeSampleTakeSection.btnOutsideSample.setOnClickListener {
+            binding.includeSampleTakeSection.outsideGroup.isVisible = true
+            binding.includeSampleTakeSection.chooseOutsideOrVoucher.isVisible = false
+        }
+        binding.includeSampleTakeSection.btnScanFromVoucher.setOnClickListener {
+            binding.includeSampleTakeSection.tilScanVoucherHere.isVisible = true
+            binding.includeSampleTakeSection.chooseOutsideOrVoucher.isVisible = false
         }
 
         viewModel.saveOutsideSampleLiveData.observe(viewLifecycleOwner) {
@@ -248,7 +325,7 @@ class NewOrderInfoFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
-                    if (it.data!!.sampleId.isNullOrEmpty()) {
+                    if (it.data!!.id.isNullOrEmpty()) {
                         Toast.makeText(requireContext(), "Sample Not Found", Toast.LENGTH_LONG)
                             .show()
                     } else if (viewModel.sampleList.contains(it.data!!)) {
@@ -320,7 +397,7 @@ class NewOrderInfoFragment : Fragment() {
                         viewModel.orderQtyList.add("")
                     }
                     viewModel.jewellerySizeIdList.addAll(it.data!!.map { it.id })
-                    adapter.submitList(it.data!!.map { it.asBookMarkOrder() })
+                    adapter.submitList(it.data!!.map { it.asSizeInfo() })
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
@@ -331,7 +408,7 @@ class NewOrderInfoFragment : Fragment() {
         }
 
         //Gold Quality for goldSmith
-        val list = listOf<String>("A", "B", "C", "D")
+        val list = listOf<String>("A", "B", "C", "100%")
         val arrayAdapter =
             ArrayAdapter(requireContext(), R.layout.item_drop_down_text, list)
         binding.actGoldQuality.setAdapter(arrayAdapter)
@@ -357,15 +434,9 @@ class NewOrderInfoFragment : Fragment() {
                     binding.actGoldSmith.setOnClickListener {
                         binding.actGoldSmith.showDropdown(arrayAdapter)
                     }
-                    if (sharedViewModel.selectedGoldSmith.value.isNullOrEmpty().not()) {
-                        binding.actGoldSmith.setText(
-                            it.data!!.find { it.id == sharedViewModel.selectedGoldSmith.value }!!.name,
-                            false
-                        )
-                    }
-                    sharedViewModel.selectedGoldSmith.value = it.data!![0].id
+                    viewModel.selectedGSId = it.data!![0].id
                     binding.actGoldSmith.addTextChangedListener { editable ->
-                        sharedViewModel.selectedGoldSmith.value = it.data!!.find {
+                        viewModel.selectedGSId = it.data!!.find {
                             it.name == binding.actGoldSmith.text.toString()
                         }?.id
                     }
@@ -377,110 +448,197 @@ class NewOrderInfoFragment : Fragment() {
             }
         }
 
-        binding.includeButton.btnApprove.setOnClickListener {
-            if (orderedPhoto != null) {
+
+        var toggle = 0
+        binding.ivStar.setOnClickListener {
+            if (toggle == 0) {
+                toggle = 1
+                binding.ivStar.setImageDrawable(requireContext().getDrawable(R.drawable.filled_star))
 
             } else {
-                val kyat = MultipartBody.Part.createFormData(
-                    "bookmark[avg_weight_per_unit_kyat]",
-                    binding.edtKyat.text.toString()
-                )
+                toggle = 0
+                binding.ivStar.setImageDrawable(requireContext().getDrawable(R.drawable.star_icon))
+            }
+        }
 
-                val pae = MultipartBody.Part.createFormData(
-                    "bookmark[avg_weight_per_unit_pae]",
-                    binding.edtPae.text.toString()
-                )
-                val ywae = MultipartBody.Part.createFormData(
-                    "bookmark[avg_weight_per_unit_ywae]",
-                    binding.edtYwae.text.toString()
-                )
-
-                val jewelleryTypeId = MultipartBody.Part.createFormData(
-                    "bookmark[jewellery_type_id]",
-                    args.jewelleryTypeId
-                )
-
-                val orderGoldQuality = MultipartBody.Part.createFormData(
-                    "order[gold_quality]",
-                    binding.actGoldQuality.text.toString()
-                )
-
-                val orderGoldSmith = MultipartBody.Part.createFormData(
-                    "order[goldsmith_id]",
-                    sharedViewModel.selectedGoldSmith.value!!
-                )
-
-                var totalQty = 0
-                viewModel.orderQtyList.forEach {
-                    var qty = if (it.isNullOrEmpty()) 0 else it.toInt()
-                    totalQty += qty
+        binding.includeButton.btnApprove.setOnClickListener {
+            binding.includeButton.btnOrder.isEnabled = true
+            var totalOrderQty = 0
+            repeat(viewModel.orderQtyList.size) {
+                val orderQty = if(viewModel.orderQtyList[it].isNotEmpty()) viewModel.orderQtyList[it] else "0"
+                totalOrderQty += orderQty.toInt()
+            }
+            var gqValue :Double= when(binding.actGoldQuality.text.toString()){
+                "A"->{
+                    17.0
                 }
-                val equivalent_pure_gold_weight_kpy = MultipartBody.Part.createFormData(
-                    "order[equivalent_pure_gold_weight_kpy]",
-                    getOrderValue(
-                        binding.edtKyat.text.toString().toDouble(),
-                        binding.edtPae.text.toString().toDouble(),
-                        binding.edtYwae.text.toString().toDouble(),
-                        binding.actGoldQuality.text.toString(),
-                        totalQty
+                "B"->{
+                    17.5
+                }
+                "C"->{
+                    18.0
+                }
+                "100%"->{
+                    16.0
+                }
+                else -> {0.0}
+            }
+            binding.includeButton.tieOrderWeight.setText(getHunderdPercentWt(
+                totalOrderQty,
+                getKyatsFromKPY(binding.edtKyat.text.toString().toInt(),
+                    binding.edtPae.text.toString().toInt(),
+                    binding.edtYwae.text.toString().toDouble(),
+                ),gqValue).toString())
+        }
+
+
+        binding.includeButton.btnOrder.setOnClickListener {
+//            if (orderedPhoto != null) {
+//
+//            } else {
+
+            var orderImageToUpload: MultipartBody.Part? = null
+            var requestBody1: RequestBody? = null
+            viewModel.selectedOrderImgUri?.let {
+                requestBody1 = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                orderImageToUpload = MultipartBody.Part.createFormData(
+                    "bookmark[image]",
+                    it.name,
+                    requestBody1!!
+                )
+            }
+            val kyat = MultipartBody.Part.createFormData(
+                "bookmark[avg_weight_per_unit_kyat]",
+                binding.edtKyat.text.toString()
+            )
+
+            val pae = MultipartBody.Part.createFormData(
+                "bookmark[avg_weight_per_unit_pae]",
+                binding.edtPae.text.toString()
+            )
+            val ywaeFromKpy = getYwaeFromKPY(binding.edtKyat.text.toString().toInt(),binding.edtPae.text.toString().toInt(),binding.edtYwae.text.toString().toDouble())
+            val avgYwae = MultipartBody.Part.createFormData(
+                "bookmark[avg_unit_weight_ywae]",
+                ywaeFromKpy.toString()
+            )
+
+            val jewelleryTypeId = MultipartBody.Part.createFormData(
+                "bookmark[jewellery_type_id]",
+                args.jewelleryTypeId
+            )
+
+            val orderGoldQuality = MultipartBody.Part.createFormData(
+                "order[gold_quality]",
+                binding.actGoldQuality.text.toString()
+            )
+
+            val orderGoldSmith = MultipartBody.Part.createFormData(
+                "order[goldsmith_id]",
+                viewModel.selectedGSId.orEmpty()
+            )
+
+            var totalQty = 0
+            viewModel.orderQtyList.forEach {
+                var qty = if (it.isNullOrEmpty()) 0 else it.toInt()
+                totalQty += qty
+            }
+            val equivalent_pure_gold_weight_kpy = MultipartBody.Part.createFormData(
+                "order[equivalent_pure_gold_weight_ywae]",
+                getOrderValue(
+                    binding.edtKyat.text.toString().toDouble(),
+                    binding.edtPae.text.toString().toDouble(),
+                    binding.edtYwae.text.toString().toDouble(),
+                    binding.actGoldQuality.text.toString(),
+                    totalQty
+                )
+            )
+            val order_qty = mutableListOf<MultipartBody.Part>()
+            repeat(viewModel.orderQtyList.size) {
+                val orderQty =
+                    if (viewModel.orderQtyList[it].isNotEmpty()) viewModel.orderQtyList[it] else "0"
+                order_qty.add(
+                    MultipartBody.Part.createFormData(
+                        "order[items][${it}][order_qty]",
+                        orderQty
                     )
                 )
-                val order_qty = mutableListOf<MultipartBody.Part>()
-                repeat(viewModel.orderQtyList.size) {
-                    val orderQty =
-                        if (viewModel.orderQtyList[it].isNotEmpty()) viewModel.orderQtyList[it] else "0"
-                    order_qty.add(
-                        MultipartBody.Part.createFormData(
-                            "order[items][${it}][order_qty]",
-                            orderQty
-                        )
-                    )
 
 //                sharedViewModel.orderGoldQuality["order[items][${it}][order_qty]"] =
 //                    viewModel.orderQtyList[it]
 //                sharedViewModel.jewellery_type_size_id["order[items][${it}][jewellery_type_size_id]"] =
 //                    viewModel.jewellerySizeIdList[it]
+            }
+            val jewellery_type_size_id = mutableListOf<MultipartBody.Part>()
+            repeat(viewModel.jewellerySizeIdList.size) {
+                jewellery_type_size_id.add(
+                    MultipartBody.Part.createFormData(
+                        "order[items][${it}][jewellery_type_size_id]",
+                        viewModel.jewellerySizeIdList[it]
+                    )
+                )
+            }
+            val sample_id =
+                if (viewModel.sampleList.isNullOrEmpty()) {
+                    null
+                } else {
+                    mutableListOf<MultipartBody.Part>()
                 }
-                val jewellery_type_size_id = mutableListOf<MultipartBody.Part>()
-                repeat(viewModel.jewellerySizeIdList.size) {
-                    jewellery_type_size_id.add(
+            if (viewModel.sampleList.isNullOrEmpty().not()) {
+                repeat(viewModel.sampleList.size) {
+                    sample_id!!.add(
                         MultipartBody.Part.createFormData(
-                            "order[items][${it}][jewellery_type_size_id]",
-                            viewModel.jewellerySizeIdList[it]
+                            "samples[${it}][sample_id]",
+                            viewModel.sampleList[it].id!!
                         )
                     )
                 }
-                val sample_id =
-                    if (viewModel.sampleList.isNullOrEmpty()) {
-                        null
-                    } else {
-                        mutableListOf<MultipartBody.Part>()
-                    }
-                if (viewModel.sampleList.isNullOrEmpty().not()) {
-                    repeat(viewModel.sampleList.size) {
-                        sample_id!!.add(
-                            MultipartBody.Part.createFormData(
-                                "samples[${it}][sample_id]",
-                                viewModel.sampleList[it].sampleId!!
-                            )
-                        )
-                    }
-                }
+            }
+            val isImportant = MultipartBody.Part.createFormData(
+                "order[is_important]",
+                toggle.toString()
+            )
+            val customer_category_name = MultipartBody.Part.createFormData(
+                "bookmark[custom_category_name]",
+                binding.edtCategory.text.toString()
+            )
+            val kyatOrder = MultipartBody.Part.createFormData(
+                "order[avg_weight_per_unit_kyat]",
+                binding.edtKyat.text.toString()
+            )
+
+            val paeOrder = MultipartBody.Part.createFormData(
+                "order[avg_weight_per_unit_pae]",
+                binding.edtPae.text.toString()
+            )
+            val orderYwaeFromKpy = getYwaeFromKPY(binding.edtKyat.text.toString().toInt(),binding.edtPae.text.toString().toInt(),binding.edtYwae.text.toString().toDouble())
+            val orderYwae = MultipartBody.Part.createFormData(
+                "order[avg_unit_weight_ywae]",
+                orderYwaeFromKpy.toString()
+            )
+
+            if (totalQty == 0) {
+                Toast.makeText(
+                    requireContext(),
+                    "Total Order Qty must not be zero",
+                    Toast.LENGTH_LONG
+                ).show()
+            }else{
                 viewModel.orderStock(
-                    kyat,
-                    pae,
-                    ywae,
+                    avgYwae,
+                    orderYwae,
                     jewelleryTypeId,
-                    orderedPhoto,
+                    orderImageToUpload,
                     orderGoldQuality,
                     orderGoldSmith,
+                    null,
                     null,
                     equivalent_pure_gold_weight_kpy,
                     jewellery_type_size_id,
                     order_qty,
-                    sample_id
+                    sample_id,
+                    isImportant,
+                    customer_category_name
                 )
-
             }
         }
 

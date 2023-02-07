@@ -4,6 +4,7 @@ import com.critx.commonkotlin.util.Resource
 import com.critx.data.network.dto.SimpleResponse
 import com.critx.data.network.dto.SimpleResponseDto
 import com.critx.data.network.dto.setupStock.ProductCodeResponse
+import com.critx.data.network.dto.setupStock.ProductSingleDto
 import com.critx.data.network.dto.setupStock.jewelleryCategory.*
 import com.critx.data.network.dto.setupStock.jewelleryGroup.Data
 import com.critx.data.network.dto.setupStock.jewelleryGroup.JewelleryGroupDto
@@ -57,7 +58,7 @@ interface SetupStockNetWorkDatasource {
         token: String,
         method: RequestBody,
         catId: String,
-    ):SimpleResponse
+    ): SimpleResponse
 
     suspend fun getJewelleryCategory(
         token: String,
@@ -70,7 +71,7 @@ interface SetupStockNetWorkDatasource {
     suspend fun getRelatedJewelleryCategories(
         token: String,
         categoryId: String
-    ):JewelleryCatDto
+    ): JewelleryCatDto
 
     suspend fun createJewelleryCategory(
         token: String,
@@ -78,13 +79,11 @@ interface SetupStockNetWorkDatasource {
         jewellery_quality_id: RequestBody,
         groupId: RequestBody,
         is_frequently_used: RequestBody,
-        withGem:RequestBody,
+        withGem: RequestBody,
         name: RequestBody,
         avgWeigh: RequestBody,
-        avgKyat:RequestBody,
-        avgPae:RequestBody,
-        avgYwae:RequestBody,
-        images: MutableList<MultipartBody.Part>,
+        avgYwae: RequestBody,
+        images:MutableList<MultipartBody.Part>,
         video: MultipartBody.Part?,
         specification: RequestBody,
         design: MutableList<RequestBody>,
@@ -103,10 +102,15 @@ interface SetupStockNetWorkDatasource {
         withGem: RequestBody,
         name: RequestBody,
         avgWeigh: RequestBody,
-        avgKyat:RequestBody,
-        avgPae:RequestBody,
-        avgYwae:RequestBody,
-        images: MutableList<MultipartBody.Part>,
+        avgYwae: RequestBody,
+        image1:MultipartBody.Part?,
+        image1Id:MultipartBody.Part?,
+        image2:MultipartBody.Part?,
+        image2Id:MultipartBody.Part?,
+        image3:MultipartBody.Part?,
+        image3Id:MultipartBody.Part?,
+        gif:MultipartBody.Part?,
+        gifId:MultipartBody.Part?,
         video: MultipartBody.Part?,
         specification: RequestBody,
         design: MutableList<RequestBody>,
@@ -123,20 +127,18 @@ interface SetupStockNetWorkDatasource {
 
     suspend fun getDesign(
         token: String,
-        jewelleryType:String
+        jewelleryType: String
     ): DesignDto
 
     suspend fun createProduct(
         token: String,
         name: RequestBody?,
-        productCode:RequestBody,
+        productCode: RequestBody,
         type: RequestBody,
         quality: RequestBody,
         group: RequestBody?,
         categoryId: RequestBody?,
         goldAndGemWeight: RequestBody?,
-        gemWeightKyat: RequestBody?,
-        gemWeightPae: RequestBody?,
         gemWeightYwae: RequestBody?,
         gemValue: RequestBody?,
         ptAndClipCost: RequestBody?,
@@ -146,11 +148,54 @@ interface SetupStockNetWorkDatasource {
         diamondValueFromGS: RequestBody?,
         diamondPriceForSale: RequestBody?,
         diamondValueForSale: RequestBody?,
-        images: List<MultipartBody.Part>,
+        image1:MultipartBody.Part?,
+        image1Id:MultipartBody.Part?,
+        image2:MultipartBody.Part?,
+        image2Id:MultipartBody.Part?,
+        image3:MultipartBody.Part?,
+        image3Id:MultipartBody.Part?,
+        gif:MultipartBody.Part?,
+        gifId:MultipartBody.Part?,
+        video: MultipartBody.Part?,
+    ): SimpleResponse
+
+    suspend fun editProduct(
+        token: String,
+        method: RequestBody,
+        productCode: String,
+        name: RequestBody?,
+        type: RequestBody,
+        quality: RequestBody,
+        group: RequestBody?,
+        categoryId: RequestBody?,
+        goldAndGemWeight: RequestBody?,
+        gemWeightYwae: RequestBody?,
+        gemValue: RequestBody?,
+        ptAndClipCost: RequestBody?,
+        maintenanceCost: RequestBody?,
+        diamondInfo: RequestBody?,
+        diamondPriceFromGS: RequestBody?,
+        diamondValueFromGS: RequestBody?,
+        diamondPriceForSale: RequestBody?,
+        diamondValueForSale: RequestBody?,
+        image1:MultipartBody.Part?,
+        image1Id:MultipartBody.Part?,
+        image2:MultipartBody.Part?,
+        image2Id:MultipartBody.Part?,
+        image3:MultipartBody.Part?,
+        image3Id:MultipartBody.Part?,
+        gif:MultipartBody.Part?,
+        gifId:MultipartBody.Part?,
         video: MultipartBody.Part?,
     ): SimpleResponse
 
     suspend fun getProductCode(
-        token: String
-    ):ProductCodeResponse
+        token: String,
+        jewelleryQualityId:String
+    ): ProductCodeResponse
+
+    suspend fun getProduct(
+        token: String,
+        productCode: String
+    ): ProductSingleDto
 }

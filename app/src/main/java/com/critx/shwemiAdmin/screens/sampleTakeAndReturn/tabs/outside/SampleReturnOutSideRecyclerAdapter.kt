@@ -12,14 +12,18 @@ import com.critx.domain.model.sampleTakeAndReturn.VoucherSampleDomain
 import com.critx.shwemiAdmin.databinding.ItemSampleReturnOutsideBinding
 import com.critx.shwemiAdmin.uiModel.simpleTakeAndReturn.SampleItemUIModel
 
-class SampleReturnInventoryRecyclerAdapter (private val onclick:(id:String)->Unit) : ListAdapter<OutsideSampleDomain, CollectStockViewHolder>(
+class SampleReturnInventoryRecyclerAdapter(
+    private val onclick: (id: String) -> Unit,
+    private val eyeClick: (url: String) -> Unit
+) : ListAdapter<OutsideSampleDomain, CollectStockViewHolder>(
     CollectStockDiffUtil
-)  {
+) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CollectStockViewHolder {
         return CollectStockViewHolder(
             ItemSampleReturnOutsideBinding.inflate(
-                LayoutInflater.from(parent.context),parent,false
-            ),onclick)
+                LayoutInflater.from(parent.context), parent, false
+            ), onclick,eyeClick
+        )
     }
 
     override fun onBindViewHolder(holder: CollectStockViewHolder, position: Int) {
@@ -28,25 +32,37 @@ class SampleReturnInventoryRecyclerAdapter (private val onclick:(id:String)->Uni
 
 }
 
-class CollectStockViewHolder(private val binding: ItemSampleReturnOutsideBinding,
-private val onclick:(id:String)->Unit): RecyclerView.ViewHolder(binding.root){
-    fun bind(data: OutsideSampleDomain){
-       binding.tvLabelStockName.text = data.name
+class CollectStockViewHolder(
+    private val binding: ItemSampleReturnOutsideBinding,
+    private val onclick: (id: String) -> Unit,
+    private val eyeClick:(url:String)->Unit
+) : RecyclerView.ViewHolder(binding.root) {
+    fun bind(data: OutsideSampleDomain) {
+        binding.tvLabelStockName.text = data.name
         binding.ivSample.loadImageWithGlide(data.file.url)
-        binding.tvWeightValue.text = data.weightGm
+        binding.tvWeightValue.text = data.weightGm + "gm"
         binding.checkBox.isChecked = data.isChecked
         binding.checkBox.setOnClickListener {
             onclick(data.id.toString())
+        }
+        binding.ivEye.setOnClickListener {
+            eyeClick(data.file.url)
         }
     }
 }
 
 object CollectStockDiffUtil : DiffUtil.ItemCallback<OutsideSampleDomain>() {
-    override fun areItemsTheSame(oldItem: OutsideSampleDomain, newItem: OutsideSampleDomain): Boolean {
+    override fun areItemsTheSame(
+        oldItem: OutsideSampleDomain,
+        newItem: OutsideSampleDomain
+    ): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: OutsideSampleDomain, newItem: OutsideSampleDomain): Boolean {
+    override fun areContentsTheSame(
+        oldItem: OutsideSampleDomain,
+        newItem: OutsideSampleDomain
+    ): Boolean {
         return oldItem == newItem
     }
 

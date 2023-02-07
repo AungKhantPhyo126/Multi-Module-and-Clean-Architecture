@@ -4,6 +4,7 @@ import com.critx.commonkotlin.util.Resource
 import com.critx.domain.model.LogInSuccess
 import com.critx.domain.model.SetupStock.JewelleryType.JewelleryType
 import com.critx.domain.model.SetupStock.ProductCodeDomain
+import com.critx.domain.model.SetupStock.ProductSingleDomain
 import com.critx.domain.model.SetupStock.jewelleryCategory.CalculateKPY
 import com.critx.domain.model.SetupStock.jewelleryCategory.DesignDomain
 import com.critx.domain.model.SetupStock.jewelleryCategory.JewelleryCategory
@@ -75,11 +76,9 @@ interface SetupStockRepository {
         jewellery_quality_id: RequestBody,
         groupId: RequestBody,
         is_frequently_used: RequestBody,
-        withGem:RequestBody,
+        withGem: RequestBody,
         name: RequestBody,
         avgWeigh: RequestBody,
-        avgKyat: RequestBody,
-        avgPae: RequestBody,
         avgYwae: RequestBody,
         images: MutableList<MultipartBody.Part>,
         video: MultipartBody.Part?,
@@ -100,9 +99,15 @@ interface SetupStockRepository {
         withGem: RequestBody,
         name: RequestBody,
         avgWeigh: RequestBody,
-        avgKyat: RequestBody,
-        avgPae: RequestBody,
-        avgYwae: RequestBody, images: MutableList<MultipartBody.Part>,
+        avgYwae: RequestBody,
+        image1: MultipartBody.Part?,
+        image1Id: MultipartBody.Part?,
+        image2: MultipartBody.Part?,
+        image2Id: MultipartBody.Part?,
+        image3: MultipartBody.Part?,
+        image3Id: MultipartBody.Part?,
+        gif: MultipartBody.Part?,
+        gifId: MultipartBody.Part?,
         video: MultipartBody.Part?,
         specification: RequestBody,
         design: MutableList<RequestBody>,
@@ -122,7 +127,7 @@ interface SetupStockRepository {
         ywae: Double
     ): Flow<Resource<CalculateKPY>>
 
-    fun getDesignList(token: String,jewelleryType:String): Flow<Resource<List<DesignDomain>>>
+    fun getDesignList(token: String, jewelleryType: String): Flow<Resource<List<DesignDomain>>>
 
     fun createProduct(
         token: String,
@@ -133,8 +138,6 @@ interface SetupStockRepository {
         group: RequestBody?,
         categoryId: RequestBody?,
         goldAndGemWeight: RequestBody?,
-        gemWeightKyat: RequestBody?,
-        gemWeightPae: RequestBody?,
         gemWeightYwae: RequestBody?,
         gemValue: RequestBody?,
         ptAndClipCost: RequestBody?,
@@ -144,11 +147,54 @@ interface SetupStockRepository {
         diamondValueFromGS: RequestBody?,
         diamondPriceForSale: RequestBody?,
         diamondValueForSale: RequestBody?,
-        images: List<MultipartBody.Part>,
+          image1:MultipartBody.Part?,
+        image1Id:MultipartBody.Part?,
+        image2:MultipartBody.Part?,
+        image2Id:MultipartBody.Part?,
+        image3:MultipartBody.Part?,
+        image3Id:MultipartBody.Part?,
+        gif:MultipartBody.Part?,
+        gifId:MultipartBody.Part?,
         video: MultipartBody.Part?,
     ): Flow<Resource<SimpleData>>
 
+   suspend fun editProduct(
+        token: String,
+        method: RequestBody,
+        productCode: String,
+        name: RequestBody?,
+        type: RequestBody,
+        quality: RequestBody,
+        group: RequestBody?,
+        categoryId: RequestBody?,
+        goldAndGemWeight: RequestBody?,
+        gemWeightYwae: RequestBody?,
+        gemValue: RequestBody?,
+        ptAndClipCost: RequestBody?,
+        maintenanceCost: RequestBody?,
+        diamondInfo: RequestBody?,
+        diamondPriceFromGS: RequestBody?,
+        diamondValueFromGS: RequestBody?,
+        diamondPriceForSale: RequestBody?,
+        diamondValueForSale: RequestBody?,
+          image1:MultipartBody.Part?,
+        image1Id:MultipartBody.Part?,
+        image2:MultipartBody.Part?,
+        image2Id:MultipartBody.Part?,
+        image3:MultipartBody.Part?,
+        image3Id:MultipartBody.Part?,
+        gif:MultipartBody.Part?,
+        gifId:MultipartBody.Part?,
+        video: MultipartBody.Part?,
+    ): Resource<SimpleData>
+
     fun getProductCode(
-        token: String
+        token: String,
+        jewelleryQualityId:String
     ): Flow<Resource<ProductCodeDomain>>
+
+    fun getProduct(
+        token: String,
+        productCode: String
+    ): Flow<Resource<ProductSingleDomain>>
 }

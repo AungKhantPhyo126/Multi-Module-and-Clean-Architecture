@@ -12,6 +12,7 @@ data class VoucherSampleDomain(
 )
 
 data class FileShweMiDomain(
+    val id: String,
     val type: String,
     val url:String
 )

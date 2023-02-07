@@ -1,5 +1,7 @@
 package com.critx.data.network.dto.orderStock
 
+import com.critx.data.network.dto.collectStock.GoldSmithListDto
+import com.critx.data.network.dto.collectStock.asDomain
 import com.critx.data.network.dto.sampleTakeAndReturn.FileShweMiDto
 import com.critx.data.network.dto.sampleTakeAndReturn.asDomain
 import com.critx.domain.model.orderStock.BookMarkStockDomain
@@ -15,10 +17,12 @@ data class BookMarkedStocksResponse(
 data class BookMarkStockDto(
     val id:String,
     val image:FileShweMiDto,
-    val avg_weight_per_unit_kyat:String,
-    val avg_weight_per_unit_pae:String,
-    val avg_weight_per_unit_ywae:String,
+    val avg_unit_weight_ywae:String,
     val jewellery_type_id:String,
+    val name:String?,
+    val sizes:List<BookMarkStockInfoDto>?,
+    val is_orderable:Boolean?,
+
 )
 
 data class PagingMetaDto(
@@ -35,10 +39,13 @@ fun BookMarkStockDto.asDomain():BookMarkStockDomain{
     return BookMarkStockDomain(
         id,
         image.asDomain(),
-        avg_weight_per_unit_kyat,
-        avg_weight_per_unit_pae,
-        avg_weight_per_unit_ywae,
-        jewellery_type_id
+        avg_unit_weight_ywae,
+        jewellery_type_id,
+        name.orEmpty(),
+        sizes?.map { it.asDomain() }.orEmpty(),
+        is_orderable?:true,
+        null,
+        null
     )
 }
 

@@ -47,6 +47,7 @@ class ChooseJewelleryQualityFragment : Fragment() {
     private var snackBar: Snackbar? = null
     var directNavigateList = mutableListOf<String>()
     private val sharedViewModel by activityViewModels<SharedViewModel>()
+    var checkedChipId = 0
 
 
     override fun onCreateView(
@@ -108,7 +109,6 @@ class ChooseJewelleryQualityFragment : Fragment() {
             }
         }
 
-        var checkedChipId = 0
         binding.chipGroupJewelleryQuality.setOnCheckedStateChangeListener { group, checkedIds ->
             val selectedChip = binding.chipGroupJewelleryQuality.children.toList().find {
                 (it as Chip).isChecked
@@ -131,7 +131,7 @@ class ChooseJewelleryQualityFragment : Fragment() {
 
         binding.btnNext.setOnClickListener {
             if (directNavigateList.contains(binding.chipGroupJewelleryQuality.checkedChipId.toString())) {
-                findNavController().navigate(ChooseJewelleryQualityFragmentDirections.actionChooseJewelleryQualityFragmentToProductCreateFragment())
+                findNavController().navigate(ChooseJewelleryQualityFragmentDirections.actionChooseJewelleryQualityFragmentToProductCreateFragment(args.firstCat.id,checkedChipId.toString(),null,null,null))
             } else if (binding.tvSecondCat.isVisible) {
                 findNavController().navigate(
                     com.critx.shwemiAdmin.screens.setupStock.second.ChooseJewelleryQualityFragmentDirections.actionChooseJewelleryQualityFragmentToChooseGroupFragment(

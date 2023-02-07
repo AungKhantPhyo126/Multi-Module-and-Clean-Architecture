@@ -124,8 +124,6 @@ class CollectStockRepositoryImpl @Inject constructor(
     override  fun collectBatch(
         token: String,
         method: RequestBody,
-        kyat: RequestBody?,
-        pae: RequestBody?,
         ywae: RequestBody?,
         goldSmithId: RequestBody?,
         bonus: RequestBody?,
@@ -140,8 +138,6 @@ class CollectStockRepositoryImpl @Inject constructor(
                         collectStockDataSource.collectBatch(
                             token,
                             method,
-                            kyat,
-                            pae,
                             ywae,
                             goldSmithId,
                             bonus,

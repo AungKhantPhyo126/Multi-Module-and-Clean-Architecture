@@ -48,7 +48,9 @@ class RepairStockFragment:Fragment() {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            viewModel.removeJobDone(viewHolder.itemId.toString())
+            val position = viewHolder.absoluteAdapterPosition
+            val swipedItem = adapter.currentList[position]
+            viewModel.removeJobDone(swipedItem.id)
         }
 
     }
@@ -132,6 +134,23 @@ class RepairStockFragment:Fragment() {
             }
         }
 
+        viewModel.deleteRepairStockLiveData.observe(viewLifecycleOwner){
+            when(it){
+                is Resource.Loading->{
+                    loadingDialog.show()
+                }
+                is Resource.Success->{
+                    loadingDialog.dismiss()
+                   viewModel.getJobDone(checkedGoldSmith)
+//                    viewModel.resetJobDoneLiveData()
+                }
+                is Resource.Error->{
+                    loadingDialog.dismiss()
+                    Toast.makeText(requireContext(),it.message,Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
         viewModel.jobDoneLiveData.observe(viewLifecycleOwner){
             when(it){
                 is Resource.Loading->{
@@ -157,9 +176,15 @@ class RepairStockFragment:Fragment() {
                 }
                 is Resource.Success->{
                     loadingDialog.dismiss()
+                    var getFirstHelper = 0
                     for (item in it.data!!) {
                         val chip = requireContext().createChip(item.name)
                         chip.id = item.id.toInt()
+                        if (getFirstHelper == 0){
+                            chip.isChecked=true
+                            viewModel.getJobDone(item.id)
+                            getFirstHelper++
+                        }
                         binding.chipGroupGs.addView(chip)
                     }
                 }
@@ -179,6 +204,7 @@ fun Context.showServiceChargeOnlyDialog(onClick: (amount:String) -> Unit) {
     val alertDialogBinding = ServiceChargeDialogBinding.inflate(
         inflater, ConstraintLayout(builder.context), false
     )
+    alertDialogBinding.tilInvoiceScan.isVisible = false
 
     alertDialogBinding.tilWastageWeightInGm.isVisible = false
     alertDialogBinding.btnGive.text = "OK"

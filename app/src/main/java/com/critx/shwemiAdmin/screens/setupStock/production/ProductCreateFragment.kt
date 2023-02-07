@@ -12,6 +12,7 @@ import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.view.*
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -25,29 +26,25 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.critx.common.ui.getAlertDialog
-import com.critx.common.ui.getBitMapWithGlide
-import com.critx.common.ui.getThumbnail
+import androidx.navigation.fragment.navArgs
+import com.critx.common.ui.*
+import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
-import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.AddGemValueDialogBinding
 import com.critx.shwemiAdmin.databinding.FragmentProductCreateBinding
 import com.critx.shwemiAdmin.databinding.ProductAddedDialogBinding
-import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
-import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.SelectedImage
-import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.convertBitmapToFile
-import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.getResizedBitmap
-import com.critx.shwemiAdmin.screens.setupStock.fourth.recommendSTock.RecommendStockAdapter
+import com.critx.shwemiAdmin.getYwaeFromKPY
 import com.critx.shwemiAdmin.screens.setupStock.third.edit.getRealPathFromUri
+import com.critx.shwemiAdmin.screens.setupStock.third.edit.persistImage
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
@@ -60,138 +57,121 @@ class ProductCreateFragment : Fragment() {
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
     private val viewModel by viewModels<FinalStockSetupViewModel>()
-    private val sharedViewModel by activityViewModels<SharedViewModel>()
-
-    var originalfile: File? = null
-    var originalbm: Bitmap? = null
-
-    //    private val args by navArgs<FinalStockSetupFragmentArgs>()
-    var photo1: MultipartBody.Part? = null
-    var photo2: MultipartBody.Part? = null
-    var photo3: MultipartBody.Part? = null
-    var video: MultipartBody.Part? = null
-    var gif: MultipartBody.Part? = null
-
+    private val args by navArgs<ProductCreateFragmentArgs>()
     private lateinit var launchChooseImage1: ActivityResultLauncher<Intent>
     private lateinit var launchChooseImage2: ActivityResultLauncher<Intent>
     private lateinit var launchChooseImage3: ActivityResultLauncher<Intent>
     private lateinit var launchChooseVideo: ActivityResultLauncher<Intent>
     private lateinit var launchChooseGif: ActivityResultLauncher<Intent>
     private lateinit var readStoragePermissionlauncher: ActivityResultLauncher<String>
+
+    var photo1Id: MultipartBody.Part? = null
+    var photo2Id: MultipartBody.Part? = null
+    var photo3Id: MultipartBody.Part? = null
+    var gifId: MultipartBody.Part? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        launchChooseImage1 =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                var selectedImage: Bitmap?
-                if (result.resultCode == Activity.RESULT_OK) {
-                    result.data?.data?.let {
-                        val imageStream: InputStream =
-                            requireContext().contentResolver?.openInputStream(it)!!
-                        selectedImage = BitmapFactory.decodeStream(imageStream)
-                        selectedImage = getResizedBitmap(
-                            selectedImage!!,
-                            500
-                        );// 400 is for example, replace with desired size
-                        binding.ivImage1.setImageBitmap(selectedImage)
-                        val file = getRealPathFromUri(requireContext(), it)?.let { it1 ->
-                            File(
-                                it1
-                            )
+        launchChooseImage1 = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                if (data != null && data.data != null) {
+                    getRealPathFromUri(requireContext(), data.data!!)?.let { path ->
+                        if (path.endsWith(".gif")) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Please choose image file",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            viewModel.selectedImgUri1 = File(path)
+                            if (photo1Id != null) photo1Id = null
+                            binding.ivImage1.setImageURI(data.data)
                         }
-                        viewModel.setSelectedImgUri1(SelectedImage(file!!, selectedImage!!))
                     }
                 }
-
             }
-        launchChooseImage2 =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                var selectedImage: Bitmap?
-                if (result.resultCode == Activity.RESULT_OK) {
-                    result.data?.data?.let {
-                        val imageStream: InputStream =
-                            requireContext().contentResolver?.openInputStream(it)!!
-                        selectedImage = BitmapFactory.decodeStream(imageStream)
-                        selectedImage = getResizedBitmap(
-                            selectedImage!!,
-                            500
-                        );// 400 is for example, replace with desired size
-                        binding.ivImage2.setImageBitmap(selectedImage)
-                        val file = getRealPathFromUri(requireContext(), it)?.let { it1 ->
-                            File(
-                                it1
-                            )
+        }
+        launchChooseImage2 = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                if (data != null && data.data != null) {
+                    getRealPathFromUri(requireContext(), data.data!!)?.let { path ->
+                        if (path.endsWith(".gif")) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Please choose image file",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            viewModel.selectedImgUri2 = File(path)
+                            if (photo2Id == null) photo2Id = null
+                            binding.ivImage2.setImageURI(data.data)
                         }
-                        viewModel.setSelectedImgUri2(SelectedImage(file!!, selectedImage!!))
                     }
                 }
-
             }
-        launchChooseImage3 =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                var selectedImage: Bitmap?
-                if (result.resultCode == Activity.RESULT_OK) {
-                    result.data?.data?.let {
-                        val imageStream: InputStream =
-                            requireContext().contentResolver?.openInputStream(it)!!
-                        selectedImage = BitmapFactory.decodeStream(imageStream)
-                        selectedImage = getResizedBitmap(
-                            selectedImage!!,
-                            500
-                        );// 400 is for example, replace with desired size
-                        binding.ivImage3.setImageBitmap(selectedImage)
-                        val file = getRealPathFromUri(requireContext(), it)?.let { it1 ->
-                            File(
-                                it1
-                            )
+        }
+        launchChooseImage3 = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                if (data != null && data.data != null) {
+                    getRealPathFromUri(requireContext(), data.data!!)?.let { path ->
+                        if (path.endsWith(".gif")) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Please choose image file",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            viewModel.selectedImgUri3 = File(path)
+                            if (photo3Id == null) photo3Id = null
+                            binding.ivImage3.setImageURI(data.data)
                         }
-                        viewModel.setSelectedImgUri3(SelectedImage(file!!, selectedImage!!))
                     }
                 }
-
             }
-
-        launchChooseVideo =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-
-                if (result.resultCode == Activity.RESULT_OK) {
-                    result.data?.data?.let {
-
-                        viewModel.setSelectedVideo(
-                            getRealPathFromUri(requireContext(), it)?.let { it1 ->
-
-                                File(
-                                    it1
-                                )
-                            })
-                    }
-
-                }
-            }
-
-        launchChooseGif =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-
-                var selectedImage: Bitmap?
-                if (result.resultCode == Activity.RESULT_OK) {
-                    result.data?.data?.let {
-                        val imageStream: InputStream =
-                            requireContext().contentResolver?.openInputStream(it)!!
-                        selectedImage = BitmapFactory.decodeStream(imageStream)
-                        selectedImage = getResizedBitmap(
-                            selectedImage!!,
-                            500
-                        );// 400 is for example, replace with desired size
-                        binding.ivGif.setImageBitmap(selectedImage)
-                        val file = getRealPathFromUri(requireContext(), it)?.let { it1 ->
-                            File(
-                                it1
-                            )
+        }
+        launchChooseGif = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                if (data != null && data.data != null) {
+                    getRealPathFromUri(requireContext(), data.data!!)?.let { path ->
+                        if (path.endsWith(".gif")) {
+                            viewModel.selectedGifUri = File(path)
+                            if (gifId == null) gifId = null
+                            binding.ivGif.loadImageWithGlideAsGifFromStorage(File(path))
                         }
-                        viewModel.setSelectedGif(SelectedImage(file!!, selectedImage!!))
+                        Toast.makeText(
+                            requireContext(),
+                            "Please choose a gif file",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
-
             }
+        }
+        launchChooseVideo = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                if (data != null && data.data != null) {
+                    getRealPathFromUri(requireContext(), data.data!!)?.let { path ->
+                        viewModel.selectedVideoUri = File(path)
+                        binding.ivVideo.getThumbnail(path)
+                    }
+                }
+            }
+        }
 
         readStoragePermissionlauncher = registerForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -213,234 +193,159 @@ class ProductCreateFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.getProductCode(args.secondCatId)
         binding.btnRefreshProductCode.setOnClickListener {
-            viewModel.getProductCode()
+            viewModel.getProductCode(args.secondCatId)
+        }
+        if (args.category != null) {
+            setFirstCatImage(
+                args.category!!.imageUrlList[0].url,
+                args.category!!.imageUrlList[0].id
+            )
         }
         binding.ivRemove1.setOnClickListener {
-            viewModel.setSelectedImgUri1(null)
+            binding.ivImage1.setImageDrawable(requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_picture))
+            viewModel.selectedImgUri1 = null
         }
         binding.ivRemove2.setOnClickListener {
-            viewModel.setSelectedImgUri2(null)
+            binding.ivImage2.setImageDrawable(requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_picture))
+            viewModel.selectedImgUri2 = null
+
         }
         binding.ivRemove3.setOnClickListener {
-            viewModel.setSelectedImgUri3(null)
+            binding.ivImage3.setImageDrawable(requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_picture))
+            viewModel.selectedImgUri3 = null
+
         }
         binding.ivRemoveGif.setOnClickListener {
-            viewModel.setSelectedGif(null)
+            binding.ivGif.setImageDrawable(requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_gif))
+            viewModel.selectedGifUri = null
+
         }
         binding.ivRemoveVideo.setOnClickListener {
-            viewModel.setSelectedVideo(null)
+            binding.ivVideo.setImageDrawable(requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_video))
+            viewModel.selectedVideoUri = null
         }
 
-        binding.cbGemValue.setOnCheckedChangeListener { compoundButton, ischecked ->
-            if (ischecked) {
-                val builder = MaterialAlertDialogBuilder(requireContext())
-                val inflater: LayoutInflater = LayoutInflater.from(builder.context)
-                val alertDialogBinding = AddGemValueDialogBinding.inflate(
-                    inflater, ConstraintLayout(builder.context), false
-                )
-                builder.setView(alertDialogBinding.root)
-                val alertDialog = builder.create()
 
-                val displayMetrics = DisplayMetrics()
-                var mDisplayWidth = 0
-                var mDisplayHeight = 0
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    val mDisplayMetrics = requireActivity().windowManager.currentWindowMetrics
-                    mDisplayWidth = mDisplayMetrics.bounds.width()
-                    mDisplayHeight = mDisplayMetrics.bounds.height()
+        binding.btnGemValue.setOnClickListener {
+            val builder = MaterialAlertDialogBuilder(requireContext())
+            val inflater: LayoutInflater = LayoutInflater.from(builder.context)
+            val alertDialogBinding = AddGemValueDialogBinding.inflate(
+                inflater, ConstraintLayout(builder.context), false
+            )
+            builder.setView(alertDialogBinding.root)
+            val alertDialog = builder.create()
+
+            val displayMetrics = DisplayMetrics()
+            var mDisplayWidth = 0
+            var mDisplayHeight = 0
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                val mDisplayMetrics = requireActivity().windowManager.currentWindowMetrics
+                mDisplayWidth = mDisplayMetrics.bounds.width()
+                mDisplayHeight = mDisplayMetrics.bounds.height()
+            } else {
+                requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
+                mDisplayWidth = displayMetrics.widthPixels
+                mDisplayHeight = displayMetrics.heightPixels
+            }
+
+
+            val mLayoutParams = WindowManager.LayoutParams()
+            mLayoutParams.width = (mDisplayWidth).toInt()
+            mLayoutParams.height = (mDisplayHeight).toInt()
+            mLayoutParams.verticalMargin = 16f
+            alertDialog.window?.attributes = mLayoutParams
+
+            alertDialog.setCancelable(false)
+            alertDialogBinding.btnCalculate.setOnClickListener {
+                if (alertDialogBinding.btnCalculate.text == "Calculate") {
+                    calculate(alertDialogBinding)
                 } else {
-                    requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
-                    mDisplayWidth = displayMetrics.widthPixels
-                    mDisplayHeight = displayMetrics.heightPixels
-                }
-
-
-                val mLayoutParams = WindowManager.LayoutParams()
-                mLayoutParams.width = (mDisplayWidth).toInt()
-                mLayoutParams.height = (mDisplayHeight).toInt()
-                mLayoutParams.verticalMargin = 16f
-                alertDialog.window?.attributes = mLayoutParams
-
-                alertDialog.setCancelable(false)
-                alertDialogBinding.btnCalculate.setOnClickListener {
-                    if (alertDialogBinding.btnCalculate.text == "Calculate") {
-                        calculate(alertDialogBinding)
-                    } else {
-                        viewModel.diamondInfo =
-                            alertDialogBinding.edtDiamondWeightAndShape.text.toString()
-                        viewModel.diamondPriceFromGS =
-                            alertDialogBinding.edtDiamondPrice.text.toString()
-                        viewModel.diamondValueFromGS =
-                            alertDialogBinding.edtDiamondValue.text.toString()
-                        viewModel.diamondPriceForSale =
-                            alertDialogBinding.edtDiamondActualPrice.text.toString()
-                        viewModel.gemValue =
-                            alertDialogBinding.actDiamondActualSellValue.text.toString()
-                        binding.edtGemValue.setText(viewModel.gemValue.orEmpty())
-                        alertDialog.dismiss()
-                    }
-
-                }
-                alertDialogBinding.tvReset.setOnClickListener {
-                    resetValue(alertDialogBinding)
-                }
-                alertDialogBinding.ivExit.setOnClickListener {
+                    viewModel.diamondInfo =
+                        alertDialogBinding.edtDiamondWeightAndShape.text.toString()
+                    viewModel.diamondPriceFromGS =
+                        alertDialogBinding.edtDiamondPrice.text.toString()
+                    viewModel.diamondValueFromGS =
+                        alertDialogBinding.edtDiamondValue.text.toString()
+                    viewModel.diamondPriceForSale =
+                        alertDialogBinding.edtDiamondActualPrice.text.toString()
+                    viewModel.gemValue =
+                        alertDialogBinding.actDiamondActualSellValue.text.toString()
+                    binding.edtGemValue.setText(viewModel.gemValue.orEmpty())
                     alertDialog.dismiss()
                 }
-                alertDialog.window?.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-                alertDialog.window?.setDimAmount(0.8f)
-                alertDialog.show()
-            } else {
-                viewModel.resetDimaondData()
-            }
-        }
-        viewModel.selectedImgUri1?.observe(viewLifecycleOwner) { selectedItem ->
-            selectedItem?.let {
-                binding.ivImage1.setImageBitmap(selectedItem.bitMap)
-                val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-                photo1 = MultipartBody.Part.createFormData(
-                    "images[]",
-                    selectedItem.file.name,
-                    requestBody
-                )
-            }
-            if (selectedItem == null) {
-                photo1 = null
-                binding.ivImage1.setImageResource(com.critx.shwemiAdmin.R.drawable.empty_picture)
-            }
-            binding.ivRemove1.isVisible = selectedItem != null
 
-
-        }
-        viewModel.selectedImgUri2?.observe(viewLifecycleOwner) { selectedItem ->
-            selectedItem?.let {
-                binding.ivImage2.setImageBitmap(selectedItem.bitMap)
-                val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-
-                photo2 = MultipartBody.Part.createFormData(
-                    "images[]",
-                    selectedItem.file.name,
-                    requestBody
-                )
             }
-            if (selectedItem == null) {
-                photo2 = null
-                binding.ivImage2.setImageResource(com.critx.shwemiAdmin.R.drawable.empty_picture)
+            alertDialogBinding.tvReset.setOnClickListener {
+                resetValue(alertDialogBinding)
             }
-
-            binding.ivRemove2.isVisible = selectedItem != null
-
-        }
-        viewModel.selectedImgUri3?.observe(viewLifecycleOwner) { selectedItem ->
-            selectedItem?.let {
-                binding.ivImage3.setImageBitmap(selectedItem.bitMap)
-                val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-
-                photo3 = MultipartBody.Part.createFormData(
-                    "images[]",
-                    selectedItem.file.name,
-                    requestBody
-                )
+            alertDialogBinding.ivExit.setOnClickListener {
+                alertDialog.dismiss()
             }
-            if (selectedItem == null) {
-                photo3 = null
-                binding.ivImage3.setImageResource(com.critx.shwemiAdmin.R.drawable.empty_picture)
-            }
-
-            binding.ivRemove3.isVisible = selectedItem != null
+            alertDialog.window?.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+            alertDialog.window?.setDimAmount(0.8f)
+            alertDialog.show()
 
         }
 
-        viewModel.selectedGifUri?.observe(viewLifecycleOwner) { selectedItem ->
-            selectedItem?.let {
-                binding.ivGif.setImageBitmap(selectedItem.bitMap)
-                val requestBody = it.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-
-                gif = MultipartBody.Part.createFormData(
-                    "images[]",
-                    selectedItem.file.name,
-                    requestBody
-                )
-            }
-            if (selectedItem == null) {
-                gif = null
-                binding.ivGif.setImageResource(com.critx.shwemiAdmin.R.drawable.empty_gif)
-            }
-            binding.ivRemoveGif.isVisible = selectedItem != null
-
-        }
-        viewModel.selectedVideoUri.observe(viewLifecycleOwner) { selectedItem ->
-            binding.ivRemoveVideo.isVisible = selectedItem != null
-//            binding.ivRemoveVideo.isVisible = binding.ivVideo.drawable != requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_picture)
-            if (selectedItem != null) {
-//                val thumbnail = ThumbnailUtils.createVideoThumbnail(
-//                    selectedItem,
-//                    Size(500, 500), CancellationSignal()
-//                )
-                binding.ivVideo.getThumbnail(selectedItem.path)
-                val requestBody =
-                    selectedItem.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-                video = MultipartBody.Part.createFormData("video", selectedItem.name, requestBody)
-            } else {
-                video = null
-                binding.ivVideo.setImageDrawable(requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_video))
-            }
-
-        }
 
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+        viewModel.createProductLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
 
-                launch {
-                    sharedViewModel.fourthCat?.let {
-                        withContext(Dispatchers.IO) {
-                            originalbm = getBitMapWithGlide(it.imageUrlList[0], requireContext())
-                            val fileName: String =
-                                it.imageUrlList[0].substring(it.imageUrlList[0].lastIndexOf('/') + 1)
-                            originalfile =
-                                convertBitmapToFile(fileName, originalbm!!, requireContext())
-                        }
-                    }
-                    if (viewModel.selectedImgUri1.value == null && originalfile != null && originalbm != null) {
-                        viewModel.setSelectedImgUri1(SelectedImage(originalfile!!, originalbm!!))
-                    }
                 }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    viewModel.selectedImgUri1 = null
+                    viewModel.selectedImgUri2 = null
+                    viewModel.selectedImgUri3 = null
+                    viewModel.selectedGifUri = null
+                    viewModel.selectedVideoUri = null
+                    viewModel.resetCreateLiveData()
+                    viewModel.resetGetProductLiveData()
+                    showSuccesDialog()
 
-                //CreateProduct
-                launch {
-                    viewModel.createProductState.collectLatest {
-                        if (it.loading) {
-                            loadingDialog.show()
-                        } else loadingDialog.dismiss()
-                        if (it.success != null) {
-                            it.success = null
-                            showSuccesDialog()
-                        }
-                        if (it.getProductCodeSuccess != null) {
-                            binding.tvStockCodeNumber.text = it.getProductCodeSuccess
-                        }
-                    }
+
                 }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    snackBar?.dismiss()
+                    snackBar = Snackbar.make(
+                        binding.root,
+                        it.message.orEmpty(),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackBar?.show()
+                }
+            }
+        }
 
-                launch {
-                    viewModel.event.collectLatest { event ->
-                        when (event) {
-                            is UiEvent.ShowErrorSnackBar -> {
-                                snackBar?.dismiss()
-                                snackBar = Snackbar.make(
-                                    binding.root,
-                                    event.message,
-                                    Snackbar.LENGTH_LONG
-                                )
-                                snackBar?.show()
-                            }
-                        }
-                    }
+
+        viewModel.getProductLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    binding.tvStockCodeNumber.text = it.data.orEmpty()
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    snackBar?.dismiss()
+                    snackBar = Snackbar.make(
+                        binding.root,
+                        it.message.orEmpty(),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackBar?.show()
                 }
             }
         }
@@ -449,8 +354,6 @@ class ProductCreateFragment : Fragment() {
 
         binding.btnNext.setOnClickListener {
             createProduct()
-
-
         }
 
         loadingDialog = requireContext().getAlertDialog()
@@ -521,7 +424,8 @@ class ProductCreateFragment : Fragment() {
         alertDialog.setCancelable(false)
         alertDialog.show()
         successBinding.btnCreateAnotherStock.setOnClickListener {
-            viewModel.getProductCode()
+            viewModel.getProductCode(args.secondCatId)
+            formReset()
             alertDialog.dismiss()
         }
         successBinding.btnCreateNewItem.setOnClickListener {
@@ -586,7 +490,7 @@ class ProductCreateFragment : Fragment() {
             val diamondActualPrice = dialogbinding.edtDiamondActualPrice.text.toString().toDouble()
             val diamondValue = dialogbinding.edtDiamondValue.text.toString().toDouble()
             val actualSellValue = diamondActualPrice * (diamondValue / diamondPrice)
-            dialogbinding.actDiamondActualSellValue.setText(actualSellValue.toString())
+            dialogbinding.actDiamondActualSellValue.setText(actualSellValue.toInt().toString())
             dialogbinding.tvReset.setTextColor(requireContext().getColorStateList(R.color.primary_color))
             dialogbinding.btnCalculate.text = "Add"
         }
@@ -602,9 +506,66 @@ class ProductCreateFragment : Fragment() {
         ) {
             Toast.makeText(requireContext(), "Fill The Required Fields", Toast.LENGTH_LONG).show()
         } else {
-            val photoList = mutableListOf<MultipartBody.Part?>(photo1, photo2, photo3, gif)
+
+            var photo1: MultipartBody.Part? = null
+            var requestBody1: RequestBody? = null
+            viewModel.selectedImgUri1?.let {
+                requestBody1 = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                photo1 = MultipartBody.Part.createFormData(
+                    "images[0][file]",
+                    it.name,
+                    requestBody1!!
+                )
+            }
+
+            var photo2: MultipartBody.Part? = null
+            var requestBody2: RequestBody? = null
+            viewModel.selectedImgUri2?.let {
+                requestBody2 = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                photo2 = MultipartBody.Part.createFormData(
+                    "images[1][file]",
+                    it.name,
+                    requestBody2!!
+                )
+            }
+
+            var photo3: MultipartBody.Part? = null
+            var requestBody3: RequestBody? = null
+            viewModel.selectedImgUri3?.let {
+                requestBody3 = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                photo3 = MultipartBody.Part.createFormData(
+                    "images[2][file]",
+                    it.name,
+                    requestBody3!!
+                )
+            }
+
+            var selectedGif: MultipartBody.Part? = null
+            var requestBody4: RequestBody? = null
+            viewModel.selectedGifUri?.let {
+                requestBody4 = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                selectedGif = MultipartBody.Part.createFormData(
+                    "images[3][file]",
+                    it.name,
+                    requestBody4!!
+                )
+            }
+
+            var video: MultipartBody.Part? = null
+            var requestBody5: RequestBody? = null
+            viewModel.selectedVideoUri?.let {
+                requestBody5 = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                video = MultipartBody.Part.createFormData(
+                    "video",
+                    it.name,
+                    requestBody5!!
+                )
+            }
+
+
+            val photoList = mutableListOf<MultipartBody.Part?>(photo1, photo2, photo3, selectedGif)
             val photoToUpload = photoList.filterNotNull() as MutableList
-//        val videoList = mutableListOf(video!!)
+
 
             val productCode = binding.tvStockCodeNumber.text.toString()
                 .toRequestBody("multipart/form-data".toMediaTypeOrNull())
@@ -623,27 +584,52 @@ class ProductCreateFragment : Fragment() {
                 ?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
             val pae = binding.edtP.text?.toString()
                 ?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val ywae = binding.edtY.text?.toString()
-                ?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val diamondInfo =
+            val resultYwae = getYwaeFromKPY(
+                binding.edtK.text.toString().toInt(), binding.edtP.text.toString().toInt(),
+                binding.edtY.text.toString().toDouble()
+            )
+            val ywae = resultYwae.toString()
+                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val diamondInfo = if (viewModel.diamondInfo.isNullOrEmpty()) {
+                null
+            } else {
                 viewModel.diamondInfo?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val diamondPriceFromGS =
+            }
+            val diamondPriceFromGS = if (viewModel.diamondPriceFromGS.isNullOrEmpty()) {
+                null
+            } else {
                 viewModel.diamondPriceFromGS?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            }
             val diamondValueFromGS =
-                viewModel.diamondValueFromGS?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val diamondValueForSale =
+                if (viewModel.diamondValueFromGS.isNullOrEmpty()) {
+                    null
+                } else {
+                    viewModel.diamondValueFromGS?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                }
+            val diamondValueForSale = if (viewModel.diamondValueForSale.isNullOrEmpty()) {
+                null
+            } else {
                 viewModel.diamondValueForSale?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            }
             val diamondPriceForSale =
-                viewModel.diamondPriceForSale?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                if (viewModel.diamondPriceForSale.isNullOrEmpty()) {
+                    null
+                } else {
+                    viewModel.diamondPriceForSale?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                }
 
             val type =
-                sharedViewModel.firstCat!!.id.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                args.firstCatId.toRequestBody("multipart/form-data".toMediaTypeOrNull())
             val quality =
-                sharedViewModel.secondCat!!.id.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                args.secondCatId.toRequestBody("multipart/form-data".toMediaTypeOrNull())
             val group =
-                sharedViewModel.thirdCat!!.id.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                args.thirdCatId?.let {
+                    it.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                }
             val category =
-                sharedViewModel.fourthCat!!.id.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                args.fourthCatId?.let {
+                    it.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                }
 
 
 
@@ -655,8 +641,6 @@ class ProductCreateFragment : Fragment() {
                 group,
                 category,
                 goldGemWeight,
-                kyat,
-                pae,
                 ywae,
                 gemValue,
                 ptClipPrice,
@@ -666,26 +650,56 @@ class ProductCreateFragment : Fragment() {
                 diamondValueFromGS,
                 diamondPriceForSale,
                 diamondValueForSale,
-                photoToUpload,
+                photo1,
+                photo1Id,
+                photo2,
+                photo2Id,
+                photo3,
+                photo3Id,
+                selectedGif,
+                gifId,
                 video
             )
         }
 
 
-//        viewModel.createProduct(
-//            name,
-//            args.firstCat.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-//            args.secondCat.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-//            args.thirdCat.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-//            args.fourthCat.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-//            goldGemWeight,
-//            kyat,
-//            pae,
-//            ywae,
-//            gemValue,
-//            ptClipPrice,
-//
-//        )
+    }
+
+    fun setFirstCatImage(imageUrl: String, imageId: String) {
+        binding.ivImage1.loadImageWithGlide(imageUrl)
+        photo1Id = MultipartBody.Part.createFormData(
+            "images[0][id]",
+            imageId
+        )
+    }
+
+    fun formReset() {
+        binding.edtEnterStockName.setText("")
+        binding.edtGemValue.setText("")
+        binding.edtK.setText("0")
+        binding.edtP.setText("0")
+        binding.edtY.setText("0")
+        binding.edtGoldGemGm.setText("0")
+        binding.edtPtClipPrice.setText("0")
+        binding.edtServiceFee.setText("0")
+        if (args.category != null) {
+            setFirstCatImage(
+                args.category!!.imageUrlList[0].url,
+                args.category!!.imageUrlList[0].id
+            )
+        } else {
+            binding.ivImage1.setImageDrawable(requireContext().getDrawable(R.drawable.empty_picture))
+        }
+        binding.ivImage2.setImageDrawable(requireContext().getDrawable(R.drawable.empty_picture))
+        binding.ivImage3.setImageDrawable(requireContext().getDrawable(R.drawable.empty_picture))
+        binding.ivGif.setImageDrawable(requireContext().getDrawable(R.drawable.empty_gif))
+        binding.ivVideo.setImageDrawable(requireContext().getDrawable(R.drawable.empty_video))
+        viewModel.resetDimaondData()
+        viewModel.selectedImgUri1 = null
+        viewModel.selectedImgUri2 = null
+        viewModel.selectedImgUri3 = null
+        viewModel.selectedGifUri = null
+        viewModel.selectedVideoUri = null
     }
 
 }

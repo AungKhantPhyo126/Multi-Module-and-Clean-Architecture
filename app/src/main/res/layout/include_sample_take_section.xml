@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:textAppearance="@style/TextAppearance.ShweMi.Body2"
         android:text="@string/sample_take"
+        android:textAppearance="@style/TextAppearance.ShweMi.Body2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -55,6 +55,34 @@
             android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_scan_voucher_here"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        app:boxBackgroundColor="@color/white"
+        app:endIconDrawable="@drawable/ic_qr_scan"
+        app:endIconMode="custom"
+        app:endIconTintMode="screen"
+        app:hintEnabled="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_label_sample_take">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_scan_voucher_here"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Type or Scan Voucher here"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <TextView
         android:id="@+id/tv_stock_name"
         android:layout_width="wrap_content"
@@ -74,7 +102,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        app:hintEnabled="false"
         android:padding="0dp"
         app:boxCornerRadiusBottomEnd="15dp"
         app:boxCornerRadiusBottomStart="15dp"
@@ -83,6 +110,7 @@
         app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
         app:boxStrokeWidth="1dp"
         app:errorEnabled="false"
+        app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_stock_name">
@@ -95,6 +123,7 @@
             android:scrollbars="vertical" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
     <TextView
         android:id="@+id/tv_label_weight"
         android:layout_width="wrap_content"
@@ -114,7 +143,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        app:hintEnabled="false"
         android:padding="0dp"
         app:boxCornerRadiusBottomEnd="15dp"
         app:boxCornerRadiusBottomStart="15dp"
@@ -123,6 +151,7 @@
         app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
         app:boxStrokeWidth="1dp"
         app:errorEnabled="false"
+        app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_label_weight">
@@ -132,6 +161,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/enter_weight"
+            android:inputType="numberDecimal"
             android:scrollbars="vertical" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -155,7 +185,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        app:hintEnabled="false"
         android:padding="0dp"
         app:boxCornerRadiusBottomEnd="15dp"
         app:boxCornerRadiusBottomStart="15dp"
@@ -164,6 +193,7 @@
         app:boxStrokeColor="@color/daily_gold_price_input_box_boarder_color"
         app:boxStrokeWidth="1dp"
         app:errorEnabled="false"
+        app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_label_specification">
@@ -195,16 +225,44 @@
         android:layout_height="200dp"
         android:layout_marginTop="16dp"
         android:scaleType="fitXY"
+        android:src="@drawable/empty_picture"
         app:layout_constraintEnd_toEndOf="@+id/til_specification"
         app:layout_constraintStart_toStartOf="@+id/til_specification"
-        app:layout_constraintTop_toBottomOf="@+id/til_specification"
-        android:src="@drawable/empty_picture"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/til_specification" />
+
     <androidx.constraintlayout.widget.Group
         android:id="@+id/outside_group"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="tv_stock_name,til_stock_name,tv_label_weight,til_weight,tv_label_specification,til_specification,iv_outside,btn_save_and_take"/>
+        android:visibility="gone"
+        app:constraint_referenced_ids="tv_stock_name,til_stock_name,tv_label_weight,til_weight,tv_label_specification,til_specification,iv_outside,btn_save_and_take" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/choose_outside_or_voucher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="btn_scan_from_voucher,btn_outside_sample" />
+
+    <Button
+        android:id="@+id/btn_scan_from_voucher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Voucher"
+        app:layout_constraintEnd_toStartOf="@+id/btn_outside_sample"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_label_sample_take" />
+
+    <Button
+        android:id="@+id/btn_outside_sample"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Outside"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btn_scan_from_voucher"
+        app:layout_constraintTop_toTopOf="@+id/btn_scan_from_voucher" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

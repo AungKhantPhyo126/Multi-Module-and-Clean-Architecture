@@ -11,18 +11,14 @@ class GiveGoldUseCase @Inject constructor(
         goldSmithId: String,
         orderItem: String,
         orderQty: String,
-        weightK: String,
-        weighP: String,
         weightY: String,
         goldBoxId: String,
         goldWeight: String,
         gemWeight: String,
         goldAndGemWeight:String,
-        wastageK: String,
-        wastageP: String,
         wastageY: String,
-        dueDate: String,
+        dueDate: String?,
         sampleList: List<String>?
-    )=giveGoldRepository.giveGold(token, goldSmithId, orderItem, orderQty, weightK, weighP,
-        weightY, goldBoxId, goldWeight, gemWeight,goldAndGemWeight, wastageK, wastageP, wastageY, dueDate, sampleList)
+    )=giveGoldRepository.giveGold(token, goldSmithId, orderItem, orderQty,
+        weightY, goldBoxId, goldWeight, gemWeight,goldAndGemWeight,wastageY, dueDate, sampleList)
 }

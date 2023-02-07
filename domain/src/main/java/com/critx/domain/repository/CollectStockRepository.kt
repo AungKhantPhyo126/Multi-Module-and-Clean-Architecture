@@ -24,8 +24,6 @@ interface CollectStockRepository {
     fun collectBatch(
         token: String,
         method:RequestBody,
-        kyat:RequestBody?,
-        pae:RequestBody?,
         ywae:RequestBody?,
         goldSmithId:RequestBody?,
         bonus:RequestBody?,

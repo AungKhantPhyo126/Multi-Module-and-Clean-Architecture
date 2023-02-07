@@ -73,6 +73,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tv_label_stock_code"
             app:layout_constraintTop_toBottomOf="@+id/tv_label_stock_code" />
+
+        <TextView
+            android:id="@+id/tv_weight_gm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_label_stock_code"
+            app:layout_constraintTop_toBottomOf="@+id/tv_sample_spec"
+            tools:text="4.56" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
 

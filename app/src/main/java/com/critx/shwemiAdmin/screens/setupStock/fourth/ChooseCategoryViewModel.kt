@@ -2,10 +2,11 @@ package com.critx.shwemiAdmin.screens.setupStock.third
 
 import androidx.lifecycle.*
 import com.critx.commonkotlin.util.Resource
+import com.critx.data.localdatabase.LocalDatabase
 import com.critx.domain.useCase.SetUpStock.DeleteJewelleryCategoryUseCase
 import com.critx.domain.useCase.SetUpStock.GetJewelleryCategoryUseCase
 import com.critx.shwemiAdmin.UiEvent
-import com.critx.shwemiAdmin.localDatabase.LocalDatabase
+import com.critx.shwemiAdmin.uiModel.setupStock.ChooseGroupUIModel
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryCategoryUiModel
 import com.critx.shwemiAdmin.uiModel.setupStock.asUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,9 +24,13 @@ class ChooseCategoryViewModel @Inject constructor(
 ) : ViewModel() {
     //forselection
 
-    private val _getJewelleryCategoryLiveData = MutableLiveData<Resource<List<JewelleryCategoryUiModel>>>()
-    val getJewelleryCategoryLiveData :LiveData<Resource<List<JewelleryCategoryUiModel>>>
+    private val _getJewelleryCategoryLiveData = MutableLiveData<Resource<MutableList<JewelleryCategoryUiModel?>>>()
+    val getJewelleryCategoryLiveData :LiveData<Resource<MutableList<JewelleryCategoryUiModel?>>>
 get() = _getJewelleryCategoryLiveData
+
+    fun resetGetJewelleryCategoryLiveData(){
+        _getJewelleryCategoryLiveData.value = null
+    }
     private val _deleteLiveData = MutableLiveData<Resource<String>>()
     val deleteLiveData :LiveData<Resource<String>>
         get() = _deleteLiveData
@@ -69,7 +74,10 @@ get() = _getJewelleryCategoryLiveData
                         _getJewelleryCategoryLiveData.value = Resource.Loading()
                     }
                     is Resource.Success -> {
-                        _getJewelleryCategoryLiveData.value =Resource.Success(result.data!!.map { it.asUiModel() })
+                        val resultdata = mutableListOf<JewelleryCategoryUiModel?>(null)
+                        resultdata.addAll(result.data!!.map { it.asUiModel() })
+                        _getJewelleryCategoryLiveData.value =
+                            Resource.Success(resultdata)
 
 
                     }

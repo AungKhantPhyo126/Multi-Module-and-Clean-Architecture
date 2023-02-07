@@ -5,11 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
+import com.critx.data.localdatabase.LocalDatabase
 import com.critx.domain.model.collectStock.JewellerySizeDomain
 import com.critx.domain.useCase.collectStock.CollectBatchUseCase
 import com.critx.domain.useCase.collectStock.GetGoldSmithListUseCase
 import com.critx.domain.useCase.collectStock.GetJewellerySizeUseCase
-import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.notifyObserverWithResource
 import com.critx.shwemiAdmin.uiModel.collectStock.CollectStockBatchUIModel
 import com.critx.shwemiAdmin.uiModel.collectStock.GoldSmithUiModel
@@ -97,8 +97,6 @@ class FillInfoCollectStockViewModel @Inject constructor(
     }
 
     fun collectBatch(
-        kyat: RequestBody?,
-        pae: RequestBody?,
         ywae: RequestBody?,
         goldSmithId: RequestBody?,
         bonus: RequestBody?,
@@ -110,8 +108,7 @@ class FillInfoCollectStockViewModel @Inject constructor(
         viewModelScope.launch {
             collectBatchUseCase(
                 localDatabase.getToken().orEmpty(),
-                methodRequestBody,
-                kyat, pae, ywae, goldSmithId, bonus, jewellerySizeId, productIds
+                methodRequestBody, ywae, goldSmithId, bonus, jewellerySizeId, productIds
             ).collectLatest {
                 when(it){
                     is Resource.Loading->{

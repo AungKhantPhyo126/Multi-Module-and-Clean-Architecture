@@ -47,6 +47,8 @@ import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.DialogChooseDesignBinding
 import com.critx.shwemiAdmin.databinding.DialogChooseJewelleryTypeBinding
 import com.critx.shwemiAdmin.databinding.FragmentAddCategoryBinding
+import com.critx.shwemiAdmin.getKPYFromYwae
+import com.critx.shwemiAdmin.getYwaeFromKPY
 import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
 import com.critx.shwemiAdmin.screens.setupStock.fourth.ChooseCategoryFragmentDirections
 import com.critx.shwemiAdmin.screens.setupStock.fourth.JewelleryCategoryRecyclerAdapter
@@ -95,6 +97,12 @@ class AddCategoryFragment : Fragment() {
     private lateinit var launchChooseGif: ActivityResultLauncher<Intent>
     private lateinit var readStoragePermissionlauncher: ActivityResultLauncher<String>
 
+    var photo1Id: MultipartBody.Part? = null
+    var photo2Id: MultipartBody.Part? = null
+    var photo3Id: MultipartBody.Part? = null
+    var gifId: MultipartBody.Part? = null
+
+
 //    var selectedRecommendCat: MutableList<Int> = mutableListOf()
 
 
@@ -117,9 +125,18 @@ class AddCategoryFragment : Fragment() {
                 val data = result.data
                 if (data != null && data.data != null) {
                     getRealPathFromUri(requireContext(), data.data!!)?.let { path ->
-                        viewModel.selectedImgUri1 = File(path)
+                        if (path.endsWith(".gif")) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Please choose image file",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }else{
+                            viewModel.selectedImgUri1 = File(path)
+                            if (photo1Id == null) photo1Id = null
+                            binding.ivImage1.loadImageWithGlideWithUri(data.data)
+                        }
                     }
-                    binding.ivImage1.setImageURI(data.data)
                 }
             }
         }
@@ -130,9 +147,18 @@ class AddCategoryFragment : Fragment() {
                 val data = result.data
                 if (data != null && data.data != null) {
                     getRealPathFromUri(requireContext(), data.data!!)?.let { path ->
-                        viewModel.selectedImgUri2 = File(path)
+                        if (path.endsWith(".gif")) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Please choose image file",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }else{
+                            viewModel.selectedImgUri2 = File(path)
+                            if (photo2Id == null) photo2Id = null
+                            binding.ivImage2.loadImageWithGlideWithUri(data.data)
+                        }
                     }
-                    binding.ivImage2.setImageURI(data.data)
                 }
             }
         }
@@ -143,10 +169,18 @@ class AddCategoryFragment : Fragment() {
                 val data = result.data
                 if (data != null && data.data != null) {
                     getRealPathFromUri(requireContext(), data.data!!)?.let { path ->
-                        viewModel.selectedImgUri3 = File(path)
+                        if (path.endsWith(".gif")) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Please choose image file",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }else{
+                            viewModel.selectedImgUri3 = File(path)
+                            if (photo3Id == null) photo3Id = null
+                            binding.ivImage3.loadImageWithGlideWithUri(data.data)
+                        }
                     }
-                    binding.ivImage3.setImageURI(data.data)
-
                 }
             }
         }
@@ -157,9 +191,18 @@ class AddCategoryFragment : Fragment() {
                 val data = result.data
                 if (data != null && data.data != null) {
                     getRealPathFromUri(requireContext(), data.data!!)?.let { path ->
-                        viewModel.selectedGifUri = File(path)
+                        if (path.endsWith(".gif")) {
+                            viewModel.selectedGifUri = File(path)
+                            if (gifId == null) gifId = null
+                            binding.ivGif.loadImageWithGlideAsGifFromStorage(File(path))
+                        }else{
+                            Toast.makeText(
+                                requireContext(),
+                                "Please choose a gif file",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
-                    binding.ivGif.setImageURI(data.data)
                 }
             }
         }
@@ -208,9 +251,6 @@ class AddCategoryFragment : Fragment() {
         binding.includeRecommendCategory.btnAdd.setOnClickListener {
             showChooseRelatedCategoryDialog()
         }
-        binding.btnConfirm.setOnClickListener {
-
-        }
         loadingDialog = requireContext().getAlertDialog()
         isFrequentlyUsed = if (binding.cbFrequentlyUsed.isChecked) 1 else 0
         binding.cbFrequentlyUsed.setOnCheckedChangeListener { compoundButton, ischecked ->
@@ -245,23 +285,33 @@ class AddCategoryFragment : Fragment() {
             binding.edtEnterCategory.setText(args.category!!.name)
             binding.edtAvgWeight.setText(args.category!!.avgWeightPerUnitGm.toString())
             binding.edtSpecification.setText(args.category!!.specification)
-            binding.edtK.setText(args.category!!.avgKPYUiModel.kyat.toString())
-            binding.edtP.setText(args.category!!.avgKPYUiModel.pae.toString())
-            binding.edtY.setText(args.category!!.avgKPYUiModel.ywae.toString())
+            val kpyList = getKPYFromYwae(args.category!!.avgWastagePerUnitYwae!!.toDouble())
+            binding.edtK.setText(kpyList[0])
+            binding.edtP.setText(kpyList[1])
+            binding.edtY.setText(kpyList[2])
             val imageList = args.category!!.imageUrlList
             repeat(imageList.size) {
-                if (imageList[it].endsWith(".gif")) {
-                    binding.ivGif.loadImageWithGlide(imageList[it])
-                    setOriginalImage(imageList[it], 3)
+                if (imageList[it].url.endsWith(".gif")) {
+                    binding.ivGif.loadImageWithGlideAsGif(imageList[it].url)
+                    setOriginalImage(imageList[it].url, imageList[it].id, 3)
+                    gifId = MultipartBody.Part.createFormData(
+                        "images[3][id]",
+                        imageList[it].id
+                    )
+
                 } else {
-                    setOriginalImage(imageList[it], it)
+                    setOriginalImage(imageList[it].url, imageList[it].id, it)
                 }
             }
             if (args.category!!.video.isNullOrEmpty().not()) {
                 args.category!!.video?.let { binding.ivVideo.getThumbnail(it) }
             }
-
+            binding.swipeRefreshLayout.setOnRefreshListener {
+                refreshData()
+            }
         } else {
+            viewModel.setRelatedCat()
+            viewModel.setDesigns()
             binding.btnConfirm.text = "Create & Select"
         }
         viewModel.designInCatLiveDataLiveData.observe(viewLifecycleOwner) {
@@ -313,21 +363,23 @@ class AddCategoryFragment : Fragment() {
         binding.ivRemove1.setOnClickListener {
             binding.ivImage1.setImageDrawable(requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_picture))
             viewModel.selectedImgUri1 = null
+            photo1Id = null
         }
         binding.ivRemove2.setOnClickListener {
             binding.ivImage2.setImageDrawable(requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_picture))
             viewModel.selectedImgUri2 = null
+            photo2Id = null
 
         }
         binding.ivRemove3.setOnClickListener {
             binding.ivImage3.setImageDrawable(requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_picture))
             viewModel.selectedImgUri3 = null
-
+            photo3Id = null
         }
         binding.ivRemoveGif.setOnClickListener {
             binding.ivGif.setImageDrawable(requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_gif))
             viewModel.selectedGifUri = null
-
+            gifId = null
         }
         binding.ivRemoveVideo.setOnClickListener {
             binding.ivVideo.setImageDrawable(requireContext().getDrawable(com.critx.shwemiAdmin.R.drawable.empty_video))
@@ -364,12 +416,14 @@ class AddCategoryFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
+                    binding.swipeRefreshLayout.isRefreshing = false
                     relatedCatRecyclerAdapter.submitList(it.data)
                     relatedCatRecyclerAdapter.notifyDataSetChanged()
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
                     snackBar?.dismiss()
+                    binding.swipeRefreshLayout.isRefreshing = false
                     snackBar = Snackbar.make(
                         binding.root,
                         it.message.orEmpty(),
@@ -409,6 +463,7 @@ class AddCategoryFragment : Fragment() {
                 is Resource.Error -> {
                     loadingDialog.dismiss()
                     snackBar?.dismiss()
+                    viewModel.resetCreateLiveData()
                     snackBar = Snackbar.make(
                         binding.root,
                         it.message.orEmpty(),
@@ -450,60 +505,70 @@ class AddCategoryFragment : Fragment() {
         }
     }
 
-    fun setOriginalImage(imageUrl: String, placeHolder: Int) {
-        var bm: Bitmap?
+    fun setOriginalImage(imageUrl: String, imageId: String, placeHolder: Int) {
         when (placeHolder) {
             0 -> {
                 binding.ivImage1.loadImageWithGlide(imageUrl)
+                photo1Id = MultipartBody.Part.createFormData(
+                    "images[0][id]",
+                    imageId
+                )
             }
             1 -> {
                 binding.ivImage2.loadImageWithGlide(imageUrl)
+                photo2Id = MultipartBody.Part.createFormData(
+                    "images[1][id]",
+                    imageId
+                )
             }
             2 -> {
                 binding.ivImage3.loadImageWithGlide(imageUrl)
+                photo3Id = MultipartBody.Part.createFormData(
+                    "images[2][id]",
+                    imageId
+                )
             }
 
-
         }
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                bm = getBitMapWithGlide(imageUrl, requireContext())
-                val fileName: String =
-                    imageUrl.substring(imageUrl.lastIndexOf('/') + 1)
-                when (placeHolder) {
-                    0 -> {
-                        viewModel.selectedImgUri1 = persistImage(
-                            bm!!,
-                            fileName,
-                            requireContext()
-                        )
-                    }
-                    1 -> {
-                        viewModel.selectedImgUri2 = persistImage(
-                            bm!!,
-                            fileName,
-                            requireContext()
-                        )
-                    }
-                    2 -> {
-                        viewModel.selectedImgUri3 = persistImage(
-                            bm!!,
-                            fileName,
-                            requireContext()
-                        )
-                    }
-                    3 -> {
-                        viewModel.selectedGifUri = persistImage(
-                            bm!!,
-                            fileName,
-                            requireContext()
-                        )
-                    }
-
-                }
-
-            }
-        }
+//        lifecycleScope.launch {
+//            withContext(Dispatchers.IO) {
+//                bm = getBitMapWithGlide(imageUrl, requireContext())
+//                val fileName: String =
+//                    imageUrl.substring(imageUrl.lastIndexOf('/') + 1)
+//                when (placeHolder) {
+//                    0 -> {
+//                        viewModel.selectedImgUri1 = persistImage(
+//                            bm!!,
+//                            fileName,
+//                            requireContext()
+//                        )
+//                    }
+//                    1 -> {
+//                        viewModel.selectedImgUri2 = persistImage(
+//                            bm!!,
+//                            fileName,
+//                            requireContext()
+//                        )
+//                    }
+//                    2 -> {
+//                        viewModel.selectedImgUri3 = persistImage(
+//                            bm!!,
+//                            fileName,
+//                            requireContext()
+//                        )
+//                    }
+//                    3 -> {
+//                        viewModel.selectedGifUri = persistImage(
+//                            bm!!,
+//                            fileName,
+//                            requireContext()
+//                        )
+//                    }
+//
+//                }
+//
+//            }
+//        }
     }
 
 
@@ -576,7 +641,7 @@ class AddCategoryFragment : Fragment() {
             viewModel.selectedImgUri1?.let {
                 requestBody1 = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
                 photo1 = MultipartBody.Part.createFormData(
-                    "images[]",
+                    "images[0][file]",
                     it.name,
                     requestBody1!!
                 )
@@ -587,7 +652,7 @@ class AddCategoryFragment : Fragment() {
             viewModel.selectedImgUri2?.let {
                 requestBody2 = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
                 photo2 = MultipartBody.Part.createFormData(
-                    "images[]",
+                    "images[1][file]",
                     it.name,
                     requestBody2!!
                 )
@@ -598,7 +663,7 @@ class AddCategoryFragment : Fragment() {
             viewModel.selectedImgUri3?.let {
                 requestBody3 = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
                 photo3 = MultipartBody.Part.createFormData(
-                    "images[]",
+                    "images[2][file]",
                     it.name,
                     requestBody3!!
                 )
@@ -609,7 +674,7 @@ class AddCategoryFragment : Fragment() {
             viewModel.selectedGifUri?.let {
                 requestBody4 = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
                 selectedGif = MultipartBody.Part.createFormData(
-                    "images[]",
+                    "images[3][file]",
                     it.name,
                     requestBody4!!
                 )
@@ -626,11 +691,6 @@ class AddCategoryFragment : Fragment() {
                 )
             }
 
-
-            val photoList = mutableListOf<MultipartBody.Part?>(photo1, photo2, photo3, selectedGif)
-            val photoToUpload = photoList.filterNotNull() as MutableList
-
-//        val videoList = mutableListOf(video!!)
             val designList = mutableListOf<RequestBody>()
             viewModel.designInCatLiveDataLiveData.value?.let { list ->
                 list.forEach {
@@ -647,11 +707,12 @@ class AddCategoryFragment : Fragment() {
             val avgWeigh = binding.edtAvgWeight.text.toString()
                 .toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
-            val avgKyat = binding.edtK.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val avgPae = binding.edtP.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val avgYwae = binding.edtY.text.toString()
+//            val avgKyat = binding.edtK.text.toString()
+//                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+//            val avgPae = binding.edtP.text.toString()
+//                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val ywae = getYwaeFromKPY(binding.edtK.text.toString().toInt(),binding.edtP.text.toString().toInt(),binding.edtY.text.toString().toDouble())
+            val avgYwae = ywae.toString()
                 .toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
             val recommendCat = mutableListOf<RequestBody>()
@@ -663,6 +724,46 @@ class AddCategoryFragment : Fragment() {
 
 
             if (actionType == CREATE_CATEGORY) {
+
+                viewModel.selectedImgUri1?.let {
+                    requestBody1 = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                    photo1 = MultipartBody.Part.createFormData(
+                        "images[]",
+                        it.name,
+                        requestBody1!!
+                    )
+                }
+
+                viewModel.selectedImgUri2?.let {
+                    requestBody2 = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                    photo2 = MultipartBody.Part.createFormData(
+                        "images[]",
+                        it.name,
+                        requestBody2!!
+                    )
+                }
+
+                viewModel.selectedImgUri3?.let {
+                    requestBody3 = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                    photo3 = MultipartBody.Part.createFormData(
+                        "images[]",
+                        it.name,
+                        requestBody3!!
+                    )
+                }
+
+                viewModel.selectedGifUri?.let {
+                    requestBody4 = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                    selectedGif = MultipartBody.Part.createFormData(
+                        "images[]",
+                        it.name,
+                        requestBody4!!
+                    )
+                }
+
+                val photoList =
+                    mutableListOf<MultipartBody.Part?>(photo1, photo2, photo3, selectedGif)
+                val photoToUpload = photoList.filterNotNull() as MutableList
                 viewModel.createJewelleryCategory(
                     args.type.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
                     args.quality.id.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
@@ -678,8 +779,7 @@ class AddCategoryFragment : Fragment() {
                     specification,
                     designList,
                     orderToGs.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                    avgKyat,
-                    avgPae,
+
                     avgYwae,
                     recommendCat
                 )
@@ -695,13 +795,18 @@ class AddCategoryFragment : Fragment() {
                         .toRequestBody("multipart/form-data".toMediaTypeOrNull()),
                     name,
                     avgWeigh,
-                    photoToUpload,
+                    photo1,
+                    photo1Id,
+                    photo2,
+                    photo2Id,
+                    photo3,
+                    photo3Id,
+                    selectedGif,
+                    gifId,
                     video,
                     specification,
                     designList,
                     orderToGs.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                    avgKyat,
-                    avgPae,
                     avgYwae,
                     recommendCat
                 )
@@ -722,11 +827,8 @@ class AddCategoryFragment : Fragment() {
         builder.setView(relatedCatDialogBinding.root)
         val alertDialog = builder.create()
         alertDialog.setCancelable(false)
-
-        var frequentUse = 0
-        relatedCatDialogBinding.cbFrequentlyUsed.setOnCheckedChangeListener { compoundButton, isChecked ->
-            frequentUse = if (isChecked) 1 else 0
-        }
+        alertDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT); //Controlling width and height.
+        relatedCatDialogBinding.cbImageView.isVisible = false
 
         /** choose jewellery type */
         viewModel.getJewelleryType()
@@ -796,7 +898,7 @@ class AddCategoryFragment : Fragment() {
 
                                 secondCatId = item.id
                                 viewModel.getJewelleryGroup(
-                                    frequentUse,
+                                    0,
                                     firstCatId.toInt(),
                                     item.id.toInt()
                                 )
@@ -837,9 +939,9 @@ class AddCategoryFragment : Fragment() {
                             relatedCatDialogBinding.tvThirdCat.isVisible = true
 
                             viewModel.getJewelleryCategory(
-                                frequentUse,
+                                0,
                                 firstCatId.toInt(),
-                                it.id.toInt(),
+                                secondCatId.toInt(),
                                 it.id.toInt()
                             )
 
@@ -868,12 +970,10 @@ class AddCategoryFragment : Fragment() {
                         }
                     }
                     relatedCatDialogBinding.ivBack.isVisible = true
-                    relatedCatDialogBinding.cbFrequentlyUsed.isVisible = true
                     relatedCatDialogBinding.cbImageView.isVisible = true
                     relatedCatDialogBinding.ivBack.setOnClickListener {
                         relatedCatDialogBinding.ivThirdCat.isVisible = false
                         relatedCatDialogBinding.tvThirdCat.isVisible = false
-                        relatedCatDialogBinding.cbFrequentlyUsed.isVisible = false
                         relatedCatDialogBinding.cbImageView.isVisible = false
                         viewModel.getJewelleryQuality()
                     }
@@ -887,7 +987,7 @@ class AddCategoryFragment : Fragment() {
                             relatedCatDialogBinding.tvThirdCat.isVisible = true
 
                             viewModel.getJewelleryCategory(
-                                frequentUse,
+                                0,
                                 firstCatId.toInt(),
                                 secondCatId.toInt(),
                                 item.id.toInt()
@@ -920,20 +1020,23 @@ class AddCategoryFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
-                    categoryAdapter = JewelleryCategoryRecyclerAdapter({
-
-                    }, {
-
-                    }, {item->
+                    categoryAdapter = JewelleryCategoryRecyclerAdapter({ item ->
                         relatedCatDialogBinding.tvFourthCat.text = item.name
                         relatedCatDialogBinding.ivFourthCat.isVisible = true
                         relatedCatDialogBinding.tvFourthCat.isVisible = true
-                        if (viewModel.getRelatedCats.value!!.data!!.contains(item)){
-                            Toast.makeText(requireContext(),"This cat is already added",Toast.LENGTH_LONG).show()
-                        }else{
+                        if (viewModel.getRelatedCats.value!!.data!!.contains(item)) {
+                            Toast.makeText(
+                                requireContext(),
+                                "This cat is already added",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else {
                             viewModel.addRelatedCat(item)
                             alertDialog.dismiss()
                         }
+                    }, {
+
+                    }, {
                         //To Do
                     }, {
                         //deleteclick
@@ -955,7 +1058,6 @@ class AddCategoryFragment : Fragment() {
                         }
                     }
                     relatedCatDialogBinding.ivBack.isVisible = true
-                    relatedCatDialogBinding.cbFrequentlyUsed.isVisible = true
                     relatedCatDialogBinding.cbImageView.isVisible = true
                     relatedCatDialogBinding.ivBack.setOnClickListener {
                         relatedCatDialogBinding.ivFourthCat.isVisible = false
@@ -975,16 +1077,22 @@ class AddCategoryFragment : Fragment() {
                             relatedCatDialogBinding.tvFourthCat.text = item.name
                             relatedCatDialogBinding.ivFourthCat.isVisible = true
                             relatedCatDialogBinding.tvFourthCat.isVisible = true
-                            if (viewModel.getRelatedCats.value!!.data!!.contains(item)){
-                                Toast.makeText(requireContext(),"This cat is already added",Toast.LENGTH_LONG).show()
-                            }else{
+                            if (viewModel.getRelatedCats.value != null) {
+                                if (viewModel.getRelatedCats.value!!.data!!.contains(item)) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "This cat is already added",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                } else {
+                                    viewModel.addRelatedCat(item)
+                                    alertDialog.dismiss()
+                                }
+                            } else {
                                 viewModel.addRelatedCat(item)
                                 alertDialog.dismiss()
                             }
-                            //To Do
                         }
-
-
                     }
                 }
                 is Resource.Error -> {
@@ -1002,7 +1110,6 @@ class AddCategoryFragment : Fragment() {
 
 
         relatedCatDialogBinding.ivExit.setOnClickListener {
-            relatedCatDialogBinding.cbFrequentlyUsed.isVisible = false
             relatedCatDialogBinding.cbImageView.isVisible = false
             viewModel.resetLiveData()
             alertDialog.dismiss()
@@ -1030,29 +1137,37 @@ class AddCategoryFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
+                    designBinding.tvEmptyList.isVisible = it.data.isNullOrEmpty()
+                    binding.swipeRefreshLayout.isRefreshing = false
                     for (item in it.data!!) {
                         val chip = requireContext().createChip(item.name)
                         chip.id = item.id.toInt()
                         designBinding.chipGroup.addView(chip)
                         chip.setOnClickListener {
-                            if (viewModel.designInCatLiveDataLiveData.value!!.contains(item)) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "This Design is Already Chosen",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            } else {
+                            if (viewModel.designInCatLiveDataLiveData.value != null) {
+                                if (viewModel.designInCatLiveDataLiveData.value!!.contains(item)) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "This Design is Already Chosen",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                } else {
+                                    viewModel.addDesignByItem(item)
+                                    viewModel.resetgetdesignLiveData()
+                                    alertDialog.dismiss()
+                                }
+                            } else
                                 viewModel.addDesignByItem(item)
-                                alertDialog.dismiss()
-                            }
-
+                            viewModel.resetgetdesignLiveData()
+                            alertDialog.dismiss()
                         }
                     }
-                    alertDialog.show()
+
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
                     snackBar?.dismiss()
+                    binding.swipeRefreshLayout.isRefreshing = false
                     snackBar = Snackbar.make(
                         binding.root,
                         it.message.orEmpty(),
@@ -1062,7 +1177,13 @@ class AddCategoryFragment : Fragment() {
                 }
             }
         }
+        alertDialog.show()
 
+    }
+
+    fun refreshData() {
+        viewModel.getRelatedCat(args.category!!.id)
+        viewModel.getDesign(args.type.id)
     }
 
 }
@@ -1082,45 +1203,3 @@ class AddCategoryFragment : Fragment() {
 //}
 
 
-fun getResizedBitmap(image: Bitmap, maxSize: Int): Bitmap? {
-    var width = 600
-    var height = 600
-//    width = (width*Resources.getSystem().displayMetrics.density).toInt()
-//    height = (height*Resources.getSystem().displayMetrics.density).toInt()
-//    val bitmapRatio = width.toFloat() / height.toFloat()
-//    if (bitmapRatio > 1) {
-//        width = maxSize
-//        height = (width / bitmapRatio).toInt()
-//    } else {
-//        height = maxSize
-//        width = (height * bitmapRatio).toInt()
-//    }
-    return Bitmap.createScaledBitmap(image, width, height, true)
-}
-
-fun convertBitmapToFile(fileName: String, bitmap: Bitmap, context: Context): File {
-    //create a file to write bitmap data
-    val file = File(context.cacheDir, fileName)
-    file.createNewFile()
-
-    //Convert bitmap to byte array
-    val bos = ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 100 /*ignored for PNG*/, bos)
-    val bitMapData = bos.toByteArray()
-
-    //write the bytes in file
-    var fos: FileOutputStream? = null
-    try {
-        fos = FileOutputStream(file)
-    } catch (e: FileNotFoundException) {
-        e.printStackTrace()
-    }
-    try {
-        fos?.write(bitMapData)
-        fos?.flush()
-        fos?.close()
-    } catch (e: IOException) {
-        e.printStackTrace()
-    }
-    return file
-}

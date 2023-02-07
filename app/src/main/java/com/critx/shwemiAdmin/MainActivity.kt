@@ -8,8 +8,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavArgument
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -18,16 +20,21 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
+import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.databinding.ActivityMainBinding
 import com.critx.shwemiAdmin.screens.giveGold.GiveGoldFragment
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    lateinit var connectionObserver: ConnectionObserver
     lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-    lateinit var actionBarDrawerToggle : ActionBarDrawerToggle
+    lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private val startDestinationList = listOf<Int>(
         R.id.dailyGoldPriceFragment,
         R.id.sampleTakeAndReturnFragment,
@@ -55,8 +62,42 @@ class MainActivity : AppCompatActivity() {
         "https://live-production.wcms.abc-cdn.net.au/ff1221fbfdb2fe163fdda15df5f77676?impolicy=wcms_crop_resize&cropH=394&cropW=700&xPos=0&yPos=37&width=862&height=485"
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        connectionObserver = ConnectionObserverImpl(applicationContext)
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        with(connectionObserver) {
+            register()
+            onConnected = {
+                binding.tvConnectionState.text = "Internet Connected"
+                applicationContext.getColorStateList(R.color.green)
+                    .also { binding.tvConnectionState.backgroundTintList = it }
+                lifecycleScope.launch {
+                    delay(1000)
+                    binding.tvConnectionState.isVisible = false
+                }
+            }
+            onDisconnected = {
+                lifecycleScope.launch {
+                    binding.tvConnectionState.isVisible = true
+                    binding.tvConnectionState.text = "Internet Disconnected"
+                    applicationContext.getColorStateList(R.color.primary_color)
+                        .also { binding.tvConnectionState.backgroundTintList = it }
+                }
+            }
+            onLosing = {
+                binding.tvConnectionState.isVisible = true
+                binding.tvConnectionState.text = "Internet Disconnected"
+                binding.tvConnectionState.setBackgroundColor(R.color.primary_color)
+
+            }
+            onUnAvailable = {
+                binding.tvConnectionState.isVisible = true
+                binding.tvConnectionState.text = "Internet Unavailable"
+                binding.tvConnectionState.setBackgroundColor(R.color.primary_color)
+            }
+
+        }
+
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
@@ -83,20 +124,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.dailyGoldPriceFragment->{
+        when (item.itemId) {
+            R.id.dailyGoldPriceFragment -> {
 
             }
-            R.id.sampleTakeAndReturnFragment->{
+            R.id.sampleTakeAndReturnFragment -> {
 
             }
-            R.id.giveGoldFragment->{
+            R.id.giveGoldFragment -> {
 
 //                navController.navigate(GiveGoldFragment)
             }
 
         }
-        if (actionBarDrawerToggle.onOptionsItemSelected(item)){
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -104,7 +145,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        if (navController.currentDestination!!.id == R.id.loginFragment){
+        if (navController.currentDestination!!.id == R.id.loginFragment) {
             finish()
         }
     }

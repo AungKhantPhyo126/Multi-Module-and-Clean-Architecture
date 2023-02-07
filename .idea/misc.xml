@@ -29,7 +29,7 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/layout-v23/item_image_selection.xml" value="0.17255434782608695" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout-v26/include_price_by_table_small_items.xml" value="0.22826086956521738" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
-        <entry key="..\:/Shwe Mi/app/src/main/res/layout/add_gem_value_dialog.xml" value="0.16" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/add_gem_value_dialog.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/bubble_card.xml" value="0.4" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/bubble_card_delete.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/choice_chip.xml" value="0.2013681060282172" />
@@ -47,17 +47,17 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_choose_category.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_choose_group.xml" value="0.2" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_choose_jewellery_quality.xml" value="0.2" />
-        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_collect_stock.xml" value="0.264" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_collect_stock.xml" value="0.4" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_confirm_voucher.xml" value="0.25" />
-        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_daily_gold_price.xml" value="0.264" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_daily_gold_price.xml" value="0.25" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_design_list.xml" value="0.1" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_discount.xml" value="0.24895833333333334" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_edit_stock.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_fill_info_collect_stock.xml" value="0.264" />
-        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_fill_order_info.xml" value="0.264" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_fill_order_info.xml" value="0.2" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_final_stock_setup.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_flash_sale.xml" value="0.20244565217391305" />
-        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_give_gold.xml" value="0.264" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_give_gold.xml" value="0.4" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_handed_list.xml" value="0.20516304347826086" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_inventory.xml" value="0.20051303976058144" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/fragment_login.xml" value="0.22826086956521738" />
@@ -103,7 +103,7 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_sample_return_btn_group.xml" value="0.20436083796494228" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_sample_return_inventory.xml" value="0.20436083796494228" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_sample_return_outside.xml" value="0.264" />
-        <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_sample_take_section.xml" value="0.2" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_sample_take_section.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_total_sample_taken.xml" value="0.20051303976058144" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/include_transfer_stock_button_layout.xml" value="0.20521590423257802" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_add_chip.xml" value="0.264" />
@@ -124,7 +124,7 @@
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_related_cat.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_sample_image.xml" value="0.21422101449275363" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_sample_return_inventory.xml" value="0.4" />
-        <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_sample_return_outside.xml" value="0.20521590423257802" />
+        <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_sample_return_outside.xml" value="0.4" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_saved_sample.xml" value="0.264" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_stock_code.xml" value="0.20521590423257802" />
         <entry key="..\:/Shwe Mi/app/src/main/res/layout/item_stock_info_in_fill_order_info.xml" value="0.2" />

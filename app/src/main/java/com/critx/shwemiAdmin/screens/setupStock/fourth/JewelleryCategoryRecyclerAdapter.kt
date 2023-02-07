@@ -107,9 +107,9 @@ class ImageViewHolder(
 
     fun bind(data: JewelleryCategoryUiModel) {
         binding.ivEye.isVisible = isEyeVisible
-        binding.ivImage.loadImageWithGlide(data.imageUrlList[0])
+        binding.ivImage.loadImageWithGlide(data.imageUrlList[0].url)
         binding.ivEye.setOnClickListener {
-            eyeClick(data.imageUrlList[0])
+            eyeClick(data.imageUrlList[0].url)
         }
         binding.mcvImageCard.setOnClickListener {
             onclick(data)

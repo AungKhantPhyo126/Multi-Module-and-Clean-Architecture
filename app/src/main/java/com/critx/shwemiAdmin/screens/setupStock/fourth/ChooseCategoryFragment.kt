@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
@@ -114,6 +115,14 @@ class ChooseCategoryFragment : Fragment() {
         )
 
 
+        binding.btnNext.setOnClickListener {
+            selectedGroupModel?.let {
+                findNavController().navigate(ChooseCategoryFragmentDirections.actionChooseCategoryFragmentToProductCreateFragment(
+                    args.firstCat.id,args.secondCat.id,args.thirdCat.id,it.id,it
+                ))
+            }?:Toast.makeText(requireContext(),"Select one please",Toast.LENGTH_LONG).show()
+
+        }
 
         binding.cbFrequentlyUsed.setOnCheckedChangeListener { compoundButton, ischecked ->
             frequentUse = if (ischecked) 1 else 0
@@ -138,7 +147,7 @@ class ChooseCategoryFragment : Fragment() {
                     loadingDialog.dismiss()
                     adapter.submitList(it.data)
                     adapter.notifyDataSetChanged()
-                    setupChipView(it.data.orEmpty())
+                    setupChipView(it.data?.filterNotNull().orEmpty())
                     val selectedItem = it.data!!.filterNotNull().find { it.isChecked }
                     binding.btnNext.isEnabled = selectedItem != null
 
@@ -167,11 +176,9 @@ class ChooseCategoryFragment : Fragment() {
 
                             }
                     }
-
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
-
                 }
             }
         }

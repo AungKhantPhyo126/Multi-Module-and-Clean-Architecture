@@ -4,8 +4,9 @@ import com.critx.data.datasource.box.BoxNetWorkDataSource
 import com.critx.data.network.api.BoxService
 import com.critx.data.network.dto.box.BoxScanDto
 import com.critx.data.network.dto.box.BoxWeightDto
-import com.critx.data.network.dto.setupStock.jewelleryCategory.error.CreateCategoryError
-import com.critx.data.network.dto.setupStock.jewelleryCategory.error.getMessage
+import com.critx.data.network.dto.setupStock.jewelleryCategory.error.SimpleError
+import com.critx.data.parseError
+import com.critx.data.parseErrorWithDataClass
 import javax.inject.Inject
 
 class BoxDataSourceImpl @Inject constructor(
@@ -19,10 +20,18 @@ class BoxDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        getErrorString(
-                            response.errorBody()
-                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
-                        )
+                        val singleError = response.errorBody()?.parseErrorWithDataClass<SimpleError>()
+                        if (singleError != null){
+                            singleError.response.message
+                        }else{
+                            val errorMessage =
+                                response.errorBody()?.parseError()
+
+                            val list: List<Map.Entry<String, Any>> =
+                                ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
+                            val (key, value) = list[0]
+                            value.toString()
+                        }
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -43,10 +52,18 @@ class BoxDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        getErrorString(
-                            response.errorBody()
-                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
-                        )
+                        val singleError = response.errorBody()?.parseErrorWithDataClass<SimpleError>()
+                        if (singleError != null){
+                            singleError.response.message
+                        }else{
+                            val errorMessage =
+                                response.errorBody()?.parseError()
+
+                            val list: List<Map.Entry<String, Any>> =
+                                ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
+                            val (key, value) = list[0]
+                            value.toString()
+                        }
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"

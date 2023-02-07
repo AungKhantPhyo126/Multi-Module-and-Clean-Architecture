@@ -39,6 +39,7 @@ import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentGiveGoldBinding
 import com.critx.shwemiAdmin.databinding.ServiceChargeDialogBinding
+import com.critx.shwemiAdmin.getYwaeFromKPY
 import com.critx.shwemiAdmin.hideKeyboard
 import com.critx.shwemiAdmin.screens.orderStock.fillOrderInfo.SampleImageRecyclerAdapter
 import com.critx.shwemiAdmin.screens.repairStock.showServiceChargeOnlyDialog
@@ -61,13 +62,13 @@ import java.util.*
 @AndroidEntryPoint
 class GiveGoldFragment : Fragment() {
     private lateinit var binding: FragmentGiveGoldBinding
-    private lateinit var alertDialogBinding:ServiceChargeDialogBinding
+    private lateinit var alertDialogBinding: ServiceChargeDialogBinding
     private val viewModel by viewModels<GiveGoldViewModel>()
-    private val sharedViewModel by activityViewModels<SharedViewModel>()
     private lateinit var loadingDialog: AlertDialog
     private lateinit var datePicker: MaterialDatePicker<Long>
     private lateinit var barLauncher: Any
     private lateinit var barLauncherSampleTake: Any
+    private lateinit var barLauncherVoucher: Any
     var photo: MultipartBody.Part? = null
     private lateinit var launchChooseImage: ActivityResultLauncher<Intent>
     private lateinit var readStoragePermissionlauncher: ActivityResultLauncher<String>
@@ -142,7 +143,7 @@ class GiveGoldFragment : Fragment() {
         barLauncher = this.getBarLauncherTest(requireContext()) {
             alertDialogBinding.edtInvoiceNumber.setText(it)
         }
-        val sampleImageRecyclerAdapter = SampleImageRecyclerAdapter{
+        val sampleImageRecyclerAdapter = SampleImageRecyclerAdapter {
             viewModel.remove(it)
         }
         binding.rvSampleList.adapter = sampleImageRecyclerAdapter
@@ -153,24 +154,68 @@ class GiveGoldFragment : Fragment() {
 //            binding.btnSampleTake.setTextColor(requireContext().getColorStateList(R.color.primary_color))
 //        }
 
+        viewModel.voucherScanLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    viewModel.checkSampleWithVoucher(it.data!!.id)
+                    viewModel.resetVoucherScanLive()
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+
+                }
+            }
+        }
+        viewModel.sampleLiveDataFromVoucher.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    it.data!!.forEach { sampleItem ->
+                        if (viewModel.sampleList.contains(sampleItem)) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Stock Already Scanned",
+                                Toast.LENGTH_LONG
+                            )
+                                .show()
+                        } else if (sampleItem.specification.isNullOrEmpty().not()) {
+                            viewModel.addSample(sampleItem)
+                        }
+                    }
+                    viewModel.resetSampleLiveDataFromVoucher()
+
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
 
 
         /**retrieve product**/
         binding.btnRetrieveProduct.setOnClickListener {
             showServiceChargeDialogForGoldGive()
         }
-        viewModel.serviceChargeLiveData.observe(viewLifecycleOwner){
-            when(it){
-                is Resource.Loading->{
+        viewModel.serviceChargeLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
                     loadingDialog.show()
                 }
-                is Resource.Success->{
+                is Resource.Success -> {
                     loadingDialog.dismiss()
-                    requireContext().showSuccessDialog(it.data!!){
+                    requireContext().showSuccessDialog(it.data!!) {
                         viewModel.resetserviceChargeLiveData()
                     }
                 }
-                is Resource.Error->{
+                is Resource.Error -> {
                     loadingDialog.dismiss()
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
 
@@ -178,25 +223,36 @@ class GiveGoldFragment : Fragment() {
             }
         }
 
+        barLauncherVoucher = this.getBarLauncherTest(requireContext()) {
+            binding.includeSampleTakeSection.edtScanVoucherHere.setText(it)
+            viewModel.scanVoucher(it)
+        }
+        binding.includeSampleTakeSection.tilScanVoucherHere.setEndIconOnClickListener {
+            scanQrCode(requireContext(), barLauncherVoucher)
+        }
+        binding.includeSampleTakeSection.edtScanVoucherHere.setOnKeyListener(object :
+            View.OnKeyListener {
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
 
-//        binding.btnSampleTake.setOnClickListener {
-//            sharedViewModel.orderItem.value = binding.edtOrderItemName.text.toString()
-//            sharedViewModel.orderQty.value = binding.edtOrderQty.text.toString()
-//            sharedViewModel.weightK.value = binding.edtK.text.toString()
-//            sharedViewModel.weightP.value = binding.edtP.text.toString()
-//            sharedViewModel.weightY.value = binding.edtY.text.toString()
-//            sharedViewModel.goldWeight.value = binding.edtGoldGm.text.toString()
-//            sharedViewModel.gemWeight.value = binding.edtGemGm.text.toString()
-//            sharedViewModel.goldAndGemWeight.value = binding.tvGoldAndGemGm.text.toString()
-//            sharedViewModel.wastageK.value = binding.edtK2.text.toString()
-//            sharedViewModel.wastageP.value = binding.edtP2.text.toString()
-//            sharedViewModel.wastageY.value = binding.edtY2.text.toString()
-//            sharedViewModel.dueDate.value = binding.tvDueDate.text.toString()
-////            findNavController().navigate(GiveGoldFragmentDirections.actionGiveGoldFragmentToSampleTakeAndReturnFragment())
-//        }
+                // If the event is a key-down event on the "enter" button
+                if (event.action == KeyEvent.ACTION_DOWN &&
+                    keyCode == KeyEvent.KEYCODE_ENTER
+                ) {
+                    // Perform action on key press
+                    viewModel.scanVoucher(binding.includeSampleTakeSection.edtScanHere.text.toString())
+                    hideKeyboard(activity, binding.includeSampleTakeSection.edtScanHere)
+                    return true
+                }
+                return false
+            }
+        })
+
         barLauncherSampleTake = this.getBarLauncherTest(requireContext()) {
             binding.includeSampleTakeSection.edtScanHere.setText(it)
             viewModel.scanStock(it)
+        }
+        binding.includeSampleTakeSection.tilScanHere.setEndIconOnClickListener {
+            scanQrCode(requireContext(), barLauncherSampleTake)
         }
         binding.includeSampleTakeSection.edtScanHere.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
@@ -226,12 +282,13 @@ class GiveGoldFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
-                    if (it.data!!.sampleId.isNullOrEmpty()){
-                        Toast.makeText(requireContext(),"Sample Not Found", Toast.LENGTH_LONG).show()
-                    }else if (viewModel.sampleList.contains(it.data!!)) {
+                    if (it.data!!.id.isNullOrEmpty()) {
+                        Toast.makeText(requireContext(), "Sample Not Found", Toast.LENGTH_LONG)
+                            .show()
+                    } else if (viewModel.sampleList.contains(it.data!!)) {
                         Toast.makeText(requireContext(), "Stock Already Scanned", Toast.LENGTH_LONG)
                             .show()
-                    }else{
+                    } else {
                         viewModel.addSample(it.data!!)
 
                     }
@@ -270,8 +327,8 @@ class GiveGoldFragment : Fragment() {
                     loadingDialog.dismiss()
                     requireContext().showSuccessDialog(it.data!!) {
                         viewModel.resetGiveGoldLiveData()
+                        formReset()
                     }
-
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
@@ -295,15 +352,11 @@ class GiveGoldFragment : Fragment() {
                         ArrayAdapter(requireContext(), R.layout.item_drop_down_text, list)
                     binding.actGoldSmith.setAdapter(arrayAdapter)
                     binding.actGoldSmith.setText(list[0], false)
-                    if (sharedViewModel.selectedGoldSmith.value.isNullOrEmpty().not()) {
-                        binding.actGoldSmith.setText(
-                            it.data!!.find { it.id == sharedViewModel.selectedGoldSmith.value }!!.name,
-                            false
-                        )
-                    }
-                    sharedViewModel.selectedGoldSmith.value = it.data!![0].id
+                    viewModel.selectedGSId = it.data!!.find {
+                        it.name == binding.actGoldSmith.text.toString()
+                    }?.id
                     binding.actGoldSmith.addTextChangedListener { editable ->
-                        sharedViewModel.selectedGoldSmith.value = it.data!!.find {
+                        viewModel.selectedGSId = it.data!!.find {
                             it.name == binding.actGoldSmith.text.toString()
                         }?.id
                     }
@@ -331,21 +384,16 @@ class GiveGoldFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
-                    if (sharedViewModel.selectedGoldBoxId.value.isNullOrEmpty().not()) {
-                        binding.mcvHundredPercent.isChecked =
-                            it.data!!.find { it.id == sharedViewModel.selectedGoldBoxId.value }!!.name == "100%"
-                        binding.mcvOther.isChecked =
-                            it.data!!.find { it.id == sharedViewModel.selectedGoldBoxId.value }!!.name == "Other"
-                    }
+
                     binding.mcvHundredPercent.setOnCheckedChangeListener { card, isChecked ->
                         if (isChecked) {
-                            sharedViewModel.selectedGoldBoxId.value =
+                            viewModel.selectedGoldBoxId =
                                 it.data!!.find { it.name == "100%" }!!.id
                         }
                     }
                     binding.mcvOther.setOnCheckedChangeListener { card, isChecked ->
                         if (isChecked) {
-                            sharedViewModel.selectedGoldBoxId.value =
+                            viewModel.selectedGoldBoxId =
                                 it.data!!.find { it.name == "Other" }!!.id
                         }
                     }
@@ -386,8 +434,19 @@ class GiveGoldFragment : Fragment() {
         }
 
         binding.includeSampleTakeSection.switch1.setOnCheckedChangeListener { compoundButton, b ->
-            binding.includeSampleTakeSection.outsideGroup.isVisible = b
+//            binding.includeSampleTakeSection.outsideGroup.isVisible = b
+            if (!b) binding.includeSampleTakeSection.outsideGroup.isVisible = false
+            if (!b) binding.includeSampleTakeSection.tilScanVoucherHere.isVisible = false
             binding.includeSampleTakeSection.tilScanHere.isVisible = !b
+            binding.includeSampleTakeSection.chooseOutsideOrVoucher.isVisible = b
+        }
+        binding.includeSampleTakeSection.btnOutsideSample.setOnClickListener {
+            binding.includeSampleTakeSection.outsideGroup.isVisible = true
+            binding.includeSampleTakeSection.chooseOutsideOrVoucher.isVisible = false
+        }
+        binding.includeSampleTakeSection.btnScanFromVoucher.setOnClickListener {
+            binding.includeSampleTakeSection.tilScanVoucherHere.isVisible = true
+            binding.includeSampleTakeSection.chooseOutsideOrVoucher.isVisible = false
         }
         binding.includeSampleTakeSection.ivOutside.setOnClickListener {
             if (isReadExternalStoragePermissionGranted()) {
@@ -406,7 +465,7 @@ class GiveGoldFragment : Fragment() {
                     viewModel.addSample(it.data!!)
                 }
                 is Resource.Error -> {
-                    Toast.makeText(requireContext(),it.message,Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                     loadingDialog.dismiss()
                 }
             }
@@ -424,47 +483,58 @@ class GiveGoldFragment : Fragment() {
                     photo!!
                 )
             } else {
-                Toast.makeText(requireContext(), "Please Fill Required Data", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Please Fill Required Data", Toast.LENGTH_LONG)
+                    .show()
             }
 
         }
 
         binding.btnConfirm.setOnClickListener {
             if (
-                sharedViewModel.selectedGoldSmith.value.isNullOrEmpty() ||
-                sharedViewModel.selectedGoldBoxId.value.isNullOrEmpty()
+                viewModel.selectedGSId.isNullOrEmpty() ||
+               viewModel.selectedGoldBoxId.isNullOrEmpty()
             ) {
                 Toast.makeText(requireContext(), "select goldsmith and goldbox", Toast.LENGTH_LONG)
                     .show()
             } else {
-                val goldSmith = sharedViewModel.selectedGoldSmith.value!!
+                val goldSmith = viewModel.selectedGSId.orEmpty()
                 val orderItem = binding.edtOrderItemName.text.toString()
                 val orderQty = binding.edtOrderQty.text.toString()
-                val weightK = binding.edtK.text.toString()
-                val weightP = binding.edtP.text.toString()
-                val weightY = binding.edtY.text.toString()
+
+                val ywae = getYwaeFromKPY(
+                    binding.edtK.text.toString().toInt(),
+                    binding.edtP.text.toString().toInt(),
+                    binding.edtY.text.toString().toDouble()
+                )
+                val weightY = ywae.toString()
                 val goldGm = binding.edtGoldGm.text.toString()
                 val gemGm = binding.edtGemGm.text.toString()
                 val goldAndGemGm = binding.tvGoldAndGemGm.text.toString()
-                val goldBox = sharedViewModel.selectedGoldBoxId.value!!
-                val wastageK = binding.edtK2.text.toString()
-                val wastageP = binding.edtP2.text.toString()
-                val wastageY = binding.edtY2.text.toString()
-                val dueDate = binding.tvDueDate.text.toString()
-                val sampleList = if (viewModel.sampleList.isNullOrEmpty().not()) viewModel.sampleList.map { it.sampleId!! } else null
+                val goldBox = viewModel.selectedGoldBoxId.toString()
+
+                val wastageYwae = getYwaeFromKPY(
+                    binding.edtK2.text.toString().toInt(),
+                    binding.edtP2.text.toString().toInt(),
+                    binding.edtY2.text.toString().toDouble()
+                )
+                val wastageY = wastageYwae.toString()
+                val dueDate = if (binding.tvDueDate.text.isNullOrEmpty()) {
+                    null
+                } else {
+                    binding.tvDueDate.text.toString()
+                }
+                val sampleList = if (viewModel.sampleList.isNullOrEmpty()
+                        .not()
+                ) viewModel.sampleList.map { it.id!! } else null
                 viewModel.giveGold(
                     goldSmith,
                     orderItem,
                     orderQty,
-                    weightK,
-                    weightP,
                     weightY,
                     goldBox,
                     goldGm,
                     gemGm,
                     goldAndGemGm,
-                    wastageK,
-                    wastageP,
                     wastageY,
                     dueDate,
                     sampleList
@@ -473,21 +543,6 @@ class GiveGoldFragment : Fragment() {
         }
     }
 
-//    fun bindCachedData() {
-//        binding.edtOrderItemName.setText(sharedViewModel.orderItem.value ?: "")
-//        binding.edtOrderQty.setText(sharedViewModel.orderQty.value ?: "")
-//        binding.edtK.setText(sharedViewModel.weightK.value ?: "")
-//        binding.edtP.setText(sharedViewModel.weightP.value ?: "")
-//        binding.edtY.setText(sharedViewModel.weightY.value ?: "")
-//        binding.edtGoldGm.setText(sharedViewModel.goldWeight.value ?: "")
-//        binding.edtGemGm.setText(sharedViewModel.gemWeight.value ?: "")
-//        binding.tvGoldAndGemGm.text = sharedViewModel.goldAndGemWeight.value ?: ""
-//        binding.edtK2.setText(sharedViewModel.wastageK.value ?: "")
-//        binding.edtP2.setText(sharedViewModel.wastageP.value ?: "")
-//        binding.edtY2.setText(sharedViewModel.wastageY.value ?: "")
-//        binding.tvDueDate.text = sharedViewModel.dueDate.value ?: ""
-//    }
-
     fun showServiceChargeDialogForGoldGive() {
         val builder = MaterialAlertDialogBuilder(requireContext())
         val inflater: LayoutInflater = LayoutInflater.from(builder.context)
@@ -495,7 +550,7 @@ class GiveGoldFragment : Fragment() {
             inflater, ConstraintLayout(builder.context), false
         )
         alertDialogBinding.tilInvoiceScan.setEndIconOnClickListener {
-            scanQrCode(requireContext(),barLauncher)
+            scanQrCode(requireContext(), barLauncher)
         }
         builder.setView(alertDialogBinding.root)
         val alertDialog = builder.create()
@@ -513,11 +568,13 @@ class GiveGoldFragment : Fragment() {
         }
         alertDialog.show()
     }
+
     fun chooseImage() {
         val pickIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         pickIntent.type = "image/*"
         launchChooseImage.launch(pickIntent)
     }
+
     private fun isReadExternalStoragePermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(
             requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE
@@ -526,6 +583,25 @@ class GiveGoldFragment : Fragment() {
 
     fun requestPermission() {
         readStoragePermissionlauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+    }
+
+    fun formReset() {
+        binding.edtOrderItemName.setText("")
+        binding.edtOrderQty.setText("")
+        binding.edtK.setText("0")
+        binding.edtP.setText("0")
+        binding.edtY.setText("0")
+        binding.edtK2.setText("0")
+        binding.edtP2.setText("0")
+        binding.edtY2.setText("0")
+        binding.mcvHundredPercent.isChecked = false
+        binding.mcvOther.isChecked = false
+        binding.edtGoldGm.setText("")
+        binding.edtGemGm.setText("")
+        binding.tvGoldAndGemGm.text = ""
+        binding.tvDueDate.text = ""
+        viewModel.resetTakenSamplelist()
+
     }
 }
 

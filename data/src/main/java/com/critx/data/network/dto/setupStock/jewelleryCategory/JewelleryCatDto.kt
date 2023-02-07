@@ -24,8 +24,7 @@ data class JewelleryCategoryData(
     val order_to_goldsmith:String,
     val specification : String,
     val avg_weight_per_unit_gm:Double,
-    val avg_wastage_per_unit_kpy:Double,
-    val avg_KPY : AverageKPYData,
+    val avg_unit_wastage_ywae:Double,
     val jewellery_type: JewelleryType,
     val jewellery_quality: JewelleryQuality,
     val group: JewelleryGroup,
@@ -53,12 +52,11 @@ fun JewelleryCategoryData.asDomain():JewelleryCategory{
         orderToGs = order_to_goldsmith,
         specification = specification,
         avgWeightPerUnitGm = avg_weight_per_unit_gm,
-        avgWastagePerUnitKpy = avg_wastage_per_unit_kpy,
+        avgWastagePerUnitYwae = avg_unit_wastage_ywae,
         jewelleryType = jewellery_type,
         jewelleryQuality = jewellery_quality,
         jewelleryGroup = group,
         fileList = files.map { it.asDomain() },
-        avgKPY = avg_KPY.asDomain(),
         designs = designs.map { it.asDomain() }
     )
 }

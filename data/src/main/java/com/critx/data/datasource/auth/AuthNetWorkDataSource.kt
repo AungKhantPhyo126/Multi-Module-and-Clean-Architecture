@@ -10,6 +10,6 @@ import kotlinx.coroutines.flow.Flow
 interface AuthNetWorkDataSource {
     suspend fun login(username:String,password:String): LoginSuccessDto
     suspend fun logout(token:String):SimpleResponse
-    suspend fun refreshToken(token:String):LoginSuccessDto
-    suspend fun getProfile(token: String): ProfileDto
+    fun refreshToken():Resource<String>
+    suspend fun getProfile(): ProfileDto
 }

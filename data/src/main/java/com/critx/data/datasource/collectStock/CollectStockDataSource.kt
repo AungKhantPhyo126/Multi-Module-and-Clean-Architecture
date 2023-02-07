@@ -3,7 +3,6 @@ package com.critx.data.datasource.collectStock
 import com.critx.data.network.dto.SimpleResponse
 import com.critx.data.network.dto.collectStock.*
 import okhttp3.RequestBody
-import java.awt.Stroke
 
 interface CollectStockDataSource {
     suspend fun getProductId(token: String, productCode: String): String
@@ -21,8 +20,6 @@ interface CollectStockDataSource {
     suspend fun collectBatch(
         token: String,
         method:RequestBody,
-        kyat:RequestBody?,
-        pae:RequestBody?,
         ywae:RequestBody?,
         goldSmithId:RequestBody?,
         bonus:RequestBody?,

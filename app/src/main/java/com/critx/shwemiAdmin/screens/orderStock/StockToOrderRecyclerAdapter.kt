@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.critx.common.ui.loadImageWithGlide
+import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.ItemStockCodeBinding
 import com.critx.shwemiAdmin.databinding.ItemStockToOrderBinding
+import com.critx.shwemiAdmin.getKPYFromYwae
 import com.critx.shwemiAdmin.uiModel.orderStock.BookMarkStockUiModel
 
 class StockToOrderRecyclerAdapter (private val orderClick:(data:BookMarkStockUiModel)->Unit) :
@@ -33,10 +35,23 @@ class StockCodeListViewHolder(private val binding: ItemStockToOrderBinding,
         binding.root.setOnClickListener {
             onclick(data)
         }
+        if (data.is_orderable){
+            binding.btnTapToOrder.text = "Tap to Order"
+            binding.btnTapToOrder.setTextColor(binding.root.context.getColorStateList(R.color.edit_text_color))
+            binding.btnTapToOrder.iconTint =binding.root.context.getColorStateList(R.color.edit_text_color)
+
+        }else {
+            binding.btnTapToOrder.text = "Ordered"
+            binding.btnTapToOrder.iconTint =binding.root.context.getColorStateList(R.color.primary_color)
+            binding.btnTapToOrder.setTextColor(binding.root.context.getColorStateList(R.color.primary_color))
+
+        }
+        binding.tvCatName.text = data.custom_category_name
         binding.ivStock.loadImageWithGlide(data.image)
-        binding.tvKyatValue.text = data.avg_weight_per_unit_kyat
-        binding.tvPaeValue.text = data.avg_weight_per_unit_pae
-        binding.tvYwaeValue.text = data.avg_weight_per_unit_ywae.toDouble().toInt().toString()
+        val kpyList = getKPYFromYwae(data.avg_unit_weight_ywae.toDouble())
+        binding.tvKyatValue.text = kpyList[0].toInt().toString()
+        binding.tvPaeValue.text = kpyList[1].toInt().toString()
+        binding.tvYwaeValue.text = kpyList[2].toString()
     }
 }
 

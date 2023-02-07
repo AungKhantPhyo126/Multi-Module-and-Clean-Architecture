@@ -36,7 +36,6 @@ import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.FragmentNewGroupBinding
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.SelectedImage
-import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.getResizedBitmap
 import com.critx.shwemiAdmin.screens.setupStock.third.ChooseGroupViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -86,7 +85,7 @@ class EditGroupFragment : Fragment() {
                     getRealPathFromUri(requireContext(), data.data!!)?.let { path ->
                         viewModel.selectedImgUri = File(path)
                     }
-                    binding.ivGroupImage.setImageURI(data.data)
+                    binding.ivGroupImage.loadImageWithGlideWithUri(data.data)
                 }
             }
         }
@@ -131,7 +130,6 @@ class EditGroupFragment : Fragment() {
         isFrequentlyUsed = if (binding.cbFrequentlyUsed.isChecked) 1 else 0
         binding.cbFrequentlyUsed.setOnCheckedChangeListener { compoundButton, ischecked ->
             isFrequentlyUsed = if (ischecked) 1 else 0
-
         }
         binding.ivGroupImage.setOnClickListener {
             if (isReadExternalStoragePermissionGranted()) {

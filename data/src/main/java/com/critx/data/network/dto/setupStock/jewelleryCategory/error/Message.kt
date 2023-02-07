@@ -59,3 +59,7 @@ fun Message.getMessage(): List<String?> {
     ?: due_date ?: wastage_kyat ?: wastage_pae ?: wastage_ywae ?: image ?: gem_value
     ?: orderGoldSmith?:goldsmith_id ?: listOf(message) ?: emptyList()
 }
+
+data class AuthError(
+    val message:String
+)

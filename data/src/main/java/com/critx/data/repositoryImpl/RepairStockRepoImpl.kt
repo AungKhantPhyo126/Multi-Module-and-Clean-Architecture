@@ -105,4 +105,21 @@ class RepairStockRepoImpl @Inject constructor(
         }
     }
 
+    override fun deleteRepairStock(repairStockId: String): Flow<Resource<SimpleData>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        repairStockDataSource.deleteRepairStock(repairStockId).asDomain()
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
 }

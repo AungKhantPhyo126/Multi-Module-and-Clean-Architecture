@@ -35,4 +35,8 @@ interface RepairStockDataSource {
         amount: RequestBody,
         repairStockList: List<RequestBody>,
     ):SimpleResponseDto
+
+    suspend fun deleteRepairStock(
+        repairStockId:String
+    ):SimpleResponseDto
 }

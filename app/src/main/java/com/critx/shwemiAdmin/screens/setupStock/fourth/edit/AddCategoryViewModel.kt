@@ -7,11 +7,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
+import com.critx.data.localdatabase.LocalDatabase
 import com.critx.domain.model.SetupStock.jewelleryCategory.CalculateKPY
 import com.critx.domain.model.SetupStock.jewelleryCategory.DesignDomain
 import com.critx.domain.useCase.SetUpStock.*
 import com.critx.shwemiAdmin.UiEvent
-import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.uiModel.setupStock.*
 import com.critx.shwemiAdmin.uistate.DesignUiState
 import com.critx.shwemiAdmin.uistate.JewelleryCategoryUiState
@@ -48,37 +48,48 @@ class AddCategoryViewModel @Inject constructor(
     var selectedVideoUri: File? = null
 
 
-    private val _createJewelleryCategoryLiveData = MutableLiveData<Resource<JewelleryCategoryUiModel>>()
-    val createJewelleryCategoryLiveData :LiveData<Resource<JewelleryCategoryUiModel>>
-    get() = _createJewelleryCategoryLiveData
-    fun resetCreateLiveData(){
+    private val _createJewelleryCategoryLiveData =
+        MutableLiveData<Resource<JewelleryCategoryUiModel>>()
+    val createJewelleryCategoryLiveData: LiveData<Resource<JewelleryCategoryUiModel>>
+        get() = _createJewelleryCategoryLiveData
+
+    fun resetCreateLiveData() {
         _createJewelleryCategoryLiveData.value = null
     }
 
-    private val _getDesign =  MutableLiveData<Resource<List<DesignUiModel>>>()
-    val getDesignLiveData :LiveData<Resource<List<DesignUiModel>>>
-    get() = _getDesign
+    private val _getDesign = MutableLiveData<Resource<List<DesignUiModel>>>()
+    val getDesignLiveData: LiveData<Resource<List<DesignUiModel>>>
+        get() = _getDesign
+    fun resetgetdesignLiveData(){
+        _getDesign.value = null
+    }
 
-    private val _designInCatLiveData =  MutableLiveData<MutableList<DesignUiModel>>()
-    val designInCatLiveDataLiveData :LiveData<MutableList<DesignUiModel>>
+    private val _designInCatLiveData = MutableLiveData<MutableList<DesignUiModel>>()
+    val designInCatLiveDataLiveData: LiveData<MutableList<DesignUiModel>>
         get() = _designInCatLiveData
 
-    fun addDesignWithList(list: MutableList<DesignUiModel>){
+    fun addDesignWithList(list: MutableList<DesignUiModel>) {
         _designInCatLiveData.value = list
     }
-    fun addDesignByItem(item:DesignUiModel){
+
+    fun addDesignByItem(item: DesignUiModel) {
         _designInCatLiveData.value!!.add(item)
         _designInCatLiveData.value = _designInCatLiveData.value
     }
-    fun removeDesignByItem(item:DesignUiModel){
+
+    fun removeDesignByItem(item: DesignUiModel) {
         _designInCatLiveData.value!!.remove(item)
         _designInCatLiveData.value = _designInCatLiveData.value
     }
+    fun setDesigns(){
+        _designInCatLiveData.value = mutableListOf<DesignUiModel>()
+    }
 
     private val _getRelatedCats = MutableLiveData<Resource<MutableList<JewelleryCategoryUiModel>>>()
-    val getRelatedCats : LiveData<Resource<MutableList<JewelleryCategoryUiModel>>>
-    get() = _getRelatedCats
-    fun resetLiveDataForBackPress(){
+    val getRelatedCats: LiveData<Resource<MutableList<JewelleryCategoryUiModel>>>
+        get() = _getRelatedCats
+
+    fun resetLiveDataForBackPress() {
         _getRelatedCats.value = null
         _getDesign.value = null
     }
@@ -87,21 +98,26 @@ class AddCategoryViewModel @Inject constructor(
     val event = _event.asSharedFlow()
 
     private val _editJewelleryCategoryState = MutableLiveData<Resource<String>>()
-    val editJewelleryCategoryState :LiveData<Resource<String>>
-    get() = _editJewelleryCategoryState
-    fun resetEditLiveData(){
+    val editJewelleryCategoryState: LiveData<Resource<String>>
+        get() = _editJewelleryCategoryState
+
+    fun resetEditLiveData() {
         _editJewelleryCategoryState.value = null
     }
 
-    fun getRelatedCat(id:String){
+    fun getRelatedCat(id: String) {
         viewModelScope.launch {
-            getRelatedCategoryUseCase(localDatabase.getToken().orEmpty(),id).collectLatest { result ->
+            getRelatedCategoryUseCase(
+                localDatabase.getToken().orEmpty(),
+                id
+            ).collectLatest { result ->
                 when (result) {
                     is Resource.Loading -> {
                         _getRelatedCats.value = Resource.Loading()
                     }
                     is Resource.Success -> {
-                        _getRelatedCats.value = Resource.Success(result.data!!.map { it.asUiModel() }.toMutableList())
+                        _getRelatedCats.value =
+                            Resource.Success(result.data!!.map { it.asUiModel() }.toMutableList())
                     }
                     is Resource.Error -> {
                         _getRelatedCats.value = Resource.Error(result.message)
@@ -112,13 +128,17 @@ class AddCategoryViewModel @Inject constructor(
         }
     }
 
-    fun removeRelatedCat(item:JewelleryCategoryUiModel){
+    fun removeRelatedCat(item: JewelleryCategoryUiModel) {
         _getRelatedCats.value!!.data!!.remove(item)
         _getRelatedCats.value = _getRelatedCats.value
     }
-    fun addRelatedCat(item:JewelleryCategoryUiModel){
+
+    fun addRelatedCat(item: JewelleryCategoryUiModel) {
         _getRelatedCats.value!!.data!!.add(item)
         _getRelatedCats.value = _getRelatedCats.value
+    }
+    fun setRelatedCat(){
+        _getRelatedCats.value = Resource.Success(mutableListOf<JewelleryCategoryUiModel>())
     }
 
 
@@ -135,8 +155,6 @@ class AddCategoryViewModel @Inject constructor(
         specification: RequestBody,
         design: MutableList<RequestBody>,
         orderToGs: RequestBody,
-        avgKyat: RequestBody,
-        avgPae: RequestBody,
         avgYwae: RequestBody,
         recommendCat: MutableList<RequestBody>?
 
@@ -152,8 +170,6 @@ class AddCategoryViewModel @Inject constructor(
                 withGem,
                 name,
                 avgWeigh,
-                avgKyat,
-                avgPae,
                 avgYwae,
                 images,
                 video,
@@ -167,7 +183,8 @@ class AddCategoryViewModel @Inject constructor(
                         _createJewelleryCategoryLiveData.value = Resource.Loading()
                     }
                     is Resource.Success -> {
-                        _createJewelleryCategoryLiveData.value = Resource.Success(it.data!!.asUiModel())
+                        _createJewelleryCategoryLiveData.value =
+                            Resource.Success(it.data!!.asUiModel())
                     }
                     is Resource.Error -> {
                         _createJewelleryCategoryLiveData.value = Resource.Error(it.message)
@@ -184,16 +201,21 @@ class AddCategoryViewModel @Inject constructor(
         jewellery_quality_id: RequestBody,
         groupId: RequestBody,
         is_frequently_used: RequestBody,
-        withGem:RequestBody,
+        withGem: RequestBody,
         name: RequestBody,
         avgWeigh: RequestBody,
-        images: MutableList<MultipartBody.Part>,
+        image1: MultipartBody.Part?,
+        image1Id: MultipartBody.Part?,
+        image2: MultipartBody.Part?,
+        image2Id: MultipartBody.Part?,
+        image3: MultipartBody.Part?,
+        image3Id: MultipartBody.Part?,
+        gif: MultipartBody.Part?,
+        gifId: MultipartBody.Part?,
         video: MultipartBody.Part?,
         specification: RequestBody,
         design: MutableList<RequestBody>,
         orderToGs: RequestBody,
-        avgKyat: RequestBody,
-        avgPae: RequestBody,
         avgYwae: RequestBody,
         recommendCat: MutableList<RequestBody>
     ) {
@@ -212,10 +234,15 @@ class AddCategoryViewModel @Inject constructor(
                 withGem,
                 name,
                 avgWeigh,
-                avgKyat,
-                avgPae,
                 avgYwae,
-                images,
+                image1,
+                image1Id,
+                image2,
+                image2Id,
+                image3,
+                image3Id,
+                gif,
+                gifId,
                 video,
                 specification,
                 design,
@@ -240,9 +267,9 @@ class AddCategoryViewModel @Inject constructor(
     }
 
 
-    fun getDesign(jewelleryType:String) {
+    fun getDesign(jewelleryType: String) {
         viewModelScope.launch {
-            getDesignListUseCase(localDatabase.getToken().orEmpty(),jewelleryType).collectLatest {
+            getDesignListUseCase(localDatabase.getToken().orEmpty(), jewelleryType).collectLatest {
                 when (it) {
                     is Resource.Loading -> {
                         _getDesign.value = Resource.Loading()
@@ -259,43 +286,46 @@ class AddCategoryViewModel @Inject constructor(
     }
 
     private val _jewelleryTypeLiveData = MutableLiveData<Resource<List<JewelleryTypeUiModel>>>()
-    val jewelleryTypeState :LiveData<Resource<List<JewelleryTypeUiModel>>>
+    val jewelleryTypeState: LiveData<Resource<List<JewelleryTypeUiModel>>>
         get() = _jewelleryTypeLiveData
 
-    fun getJewelleryType(){
+    fun getJewelleryType() {
         viewModelScope.launch {
-            getJewelleryTypeUseCase(localDatabase.getToken().orEmpty()).collectLatest { result->
-                when(result){
-                    is Resource.Loading->{
-                        _jewelleryTypeLiveData.value =Resource.Loading()
+            getJewelleryTypeUseCase(localDatabase.getToken().orEmpty()).collectLatest { result ->
+                when (result) {
+                    is Resource.Loading -> {
+                        _jewelleryTypeLiveData.value = Resource.Loading()
                     }
-                    is Resource.Success->{
-                        _jewelleryTypeLiveData.value =Resource.Success(result.data!!.map { it.asUiModel() })
+                    is Resource.Success -> {
+                        _jewelleryTypeLiveData.value =
+                            Resource.Success(result.data!!.map { it.asUiModel() })
                     }
-                    is Resource.Error->{
-                        _jewelleryTypeLiveData.value =Resource.Error(result.message)
+                    is Resource.Error -> {
+                        _jewelleryTypeLiveData.value = Resource.Error(result.message)
                     }
                 }
             }
         }
     }
 
-    private val _jewlleryQualityLiveData =MutableLiveData<Resource<List<JewelleryQualityUiModel>>>()
-    val jewelleryQualityLiveData :LiveData<Resource<List<JewelleryQualityUiModel>>>
+    private val _jewlleryQualityLiveData =
+        MutableLiveData<Resource<List<JewelleryQualityUiModel>>>()
+    val jewelleryQualityLiveData: LiveData<Resource<List<JewelleryQualityUiModel>>>
         get() = _jewlleryQualityLiveData
 
-    fun getJewelleryQuality(){
+    fun getJewelleryQuality() {
         viewModelScope.launch {
-            getJewelleryQualityUseCase(localDatabase.getToken().orEmpty()).collectLatest { result->
-                when(result){
-                    is Resource.Loading->{
+            getJewelleryQualityUseCase(localDatabase.getToken().orEmpty()).collectLatest { result ->
+                when (result) {
+                    is Resource.Loading -> {
                         _jewlleryQualityLiveData.value = Resource.Loading()
                     }
-                    is Resource.Success->{
-                        _jewlleryQualityLiveData.value =Resource.Success(result.data!!.map { it.asUiModel() })
+                    is Resource.Success -> {
+                        _jewlleryQualityLiveData.value =
+                            Resource.Success(result.data!!.map { it.asUiModel() })
                     }
-                    is Resource.Error->{
-                        _jewlleryQualityLiveData.value =Resource.Error(result.message)
+                    is Resource.Error -> {
+                        _jewlleryQualityLiveData.value = Resource.Error(result.message)
                     }
                 }
             }
@@ -305,6 +335,7 @@ class AddCategoryViewModel @Inject constructor(
     private val _getGroupLiveData = MutableLiveData<Resource<List<ChooseGroupUIModel>>>()
     val getGroupLiveData: LiveData<Resource<List<ChooseGroupUIModel>>>
         get() = _getGroupLiveData
+
     fun getJewelleryGroup(isFrequentlyUse: Int, firstCatId: Int, secondCatId: Int) {
         viewModelScope.launch {
             getJewelleryGroupUseCase(
@@ -329,10 +360,17 @@ class AddCategoryViewModel @Inject constructor(
         }
     }
 
-    private val _getJewelleryCategoryLiveData = MutableLiveData<Resource<List<JewelleryCategoryUiModel>>>()
-    val getJewelleryCategoryLiveData :LiveData<Resource<List<JewelleryCategoryUiModel>>>
+    private val _getJewelleryCategoryLiveData =
+        MutableLiveData<Resource<List<JewelleryCategoryUiModel>>>()
+    val getJewelleryCategoryLiveData: LiveData<Resource<List<JewelleryCategoryUiModel>>>
         get() = _getJewelleryCategoryLiveData
-    fun getJewelleryCategory(isFrequentlyUse: Int,firstCatId:Int,secondCatId:Int,thirdCatId:Int) {
+
+    fun getJewelleryCategory(
+        isFrequentlyUse: Int,
+        firstCatId: Int,
+        secondCatId: Int,
+        thirdCatId: Int
+    ) {
         viewModelScope.launch {
             getJewelleryCategoryUseCase(
                 localDatabase.getToken().orEmpty(),
@@ -346,7 +384,8 @@ class AddCategoryViewModel @Inject constructor(
                         _getJewelleryCategoryLiveData.value = Resource.Loading()
                     }
                     is Resource.Success -> {
-                        _getJewelleryCategoryLiveData.value =Resource.Success(result.data!!.map { it.asUiModel() })
+                        _getJewelleryCategoryLiveData.value =
+                            Resource.Success(result.data!!.map { it.asUiModel() })
                     }
                     is Resource.Error -> {
                         _getJewelleryCategoryLiveData.value = Resource.Error(result.message)
@@ -355,10 +394,11 @@ class AddCategoryViewModel @Inject constructor(
             }
         }
     }
-    fun resetLiveData(){
-        _jewelleryTypeLiveData.value=null
-        _jewlleryQualityLiveData.value=null
-        _getGroupLiveData.value=null
+
+    fun resetLiveData() {
+        _jewelleryTypeLiveData.value = null
+        _jewlleryQualityLiveData.value = null
+        _getGroupLiveData.value = null
     }
 }
 

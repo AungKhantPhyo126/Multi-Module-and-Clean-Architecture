@@ -1,10 +1,11 @@
 package com.critx.domain.model.sampleTakeAndReturn
 
 data class SampleCheckDomain(
-    val productId: String,
-    val productCode:String,
-    val thumbnail: String,
-    val sampleId: String,
-    val specification: String
+    val id:String?,
+    val productCode:String? = null,
+    val thumbnail:String?,
+    val specification:String?,
+    val weight_gm:String?,
+    val box_code:String?
 
 )

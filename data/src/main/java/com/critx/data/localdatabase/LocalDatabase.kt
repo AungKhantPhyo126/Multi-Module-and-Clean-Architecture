@@ -1,10 +1,8 @@
-package com.critx.shwemiAdmin.localDatabase
+package com.critx.data.localdatabase
 
 import android.content.Context
 import androidx.core.content.edit
 import dagger.hilt.android.qualifiers.ApplicationContext
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -42,16 +40,7 @@ class LocalDatabase @Inject constructor(@ApplicationContext context: Context) {
         return getToken().isNullOrEmpty().not()
     }
 
-    fun isRefreshTokenExpire():Boolean{
-        val today = LocalDateTime.now()
-        val expireTime = LocalDateTime.parse(getRefreshTokenExpireTime())
-        if (today.isAfter(expireTime)) clearuser()
-        return today.isAfter(expireTime)
-    }
 
-    fun saveRefreshTokenExpireTime(expireIn: LocalDateTime){
-        sharedPref.edit { putString(REFRESH_TOKEN_EXPIRE,expireIn.toString()) }
-    }
     fun getRefreshTokenExpireTime(): String? {
         return sharedPref.getString(REFRESH_TOKEN_EXPIRE,"")
     }

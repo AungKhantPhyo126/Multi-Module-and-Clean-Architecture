@@ -157,4 +157,5 @@
     <string name="no_sample_taken">No Sample Taken</string>
     <string name="new_order">New Order</string>
     <string name="remove">remove</string>
+    <string name="there_is_no_design_in_database">There is no design in database!</string>
 </resources>

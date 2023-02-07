@@ -12,17 +12,13 @@ interface GiveGoldDataSource {
         goldSmithId: String,
         orderItem: String,
         orderQty: String,
-        weightK: String,
-        weighP: String,
         weightY: String,
         goldBoxId: String,
         goldWeight: String,
         goldAndGemWeight:String,
         gemWeight: String,
-        wastageK: String,
-        wastageP: String,
         wastageY: String,
-        dueDate: String,
+        dueDate: String?,
         sampleList: List<String>?
     ):SimpleResponseDto
 

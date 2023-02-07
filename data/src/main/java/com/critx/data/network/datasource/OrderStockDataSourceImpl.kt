@@ -3,11 +3,12 @@ package com.critx.data.network.datasource
 import com.critx.data.datasource.orderStock.OrderStockDataSource
 import com.critx.data.network.api.OrderStockService
 import com.critx.data.network.dto.SimpleResponse
-import com.critx.data.network.dto.orderStock.BookMarkStockDto
 import com.critx.data.network.dto.orderStock.BookMarkStockInfoDto
 import com.critx.data.network.dto.orderStock.BookMarkedStocksResponse
-import com.critx.data.network.dto.setupStock.jewelleryCategory.error.CreateCategoryError
-import com.critx.data.network.dto.setupStock.jewelleryCategory.error.getMessage
+import com.critx.data.network.dto.orderStock.GsNewItemsResponse
+import com.critx.data.network.dto.setupStock.jewelleryCategory.error.SimpleError
+import com.critx.data.parseError
+import com.critx.data.parseErrorWithDataClass
 import okhttp3.MultipartBody
 import javax.inject.Inject
 
@@ -27,10 +28,50 @@ class OrderStockDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        getErrorString(
-                            response.errorBody()
-                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
-                        )
+                            val singleError = response.errorBody()?.parseErrorWithDataClass<SimpleError>()
+                        if (singleError != null){
+                            singleError.response.message
+                        }else{
+                            val errorMessage =
+                                response.errorBody()?.parseError()
+
+                            val list: List<Map.Entry<String, Any>> =
+                                ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
+                            val (key, value) = list[0]
+                            value.toString()
+                        }
+                    }
+                    401 -> "You are not Authorized"
+                    402 -> "Payment required!!!"
+                    403 -> "Forbidden"
+                    404 -> "You request not found"
+                    405 -> "Method is not allowed!!!"
+                    else -> "Unhandled error occurred!!!"
+                }
+            )
+        }
+    }
+
+    override suspend fun getGsNewItems(token: String, page: Int,jewelleryType: String): GsNewItemsResponse {
+        val response = orderStockService.getGsNewItems(token, page,jewelleryType)
+        return if (response.isSuccessful) {
+            response.body() ?: throw Exception("Response body Null")
+        } else {
+            throw  Exception(
+                when (response.code()) {
+                    400 -> {
+                            val singleError = response.errorBody()?.parseErrorWithDataClass<SimpleError>()
+                        if (singleError != null){
+                            singleError.response.message
+                        }else{
+                            val errorMessage =
+                                response.errorBody()?.parseError()
+
+                            val list: List<Map.Entry<String, Any>> =
+                                ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
+                            val (key, value) = list[0]
+                            value.toString()
+                        }
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -54,10 +95,18 @@ class OrderStockDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        getErrorString(
-                            response.errorBody()
-                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
-                        )
+                            val singleError = response.errorBody()?.parseErrorWithDataClass<SimpleError>()
+                        if (singleError != null){
+                            singleError.response.message
+                        }else{
+                            val errorMessage =
+                                response.errorBody()?.parseError()
+
+                            val list: List<Map.Entry<String, Any>> =
+                                ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
+                            val (key, value) = list[0]
+                            value.toString()
+                        }
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"
@@ -72,33 +121,38 @@ class OrderStockDataSourceImpl @Inject constructor(
 
     override suspend fun orderStock(
         token: String,
-        bookMarkAvgKyat: MultipartBody.Part?,
-        bookMarkAvgPae: MultipartBody.Part?,
         bookMarkAvgYwae: MultipartBody.Part?,
+        orderAvgYwae: MultipartBody.Part?,
         bookMarkJewelleryTypeId: MultipartBody.Part?,
         bookMarkImage: MultipartBody.Part?,
         goldQuality: MultipartBody.Part,
         goldSmith: MultipartBody.Part,
         bookMarkId: MultipartBody.Part?,
+        gsNewItemId: MultipartBody.Part?,
         equivalent_pure_gold_weight_kpy: MultipartBody.Part,
         jewellery_type_size_id: List<MultipartBody.Part>,
         order_qty: List<MultipartBody.Part>,
-        sample_id: List<MultipartBody.Part>?
+        sample_id: List<MultipartBody.Part>?,
+        is_important:MultipartBody.Part?,
+        custom_category_name:MultipartBody.Part?
+
     ): SimpleResponse {
         val response = orderStockService.orderStock(
             token,
-            bookMarkAvgKyat,
-            bookMarkAvgPae,
             bookMarkAvgYwae,
+            orderAvgYwae,
             bookMarkJewelleryTypeId,
             bookMarkImage,
             goldQuality,
             goldSmith,
             bookMarkId,
+            gsNewItemId,
             equivalent_pure_gold_weight_kpy,
             jewellery_type_size_id,
             order_qty,
-            sample_id
+            sample_id,
+            is_important,
+            custom_category_name
         )
         return if (response.isSuccessful) {
             response.body() ?: throw Exception("Response body Null")
@@ -106,10 +160,18 @@ class OrderStockDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
-                        getErrorString(
-                            response.errorBody()
-                                ?.parseError<CreateCategoryError>()?.response?.message?.getMessage()!!
-                        )
+                            val singleError = response.errorBody()?.parseErrorWithDataClass<SimpleError>()
+                        if (singleError != null){
+                            singleError.response.message
+                        }else{
+                            val errorMessage =
+                                response.errorBody()?.parseError()
+
+                            val list: List<Map.Entry<String, Any>> =
+                                ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
+                            val (key, value) = list[0]
+                            value.toString()
+                        }
                     }
                     401 -> "You are not Authorized"
                     402 -> "Payment required!!!"

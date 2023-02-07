@@ -38,8 +38,8 @@ class SampleImageViewHolder(
         binding.mcvRemove.setOnClickListener {
             removeClick(data)
         }
-        binding.ivSample.loadImageWithGlide(data.imageUrl)
-        if (data.productId.isNullOrEmpty()) {
+        binding.ivSample.loadImageWithGlide(data.thumbnail)
+        if (data.productCode.isNullOrEmpty()) {
             binding.tvSampleInfo.text = "Outside"
         } else {
             binding.tvSampleInfo.text = data.productCode
@@ -53,7 +53,7 @@ object SampleImageDiffUtil : DiffUtil.ItemCallback<SampleItemUIModel>() {
         oldItem: SampleItemUIModel,
         newItem: SampleItemUIModel
     ): Boolean {
-        return oldItem.sampleId == newItem.sampleId
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(

@@ -41,4 +41,10 @@ interface RepairStockService {
         @Part("amount") amount:RequestBody,
         @Part("repair_stocks[]") repairStockList:List<RequestBody>,
     ): Response<SimpleResponse>
+
+    @POST("api/repair_stocks/{repairStockId}/delete")
+    suspend fun deleteRepairStock(
+        @Header("Authorization") token: String,
+        @Path("repairStockId") repairStockId:String
+    ): Response<SimpleResponse>
 }

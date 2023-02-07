@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetProfileUsecase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-    operator fun invoke(token:String)=authRepository.getProfile(token)
+    operator fun invoke()=authRepository.getProfile()
 }

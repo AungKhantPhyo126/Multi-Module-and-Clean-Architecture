@@ -9,6 +9,5 @@ import kotlinx.coroutines.flow.Flow
 interface AuthRepository {
     fun login(name:String,password:String): Flow<Resource<LogInSuccess>>
     fun logout(token:String):Flow<Resource<SimpleData>>
-    fun refreshToken(token:String):Flow<Resource<LogInSuccess>>
-    fun getProfile(token:String):Flow<Resource<Profile>>
+    fun getProfile():Flow<Resource<Profile>>
 }

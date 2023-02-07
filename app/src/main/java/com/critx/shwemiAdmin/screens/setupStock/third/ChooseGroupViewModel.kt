@@ -5,11 +5,11 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.critx.commonkotlin.util.Resource
+import com.critx.data.localdatabase.LocalDatabase
 import com.critx.domain.useCase.SetUpStock.CreateJewelleryGroupUseCase
 import com.critx.domain.useCase.SetUpStock.DeleteJewelleryGroupUseCase
 import com.critx.domain.useCase.SetUpStock.GetJewelleryGroupUseCase
 import com.critx.shwemiAdmin.UiEvent
-import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.uiModel.setupStock.ChooseGroupUIModel
 import com.critx.shwemiAdmin.uiModel.setupStock.asUiModel
 import com.critx.shwemiAdmin.uistate.JewelleryGroupUiState
@@ -96,22 +96,21 @@ class ChooseGroupViewModel @Inject constructor(
     }
 
     fun selectImage(id: String) {
+        viewModelScope.launch {
+            _getGroupLiveData.value!!.data!!.filterNotNull().filter {
+                it.id != id
+            }.forEach {
+                it.isChecked = false
+            }
 
-        _getGroupLiveData.value!!.data!!.filterNotNull().filter {
-            it.id != id
-        }.forEach {
-            it.isChecked = false
+            _getGroupLiveData.value!!.data!!.filterNotNull().find {
+                it.id == id
+            }?.isChecked = _getGroupLiveData.value!!.data!!.filterNotNull().find {
+                it.id == id
+            }?.isChecked!!.not()
+
+            _getGroupLiveData.value = _getGroupLiveData.value
         }
-
-        _getGroupLiveData.value!!.data!!.filterNotNull().find {
-            it.id == id
-        }?.isChecked = _getGroupLiveData.value!!.data!!.filterNotNull().find {
-            it.id == id
-        }?.isChecked!!.not()
-
-        _getGroupLiveData.value = _getGroupLiveData.value
-
-
     }
     fun deSelectAll() {
         _getGroupLiveData.value!!.data!!.filterNotNull().forEach {

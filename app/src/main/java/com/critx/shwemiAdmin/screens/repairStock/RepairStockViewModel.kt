@@ -5,12 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
+import com.critx.data.localdatabase.LocalDatabase
 import com.critx.domain.model.repairStock.JobDomain
 import com.critx.domain.model.repairStock.JobDoneDomain
 import com.critx.domain.useCase.collectStock.GetGoldSmithListUseCase
 import com.critx.domain.useCase.repairStock.ChargeRepairStockUseCase
+import com.critx.domain.useCase.repairStock.DeleteRepairStockUseCase
 import com.critx.domain.useCase.repairStock.GetJobDoneDataUseCase
-import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.uiModel.collectStock.GoldSmithUiModel
 import com.critx.shwemiAdmin.uiModel.collectStock.JewellerySizeUIModel
 import com.critx.shwemiAdmin.uiModel.collectStock.asUiModel
@@ -27,21 +28,36 @@ class RepairStockViewModel @Inject constructor(
     private val localDatabase: LocalDatabase,
     private val getJobDoneDataUseCase: GetJobDoneDataUseCase,
     private val getGoldSmithListUseCase: GetGoldSmithListUseCase,
-    private val chargeRepairStockUseCase: ChargeRepairStockUseCase
+    private val chargeRepairStockUseCase: ChargeRepairStockUseCase,
+    private val deleteRepairStockUseCase: DeleteRepairStockUseCase
 ) :ViewModel() {
 
     private var _jobDoneLiveData= MutableLiveData<Resource<JobDoneDomain>>()
     val jobDoneLiveData : LiveData<Resource<JobDoneDomain>>
         get() = _jobDoneLiveData
+
+    private var _deleteRepairStockLiveData= MutableLiveData<Resource<String>>()
+    val deleteRepairStockLiveData : LiveData<Resource<String>>
+        get() = _deleteRepairStockLiveData
     fun resetJobDoneLiveData(){
         _jobDoneLiveData.value = null
     }
     fun removeJobDone(item:String){
-        val itemToRemove = _jobDoneLiveData.value!!.data!!.data.toMutableList().find { it.id == item }
-        _jobDoneLiveData.value!!.data!!.data.toMutableList().remove(
-            itemToRemove
-        )
-        _jobDoneLiveData.value = _jobDoneLiveData.value
+        viewModelScope.launch {
+            deleteRepairStockUseCase(item).collectLatest {
+                when(it){
+                    is Resource.Loading->{
+                        _deleteRepairStockLiveData.value = Resource.Loading()
+                    }
+                    is Resource.Success->{
+                        _deleteRepairStockLiveData.value = Resource.Success(it.data!!.message)
+                    }
+                    is Resource.Error->{
+                        _deleteRepairStockLiveData.value = Resource.Error(it.message)
+                    }
+                }
+            }
+        }
     }
 
     private var _chargeRepairStockLivedata= MutableLiveData<Resource<String>>()

@@ -5,20 +5,25 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
+import com.critx.data.localdatabase.LocalDatabase
 import com.critx.domain.model.collectStock.ProductIdWithTypeDomain
 import com.critx.domain.model.orderStock.BookMarkStockInfoDomain
+import com.critx.domain.model.sampleTakeAndReturn.VoucherScanDomain
 import com.critx.domain.useCase.collectStock.GetGoldSmithListUseCase
 import com.critx.domain.useCase.collectStock.GetJewellerySizeUseCase
 import com.critx.domain.useCase.collectStock.ScanProductCodeUseCase
 import com.critx.domain.useCase.orderStock.GetBookMarkStockInfoUseCase
 import com.critx.domain.useCase.orderStock.OrderStockUseCase
 import com.critx.domain.useCase.sampleTakeAndReturn.CheckSampleUseCase
+import com.critx.domain.useCase.sampleTakeAndReturn.CheckSampleWithVoucherUseCase
 import com.critx.domain.useCase.sampleTakeAndReturn.SaveOutsideSampleUseCase
-import com.critx.shwemiAdmin.localDatabase.LocalDatabase
+import com.critx.domain.useCase.sampleTakeAndReturn.ScanInvoiceUseCase
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.SelectedImage
 import com.critx.shwemiAdmin.uiModel.collectStock.GoldSmithUiModel
 import com.critx.shwemiAdmin.uiModel.collectStock.JewellerySizeUIModel
 import com.critx.shwemiAdmin.uiModel.collectStock.asUiModel
+import com.critx.shwemiAdmin.uiModel.orderStock.SizeInfoUiModel
+import com.critx.shwemiAdmin.uiModel.orderStock.asUiMoel
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryTypeUiModel
 import com.critx.shwemiAdmin.uiModel.setupStock.asUiModel
 import com.critx.shwemiAdmin.uiModel.simpleTakeAndReturn.SampleItemUIModel
@@ -28,6 +33,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,24 +45,17 @@ class FillOrderInfoViewModel @Inject constructor(
     private val saveOutsideSampleUseCase: SaveOutsideSampleUseCase,
     private val checkSampleUseCase: CheckSampleUseCase,
     private val scanProductCodeUseCase: ScanProductCodeUseCase,
-    private val getJewellerySizeUseCase: GetJewellerySizeUseCase
+    private val getJewellerySizeUseCase: GetJewellerySizeUseCase,
+    private val scanInvoiceUseCase: ScanInvoiceUseCase,
+    private val checkSampleWithVoucherUseCase: CheckSampleWithVoucherUseCase
 ) : ViewModel() {
     var orderQtyList = mutableListOf<String>()
     var jewellerySizeIdList = mutableListOf<String>()
 
-    var selectedImgUri = MutableLiveData<SelectedImage?>(null)
-    fun setSelectedImgUri(selectedImage: SelectedImage?) {
-        selectedImgUri.value = selectedImage
-    }
+    var selectedImgOutsideUri: File? = null
+    var selectedOrderImgUri: File? = null
+    var selectedGSId:String? =null
 
-    var selectedOrderedImgUri = MutableLiveData<SelectedImage?>(null)
-    fun setSelectedOrderedImgUri(selectedImage: SelectedImage?) {
-        selectedOrderedImgUri.value = selectedImage
-    }
-
-    fun resetSelectedImg() {
-        selectedImgUri.value = null
-    }
 
     private var _jewellerySizeLiveData= MutableLiveData<Resource<MutableList<JewellerySizeUIModel>>>()
     val jewellerySizeLiveData : LiveData<Resource<MutableList<JewellerySizeUIModel>>>
@@ -91,8 +90,8 @@ class FillOrderInfoViewModel @Inject constructor(
         get() = _saveOutsideSampleLiveData
 
     private var _bookMarkStockInfoLiveData =
-        MutableLiveData<Resource<List<BookMarkStockInfoDomain>>>()
-    val bookMarkStockInfoLiveData: LiveData<Resource<List<BookMarkStockInfoDomain>>>
+        MutableLiveData<Resource<List<SizeInfoUiModel>>>()
+    val bookMarkStockInfoLiveData: LiveData<Resource<List<SizeInfoUiModel>>>
         get() = _bookMarkStockInfoLiveData
 
 
@@ -117,7 +116,7 @@ class FillOrderInfoViewModel @Inject constructor(
                         _bookMarkStockInfoLiveData.value = Resource.Loading()
                     }
                     is Resource.Success -> {
-                        _bookMarkStockInfoLiveData.value = Resource.Success(it.data!!)
+                        _bookMarkStockInfoLiveData.value = Resource.Success(it.data!!.map { it.asUiMoel() })
                     }
                     is Resource.Error -> {
                         _bookMarkStockInfoLiveData.value = Resource.Error(it.message)
@@ -191,34 +190,38 @@ class FillOrderInfoViewModel @Inject constructor(
     }
 
     fun orderStock(
-        bookMarkAvgKyat: MultipartBody.Part?,
-        bookMarkAvgPae: MultipartBody.Part?,
         bookMarkAvgYwae: MultipartBody.Part?,
+        orderAvgYwae: MultipartBody.Part?,
         bookMarkJewelleryTypeId: MultipartBody.Part?,
         bookMarkImage: MultipartBody.Part?,
         goldQuality: MultipartBody.Part,
         goldSmith: MultipartBody.Part,
         bookMarkId: MultipartBody.Part?,
+        gsNewItemId: MultipartBody.Part?,
         equivalent_pure_gold_weight_kpy: MultipartBody.Part,
         jewellery_type_size_id: List<MultipartBody.Part>,
         order_qty: List<MultipartBody.Part>,
-        sample_id: List<MultipartBody.Part>?
-    ) {
+        sample_id: List<MultipartBody.Part>?,
+        is_important:MultipartBody.Part?,
+        custom_category_name:MultipartBody.Part?
+        ) {
         viewModelScope.launch {
             orderStockUseCase(
                 localDatabase.getToken().orEmpty(),
-                bookMarkAvgKyat,
-                bookMarkAvgPae,
                 bookMarkAvgYwae,
+                orderAvgYwae,
                 bookMarkJewelleryTypeId,
                 bookMarkImage,
                 goldQuality,
                 goldSmith,
                 bookMarkId,
+                gsNewItemId,
                 equivalent_pure_gold_weight_kpy,
                 jewellery_type_size_id,
                 order_qty,
-                sample_id
+                sample_id,
+                is_important,
+                custom_category_name
             ).collectLatest {
                 when (it) {
                     is Resource.Loading -> {
@@ -279,5 +282,58 @@ class FillOrderInfoViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private val _voucherScanLiveData = MutableLiveData<Resource<VoucherScanDomain>>()
+    val voucherScanLiveData: LiveData<Resource<VoucherScanDomain>>
+        get() = _voucherScanLiveData
+
+    fun scanVoucher(invoiceCode: String) {
+        viewModelScope.launch {
+            scanInvoiceUseCase(localDatabase.getToken().orEmpty(), invoiceCode).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _voucherScanLiveData.value = Resource.Loading()
+                    }
+                    is Resource.Success -> {
+                        _voucherScanLiveData.value = Resource.Success(it.data)
+//                        checkSampleUseCase(localDatabase.getToken().orEmpty(), it.data!!.id)
+                    }
+                    is Resource.Error -> {
+                        _voucherScanLiveData.value = Resource.Error(it.message)
+                    }
+                }
+            }
+        }
+    }
+    fun resetVoucherScanLive() {
+        _voucherScanLiveData.value = null
+    }
+
+    private val _sampleLiveDataFromVoucher = MutableLiveData<Resource<List<SampleItemUIModel>>>()
+    val sampleLiveDataFromVoucher: LiveData<Resource<List<SampleItemUIModel>>>
+        get() = _sampleLiveDataFromVoucher
+
+    fun checkSampleWithVoucher(stockId: String) {
+        viewModelScope.launch {
+            checkSampleWithVoucherUseCase(localDatabase.getToken().orEmpty(), stockId).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _sampleLiveDataFromVoucher.value = Resource.Loading()
+                    }
+                    is Resource.Success -> {
+                        _sampleLiveDataFromVoucher.value =
+                            Resource.Success(it.data!!.map { it.asUIModel() })
+                    }
+                    is Resource.Error -> {
+                        _sampleLiveDataFromVoucher.value = Resource.Error(it.message)
+                    }
+                }
+            }
+        }
+    }
+
+    fun resetSampleLiveDataFromVoucher(){
+        _sampleLiveDataFromVoucher.value = null
     }
 }

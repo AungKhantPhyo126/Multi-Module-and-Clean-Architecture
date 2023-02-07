@@ -11,7 +11,7 @@ data class OutsideSampleDto(
     val file: FileShweMiDto,
     val id: Int,
     val name:String?,
-    val weightGm:String?,
+    val weight_gm:String?,
     val specification: String?,
     val type: Int
 )
@@ -27,6 +27,6 @@ fun ProductDto.asDomain():ProductDomain{
 fun OutsideSampleDto.asDomain(): OutsideSampleDomain {
     return OutsideSampleDomain(
         file.asDomain(),
-        id,name.orEmpty(),weightGm.orEmpty(),specification.orEmpty(), type
+        id,name.orEmpty(),weight_gm.orEmpty(),specification.orEmpty(), type
     )
 }

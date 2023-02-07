@@ -48,7 +48,7 @@ class RelatedCatViewHolder(
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(data: JewelleryCategoryUiModel) {
-        binding.ivCat.loadImageWithGlide(data.imageUrlList[0])
+        binding.ivCat.loadImageWithGlide(data.imageUrlList[0].url)
         binding.tvCatName.text =data.name
         binding.mcvRemove.setOnClickListener {
             deleteClick(data)

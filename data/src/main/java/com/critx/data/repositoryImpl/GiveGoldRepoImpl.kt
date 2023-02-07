@@ -23,17 +23,13 @@ class GiveGoldRepoImpl @Inject constructor(
         goldSmithId: String,
         orderItem: String,
         orderQty: String,
-        weightK: String,
-        weighP: String,
         weightY: String,
         goldBoxId: String,
         goldWeight: String,
         gemWeight: String,
         goldAndGemWeight:String,
-        wastageK: String,
-        wastageP: String,
         wastageY: String,
-        dueDate: String,
+        dueDate: String?,
         sampleList: List<String>?
     ): Flow<Resource<SimpleData>> =
         flow {
@@ -41,8 +37,8 @@ class GiveGoldRepoImpl @Inject constructor(
             try {
                 emit(
                     Resource.Success(
-                        giveGoldDataSource.giveGold(token,goldSmithId, orderItem, orderQty, weightK, weighP, weightY,
-                            goldBoxId, goldWeight, gemWeight,goldAndGemWeight, wastageK, wastageP, wastageY, dueDate, sampleList).asDomain()
+                        giveGoldDataSource.giveGold(token,goldSmithId, orderItem, orderQty, weightY,
+                            goldBoxId, goldWeight, gemWeight,goldAndGemWeight,wastageY, dueDate, sampleList).asDomain()
                     )
                 )
             } catch (e: HttpException) {

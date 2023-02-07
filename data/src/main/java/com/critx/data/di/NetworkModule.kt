@@ -1,5 +1,8 @@
 package com.critx.data.di
 
+import android.content.Context
+import com.chuckerteam.chucker.api.ChuckerCollector
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.critx.data.datasource.SampleTakeAndReturn.SampleTakeAndReturnNetWorkDataSource
 import com.critx.data.datasource.auth.AuthNetWorkDataSource
 import com.critx.data.datasource.box.BoxNetWorkDataSource
@@ -10,13 +13,17 @@ import com.critx.data.datasource.orderStock.OrderStockDataSource
 import com.critx.data.datasource.repairStock.RepairStockDataSource
 import com.critx.data.datasource.setupstock.SetupStockNetWorkDatasource
 import com.critx.data.datasource.transferCheckUp.TransferCheckUpNetWorkDataSource
+import com.critx.data.localdatabase.LocalDatabase
 import com.critx.data.network.api.*
 import com.critx.data.network.datasource.*
 import com.critx.data.repositoryImpl.*
 import com.critx.domain.repository.*
+import dagger.Binds
+import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.*
 import retrofit2.Retrofit
@@ -41,14 +48,14 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAuthNetWorkDataSource(authService: AuthService): AuthNetWorkDataSource {
-        return AuthNetWorkDataSourceImpl(authService)
+    fun provideAuthNetWorkDataSource(authService: AuthService,localDatabase: LocalDatabase): AuthNetWorkDataSource {
+        return AuthNetWorkDataSourceImpl(authService,localDatabase)
     }
 
     @Provides
     @Singleton
-    fun provideAuthRepo(authNetWorkDataSource: AuthNetWorkDataSource): AuthRepository {
-        return AuthRepositoryImpl(authNetWorkDataSource)
+    fun provideAuthRepo(authNetWorkDataSource: AuthNetWorkDataSource,localDatabase: LocalDatabase): AuthRepository {
+        return AuthRepositoryImpl(authNetWorkDataSource,localDatabase)
     }
 
     @Provides
@@ -137,8 +144,8 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRepairStockDataSource(repairStockService: RepairStockService): RepairStockDataSource {
-        return RepairStockDataSourceImpl(repairStockService)
+    fun provideRepairStockDataSource(repairStockService: RepairStockService,localDatabase: LocalDatabase): RepairStockDataSource {
+        return RepairStockDataSourceImpl(repairStockService,localDatabase)
     }
 
     @Provides
@@ -216,7 +223,47 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideUncheckOkHttpClient(): OkHttpClient {
-        return UnsafeOkHttpClient.getUnsafeOkHttpClient()
+    fun provideOkHttpClient(
+        authenticator: TokenAuthenticator,
+        localDatabase: LocalDatabase,
+        @ApplicationContext context: Context,
+        connectionObserver: ConnectionObserver
+    ): OkHttpClient {
+        return UnsafeOkHttpClient.unsafeOkHttpClient.apply {
+            connectTimeout(60*1000,TimeUnit.MILLISECONDS)
+            readTimeout(60*1000,TimeUnit.MILLISECONDS)
+            authenticator(authenticator)
+            addInterceptor(Interceptor { chain: Interceptor.Chain ->
+                val request =
+                    chain.request().newBuilder()
+
+//                        .header("Accept-Encoding", "identity")
+                        .addHeader("content-type", "application/json")
+                        .addHeader("Accept", "application/json")
+                        .addHeader("Authorization", "Bearer ${localDatabase.getToken()}")
+                        .build()
+                chain.proceed(request)
+            })
+            addInterceptor(
+                ChuckerInterceptor.Builder(context)
+                    .collector(ChuckerCollector(context))
+                    .maxContentLength(250000L)
+                    .redactHeaders(emptySet())
+                    .alwaysReadResponseBody(false)
+                    .build()
+            )
+            addInterceptor(InternetConnectionInterceptor(connectionObserver))
+
+        }.build()
     }
+    @Provides
+    @Singleton
+    fun provideAuthenticator(
+        authRepo: Lazy<AuthNetWorkDataSourceImpl>,
+        localDatabase: LocalDatabase
+    ): TokenAuthenticator {
+        return TokenAuthenticator(authRepo, localDatabase)
+    }
+
+
 }

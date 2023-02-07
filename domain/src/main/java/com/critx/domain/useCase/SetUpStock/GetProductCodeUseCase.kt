@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetProductCodeUseCase @Inject constructor(
     private val setupStockRepository: SetupStockRepository
 ) {
-    operator fun invoke(token:String)=setupStockRepository.getProductCode(token)
+    operator fun invoke(token:String,jewelleryQualityId:String)=setupStockRepository.getProductCode(token,jewelleryQualityId)
 }

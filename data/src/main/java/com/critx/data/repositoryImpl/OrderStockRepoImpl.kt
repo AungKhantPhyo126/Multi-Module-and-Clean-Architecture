@@ -49,6 +49,33 @@ class OrderStockRepoImpl @Inject constructor(
             }
         }
 
+    override fun getGsNewItems(
+        token: String,
+        page: Int,
+        jewelleryType: String
+    ): Flow<Resource<BookMarkedStocksWithPaging>>  =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        orderStockDataSource.getGsNewItems(
+                            token,
+                            page,
+                            jewelleryType
+                        )
+                            .asDomain()
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
+
     override fun getBookMarkStockInfo(
         token: String,
         bookMarkId: String
@@ -73,19 +100,22 @@ class OrderStockRepoImpl @Inject constructor(
 
     override fun orderStock(
         token: String,
-        bookMarkAvgKyat: MultipartBody.Part?,
-        bookMarkAvgPae: MultipartBody.Part?,
         bookMarkAvgYwae: MultipartBody.Part?,
+        orderAvgYwae: MultipartBody.Part?,
         bookMarkJewelleryTypeId: MultipartBody.Part?,
         bookMarkImage: MultipartBody.Part?,
         goldQuality: MultipartBody.Part,
         goldSmith: MultipartBody.Part,
         bookMarkId: MultipartBody.Part?,
+        gsNewItemId: MultipartBody.Part?,
         equivalent_pure_gold_weight_kpy: MultipartBody.Part,
         jewellery_type_size_id: List<MultipartBody.Part>,
         order_qty: List<MultipartBody.Part>,
-        sample_id: List<MultipartBody.Part>?
-    ): Flow<Resource<SimpleData>> =
+        sample_id: List<MultipartBody.Part>?,
+        is_important:MultipartBody.Part?,
+        custom_category_name:MultipartBody.Part?,
+
+        ): Flow<Resource<SimpleData>> =
         flow {
             emit(Resource.Loading())
             try {
@@ -93,18 +123,20 @@ class OrderStockRepoImpl @Inject constructor(
                     Resource.Success(
                         orderStockDataSource.orderStock(
                             token,
-                            bookMarkAvgKyat,
-                            bookMarkAvgPae,
                             bookMarkAvgYwae,
+                            orderAvgYwae,
                             bookMarkJewelleryTypeId,
                             bookMarkImage,
                             goldQuality,
                             goldSmith,
                             bookMarkId,
+                            gsNewItemId,
                             equivalent_pure_gold_weight_kpy,
                             jewellery_type_size_id,
                             order_qty,
-                            sample_id
+                            sample_id,
+                            is_important,
+                            custom_category_name
                         ).response.asDomain()
                     )
                 )

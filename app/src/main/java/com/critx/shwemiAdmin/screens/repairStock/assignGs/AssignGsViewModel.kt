@@ -5,11 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
+import com.critx.data.localdatabase.LocalDatabase
 import com.critx.domain.model.repairStock.RepairJobDomain
 import com.critx.domain.useCase.SetUpStock.GetJewelleryTypeUseCase
 import com.critx.domain.useCase.repairStock.AssignGoldSmithUseCase
 import com.critx.domain.useCase.repairStock.GetRepairJobUseCase
-import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.uiModel.collectStock.GoldSmithUiModel
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryTypeUiModel
 import com.critx.shwemiAdmin.uiModel.setupStock.asUiModel
@@ -46,11 +46,11 @@ class AssignGsViewModel @Inject constructor(
     var selectedJewelleryType = MutableLiveData<String>()
     var selectedRepairJob = MutableLiveData<String>()
 
-    fun setJewelleryType(type:String){
+    fun setJewelleryType(type:String?){
         selectedJewelleryType.value = type
     }
 
-    fun setRepairJob(job:String){
+    fun setRepairJob(job:String?){
         selectedRepairJob.value = job
     }
 

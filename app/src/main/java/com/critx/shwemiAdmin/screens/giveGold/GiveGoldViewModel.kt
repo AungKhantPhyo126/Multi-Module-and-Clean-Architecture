@@ -5,9 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
+import com.critx.data.localdatabase.LocalDatabase
 import com.critx.domain.model.collectStock.ProductIdWithTypeDomain
 import com.critx.domain.model.giveGold.GoldBoxDomain
 import com.critx.domain.model.repairStock.JobDoneDomain
+import com.critx.domain.model.sampleTakeAndReturn.VoucherScanDomain
 import com.critx.domain.useCase.collectStock.GetGoldSmithListUseCase
 import com.critx.domain.useCase.collectStock.ScanProductCodeUseCase
 import com.critx.domain.useCase.giveGold.GetGoldBoxIdUseCase
@@ -15,8 +17,9 @@ import com.critx.domain.useCase.giveGold.GiveGoldScanUseCase
 import com.critx.domain.useCase.giveGold.GiveGoldUseCase
 import com.critx.domain.useCase.giveGold.ServiceChargeUseCase
 import com.critx.domain.useCase.sampleTakeAndReturn.CheckSampleUseCase
+import com.critx.domain.useCase.sampleTakeAndReturn.CheckSampleWithVoucherUseCase
 import com.critx.domain.useCase.sampleTakeAndReturn.SaveOutsideSampleUseCase
-import com.critx.shwemiAdmin.localDatabase.LocalDatabase
+import com.critx.domain.useCase.sampleTakeAndReturn.ScanInvoiceUseCase
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.SelectedImage
 import com.critx.shwemiAdmin.uiModel.collectStock.GoldSmithUiModel
 import com.critx.shwemiAdmin.uiModel.collectStock.asUiModel
@@ -40,9 +43,13 @@ class GiveGoldViewModel @Inject constructor(
     private val scanProductCodeUseCase: ScanProductCodeUseCase,
     private val checkSampleUseCase: CheckSampleUseCase,
     private val saveOutsideSampleUseCase: SaveOutsideSampleUseCase,
-
+    private val scanInvoiceUseCase: ScanInvoiceUseCase,
+    private val checkSampleWithVoucherUseCase: CheckSampleWithVoucherUseCase,
 
     ) : ViewModel() {
+    var selectedGSId:String? =null
+    var selectedGoldBoxId:String? =null
+
     private var _takenSampleListLiveData = MutableLiveData<List<SampleItemUIModel>>()
     val takenSampleListLiveData: LiveData<List<SampleItemUIModel>>
         get() = _takenSampleListLiveData
@@ -57,6 +64,11 @@ class GiveGoldViewModel @Inject constructor(
     fun remove(item: SampleItemUIModel) {
         sampleList.remove(item)
         _takenSampleListLiveData.value = sampleList
+    }
+    fun resetTakenSamplelist(){
+        sampleList.removeAll(sampleList)
+        _takenSampleListLiveData.value = sampleList
+
     }
 
     private var _serviceChargeLiveData = MutableLiveData<Resource<String>>()
@@ -96,7 +108,7 @@ class GiveGoldViewModel @Inject constructor(
                         _serviceChargeLiveData.value = Resource.Loading()
                     }
                     is Resource.Success->{
-                        serviceChargeUseCase(localDatabase.getToken().orEmpty(), wastageGm,chargeAmount,
+                        serviceChargeUseCase(localDatabase.getToken().orEmpty(), chargeAmount,wastageGm,
                         it.data!!.id).collectLatest {
                             when(it){
                                 is Resource.Loading->{
@@ -240,17 +252,13 @@ class GiveGoldViewModel @Inject constructor(
         goldSmithId: String,
         orderItem: String,
         orderQty: String,
-        weightK: String,
-        weighP: String,
         weightY: String,
         goldBoxId: String,
         goldWeight: String,
         gemWeight: String,
         goldAndGemWeight:String,
-        wastageK: String,
-        wastageP: String,
         wastageY: String,
-        dueDate: String,
+        dueDate: String?,
         sampleList: List<String>?
     ) {
         viewModelScope.launch {
@@ -259,15 +267,11 @@ class GiveGoldViewModel @Inject constructor(
                 goldSmithId,
                 orderItem,
                 orderQty,
-                weightK,
-                weighP,
                 weightY,
                 goldBoxId,
                 goldWeight,
                 gemWeight,
                 goldAndGemWeight,
-                wastageK,
-                wastageP,
                 wastageY,
                 dueDate,
                 sampleList
@@ -285,6 +289,59 @@ class GiveGoldViewModel @Inject constructor(
             }
         }
         }
+    }
+
+    private val _voucherScanLiveData = MutableLiveData<Resource<VoucherScanDomain>>()
+    val voucherScanLiveData: LiveData<Resource<VoucherScanDomain>>
+        get() = _voucherScanLiveData
+
+    fun scanVoucher(invoiceCode: String) {
+        viewModelScope.launch {
+            scanInvoiceUseCase(localDatabase.getToken().orEmpty(), invoiceCode).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _voucherScanLiveData.value = Resource.Loading()
+                    }
+                    is Resource.Success -> {
+                        _voucherScanLiveData.value = Resource.Success(it.data)
+//                        checkSampleUseCase(localDatabase.getToken().orEmpty(), it.data!!.id)
+                    }
+                    is Resource.Error -> {
+                        _voucherScanLiveData.value = Resource.Error(it.message)
+                    }
+                }
+            }
+        }
+    }
+    fun resetVoucherScanLive() {
+        _voucherScanLiveData.value = null
+    }
+
+    private val _sampleLiveDataFromVoucher = MutableLiveData<Resource<List<SampleItemUIModel>>>()
+    val sampleLiveDataFromVoucher: LiveData<Resource<List<SampleItemUIModel>>>
+        get() = _sampleLiveDataFromVoucher
+
+    fun checkSampleWithVoucher(stockId: String) {
+        viewModelScope.launch {
+            checkSampleWithVoucherUseCase(localDatabase.getToken().orEmpty(), stockId).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _sampleLiveDataFromVoucher.value = Resource.Loading()
+                    }
+                    is Resource.Success -> {
+                        _sampleLiveDataFromVoucher.value =
+                            Resource.Success(it.data!!.map { it.asUIModel() })
+                    }
+                    is Resource.Error -> {
+                        _sampleLiveDataFromVoucher.value = Resource.Error(it.message)
+                    }
+                }
+            }
+        }
+    }
+
+    fun resetSampleLiveDataFromVoucher(){
+        _sampleLiveDataFromVoucher.value = null
     }
 
 

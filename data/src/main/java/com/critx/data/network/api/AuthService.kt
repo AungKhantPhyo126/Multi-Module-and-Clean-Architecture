@@ -5,6 +5,7 @@ import com.critx.data.network.dto.SimpleResponse
 import com.critx.data.network.dto.SimpleResponseDto
 import com.critx.data.network.dto.auth.LoginSuccessDto
 import com.critx.data.network.dto.auth.ProfileDto
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -24,9 +25,9 @@ interface AuthService {
     ):Response<SimpleResponse>
 
     @GET("api/auth/refresh")
-    suspend fun refreshToken(
+    fun refreshToken(
         @Header("Authorization") token:String
-    ):Response<LoginSuccessDto>
+    ):Call<LoginSuccessDto>
 
 
     @GET("api/profile")

@@ -7,7 +7,7 @@ data class CreateCategoryError(
 
 data class SimpleError(
     val response: ResponseSimple,
-    val data: List<Any>
+    val message: String?
 )
 
 data class ResponseSimple(

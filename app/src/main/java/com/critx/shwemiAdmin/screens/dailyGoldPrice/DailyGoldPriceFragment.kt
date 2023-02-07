@@ -25,7 +25,6 @@ import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.UiEvent
 import com.critx.shwemiAdmin.databinding.FragmentDailyGoldPriceBinding
-import com.critx.shwemiAdmin.workerManager.RefreshTokenWorker
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -39,12 +38,6 @@ class DailyGoldPriceFragment : Fragment() {
     private val viewModel by viewModels<DailyGoldPriceViewModel>()
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
-    lateinit var workManager: WorkManager
-    lateinit var repeatingRequest: PeriodicWorkRequest
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -73,49 +66,41 @@ class DailyGoldPriceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
-        workManager = WorkManager.getInstance(requireContext())
         loadingDialog = requireContext().getAlertDialog()
-        viewModel.isloggedIn()
-        viewModel.getProfile()
-        viewModel.profileLivedata.observe(viewLifecycleOwner){
-            when(it){
-                is Resource.Loading->{
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            refreshData()
+        }
+        viewModel.profileLivedata.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
                     loadingDialog.show()
                 }
-                is Resource.Success->{
+                is Resource.Success -> {
                     loadingDialog.dismiss()
-                    enqueueRefreshTokenWork()
+                    binding.swipeRefreshLayout.isRefreshing = false
                     binding.tvLogginedBy.isVisible = true
                     binding.tvUserName.text = it.data!!.name
                     binding.tvTodayDate.text = it.data!!.todayDate
                     binding.tvTodayName.text = it.data!!.todayName
+                    viewModel.getGoldPrice()
                     viewModel.resetProfileLiveData()
                 }
-                is Resource.Error->{
+                is Resource.Error -> {
                     loadingDialog.dismiss()
+                    binding.swipeRefreshLayout.isRefreshing = false
+                    if (it.message == "TOKEN_EXPIRED" || it.message == "TOKEN_NOT_PROVIDED" || it.message == "TOKEN_INVALID") {
+                        findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
+                    } else {
+                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                    }
                     viewModel.resetProfileLiveData()
-                    Toast.makeText(requireContext(),it.message,Toast.LENGTH_LONG).show()
-                            findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
+
+//                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
 
                 }
             }
         }
-        val workConstraints = Constraints
-            .Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
-        repeatingRequest =
-            PeriodicWorkRequestBuilder<RefreshTokenWorker>(15, TimeUnit.MINUTES)
-                .setConstraints(workConstraints)
-                .build()
 
-//        workManager.getWorkInfoByIdLiveData(repeatingRequest.id).observe(viewLifecycleOwner) {
-//            Log.i("refresh success", it.state.toString())
-//            if (it.state == WorkInfo.State.ENQUEUED) {
-//                viewModel.getProfile()
-//                Log.i("refresh success", "reached")
-//            }
-//        }
 
         val toolbarEndIcon: ImageView = activity!!.findViewById<View>(R.id.iv_end_icon) as ImageView
         toolbarEndIcon.setOnClickListener {
@@ -127,10 +112,10 @@ class DailyGoldPriceFragment : Fragment() {
                 validatePrice(binding.layoutDailyGoldPriceInput.edt15pGq, requireContext()) &&
                 validatePrice(binding.layoutDailyGoldPriceInput.edt22kGq, requireContext()) &&
                 validatePrice(binding.layoutDailyGoldPriceInput.edtDiamond, requireContext()) &&
-                validatePriceForWeight( binding.layoutDailyGoldPriceInput.edtWg, requireContext()) &&
+                validatePriceForWeight(binding.layoutDailyGoldPriceInput.edtWg, requireContext()) &&
                 validatePrice(binding.layoutDailyGoldPriceInput.edtRebuy, requireContext()) &&
                 validatePrice(binding.layoutDailyGoldPriceInput.edtGoldBlock, requireContext())
-                    ){
+            ) {
                 val map: HashMap<String, String> = HashMap()
                 map["price[1]"] = binding.layoutDailyGoldPriceInput.edtGoldBlock.text.toString()
                 map["price[2]"] = binding.layoutDailyGoldPriceInput.edt15pGq.text.toString()
@@ -150,6 +135,7 @@ class DailyGoldPriceFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
+                    binding.swipeRefreshLayout.isRefreshing = false
                     requireContext().showSuccessDialog(it.data!!) {
                         viewModel.resetUpdateGoldLive()
                     }
@@ -170,7 +156,7 @@ class DailyGoldPriceFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
-                    workManager.cancelUniqueWork(RefreshTokenWorker.REFRESH_TOKEN_WORK)
+                    binding.swipeRefreshLayout.isRefreshing = false
                     viewModel.resetLogOutLiveData()
                     findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
                 }
@@ -189,6 +175,7 @@ class DailyGoldPriceFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
+                    binding.swipeRefreshLayout.isRefreshing = false
                     binding.layoutDailyGoldPriceInput.edtGoldBlock.setText(it.data?.get(0)!!.price)
                     binding.layoutDailyGoldPriceInput.edt15pGq.setText(it.data?.get(1)!!.price)
                     binding.layoutDailyGoldPriceInput.edt22kGq.setText(it.data?.get(2)!!.price)
@@ -198,6 +185,7 @@ class DailyGoldPriceFragment : Fragment() {
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
+                    binding.swipeRefreshLayout.isRefreshing = false
                     binding.layoutDailyGoldPriceInput.edtGoldBlock.setText("")
                     binding.layoutDailyGoldPriceInput.edt15pGq.setText("")
                     binding.layoutDailyGoldPriceInput.edt22kGq.setText("")
@@ -220,7 +208,6 @@ class DailyGoldPriceFragment : Fragment() {
                             loadingDialog.show()
                         } else loadingDialog.dismiss()
                         if (!it.successMessage.isNullOrEmpty()) {
-                            workManager.cancelUniqueWork(RefreshTokenWorker.REFRESH_TOKEN_WORK)
                             findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
                         }
                     }
@@ -238,9 +225,7 @@ class DailyGoldPriceFragment : Fragment() {
                                     Snackbar.LENGTH_LONG
                                 )
                                 snackBar?.show()
-                                if (event.message == "refresh token fail") {
-                                    workManager.cancelUniqueWork(RefreshTokenWorker.REFRESH_TOKEN_WORK)
-                                }
+
                             }
                         }
                     }
@@ -263,7 +248,6 @@ class DailyGoldPriceFragment : Fragment() {
         }
 
 
-
 //        if (!viewModel.isLogin()){
 //            findNavController().navigate(DailyGoldPriceFragmentDirections.actionDailyGoldPriceFragmentToLoginFragment())
 //        }else{
@@ -279,13 +263,10 @@ class DailyGoldPriceFragment : Fragment() {
         }
     }
 
-    private fun enqueueRefreshTokenWork() {
-        workManager.enqueueUniquePeriodicWork(
-            RefreshTokenWorker.REFRESH_TOKEN_WORK,
-            ExistingPeriodicWorkPolicy.KEEP,
-            repeatingRequest
-        )
+    fun refreshData() {
+        viewModel.getProfile()
     }
+
 //    fun addConstantTextInEditText(edt: EditText, text: String?) {
 //        edt.setText(text)
 //        Selection.setSelection(edt.text, edt.text.length)

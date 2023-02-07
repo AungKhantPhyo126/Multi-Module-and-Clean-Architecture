@@ -34,4 +34,8 @@ interface RepairStockRepository {
         amount: RequestBody,
         repairStockList: List<RequestBody>,
     ):Flow<Resource<SimpleData>>
+
+     fun deleteRepairStock(
+         repairStockId:String
+     ):Flow<Resource<SimpleData>>
 }

@@ -121,7 +121,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cb_frequently_used">
+        app:layout_constraintTop_toBottomOf="@+id/cb_image_view">
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group"
@@ -139,31 +139,20 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_images"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="350dp"
-
         android:visibility="invisible"
+        android:layout_gravity="center_horizontal"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cb_frequently_used"
+        app:layout_constraintTop_toBottomOf="@+id/cb_image_view"
         app:layout_constraintBottom_toBottomOf="parent"
         app:spanCount="2"
         tools:listitem="@layout/item_image_selection" />
 
 
-    <CheckBox
-        android:id="@+id/cb_frequently_used"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:buttonTint="@color/primary_color"
-        android:visibility="gone"
-        android:text="@string/frequently_used"
-        app:layout_constraintEnd_toStartOf="@+id/cb_image_view"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/tv_label_choose"
-        app:layout_constraintTop_toBottomOf="@+id/tv_label_choose" />
+
 
     <CheckBox
         android:id="@+id/cb_image_view"
@@ -172,11 +161,10 @@
         android:buttonTint="@color/primary_color"
         android:visibility="gone"
         android:text="@string/image_view"
-        app:layout_constraintBottom_toBottomOf="@+id/cb_frequently_used"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/cb_frequently_used"
-        app:layout_constraintTop_toTopOf="@+id/cb_frequently_used" />
+        app:layout_constraintStart_toStartOf="@+id/tv_label_choose"
+        app:layout_constraintTop_toBottomOf="@+id/tv_label_choose" />
 
     <ImageView
         android:id="@+id/iv_back"

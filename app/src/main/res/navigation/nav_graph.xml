@@ -150,11 +150,6 @@
         <action
             android:id="@+id/action_chooseCategoryFragment_to_productCreateFragment"
             app:destination="@id/productCreateFragment" />
-        <action
-            android:id="@+id/action_chooseCategoryFragment_to_recommendStockFragment"
-            app:destination="@id/recommendStockFragment"
-            app:popUpTo="@id/addCategoryFragment"
-            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/addCategoryFragment"
@@ -169,25 +164,20 @@
         <argument
             android:name="groupInfo"
             app:argType="com.critx.shwemiAdmin.uiModel.setupStock.ChooseGroupUIModel" />
-        <action
-            android:id="@+id/action_addCategoryFragment_to_designListFragment"
-            app:destination="@id/designListFragment" />
         <argument
             android:name="category"
             app:argType="com.critx.shwemiAdmin.uiModel.setupStock.JewelleryCategoryUiModel"
             app:nullable="true" />
-        <action
-            android:id="@+id/action_addCategoryFragment_to_recommendStockFragment"
-            app:destination="@id/recommendStockFragment" />
+
     </fragment>
-    <fragment
-        android:id="@+id/designListFragment"
-        android:name="com.critx.shwemiAdmin.screens.setupStock.fourth.design.DesignListFragment"
-        android:label="DesignListFragment" >
-        <argument
-            android:name="jewelleryType"
-            app:argType="string" />
-    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/designListFragment"-->
+<!--        android:name="com.critx.shwemiAdmin.screens.setupStock.fourth.design.DesignListFragment"-->
+<!--        android:label="DesignListFragment" >-->
+<!--        <argument-->
+<!--            android:name="jewelleryType"-->
+<!--            app:argType="string" />-->
+<!--    </fragment>-->
     <fragment
         android:id="@+id/productCreateFragment"
         android:name="com.critx.shwemiAdmin.screens.setupStock.production.ProductCreateFragment"
@@ -195,19 +185,37 @@
         <action
             android:id="@+id/action_productCreateFragment_to_setupStockFragment"
             app:destination="@id/setupStockFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/recommendStockFragment"
-        android:name="com.critx.shwemiAdmin.screens.setupStock.fourth.recommendSTock.RecommendStockFragment"
-        android:label="RecommendStockFragment" >
-        <action
-            android:id="@+id/action_recommendStockFragment_to_setupStockFragment"
-            app:destination="@id/setupStockFragment" />
         <argument
-            android:name="categoryUIModel"
+            android:name="firstCatId"
+            app:argType="string" />
+        <argument
+            android:name="secondCatId"
+            app:argType="string" />
+        <argument
+            android:name="thirdCatId"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="fourthCatId"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="category"
             app:argType="com.critx.shwemiAdmin.uiModel.setupStock.JewelleryCategoryUiModel"
             app:nullable="true" />
     </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/recommendStockFragment"-->
+<!--        android:name="com.critx.shwemiAdmin.screens.setupStock.fourth.recommendSTock.RecommendStockFragment"-->
+<!--        android:label="RecommendStockFragment" >-->
+<!--        <action-->
+<!--            android:id="@+id/action_recommendStockFragment_to_setupStockFragment"-->
+<!--            app:destination="@id/setupStockFragment" />-->
+<!--        <argument-->
+<!--            android:name="categoryUIModel"-->
+<!--            app:argType="com.critx.shwemiAdmin.uiModel.setupStock.JewelleryCategoryUiModel"-->
+<!--            app:nullable="true" />-->
+<!--    </fragment>-->
     <fragment
         android:id="@+id/transferCheckUpStockFragment"
         android:name="com.critx.shwemiAdmin.screens.transferCheckUpStock.TransferCheckUpStockFragment"

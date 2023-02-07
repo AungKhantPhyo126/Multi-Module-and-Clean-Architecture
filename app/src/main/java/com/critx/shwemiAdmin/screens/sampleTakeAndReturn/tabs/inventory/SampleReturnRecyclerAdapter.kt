@@ -35,7 +35,7 @@ class StockCodeListViewHolder(
         binding.ibCross.setOnClickListener {
             onclick(data)
         }
-        binding.ivSample.loadImageWithGlide(data.imageUrl)
+        binding.ivSample.loadImageWithGlide(data.thumbnail)
         binding.tvStockCodeNumber.text = data.productCode
 
     }

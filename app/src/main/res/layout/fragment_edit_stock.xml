@@ -7,7 +7,7 @@
 
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_back"
+        android:id="@+id/btn_print"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
@@ -32,7 +32,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btn_back" />
+        app:layout_constraintStart_toEndOf="@+id/btn_print" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -40,25 +40,59 @@
         android:fillViewport="true"
         app:layout_constraintBottom_toTopOf="@id/btn_save"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/tv_label_stock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/stock"
+                android:textAppearance="@style/TextAppearance.ShweMi.Headline6"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
                 android:id="@+id/tv_label_stock_code"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginStart="16dp"
                 android:text="@string/stock_code"
                 android:textAppearance="@style/TextAppearance.ShweMi.Body2"
-                app:layout_constraintBottom_toBottomOf="@+id/mcv_scan_here"
-                app:layout_constraintEnd_toStartOf="@+id/guideline2"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/mcv_scan_here" />
+                app:layout_constraintBottom_toBottomOf="@id/til_scan_here"
+                app:layout_constraintStart_toStartOf="@+id/tv_label_stock"
+                app:layout_constraintTop_toTopOf="@+id/til_scan_here" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_scan_here"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                app:boxBackgroundColor="@color/white"
+                app:endIconDrawable="@drawable/ic_qr_scan"
+                app:endIconMode="custom"
+                app:endIconTintMode="screen"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/tv_label_stock">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_scan_here"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Type or Scan here"
+                    android:singleLine="true" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/tv_label_stock_name"
@@ -72,51 +106,6 @@
                 app:layout_constraintTop_toTopOf="@+id/til_stock_name"
                 app:layout_constraintVertical_chainStyle="spread" />
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mcv_scan_here"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="16dp"
-                android:clickable="false"
-                android:focusable="false"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="0dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/guideline2"
-                app:layout_constraintTop_toTopOf="parent"
-                app:strokeColor="@color/based_grey"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:weightSum="5">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edt_target_box_code"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="4"
-                        android:background="@drawable/popup_window_transparent"
-                        android:hint="Type or Scan"
-                        android:imeOptions="actionDone"
-                        android:paddingStart="8dp"
-                        android:textAlignment="textStart"
-                        android:textAppearance="@style/TextAppearance.ShweMi.Body2"
-                        android:textColor="@color/primary_color" />
-
-                    <ImageView
-                        android:id="@+id/iv_scan"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="16dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/ic_qr_scan" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_stock_name"
@@ -129,7 +118,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toBottomOf="@+id/mcv_scan_here">
+                app:layout_constraintTop_toBottomOf="@id/til_scan_here">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_enter_stock_name"
@@ -178,15 +167,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_begin="127dp" />
+                app:layout_constraintGuide_begin="118dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_y"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="70dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:hintEnabled="false"
+                app:expandedHintEnabled="false"
+                app:suffixText="Y"
                 app:layout_constraintEnd_toEndOf="@id/til_stock_name"
                 app:layout_constraintTop_toBottomOf="@id/til_gold_gem_gm">
 
@@ -194,17 +185,20 @@
                     android:id="@+id/edt_y"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/y"
+                    android:textAlignment="center"
+                    android:text="0"
                     android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_p"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="70dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:hintEnabled="false"
+                app:expandedHintEnabled="false"
+                app:suffixText="P"
                 app:layout_constraintEnd_toStartOf="@id/til_y"
                 app:layout_constraintStart_toEndOf="@+id/til_k"
                 app:layout_constraintTop_toBottomOf="@id/til_gold_gem_gm">
@@ -213,17 +207,20 @@
                     android:id="@+id/edt_p"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="P"
+                    android:textAlignment="center"
+                    android:text="0"
                     android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_k"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="70dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:hintEnabled="false"
+                app:expandedHintEnabled="false"
+                app:suffixText="K"
                 app:layout_constraintStart_toStartOf="@id/guideline2"
                 app:layout_constraintTop_toBottomOf="@id/til_gold_gem_gm">
 
@@ -231,7 +228,8 @@
                     android:id="@+id/edt_k"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="K"
+                    android:textAlignment="center"
+                    android:text="0"
                     android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -245,32 +243,35 @@
                 app:layout_constraintStart_toStartOf="@+id/tv_label_stock_name"
                 app:layout_constraintTop_toTopOf="@+id/til_k" />
 
-            <CheckBox
-                android:id="@+id/cb_gem_value"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_gem_value"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:buttonTint="@color/primary_color"
                 android:text="GemValue"
+                android:layout_marginEnd="8dp"
+                android:textAppearance="@style/TextAppearance.ShweMi.Caption"
+                app:layout_constraintEnd_toStartOf="@+id/guideline2"
                 app:layout_constraintStart_toStartOf="@+id/tv_label_avg_wastage"
                 app:layout_constraintTop_toBottomOf="@+id/til_k" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_gem_value"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 app:hintEnabled="false"
+                app:layout_constraintBottom_toBottomOf="@id/btn_gem_value"
                 app:layout_constraintEnd_toEndOf="@+id/til_stock_name"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintBottom_toBottomOf="@id/cb_gem_value"
-                app:layout_constraintTop_toTopOf="@id/cb_gem_value">
+                app:layout_constraintTop_toTopOf="@id/btn_gem_value">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_gem_value"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:inputType="numberDecimal"
                     android:hint="Enter Gem Value"
+                    android:inputType="numberDecimal"
                     android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -297,14 +298,14 @@
                 app:hintEnabled="false"
                 app:layout_constraintEnd_toEndOf="@+id/til_stock_name"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toBottomOf="@id/cb_gem_value">
+                app:layout_constraintTop_toBottomOf="@id/btn_gem_value">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_pt_clip_price"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:inputType="numberDecimal"
                     android:hint="@string/enter_price"
+                    android:inputType="numberDecimal"
                     android:textAppearance="@style/TextAppearance.ShweMi.Body2" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -345,15 +346,14 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_img_1"
-                android:layout_width="0dp"
-                android:layout_height="65dp"
+                android:layout_width="220dp"
+                android:layout_height="220dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="16dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/mcv_img_2"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@+id/til_service_fee"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tv_label_image"
                 app:layout_constraintTop_toBottomOf="@+id/til_service_fee">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -386,15 +386,13 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_img_3"
                 android:layout_width="0dp"
-                android:layout_height="65dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_height="220dp"
+                android:layout_marginTop="16dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="8dp"
-                app:layout_constraintEnd_toEndOf="@+id/til_service_fee"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/mcv_img_2"
-                app:layout_constraintTop_toTopOf="@+id/mcv_img_2">
+                app:layout_constraintEnd_toEndOf="@id/mcv_img_1"
+                app:layout_constraintStart_toStartOf="@id/mcv_img_1"
+                app:layout_constraintTop_toBottomOf="@id/mcv_img_2">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -426,13 +424,13 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_img_2"
                 android:layout_width="0dp"
-                android:layout_height="65dp"
+                android:layout_height="220dp"
+                android:layout_marginTop="16dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/mcv_img_3"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/mcv_img_1"
-                app:layout_constraintTop_toTopOf="@+id/mcv_img_1">
+                app:layout_constraintEnd_toEndOf="@id/mcv_img_1"
+                app:layout_constraintStart_toStartOf="@id/mcv_img_1"
+                app:layout_constraintTop_toBottomOf="@id/mcv_img_1">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -461,31 +459,16 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:id="@+id/tv_label_image"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/image_gif"
-                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
-                app:layout_constraintEnd_toStartOf="@+id/guideline2"
-                app:layout_constraintStart_toStartOf="@+id/tv_label_service_fee"
-                app:layout_constraintTop_toTopOf="@+id/mcv_img_1" />
-
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_video"
                 android:layout_width="0dp"
-                android:layout_height="65dp"
+                android:layout_height="220dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardCornerRadius="8dp"
+                android:backgroundTint="@android:color/transparent"
                 app:cardElevation="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/mcv_img_2"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@+id/til_service_fee"
-                app:layout_constraintTop_toBottomOf="@+id/mcv_img_1">
+                app:layout_constraintEnd_toEndOf="@id/mcv_img_1"
+                app:layout_constraintStart_toStartOf="@id/mcv_img_1"
+                app:layout_constraintTop_toBottomOf="@id/mcv_gif">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -517,21 +500,20 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_gif"
                 android:layout_width="0dp"
-                android:layout_height="65dp"
-                android:layout_marginEnd="8dp"
+                android:layout_height="220dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@android:color/transparent"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="8dp"
-                app:layout_constraintEnd_toEndOf="@+id/mcv_img_2"
-                app:layout_constraintEnd_toStartOf="@+id/mcv_img_3"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/mcv_img_1"
-                app:layout_constraintStart_toStartOf="@+id/mcv_img_2"
-                app:layout_constraintTop_toTopOf="@+id/mcv_video">
+                app:layout_constraintEnd_toEndOf="@id/mcv_img_1"
+                app:layout_constraintStart_toStartOf="@id/mcv_img_1"
+                app:layout_constraintTop_toBottomOf="@id/mcv_img_3">
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <ImageView
+                    <pl.droidsonroids.gif.GifImageView
                         android:id="@+id/iv_gif"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -553,6 +535,16 @@
                         app:tint="@color/primary_color" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:id="@+id/tv_label_image"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/image_gif"
+                android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                app:layout_constraintEnd_toStartOf="@+id/guideline2"
+                app:layout_constraintStart_toStartOf="@+id/tv_label_service_fee"
+                app:layout_constraintTop_toTopOf="@+id/mcv_img_1" />
 
             <TextView
                 android:id="@+id/tv_label_video_gif"
@@ -560,7 +552,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/video"
-
                 android:textAppearance="@style/TextAppearance.ShweMi.Body2"
                 app:layout_constraintEnd_toStartOf="@+id/guideline2"
                 app:layout_constraintStart_toStartOf="@+id/tv_label_image"

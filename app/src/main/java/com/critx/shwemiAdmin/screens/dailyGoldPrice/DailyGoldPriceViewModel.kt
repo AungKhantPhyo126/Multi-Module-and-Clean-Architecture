@@ -5,12 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
+import com.critx.data.localdatabase.LocalDatabase
 import com.critx.domain.model.dailyGoldAndPrice.RebuyPriceSmallAndLargeDomain
 import com.critx.domain.useCase.auth.LogoutUseCase
-import com.critx.domain.useCase.auth.RefreshTokenUseCase
 import com.critx.domain.useCase.dailygoldprice.*
+import com.critx.shwemiAdmin.ConnectionObserver
 import com.critx.shwemiAdmin.UiEvent
-import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.uiModel.dailygoldandprice.GoldPriceUIModel
 import com.critx.shwemiAdmin.uiModel.dailygoldandprice.ProfileUIModel
 import com.critx.shwemiAdmin.uiModel.dailygoldandprice.asUiModel
@@ -28,18 +28,18 @@ class DailyGoldPriceViewModel @Inject constructor(
     private val getProfileUsecase: GetProfileUsecase,
     private val getGoldPriceUseCase: GetGoldPriceUseCase,
     private val updateGoldPriceUseCase: UpdateGoldPriceUseCase,
-    private val refreshTokenUseCase: RefreshTokenUseCase,
     private val updateRebuyPriceUseCase: UpdateRebuyPriceUseCase,
-    private val getRebuyPriceUseCase: GetRebuyPriceUseCase
+    private val getRebuyPriceUseCase: GetRebuyPriceUseCase,
+    private val connectionObserver: ConnectionObserver
 ) : ViewModel() {
     private val _logoutState = MutableStateFlow(LogoutUiState())
     val logoutState = _logoutState.asStateFlow()
 
     private val _logOutLivedata = MutableLiveData<Resource<String>>()
-    val logOutLivedata : LiveData<Resource<String>>
+    val logOutLivedata: LiveData<Resource<String>>
         get() = _logOutLivedata
 
-    fun resetLogOutLiveData(){
+    fun resetLogOutLiveData() {
         _logOutLivedata.value = null
     }
 
@@ -47,10 +47,10 @@ class DailyGoldPriceViewModel @Inject constructor(
     val profileState = _profileState.asStateFlow()
 
     private val _profileLivedata = MutableLiveData<Resource<ProfileUIModel>>()
-val profileLivedata : LiveData<Resource<ProfileUIModel>>
-    get() = _profileLivedata
-    
-    fun resetProfileLiveData(){
+    val profileLivedata: LiveData<Resource<ProfileUIModel>>
+        get() = _profileLivedata
+
+    fun resetProfileLiveData() {
         _profileLivedata.value = null
     }
 
@@ -89,12 +89,6 @@ val profileLivedata : LiveData<Resource<ProfileUIModel>>
     init {
         isloggedIn()
     }
-
-    fun isRefreshTokenExpire(): Boolean {
-        return localDatabase.isRefreshTokenExpire()
-    }
-
-
 
     fun updateRebuyPrice(
         horizontal_option_name: HashMap<String, String>,
@@ -172,6 +166,7 @@ val profileLivedata : LiveData<Resource<ProfileUIModel>>
     }
 
     fun getRebuyPrice() {
+
         viewModelScope.launch {
             getRebuyPriceUseCase(localDatabase.getToken().orEmpty()).collectLatest {
                 when (it) {
@@ -194,19 +189,19 @@ val profileLivedata : LiveData<Resource<ProfileUIModel>>
     fun logout() {
         viewModelScope.launch {
             logoutUseCase(localDatabase.getToken().orEmpty()).collectLatest { result ->
-                    when (result) {
-                        is Resource.Loading -> {
-                            _logOutLivedata.value = Resource.Loading()
-                        }
-                        is Resource.Success -> {
-                            _logOutLivedata.value = Resource.Success(result.data!!.message)
-
-                        }
-                        is Resource.Error -> {
-                            _logOutLivedata.value = Resource.Error(result.message)
-
-                        }
+                when (result) {
+                    is Resource.Loading -> {
+                        _logOutLivedata.value = Resource.Loading()
                     }
+                    is Resource.Success -> {
+                        _logOutLivedata.value = Resource.Success(result.data!!.message)
+
+                    }
+                    is Resource.Error -> {
+                        _logOutLivedata.value = Resource.Error(result.message)
+
+                    }
+                }
 
 
             }
@@ -215,13 +210,13 @@ val profileLivedata : LiveData<Resource<ProfileUIModel>>
 
     fun getProfile() {
         viewModelScope.launch {
-            getProfileUsecase(localDatabase.getToken().orEmpty()).collectLatest { result ->
+            localDatabase.getToken()
+            getProfileUsecase().collectLatest { result ->
                 when (result) {
                     is Resource.Loading -> {
                         _profileLivedata.value = Resource.Loading()
                     }
                     is Resource.Success -> {
-                        getGoldPrice()
                         _profileLivedata.value = Resource.Success(result.data!!.asUiModel())
 
                     }
@@ -233,5 +228,20 @@ val profileLivedata : LiveData<Resource<ProfileUIModel>>
                 }
             }
         }
+
+    }
+
+    init {
+        with(connectionObserver) {
+            register()
+            onConnected = {
+                getProfile()
+            }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        connectionObserver.unregister()
     }
 }

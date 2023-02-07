@@ -3,6 +3,7 @@ package com.critx.shwemiAdmin.uiModel.collectStock
 import com.critx.domain.model.collectStock.JewellerySizeDomain
 import com.critx.domain.model.orderStock.BookMarkStockInfoDomain
 import com.critx.shwemiAdmin.uiModel.orderStock.BookMarkStockUiModel
+import com.critx.shwemiAdmin.uiModel.orderStock.SizeInfoUiModel
 
 data class JewellerySizeUIModel(
     val id:String,
@@ -17,10 +18,10 @@ fun JewellerySizeDomain.asUiModel():JewellerySizeUIModel{
     )
 }
 
-fun JewellerySizeUIModel.asBookMarkOrder(): BookMarkStockInfoDomain {
-    return BookMarkStockInfoDomain(
+fun JewellerySizeUIModel.asSizeInfo(): SizeInfoUiModel {
+    return SizeInfoUiModel(
         id = id,
         size = quantity,
-        stock =""
+        stock ="0"
     )
 }

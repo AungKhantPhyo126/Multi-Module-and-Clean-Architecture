@@ -3,7 +3,6 @@ package com.critx.shwemiAdmin.screens.setupStock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.critx.shwemiAdmin.localDatabase.LocalDatabase
 import com.critx.shwemiAdmin.uiModel.orderStock.BookMarkStockUiModel
 import com.critx.shwemiAdmin.uiModel.setupStock.ChooseGroupUIModel
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryCategoryUiModel
@@ -22,8 +21,6 @@ class SharedViewModel : ViewModel() {
 
 //    var sampleTakeScreenUIState: String? = null
 
-    var selectedGoldBoxId =  MutableLiveData<String>()
-    var selectedGoldSmith = MutableLiveData<String>()
 //    var orderItem = MutableLiveData<String>()
 //    var orderQty = MutableLiveData<String>()
 //    var weightK = MutableLiveData<String>()

@@ -31,6 +31,9 @@ class AssignGsFragment :Fragment(){
     private val viewModel by viewModels<AssignGsViewModel>()
     private lateinit var loadingDialog: AlertDialog
     private val args by navArgs<AssignGsFragmentArgs>()
+    private var selectedJewelleryType = ""
+    private var currentStep=1
+
     private fun toolbarsetup(){
 
         val toolbarCenterImage: ImageView = activity!!.findViewById<View>(R.id.center_image) as ImageView
@@ -65,6 +68,7 @@ class AssignGsFragment :Fragment(){
                 is Resource.Success->{
                     loadingDialog.dismiss()
                     binding.chipGpJewelleryItem.removeAllViews()
+                    binding.btnBack.isEnabled=false
                     for (item in it.data!!) {
                         val chip = requireContext().createChip(item.name)
                         chip.id = item.id.toInt()
@@ -104,6 +108,7 @@ class AssignGsFragment :Fragment(){
                 is Resource.Success->{
                     loadingDialog.dismiss()
                     binding.chipGpJewelleryItem.removeAllViews()
+                    binding.btnBack.isEnabled=true
                     for (item in it.data!!) {
                         val chip = requireContext().createChip(item.name)
                         chip.id = item.id.toInt()
@@ -123,19 +128,19 @@ class AssignGsFragment :Fragment(){
             if (it.isNullOrEmpty() && viewModel.selectedJewelleryType.value!!.isNotEmpty()){
 
             }else{
-                binding.btnAssignGs.text = "Assign GoldSmith"
-                binding.viewSecondLine.setBackgroundColor(requireContext().getColor(R.color.primary_color))
-                binding.tvLabelThird.background =requireContext().getDrawable(R.drawable.circle_bg_text)
+                currentStep = 3
+                setLastStepState()
             }
         }
 
         viewModel.selectedJewelleryType.observe(viewLifecycleOwner){
             if (it.isNullOrEmpty()){
-                binding.tvLabelSecond.background = requireContext().getDrawable(R.drawable.circle_bg_grey)
+                setStepOneState()
             }else{
-                binding.btnAssignGs.text = "Step 2"
+                currentStep = 2
+                setStepTwoState()
+                selectedJewelleryType = it
                 viewModel.getRepairJobs(it)
-                binding.tvLabelSecond.background =requireContext().getDrawable(R.drawable.circle_bg_text)
             }
         }
 
@@ -165,6 +170,46 @@ class AssignGsFragment :Fragment(){
                 viewModel.assignGoldSmith(goldSmith,itemType, repairJob, weight, quantity)
             }
         }
+        binding.btnBack.setOnClickListener {
+            when(currentStep){
+                1->{
 
+                }
+                2->{
+                    setStepOneState()
+                    currentStep=1
+                    viewModel.getJewelleryType()
+                }
+                3->{
+                    setStepTwoState()
+                    currentStep=2
+                    viewModel.getRepairJobs(selectedJewelleryType)
+                }
+            }
+        }
+
+    }
+    fun setStepOneState(){
+        binding.btnAssignGs.text = "Step 1"
+        binding.btnBack.isEnabled = false
+        binding.tvLabelSecond.background = requireContext().getDrawable(R.drawable.circle_bg_grey)
+
+    }
+    fun setStepTwoState(){
+        binding.btnAssignGs.text = "Step 2"
+        binding.btnBack.isEnabled = true
+        binding.tvLabelSecond.background =requireContext().getDrawable(R.drawable.circle_bg_text)
+        binding.tvLabelThird.background =requireContext().getDrawable(R.drawable.circle_bg_grey)
+        binding.viewSecondLine.setBackgroundColor(requireContext().getColor(R.color.edit_text_color))
+        binding.chipScrollView.isVisible = true
+        binding.assignView.isVisible = false
+    }
+    fun setLastStepState(){
+        binding.btnAssignGs.text = "Assign GoldSmith"
+        binding.btnBack.isEnabled = true
+        binding.viewSecondLine.setBackgroundColor(requireContext().getColor(R.color.primary_color))
+        binding.tvLabelThird.background =requireContext().getDrawable(R.drawable.circle_bg_text)
+        binding.chipScrollView.isVisible = false
+        binding.assignView.isVisible = true
     }
 }

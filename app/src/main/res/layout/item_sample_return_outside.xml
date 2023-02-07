@@ -23,22 +23,34 @@
             android:layout_marginStart="16dp"
             tools:text="@string/item_name_dummy"
             android:textAppearance="@style/TextAppearance.ShweMi.Body2"
-            app:layout_constraintEnd_toStartOf="@+id/iv_sample"
+            app:layout_constraintEnd_toStartOf="@+id/frame_sample"
             app:layout_constraintStart_toEndOf="@+id/checkBox"
             app:layout_constraintTop_toTopOf="@+id/checkBox" />
-
-        <ImageView
-            android:id="@+id/iv_sample"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+        <FrameLayout
+            android:id="@+id/frame_sample"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/dummy_chip_image" />
+            app:layout_constraintTop_toTopOf="parent">
+            <ImageView
+                android:id="@+id/iv_sample"
+               android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/dummy_chip_image" />
+            <ImageView
+                android:id="@+id/iv_eye"
+                android:layout_margin="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/eye" />
+
+        </FrameLayout>
+
 
         <TextView
             android:id="@+id/tv_label_weight"
@@ -57,7 +69,7 @@
             android:layout_marginTop="8dp"
             tools:text="5gm"
             android:textAppearance="@style/TextAppearance.ShweMi.Body2"
-            app:layout_constraintEnd_toStartOf="@+id/iv_sample"
+            app:layout_constraintEnd_toStartOf="@+id/frame_sample"
             app:layout_constraintStart_toEndOf="@+id/tv_label_weight"
             app:layout_constraintTop_toBottomOf="@+id/tv_label_stock_name" />
 
@@ -65,9 +77,9 @@
             android:id="@+id/checkBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/primary_color"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:buttonTint="@color/primary_color"
+            app:layout_constraintBottom_toBottomOf="@+id/frame_sample"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

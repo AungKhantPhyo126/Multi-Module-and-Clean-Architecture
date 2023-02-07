@@ -50,8 +50,8 @@ interface CollectStockService {
     suspend fun multipleStockUpdate(
         @Header("Authorization") token: String,
         @Part ("_method") method:RequestBody,
-        @Part("wastage_kyat") avgWastageKyat: RequestBody?,
-        @Part("wastage_pae") avgWastagePae: RequestBody?,
+//        @Part("wastage_kyat") avgWastageKyat: RequestBody?,
+//        @Part("wastage_pae") avgWastagePae: RequestBody?,
         @Part("wastage_ywae") avgWastagYwae: RequestBody?,
         @Part("goldsmith_id") goldSmithId: RequestBody?,
         @Part("bonus") bonus: RequestBody?,

@@ -160,9 +160,10 @@ class ChooseGroupFragment : Fragment() {
                         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<ChooseGroupUIModel>(
                             CREATEED_GROUP_ID
                         )
-                            ?.observe(viewLifecycleOwner) {
-
-                                viewModel.selectImage(it.id)
+                            ?.observe(viewLifecycleOwner) {selectFromCreate->
+                                if (it.data!!.filterNotNull().find { it.id == selectFromCreate.id } != null){
+                                    viewModel.selectImage(selectFromCreate.id)
+                                }
 
                             }
                     }

@@ -10,8 +10,6 @@ class CollectBatchUseCase @Inject constructor(
     operator fun invoke(
         token: String,
         method: RequestBody,
-        kyat: RequestBody?,
-        pae: RequestBody?,
         ywae: RequestBody?,
         goldSmithId: RequestBody?,
         bonus: RequestBody?,
@@ -21,8 +19,6 @@ class CollectBatchUseCase @Inject constructor(
         collectStockRepository.collectBatch(
             token,
             method,
-            kyat,
-            pae,
             ywae,
             goldSmithId,
             bonus,

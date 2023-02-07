@@ -129,7 +129,7 @@ class InventoryFragment : Fragment() {
 
         /**sampleReturn**/
         binding.layoutBtnReturnSample.btnSampleReturn.setOnClickListener {
-            viewModel.returnSample(sampleReturnRecyclerAdapter.currentList.map { it.sampleId!! })
+            viewModel.returnSample(sampleReturnRecyclerAdapter.currentList.map { it.id!! })
         }
         viewModel.returnSampleLiveData.observe(viewLifecycleOwner) {
             when (it) {

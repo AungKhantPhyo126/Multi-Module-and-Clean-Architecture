@@ -6,11 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.critx.commonkotlin.util.Resource
+import com.critx.data.localdatabase.LocalDatabase
 import com.critx.domain.model.orderStock.BookMarkStockDomain
 import com.critx.domain.useCase.SetUpStock.GetJewelleryTypeUseCase
 import com.critx.domain.useCase.orderStock.GetBookMarksUseCase
-import com.critx.shwemiAdmin.localDatabase.LocalDatabase
+import com.critx.domain.useCase.orderStock.GetGsNewItemsUseCase
 import com.critx.shwemiAdmin.pagingDataSource.pagingRepo.GetBookMarkPagingDataSource
+import com.critx.shwemiAdmin.pagingDataSource.pagingRepo.GetGsNewItemsPagingDataSource
 import com.critx.shwemiAdmin.uiModel.orderStock.BookMarkStockUiModel
 import com.critx.shwemiAdmin.uiModel.setupStock.JewelleryTypeUiModel
 import com.critx.shwemiAdmin.uiModel.setupStock.asUiModel
@@ -23,6 +25,7 @@ import javax.inject.Inject
 class OrderStockViewModel @Inject constructor(
     private val localDatabase: LocalDatabase,
     private val getBookMarksUseCase: GetBookMarksUseCase,
+    private val getGsNewItemsUseCase: GetGsNewItemsUseCase,
     private val getJewelleryTypeUseCase: GetJewelleryTypeUseCase
 ):ViewModel() {
     private var _jewelleryTypeLiveData= MutableLiveData<Resource<List<JewelleryTypeUiModel>>>()
@@ -44,6 +47,23 @@ class OrderStockViewModel @Inject constructor(
                     localDatabase.getToken().orEmpty(),
                     jewelleryType,
                     isItemFromGs
+                )
+            }
+        ).liveData
+    }
+
+    fun getGsNewItems(jewelleryType:String): LiveData<PagingData<BookMarkStockUiModel>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 10,
+                enablePlaceholders = false,
+            ),
+            initialKey = 1,
+            pagingSourceFactory = {
+                GetGsNewItemsPagingDataSource(
+                    getGsNewItemsUseCase,
+                    localDatabase.getToken().orEmpty(),
+                    jewelleryType
                 )
             }
         ).liveData
