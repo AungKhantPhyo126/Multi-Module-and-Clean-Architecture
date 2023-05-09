@@ -5,10 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.critx.domain.model.DiscountVoucherScanDomain
 import com.critx.shwemiAdmin.databinding.ItemDiscountBinding
 import com.critx.shwemiAdmin.uiModel.collectStock.CollectStockBatchUIModel
 
-class DiscountRecyclerAdapter(private val onclick:()->Unit) : ListAdapter<CollectStockBatchUIModel, DiscountViewHolder>(
+class DiscountRecyclerAdapter(private val onclick:()->Unit) : ListAdapter<DiscountVoucherScanDomain, DiscountViewHolder>(
     DiscountDiffUtil
 )  {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiscountViewHolder {
@@ -27,17 +28,17 @@ class DiscountRecyclerAdapter(private val onclick:()->Unit) : ListAdapter<Collec
 
 class DiscountViewHolder(private val binding: ItemDiscountBinding,
                           private val onclick: () -> Unit): RecyclerView.ViewHolder(binding.root){
-    fun bind(data: CollectStockBatchUIModel){
-        binding.tvInvoiceCodeNumber.text = data.productCode
+    fun bind(data: DiscountVoucherScanDomain){
+        binding.tvInvoiceCodeNumber.text = data.code
     }
 }
 
-object DiscountDiffUtil : DiffUtil.ItemCallback<CollectStockBatchUIModel>() {
-    override fun areItemsTheSame(oldItem: CollectStockBatchUIModel, newItem: CollectStockBatchUIModel): Boolean {
-        return oldItem.productId == newItem.productId
+object DiscountDiffUtil : DiffUtil.ItemCallback<DiscountVoucherScanDomain>() {
+    override fun areItemsTheSame(oldItem: DiscountVoucherScanDomain, newItem: DiscountVoucherScanDomain): Boolean {
+        return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: CollectStockBatchUIModel, newItem: CollectStockBatchUIModel): Boolean {
+    override fun areContentsTheSame(oldItem: DiscountVoucherScanDomain, newItem: DiscountVoucherScanDomain): Boolean {
         return oldItem == newItem
     }
 

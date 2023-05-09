@@ -14,6 +14,7 @@ import com.critx.data.datasource.orderStock.OrderStockDataSource
 import com.critx.data.datasource.repairStock.RepairStockDataSource
 import com.critx.data.datasource.setupstock.SetupStockNetWorkDatasource
 import com.critx.data.datasource.transferCheckUp.TransferCheckUpNetWorkDataSource
+import com.critx.data.datasource.voucher.ConfirmVoucherDataSource
 import com.critx.data.localdatabase.LocalDatabase
 import com.critx.data.network.api.*
 import com.critx.data.network.datasource.*
@@ -243,6 +244,17 @@ class NetworkModule {
     @Singleton
     fun provideConfirmVoucherService(retrofit: Retrofit) = retrofit.create<ConfirmVoucherService>()
 
+    @Provides
+    @Singleton
+    fun provideConfirmVoucherDataSource(confirmVoucherService: ConfirmVoucherService): ConfirmVoucherDataSource {
+        return ConfirmVoucherDataSourceImpl(confirmVoucherService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideConfirmVoucherRepository(confirmVoucherDataSource: ConfirmVoucherDataSource): ConfirmVoucherRepository {
+        return ConfirmVoucherRepoImpl(confirmVoucherDataSource)
+    }
     @Provides
     @Singleton
     fun provideOkHttpClient(

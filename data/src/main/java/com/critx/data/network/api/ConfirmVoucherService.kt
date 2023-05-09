@@ -1,5 +1,8 @@
 package com.critx.data.network.api
 
+import com.critx.data.network.dto.DiscountVoucherScanResponse
+import com.critx.data.network.dto.ScanVoucherToConfirmResponse
+import com.critx.data.network.dto.SimpleResponse
 import com.critx.data.network.dto.flashSales.UserPointsResponse
 import retrofit2.Response
 import retrofit2.http.GET
@@ -25,5 +28,17 @@ interface ConfirmVoucherService {
     suspend fun confirmVoucher(
         @Header("Authorization") token: String,
         @Path("voucherCode") voucherCode: String,
-    ): Response<String>
+    ): Response<SimpleResponse>
+
+    @GET("api/vouchers/{voucherCode}/view")
+    suspend fun scanVoucherToConfirm(
+        @Header("Authorization") token: String,
+        @Path("voucherCode") voucherCode: String,
+    ): Response<ScanVoucherToConfirmResponse>
+
+    @GET("api/vouchers/{voucherCode}/scan")
+    suspend fun scanDiscountVoucher(
+        @Header("Authorization") token: String,
+        @Path("voucherCode") voucherCode: String,
+    ): Response<DiscountVoucherScanResponse>
 }
