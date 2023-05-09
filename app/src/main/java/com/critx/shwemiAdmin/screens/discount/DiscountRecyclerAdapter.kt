@@ -6,11 +6,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.critx.shwemiAdmin.databinding.ItemDiscountBinding
-import com.critx.shwemiAdmin.screens.flashsale.NewSampleDiffUtil
 import com.critx.shwemiAdmin.uiModel.collectStock.CollectStockBatchUIModel
 
 class DiscountRecyclerAdapter(private val onclick:()->Unit) : ListAdapter<CollectStockBatchUIModel, DiscountViewHolder>(
-    NewSampleDiffUtil
+    DiscountDiffUtil
 )  {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiscountViewHolder {
         return DiscountViewHolder(
@@ -33,7 +32,7 @@ class DiscountViewHolder(private val binding: ItemDiscountBinding,
     }
 }
 
-object NewSampleDiffUtil : DiffUtil.ItemCallback<CollectStockBatchUIModel>() {
+object DiscountDiffUtil : DiffUtil.ItemCallback<CollectStockBatchUIModel>() {
     override fun areItemsTheSame(oldItem: CollectStockBatchUIModel, newItem: CollectStockBatchUIModel): Boolean {
         return oldItem.productId == newItem.productId
     }

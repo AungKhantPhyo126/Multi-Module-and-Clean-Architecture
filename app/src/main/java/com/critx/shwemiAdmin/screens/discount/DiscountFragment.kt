@@ -43,6 +43,7 @@ class DiscountFragment :Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
+        binding.layoutBtnGroup.tilTitle.isVisible = false
         val adapter = DiscountRecyclerAdapter{
 
         }

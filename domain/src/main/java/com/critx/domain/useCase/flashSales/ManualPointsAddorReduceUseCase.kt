@@ -10,15 +10,12 @@ class ManualPointsAddorReduceUseCase @Inject constructor(
 ) {
     operator fun invoke(
         token: String,
-        title: RequestBody,
-        discount_amount: RequestBody,
-        time_from: RequestBody,
-        time_to: RequestBody,
+        user_id:RequestBody,
+        point:RequestBody,
+        reason:RequestBody,
+        action:RequestBody,
     ) = flashSaleRepository.manualPointsAddOrReduce(
         token,
-        title,
-        discount_amount,
-        time_from,
-        time_to
+  user_id, point, reason, action
     )
 }

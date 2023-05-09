@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.ItemUnconfirmedVoucherBinding
-import com.critx.shwemiAdmin.databinding.ItemVoucherBinding
 import com.critx.shwemiAdmin.uiModel.UnConfirmVoucherUIModel
 import com.critx.shwemiAdmin.uiModel.sampleTakeAndReturn.VoucherUIModel
 

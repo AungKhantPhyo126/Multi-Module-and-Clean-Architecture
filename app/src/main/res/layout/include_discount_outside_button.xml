@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_enter_specification"
+        android:id="@+id/til_title"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -21,6 +21,7 @@
         app:boxStrokeWidth="1dp"
         app:errorEnabled="false"
         app:hintEnabled="false"
+
         app:layout_constraintEnd_toStartOf="@id/btn_approve"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -30,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="top"
-            android:hint="Enter Discount Amount"
+            android:hint="@string/enter_flash_sale_title"
             android:maxLines="1"
             android:minLines="1"
             android:textAppearance="@style/TextAppearance.ShweMi.Caption" />
@@ -38,7 +39,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_enter_title"
+        android:id="@+id/til_discount_amount"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -57,14 +58,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btn_approve"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/til_enter_specification">
+        app:layout_constraintTop_toBottomOf="@id/til_title">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/tie_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="top"
-            android:hint="@string/enter_flash_sale_title"
+            android:hint="Enter Discount Amount"
             android:maxLines="1"
             android:minLines="1"
             android:textAppearance="@style/TextAppearance.ShweMi.Caption" />
@@ -84,9 +85,9 @@
         app:cornerRadius="8dp"
         app:icon="@drawable/ic_approve"
         app:iconGravity="textStart"
-        app:layout_constraintBottom_toBottomOf="@+id/til_enter_title"
+        app:layout_constraintBottom_toBottomOf="@+id/til_discount_amount"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/til_enter_title" />
+        app:layout_constraintTop_toTopOf="@+id/til_discount_amount" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

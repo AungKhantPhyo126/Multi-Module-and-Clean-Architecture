@@ -3,6 +3,7 @@ package com.critx.data.network.api
 import com.critx.data.network.dto.SimpleResponse
 import com.critx.data.network.dto.SimpleResponseDto
 import com.critx.data.network.dto.box.BoxScanResponse
+import com.critx.data.network.dto.flashSales.CustomerIdResponse
 import com.critx.data.network.dto.flashSales.UserPointsResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -34,15 +35,21 @@ interface FlashSaleService {
     @GET("api/users/{userId}/points")
     suspend fun getUserPoint(
         @Header("Authorization") token: String,
+        @Path("userId")userId:String,
         ):Response<UserPointsResponse>
+    @GET("api/users/{userCode}/scan")
+    suspend fun userScan(
+        @Header("Authorization") token: String,
+        @Path("userCode") userCode:String
+        ):Response<CustomerIdResponse>
 
     @POST("api/points/manual-process")
     @Multipart
     suspend fun manualPointsAddOrReduce(
         @Header("Authorization") token: String,
-        @Part("user_id") title:RequestBody,
-        @Part("point") discount_amount:RequestBody,
-        @Part("reason") time_from:RequestBody,
-        @Part("action") time_to:RequestBody,
+        @Part("user_id") user_id:RequestBody,
+        @Part("point") point:RequestBody,
+        @Part("reason") reason:RequestBody,
+        @Part("action") action:RequestBody,
     ): Response<SimpleResponse>
 }

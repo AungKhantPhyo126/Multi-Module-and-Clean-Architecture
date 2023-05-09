@@ -1,6 +1,7 @@
 package com.critx.domain.repository
 
 import com.critx.commonkotlin.util.Resource
+import com.critx.domain.model.CustomerIdDomain
 import com.critx.domain.model.SimpleData
 import com.critx.domain.model.flashSales.UserPointsDomain
 import kotlinx.coroutines.flow.Flow
@@ -28,14 +29,20 @@ interface FlashSaleRepository {
 
     fun getUserPoint(
          token: String,
-    ): Flow<Resource<UserPointsDomain>>
+         userCode: String,
+         ): Flow<Resource<UserPointsDomain>>
 
 
     fun manualPointsAddOrReduce(
          token: String,
-         title: RequestBody,
-         discount_amount: RequestBody,
-         time_from: RequestBody,
-         time_to: RequestBody,
+         user_id:RequestBody,
+         point:RequestBody,
+         reason:RequestBody,
+         action:RequestBody,
     ): Flow<Resource<SimpleData>>
+
+    fun userScan(
+        token: String,
+        userCode:String
+    ):Flow<Resource<CustomerIdDomain>>
 }
