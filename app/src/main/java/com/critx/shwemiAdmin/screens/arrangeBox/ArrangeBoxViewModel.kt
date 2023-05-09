@@ -6,7 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
 import com.critx.data.localdatabase.LocalDatabase
+import com.critx.domain.model.voucher.ScanVoucherToConfirmDomain
+import com.critx.domain.useCase.box.ArrangeBoxesUseCase
 import com.critx.domain.useCase.box.GetBoxDataUseCase
+import com.critx.shwemiAdmin.SingleLiveEvent
 import com.critx.shwemiAdmin.uiModel.checkUpTransfer.BoxScanUIModel
 import com.critx.shwemiAdmin.uiModel.checkUpTransfer.asUiModel
 import com.critx.shwemiAdmin.uiModel.checkupBoxWeight.BoxWeightUiModel
@@ -18,8 +21,12 @@ import javax.inject.Inject
 @HiltViewModel
 class ArrangeBoxViewModel @Inject constructor(
     private val localDatabase: LocalDatabase,
-    private val getBoxDataUseCase: GetBoxDataUseCase
+    private val getBoxDataUseCase: GetBoxDataUseCase,
+    private val arrangeBoxesUseCase: ArrangeBoxesUseCase
 ):ViewModel(){
+    private var _arrangeBoxesLiveData = SingleLiveEvent<Resource<String>>()
+    val arrangeBoxesLiveData: SingleLiveEvent<Resource<String>>
+        get() = _arrangeBoxesLiveData
     private var _getBoxDataLive = MutableLiveData<Resource<BoxScanUIModel>>()
     val getBoxDataLive: LiveData<Resource<BoxScanUIModel>>
         get() = _getBoxDataLive
@@ -57,6 +64,27 @@ class ArrangeBoxViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         _getBoxDataLive.value = Resource.Error(it.message)
+
+                    }
+                }
+            }
+        }
+    }
+
+    fun arrangeBoxes(){
+        viewModelScope.launch {
+            arrangeBoxesUseCase(localDatabase.getToken().orEmpty(),
+            boxList.map { it.id }).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _arrangeBoxesLiveData.value = Resource.Loading()
+                    }
+                    is Resource.Success -> {
+                        _arrangeBoxesLiveData.value = Resource.Success(it.data?.message.orEmpty())
+
+                    }
+                    is Resource.Error -> {
+                        _arrangeBoxesLiveData.value = Resource.Error(it.message)
 
                     }
                 }

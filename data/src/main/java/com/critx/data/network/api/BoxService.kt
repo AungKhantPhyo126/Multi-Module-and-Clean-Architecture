@@ -1,5 +1,6 @@
 package com.critx.data.network.api
 
+import com.critx.data.network.dto.SimpleResponse
 import com.critx.data.network.dto.box.BoxScanResponse
 import com.critx.data.network.dto.box.BoxWeightResponse
 import com.critx.data.network.dto.dailygoldAndPrice.GoldPriceResponse
@@ -26,6 +27,14 @@ interface BoxService {
         @Header("Authorization") token: String,
         @Field("box_id[]") boxIdList:List<String>
     ):Response<BoxWeightResponse>
+
+    @FormUrlEncoded
+    @JvmSuppressWildcards
+    @POST("api/boxes/arrange")
+    suspend fun arrangeBox(
+        @Header("Authorization") token: String,
+        @Field("boxes[]") boxIdList:List<String>
+    ):Response<SimpleResponse>
 
 
 }
