@@ -23,14 +23,14 @@ class CollectStockDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
+                        val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
-                            response.errorBody()?.parseErrorWithDataClass<SimpleError>()
+                            response.errorBody()?.parseErrorWithDataClass<SimpleError>(errorJsonString)
                         if (singleError != null) {
                             singleError.response.message
                         } else {
                             val errorMessage =
-                                response.errorBody()?.parseError()
-
+                               response.errorBody()?.parseError(errorJsonString)
                             val list: List<Map.Entry<String, Any>> =
                                 ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
                             val (key, value) = list[0]
@@ -60,14 +60,14 @@ class CollectStockDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
+                        val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
-                            response.errorBody()?.parseErrorWithDataClass<SimpleError>()
+                            response.errorBody()?.parseErrorWithDataClass<SimpleError>(errorJsonString)
                         if (singleError != null) {
                             singleError.response.message
                         } else {
                             val errorMessage =
-                                response.errorBody()?.parseError()
-
+                               response.errorBody()?.parseError(errorJsonString)
                             val list: List<Map.Entry<String, Any>> =
                                 ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
                             val (key, value) = list[0]
@@ -120,14 +120,14 @@ class CollectStockDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
+                        val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
-                            response.errorBody()?.parseErrorWithDataClass<SimpleError>()
+                            response.errorBody()?.parseErrorWithDataClass<SimpleError>(errorJsonString)
                         if (singleError != null) {
                             singleError.response.message
                         } else {
                             val errorMessage =
-                                response.errorBody()?.parseError()
-
+                               response.errorBody()?.parseError(errorJsonString)
                             val list: List<Map.Entry<String, Any>> =
                                 ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
                             val (key, value) = list[0]
@@ -153,14 +153,14 @@ class CollectStockDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
+                        val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
-                            response.errorBody()?.parseErrorWithDataClass<SimpleError>()
+                            response.errorBody()?.parseErrorWithDataClass<SimpleError>(errorJsonString)
                         if (singleError != null) {
                             singleError.response.message
                         } else {
                             val errorMessage =
-                                response.errorBody()?.parseError()
-
+                               response.errorBody()?.parseError(errorJsonString)
                             val list: List<Map.Entry<String, Any>> =
                                 ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
                             val (key, value) = list[0]
@@ -186,14 +186,14 @@ class CollectStockDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
+                        val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
-                            response.errorBody()?.parseErrorWithDataClass<SimpleError>()
+                            response.errorBody()?.parseErrorWithDataClass<SimpleError>(errorJsonString)
                         if (singleError != null) {
                             singleError.response.message
                         } else {
                             val errorMessage =
-                                response.errorBody()?.parseError()
-
+                               response.errorBody()?.parseError(errorJsonString)
                             val list: List<Map.Entry<String, Any>> =
                                 ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
                             val (key, value) = list[0]
@@ -235,14 +235,14 @@ class CollectStockDataSourceImpl @Inject constructor(
             throw  Exception(
                 when (response.code()) {
                     400 -> {
+                        val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
-                            response.errorBody()?.parseErrorWithDataClass<SimpleError>()
+                            response.errorBody()?.parseErrorWithDataClass<SimpleError>(errorJsonString)
                         if (singleError != null) {
                             singleError.response.message
                         } else {
                             val errorMessage =
-                                response.errorBody()?.parseError()
-
+                               response.errorBody()?.parseError(errorJsonString)
                             val list: List<Map.Entry<String, Any>> =
                                 ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
                             val (key, value) = list[0]

@@ -67,13 +67,17 @@ class OrderStockFragment:Fragment() {
         loadingDialog = requireContext().getAlertDialog()
         viewModel.getJewelleryType()
         binding.tvEmptyList.isVisible = true
-        adapter = StockToOrderRecyclerAdapter {
+        adapter = StockToOrderRecyclerAdapter( {
             findNavController().navigate(
                 OrderStockFragmentDirections.actionOrderStockFragmentToFillOrderInfoFragment(
                     it
                 )
             )
-        }
+        },{
+            findNavController().navigate(
+                OrderStockFragmentDirections.actionGlobalPhotoViewFragment(it)
+            )
+        })
         val toolbarEndIcon: ImageView = activity!!.findViewById<View>(R.id.iv_end_icon) as ImageView
 
         toolbarEndIcon.setOnClickListener {

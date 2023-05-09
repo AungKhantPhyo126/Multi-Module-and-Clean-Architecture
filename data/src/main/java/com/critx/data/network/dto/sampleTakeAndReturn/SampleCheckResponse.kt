@@ -7,15 +7,16 @@ data class SampleCheckResponse(
 )
 data class SampleCheckDto(
     val id:String?,
-    val productCode:String? = null,
+    val product_code:String? = null,
     val thumbnail:String?,
     val specification:String?,
+    val name:String?,
     val weight_gm:String?,
     val box_code:String?
 )
 
 fun SampleCheckDto.asDomain():SampleCheckDomain{
     return SampleCheckDomain(
-       id, productCode, thumbnail, specification, weight_gm, box_code
+       id,product_code,thumbnail,specification,name, weight_gm.orEmpty(), box_code = box_code.orEmpty()
     )
 }

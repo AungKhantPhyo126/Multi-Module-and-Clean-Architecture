@@ -34,7 +34,8 @@ fun GsNewItemsDto.asDomain(): BookMarkStockDomain{
         sizes = sizes,
         is_orderable = is_orderable,
         goldSmith = goldsmith.asDomain(),
-        gold_quality
+        gold_quality,
+        false
     )
 }
 

@@ -30,6 +30,8 @@ class InventoryViewModel @Inject constructor(
     private val returnSampleUseCase: ReturnSampleUseCase
 ) : ViewModel() {
 
+    var scannedProductCode = ""
+
     private val _getInventorySampleLiveData = MutableLiveData<Resource<List<OutsideSampleDomain>>>()
     val getInventorySampleLiveData: LiveData<Resource<List<OutsideSampleDomain>>>
         get() = _getInventorySampleLiveData
@@ -178,7 +180,7 @@ class InventoryViewModel @Inject constructor(
             }
             else{
                 repeat(scannedSamples.filter { it.specification.isNullOrEmpty() }.map { it.id }.size) {
-                    sampleIdHashMap["sample[${scannedSamples.map { it.id }[it]}]"] =
+                    sampleIdHashMap["sample[$scannedProductCode]"] =
                         specificationList.filter { it.isNotEmpty() }[it]
                 }
 

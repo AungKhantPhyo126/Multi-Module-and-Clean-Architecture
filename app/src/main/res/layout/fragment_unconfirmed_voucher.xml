@@ -47,50 +47,80 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.appcompat.widget.Toolbar>
+
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:weightSum="3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/materialToolbar"
-        android:weightSum="3">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radio_gp_voucher">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
-            android:textAppearance="@style/TextAppearance.ShweMi.Caption"
-            android:textColor="@color/edit_text_color"
             android:text="@string/invoice_code"
-            android:layout_weight="1"/>
+            android:textAppearance="@style/TextAppearance.ShweMi.Caption"
+            android:textColor="@color/edit_text_color" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
-            android:textAppearance="@style/TextAppearance.ShweMi.Caption"
-            android:textColor="@color/edit_text_color"
             android:text="@string/deposit"
-            android:layout_weight="1"/>
+            android:textAppearance="@style/TextAppearance.ShweMi.Caption"
+            android:textColor="@color/edit_text_color" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
-            android:textAppearance="@style/TextAppearance.ShweMi.Caption"
-            android:textColor="@color/edit_text_color"
             android:text="@string/balance"
-            android:layout_weight="1"/>
+            android:textAppearance="@style/TextAppearance.ShweMi.Caption"
+            android:textColor="@color/edit_text_color" />
     </LinearLayout>
-<androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/rv_unconfirm_voucher"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    app:layout_constraintTop_toBottomOf="@id/header"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-    tools:listitem="@layout/item_unconfirmed_voucher"
-    android:layout_marginTop="8dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_unconfirm_voucher"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header"
+        tools:listitem="@layout/item_unconfirmed_voucher" />
+
+    <RadioGroup
+        android:id="@+id/radio_gp_voucher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialToolbar">
+
+        <RadioButton
+            android:id="@+id/radio_btn_sale_voucher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/primary_color"
+            android:text="Sale Voucher" />
+
+        <RadioButton
+            android:id="@+id/radio_btn_pawn_voucher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/primary_color"
+            android:text="Pawn Voucher" />
+    </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

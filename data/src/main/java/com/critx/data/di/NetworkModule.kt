@@ -8,6 +8,7 @@ import com.critx.data.datasource.auth.AuthNetWorkDataSource
 import com.critx.data.datasource.box.BoxNetWorkDataSource
 import com.critx.data.datasource.collectStock.CollectStockDataSource
 import com.critx.data.datasource.dailyGoldAndPrice.DailyGoldAndPriceNetWorkDataSource
+import com.critx.data.datasource.flashSale.FlashDataSource
 import com.critx.data.datasource.giveGold.GiveGoldDataSource
 import com.critx.data.datasource.orderStock.OrderStockDataSource
 import com.critx.data.datasource.repairStock.RepairStockDataSource
@@ -87,6 +88,19 @@ class NetworkModule {
     fun provideDailyGoldPriceDataSource(dailyGoldPriceService: DailyGoldPriceService): DailyGoldAndPriceNetWorkDataSource {
         return DailyGoldAndPriceDataSourceImpl(dailyGoldPriceService)
     }
+
+    @Provides
+    @Singleton
+    fun provideFlashDataSource(flashSaleService: FlashSaleService): FlashDataSource {
+        return FlashDataSourceImpl(flashSaleService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFlashSaleRepository(flashDataSource: FlashDataSource): FlashSaleRepository {
+        return FlashRepositoryImpl(flashDataSource)
+    }
+
 
     @Provides
     @Singleton
@@ -220,6 +234,14 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideSetUpStockService(retrofit: Retrofit) = retrofit.create<SetUpStockService>()
+
+    @Provides
+    @Singleton
+    fun provideFlashSaleService(retrofit: Retrofit) = retrofit.create<FlashSaleService>()
+
+    @Provides
+    @Singleton
+    fun provideConfirmVoucherService(retrofit: Retrofit) = retrofit.create<ConfirmVoucherService>()
 
     @Provides
     @Singleton

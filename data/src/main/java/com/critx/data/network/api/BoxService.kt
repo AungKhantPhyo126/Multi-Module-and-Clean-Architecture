@@ -26,4 +26,6 @@ interface BoxService {
         @Header("Authorization") token: String,
         @Field("box_id[]") boxIdList:List<String>
     ):Response<BoxWeightResponse>
+
+
 }

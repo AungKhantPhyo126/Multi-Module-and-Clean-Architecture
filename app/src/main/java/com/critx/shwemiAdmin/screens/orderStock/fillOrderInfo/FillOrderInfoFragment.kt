@@ -707,7 +707,7 @@ class FillOrderInfoFragment : Fragment() {
 
 fun getHunderdPercentWt(totalOrderQty: Int, avgKyat: Double, gq: Double): Double {
     val result = totalOrderQty * (avgKyat) * 16 / gq
-    return String.format("%.3f", result).toDouble()
+    return String.format("%.2f", result).toDouble()
 }
 
 

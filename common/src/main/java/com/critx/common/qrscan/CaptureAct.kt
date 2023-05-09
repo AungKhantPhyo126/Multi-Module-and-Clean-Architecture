@@ -27,7 +27,7 @@ class CaptureAct:Activity() {
         binding = DataBindingUtil.setContentView(this,R.layout.activity_qr_scan)
         val barcodeScannerView = binding.zxingBarcodeScanner
 
-        val browse = binding.btnBrowseFromGallery
+//        val browse = bindingding.btnBrowseFromGallery
 
         // if the device does not have flashlight in its camera,
         // then remove the switch flashlight button...

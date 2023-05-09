@@ -150,12 +150,15 @@
     <string name="item_name_dummy">အသီးကွင်း ဟန်းချိန်း</string>
     <string name="average_weight_per_unit">Average Weight per Unit:</string>
     <string name="tap_to_order">Tap to Order</string>
-    <string name="stock_name_optional">Stock Name (Optional)</string>
-    <string name="weight_gm_optional">Weight(gm) (Optional)</string>
-    <string name="specification_optional">Specification (Optional)</string>
+    <string name="stock_name_optional">Stock Name</string>
+    <string name="weight_gm_optional">Weight(gm)</string>
+    <string name="specification_optional">Specification</string>
     <string name="taken_sample_items">Taken Sample Items</string>
     <string name="no_sample_taken">No Sample Taken</string>
     <string name="new_order">New Order</string>
     <string name="remove">remove</string>
     <string name="there_is_no_design_in_database">There is no design in database!</string>
+    <string name="items_in_voucher">Items in Voucher</string>
+    <string name="enter_flash_sale_title">Enter Flash Sale Title</string>
+    <string name="stock_in_voucher">Stock In Voucher</string>
 </resources>

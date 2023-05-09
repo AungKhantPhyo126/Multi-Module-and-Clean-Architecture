@@ -7,12 +7,14 @@ data class SampleItemUIModel(
     val productCode:String? = null,
     val thumbnail:String?,
     var specification:String?,
+    val name:String?,
     val weight_gm:String?,
-    val box_code:String?
+    val box_code:String?,
+    var isChecked:Boolean = false
 )
 
 fun SampleCheckDomain.asUIModel():SampleItemUIModel{
     return SampleItemUIModel(
-        id, productCode, thumbnail, specification, weight_gm, box_code
+        id, productCode, thumbnail, specification, name,weight_gm, box_code
     )
 }

@@ -1,5 +1,6 @@
 package com.critx.data.network.dto.setupStock
 
+import com.critx.data.network.dto.collectStock.GoldSmithListDto
 import com.critx.data.network.dto.collectStock.JewellerySizeDto
 import com.critx.data.network.dto.sampleTakeAndReturn.FileShweMiDto
 import com.critx.data.network.dto.sampleTakeAndReturn.asDomain
@@ -15,7 +16,7 @@ data class ProductSingleDto(
     @field:Json(name = "jewellery_type")
     val jewellery_type: JewelleryType,
     val jewellery_quality: JewelleryQuality,
-    val goldsmith: String?,
+    val goldsmith: GoldSmithListDto?,
     val group: Group?,
     val category: Category?,
 
@@ -38,7 +39,7 @@ fun ProductSingleDto.asDomain():ProductSingleDomain{
         code,
         derived_gold_type = derived_gold_type.asDomain(),
         derived_net_gold_weight_kpy,diamond_info?.asDomain(), files = files.map { it.asDomain() },
-        gem_weight_ywae,gold_and_gem_weight_gm,goldsmith.orEmpty(),
+        gem_weight_ywae,gold_and_gem_weight_gm,goldsmith?.name.orEmpty(),
         group = group?.id,
         id,
         jewellery_quality = jewellery_quality.id.toString(),

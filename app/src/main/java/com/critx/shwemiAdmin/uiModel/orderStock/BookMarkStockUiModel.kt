@@ -18,7 +18,8 @@ data class BookMarkStockUiModel(
     val sizes:List<SizeInfoUiModel>,
     val is_orderable:Boolean,
     val goldSmith:GoldSmithUiModel?,
-    val goldQuality:String?
+    val goldQuality:String?,
+    val isFromCloud:Boolean
 ):Parcelable
 
 @Parcelize
@@ -36,6 +37,6 @@ fun BookMarkStockInfoDomain.asUiMoel():SizeInfoUiModel{
 
 fun BookMarkStockDomain.asUiModel():BookMarkStockUiModel{
     return BookMarkStockUiModel(
-        id, image = image.url,avg_unit_weight_ywae, jewellery_type_id,custom_category_name,sizes.map { it.asUiMoel() },is_orderable,goldSmith?.asUiModel(),goldQuality
+        id, image = image.url,avg_unit_weight_ywae, jewellery_type_id,custom_category_name,sizes.map { it.asUiMoel() },is_orderable,goldSmith?.asUiModel(),goldQuality,isFromCloud
     )
 }

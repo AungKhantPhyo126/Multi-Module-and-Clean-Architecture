@@ -17,18 +17,18 @@
             android:layout_height="match_parent"
             app:zxing_scanner_layout="@layout/custom_barcode_scanner">
 
-            <Button
-                android:id="@+id/btn_browse_from_gallery"
-                style="@style/ButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/circle_shape"
-                android:drawableLeft="@drawable/ic_gallery"
-                android:layout_alignParentTop="true"
-                android:layout_marginBottom="32dp"
-                android:text="Browse From Gallery"
-                android:textAppearance="@style/TextAppearance.Common.Body2"
-                android:layout_gravity="bottom|center" />
+<!--            <Button-->
+<!--                android:id="@+id/btn_browse_from_gallery"-->
+<!--                style="@style/ButtonStyle"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@drawable/circle_shape"-->
+<!--                android:drawableLeft="@drawable/ic_gallery"-->
+<!--                android:layout_alignParentTop="true"-->
+<!--                android:layout_marginBottom="32dp"-->
+<!--                android:text="Browse From Gallery"-->
+<!--                android:textAppearance="@style/TextAppearance.Common.Body2"-->
+<!--                android:layout_gravity="bottom|center" />-->
         </com.journeyapps.barcodescanner.DecoratedBarcodeView>
 
 

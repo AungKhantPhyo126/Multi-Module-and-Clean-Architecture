@@ -45,7 +45,8 @@ fun BookMarkStockDto.asDomain():BookMarkStockDomain{
         sizes?.map { it.asDomain() }.orEmpty(),
         is_orderable?:true,
         null,
-        null
+        null,
+        true
     )
 }
 

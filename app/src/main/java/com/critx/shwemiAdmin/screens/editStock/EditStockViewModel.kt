@@ -38,10 +38,10 @@ class EditStockViewModel @Inject constructor(
     var selectedVideoUri: File? = null
 
     var diamondInfo: String? = null
-    var diamondPriceFromGS: String? = null
-    var diamondValueFromGS: String? = null
-    var diamondPriceForSale: String? = null
-    var diamondValueForSale: String? = null
+    var diamondPriceFromGS: Int? = null
+    var diamondValueFromGS: Int? = null
+    var diamondPriceForSale: Int? = null
+    var diamondValueForSale: Int? = null
     var gemValue: String? = null
 
 

@@ -16,7 +16,8 @@ import com.critx.shwemiAdmin.uiModel.simpleTakeAndReturn.SampleItemUIModel
 
 class NewSampleRecyclerAdapter(
     private val onclick: (data: SampleItemUIModel) -> Unit,
-    private val viewModel: InventoryViewModel
+    private val viewModel: InventoryViewModel,
+    private val photoClick:(url:String)->Unit
 ) : ListAdapter<SampleItemUIModel, RecyclerView.ViewHolder>(
     NewSampleDiffUtil
 ) {
@@ -34,13 +35,13 @@ class NewSampleRecyclerAdapter(
             NewSampleViewHolder(
                 ItemNewSampleBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
-                ), onclick, viewModel
+                ), onclick, viewModel,photoClick
             )
         } else {
             SaveSampleViewHolder(
                 ItemSavedSampleBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
-                ), onclick
+                ), onclick,photoClick
             )
         }
     }
@@ -63,30 +64,43 @@ class NewSampleRecyclerAdapter(
 class SaveSampleViewHolder(
     private val binding: ItemSavedSampleBinding,
     private val onclick: (data: SampleItemUIModel) -> Unit,
+    private val photoClick:(url:String)->Unit
+
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(data: SampleItemUIModel) {
         binding.ibCross.setOnClickListener {
             onclick(data)
         }
         binding.ivSample.loadImageWithGlide(data.thumbnail)
-        binding.tvStockCodeNumber.text = data.productCode
-        binding.tvSampleSpec.text = data.specification
-        binding.tvWeightGm.text = data.weight_gm + "gm"
+        binding.tvStockCodeNumber.text = data.productCode?:data.name
+        binding.tvSpecification.text = data.specification
+        binding.tvWeight.text =  if (!data.weight_gm.isNullOrEmpty()) data.weight_gm +"gm" else ""
+        binding.tvBoxCode.text = data.box_code
+        binding.ivSample.setOnClickListener {
+            photoClick(data.thumbnail.orEmpty())
+        }
     }
 }
 
 class NewSampleViewHolder(
     private val binding: ItemNewSampleBinding,
     private val onclick: (data: SampleItemUIModel) -> Unit,
-    private val viewModel: InventoryViewModel
+    private val viewModel: InventoryViewModel,
+    private val photoClick:(url:String)->Unit
+
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(data: SampleItemUIModel) {
         binding.ibCross.setOnClickListener {
             onclick(data)
         }
         binding.ivSample.loadImageWithGlide(data.thumbnail)
+        binding.ivSample.setOnClickListener {
+            photoClick(data.thumbnail.orEmpty())
+        }
         binding.tvStockCodeNumber.text = data.productCode
+        binding.tvBoxCode.text = data.box_code?:"no box code"
         binding.tieSpecification.setText(viewModel.specificationList[bindingAdapterPosition])
+
         binding.tieSpecification.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 // TODO Auto-generated method stub

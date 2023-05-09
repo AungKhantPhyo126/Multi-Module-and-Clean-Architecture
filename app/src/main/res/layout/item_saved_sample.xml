@@ -17,73 +17,141 @@
 
         <TextView
             android:id="@+id/tv_label_stock_code"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="@string/stock_code_label"
+            android:background="@color/base_pink"
+            android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.ShweMi.Body2"
-            app:layout_constraintStart_toEndOf="@+id/iv_sample"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toStartOf="@+id/tv_stock_code_number"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_sample" />
 
         <TextView
             android:id="@+id/tv_stock_code_number"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="@color/base_pink"
             android:textAppearance="@style/TextAppearance.ShweMi.Body2"
             android:textColor="@color/primary_color"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/tv_label_stock_code"
-            app:layout_constraintEnd_toStartOf="@+id/ib_cross"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tv_label_stock_code"
             app:layout_constraintTop_toTopOf="@id/tv_label_stock_code"
             tools:text="123456789" />
+
+        <TextView
+            android:id="@+id/tv_label_box_code"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Box Code -"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+            app:layout_constraintEnd_toStartOf="@+id/tv_box_code"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_label_stock_code" />
+
+        <TextView
+            android:id="@+id/tv_box_code"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+            android:textColor="@color/primary_color"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/tv_label_box_code"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv_label_box_code"
+            app:layout_constraintTop_toTopOf="@id/tv_label_box_code"
+            tools:text="123456789" />
+
+        <TextView
+            android:id="@+id/tv_label_weight"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Weight(gm) -"
+            android:background="@color/base_pink"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+            app:layout_constraintEnd_toStartOf="@+id/tv_weight"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_label_box_code" />
+
+        <TextView
+            android:id="@+id/tv_weight"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+            android:textColor="@color/primary_color"
+            android:textStyle="bold"
+            android:background="@color/base_pink"
+            app:layout_constraintBottom_toBottomOf="@id/tv_label_weight"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv_label_weight"
+            app:layout_constraintTop_toTopOf="@id/tv_label_weight"
+            tools:text="34.55 gm" />
 
         <ImageView
             android:id="@+id/ib_cross"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:src="@drawable/ic_cross"
-            app:layout_constraintBottom_toBottomOf="@id/tv_label_stock_code"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_label_stock_code" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <ImageView
             android:id="@+id/iv_sample"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="8dp"
             android:scaleType="fitXY"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ib_cross"
             app:srcCompat="@drawable/dummy_chip_image" />
 
         <TextView
-            android:id="@+id/tv_sample_spec"
-            android:layout_width="0dp"
+            android:id="@+id/tv_label_specification"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            tools:text="haha"
+            android:text="Specification"
+            android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.ShweMi.Body2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tv_label_stock_code"
-            app:layout_constraintTop_toBottomOf="@+id/tv_label_stock_code" />
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_label_weight" />
 
         <TextView
-            android:id="@+id/tv_weight_gm"
+            android:id="@+id/tv_specification"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="8dp"
             android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tv_label_stock_code"
-            app:layout_constraintTop_toBottomOf="@+id/tv_sample_spec"
-            tools:text="4.56" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_label_specification"
+            tools:text="frozen fire earth or whatever ashetguipawthaeuiopwhtpaweghtioghu
+awertjawe[toaethjioawethaeiwo[thiaehjwrp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
 

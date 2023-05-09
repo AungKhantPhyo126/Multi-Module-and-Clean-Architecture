@@ -202,8 +202,6 @@ class DailyGoldPriceViewModel @Inject constructor(
 
                     }
                 }
-
-
             }
         }
     }

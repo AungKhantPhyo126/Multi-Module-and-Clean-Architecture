@@ -7,10 +7,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.critx.shwemiAdmin.databinding.ItemDiscountBinding
 import com.critx.shwemiAdmin.databinding.ItemStockCodeBinding
+import com.critx.shwemiAdmin.uiModel.collectStock.CollectStockBatchUIModel
 import com.critx.shwemiAdmin.uiModel.discount.DiscountUIModel
 
-class FlashSaleRecyclerAdapter(private val onclick:()->Unit) : ListAdapter<DiscountUIModel, FlashSaleViewHolder>(
-    NewSampleDiffUtil
+class FlashSaleRecyclerAdapter(private val onclick:(data:CollectStockBatchUIModel)->Unit) : ListAdapter<CollectStockBatchUIModel, FlashSaleViewHolder>(
+    FlashSaleDiffUtil
 )  {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlashSaleViewHolder {
         return FlashSaleViewHolder(
@@ -27,18 +28,21 @@ class FlashSaleRecyclerAdapter(private val onclick:()->Unit) : ListAdapter<Disco
 }
 
 class FlashSaleViewHolder(private val binding: ItemStockCodeBinding,
-                         private val onclick: () -> Unit): RecyclerView.ViewHolder(binding.root){
-    fun bind(data: DiscountUIModel){
-        binding.tvStockCodeNumber.text = data.invoiceCode
+                         private val onclick: (data:CollectStockBatchUIModel) -> Unit): RecyclerView.ViewHolder(binding.root){
+    fun bind(data: CollectStockBatchUIModel){
+        binding.tvStockCodeNumber.text = data.productCode
+        binding.ibCross.setOnClickListener {
+            onclick(data)
+        }
     }
 }
 
-object NewSampleDiffUtil : DiffUtil.ItemCallback<DiscountUIModel>() {
-    override fun areItemsTheSame(oldItem: DiscountUIModel, newItem: DiscountUIModel): Boolean {
-        return oldItem.id == newItem.id
+object FlashSaleDiffUtil : DiffUtil.ItemCallback<CollectStockBatchUIModel>() {
+    override fun areItemsTheSame(oldItem: CollectStockBatchUIModel, newItem: CollectStockBatchUIModel): Boolean {
+        return oldItem.productId == newItem.productId
     }
 
-    override fun areContentsTheSame(oldItem: DiscountUIModel, newItem: DiscountUIModel): Boolean {
+    override fun areContentsTheSame(oldItem: CollectStockBatchUIModel, newItem: CollectStockBatchUIModel): Boolean {
         return oldItem == newItem
     }
 

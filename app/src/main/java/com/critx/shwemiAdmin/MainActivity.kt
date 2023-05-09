@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
             }
             onLosing = {
                 binding.tvConnectionState.isVisible = true
-                binding.tvConnectionState.text = "Internet Disconnected"
+                binding.tvConnectionState.text = "Connection losing"
                 binding.tvConnectionState.setBackgroundColor(R.color.primary_color)
 
             }

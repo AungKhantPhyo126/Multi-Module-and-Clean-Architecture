@@ -51,23 +51,23 @@ class DiscountFragment :Fragment(){
 
         }
         binding.layoutDiscount.rvStockCodeList.adapter=adapter
-        adapter.submitList(listOf(
-            DiscountUIModel(
-                "1",
-                "123456788"
-            ),
-            DiscountUIModel(
-                "2",
-                "123456788"
-            ),
-            DiscountUIModel(
-                "3",
-                "123456788"
-            ),
-            DiscountUIModel(
-                "4",
-                "123456788"
-            )
-        ))
+//        adapter.submitList(listOf(
+//            DiscountUIModel(
+//                "1",
+//                "123456788"
+//            ),
+//            DiscountUIModel(
+//                "2",
+//                "123456788"
+//            ),
+//            DiscountUIModel(
+//                "3",
+//                "123456788"
+//            ),
+//            DiscountUIModel(
+//                "4",
+//                "123456788"
+//            )
+//        ))
     }
 }

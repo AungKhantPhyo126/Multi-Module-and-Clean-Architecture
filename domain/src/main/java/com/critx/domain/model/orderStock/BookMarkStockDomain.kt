@@ -17,7 +17,8 @@ data class BookMarkStockDomain(
     val sizes:List<BookMarkStockInfoDomain>,
     val is_orderable:Boolean,
     val goldSmith:GoldSmithListDomain?,
-    val goldQuality:String?
+    val goldQuality:String?,
+    val isFromCloud:Boolean
 )
 
 data class PagingMetaDomain(

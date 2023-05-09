@@ -48,11 +48,11 @@ inline fun ResponseBody.parseError(): Map<String,List<String>>?{
 }
 
 fun getKyatsFromKPY(kyat:Int,pae:Int,ywae:Double):Double{
-    return kyat+pae/ 16 + ywae/128
+    return kyat.toDouble() + pae.toDouble() / 16 + ywae / 128
 }
 
 fun getYwaeFromKPY(kyat:Int,pae:Int,ywae:Double):Double{
-    return kyat * 128 + pae * 8 + ywae
+    return kyat.toDouble() * 128 + pae.toDouble() * 8 + ywae
 }
 
 fun getKPYFromKyat(kyat: Double): List<String> {

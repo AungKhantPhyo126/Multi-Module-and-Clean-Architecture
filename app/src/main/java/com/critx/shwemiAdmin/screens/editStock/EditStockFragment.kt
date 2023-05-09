@@ -64,7 +64,6 @@ class EditStockFragment : Fragment() {
     private lateinit var launchChooseGif: ActivityResultLauncher<Intent>
     private lateinit var readStoragePermissionlauncher: ActivityResultLauncher<String>
 
-    private var diamondInfo: DiamondInfoDomain? = null
 
     private var firstCatId = ""
     private var secondCatId = ""
@@ -251,18 +250,18 @@ class EditStockFragment : Fragment() {
                     viewModel.diamondInfo =
                         it.data?.diamond_info?.diamond_info
                     viewModel.diamondPriceFromGS =
-                        it.data?.diamond_info?.price_from_goldsmith.toString()
+                        it.data?.diamond_info?.price_from_goldsmith
 
                     viewModel.diamondValueFromGS =
-                        it.data?.diamond_info?.value_from_goldsmith.toString()
+                        it.data?.diamond_info?.value_from_goldsmith
 
                     viewModel.diamondPriceForSale =
-                        it.data?.diamond_info?.price_for_sale.toString()
+                        it.data?.diamond_info?.price_for_sale
 
                     viewModel.gemValue =
                         it.data?.product_costs?.gem_value.toString()
+                    viewModel.diamondValueForSale = it.data?.product_costs?.gem_value
 
-                    diamondInfo = it.data?.diamond_info
                     viewModel.scanStock(binding.edtScanHere.text.toString())
                     firstCatId = it.data!!.jewellery_type
                     secondCatId = it.data!!.jewellery_quality
@@ -308,13 +307,11 @@ class EditStockFragment : Fragment() {
                         alertDialog.window?.attributes = mLayoutParams
 
                         alertDialog.setCancelable(false)
-                        if (diamondInfo != null) {
-                            alertDialogBinding.edtDiamondWeightAndShape.setText(diamondInfo!!.diamond_info.toString())
-                            alertDialogBinding.edtDiamondPrice.setText(diamondInfo!!.price_from_goldsmith.toString())
-                            alertDialogBinding.edtDiamondValue.setText(diamondInfo!!.value_from_goldsmith.toString())
-                            alertDialogBinding.edtDiamondActualPrice.setText(diamondInfo!!.price_for_sale.toString())
-                            alertDialogBinding.actDiamondActualSellValue.setText(diamondInfo!!.value_for_sale.toString())
-                        }
+                        viewModel.diamondInfo?.let { alertDialogBinding.edtDiamondWeightAndShape.setText(it) }
+                        viewModel.diamondPriceFromGS?.let { alertDialogBinding.edtDiamondPrice.setText(it.toString()) }
+                        viewModel.diamondValueFromGS?.let { alertDialogBinding.edtDiamondValue.setText(it.toString()) }
+                        viewModel.diamondPriceForSale?.let { alertDialogBinding.edtDiamondActualPrice.setText(it.toString()) }
+                        viewModel.gemValue?.let { alertDialogBinding.actDiamondActualSellValue.setText(it.toString()) }
                         alertDialogBinding.btnCalculate.setOnClickListener {
                             if (alertDialogBinding.btnCalculate.text == "Calculate") {
                                 calculate(alertDialogBinding)
@@ -322,15 +319,18 @@ class EditStockFragment : Fragment() {
                                 viewModel.diamondInfo =
                                     alertDialogBinding.edtDiamondWeightAndShape.text.toString()
                                 viewModel.diamondPriceFromGS =
-                                    alertDialogBinding.edtDiamondPrice.text.toString()
+                                    alertDialogBinding.edtDiamondPrice.text.toString().toInt()
                                 viewModel.diamondValueFromGS =
-                                    alertDialogBinding.edtDiamondValue.text.toString()
+                                    alertDialogBinding.edtDiamondValue.text.toString().toInt()
                                 viewModel.diamondPriceForSale =
-                                    alertDialogBinding.edtDiamondActualPrice.text.toString()
+                                    alertDialogBinding.edtDiamondActualPrice.text.toString().toInt()
+
+                                viewModel.diamondValueForSale =1
+                                    alertDialogBinding.actDiamondActualSellValue.text.toString().toInt()
+
                                 viewModel.gemValue =
                                     alertDialogBinding.actDiamondActualSellValue.text.toString()
                                 binding.edtGemValue.setText(viewModel.gemValue.orEmpty())
-                                diamondInfo = null
                                 alertDialog.dismiss()
                             }
 
@@ -687,27 +687,31 @@ class EditStockFragment : Fragment() {
             } else {
                 viewModel.diamondInfo?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
             }
-            val diamondPriceFromGS = if (viewModel.diamondPriceFromGS.isNullOrEmpty()) {
+            val diamondPriceFromGS = if (viewModel.diamondPriceFromGS == null) {
                 null
             } else {
-                viewModel.diamondPriceFromGS?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                viewModel.diamondPriceFromGS!!.toString()
+                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
             }
             val diamondValueFromGS =
-                if (viewModel.diamondValueFromGS.isNullOrEmpty()) {
+                if (viewModel.diamondValueFromGS == null) {
                     null
                 } else {
-                    viewModel.diamondValueFromGS?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                    viewModel.diamondValueFromGS!!.toString()
+                        .toRequestBody("multipart/form-data".toMediaTypeOrNull())
                 }
-            val diamondValueForSale = if (viewModel.diamondValueForSale.isNullOrEmpty()) {
+            val diamondValueForSale = if (viewModel.diamondValueForSale == null) {
                 null
             } else {
-                viewModel.diamondValueForSale?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                viewModel.diamondValueForSale!!.toString()
+                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
             }
             val diamondPriceForSale =
-                if (viewModel.diamondPriceForSale.isNullOrEmpty()) {
+                if (viewModel.diamondPriceForSale == null) {
                     null
                 } else {
-                    viewModel.diamondPriceForSale?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                    viewModel.diamondPriceForSale!!.toString()
+                        .toRequestBody("multipart/form-data".toMediaTypeOrNull())
                 }
 
             val type =

@@ -7,14 +7,14 @@ import okhttp3.ResponseBody
 import org.json.JSONObject
 import java.util.ArrayList
 
-inline fun <reified T> ResponseBody.parseErrorWithDataClass(): T? {
+inline fun <reified T> ResponseBody.parseErrorWithDataClass(errorJsonString:String): T? {
     val moshi = Moshi.Builder().build()
     val builder = Moshi.Builder().build()
 //    val parser = moshi.adapter(T::class.java)
     val parser = moshi.adapter(T::class.java)
-    val response = this.string()
+
     try {
-        return parser.fromJson(response)
+        return parser.fromJson(errorJsonString)
     } catch (e: JsonDataException) {
         e.printStackTrace()
     }
@@ -29,11 +29,11 @@ fun getErrorMessageFromHashMap(errorMessage:Map<String,List<String>>):String{
     return value.toString()
 }
 
-inline fun ResponseBody.parseError(): Map<String,List<String>>?{
+inline fun ResponseBody.parseError(errorJsonString:String): Map<String,List<String>>?{
     val moshi = Moshi.Builder().build()
     val type = Types.newParameterizedType(Map::class.java, String::class.java, List::class.javaObjectType)
     val adapter = moshi.adapter<Map<String, List<String>>>(type)
-    val jsonObject = JSONObject(this.string())
+    val jsonObject = JSONObject(errorJsonString)
     try {
         val messageList = jsonObject.getJSONObject("response").getJSONObject("message").toString()
         return adapter.fromJson(messageList)

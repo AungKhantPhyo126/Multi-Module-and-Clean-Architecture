@@ -37,6 +37,7 @@ import com.critx.common.ui.getAlertDialog
 import com.critx.common.ui.showSuccessDialog
 import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
+import com.critx.shwemiAdmin.databinding.DialogItemsInVoucherBinding
 import com.critx.shwemiAdmin.databinding.FragmentGiveGoldBinding
 import com.critx.shwemiAdmin.databinding.ServiceChargeDialogBinding
 import com.critx.shwemiAdmin.getYwaeFromKPY
@@ -63,6 +64,7 @@ import java.util.*
 class GiveGoldFragment : Fragment() {
     private lateinit var binding: FragmentGiveGoldBinding
     private lateinit var alertDialogBinding: ServiceChargeDialogBinding
+    private lateinit var dialogItemsInVoucherBinding: DialogItemsInVoucherBinding
     private val viewModel by viewModels<GiveGoldViewModel>()
     private lateinit var loadingDialog: AlertDialog
     private lateinit var datePicker: MaterialDatePicker<Long>
@@ -161,40 +163,13 @@ class GiveGoldFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     viewModel.checkSampleWithVoucher(it.data!!.id)
+                    showItemsInVoucherDialog()
                     viewModel.resetVoucherScanLive()
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
 
-                }
-            }
-        }
-        viewModel.sampleLiveDataFromVoucher.observe(viewLifecycleOwner) {
-            when (it) {
-                is Resource.Loading -> {
-                    loadingDialog.show()
-                }
-                is Resource.Success -> {
-                    loadingDialog.dismiss()
-                    it.data!!.forEach { sampleItem ->
-                        if (viewModel.sampleList.contains(sampleItem)) {
-                            Toast.makeText(
-                                requireContext(),
-                                "Stock Already Scanned",
-                                Toast.LENGTH_LONG
-                            )
-                                .show()
-                        } else if (sampleItem.specification.isNullOrEmpty().not()) {
-                            viewModel.addSample(sampleItem)
-                        }
-                    }
-                    viewModel.resetSampleLiveDataFromVoucher()
-
-                }
-                is Resource.Error -> {
-                    loadingDialog.dismiss()
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -239,8 +214,8 @@ class GiveGoldFragment : Fragment() {
                     keyCode == KeyEvent.KEYCODE_ENTER
                 ) {
                     // Perform action on key press
-                    viewModel.scanVoucher(binding.includeSampleTakeSection.edtScanHere.text.toString())
-                    hideKeyboard(activity, binding.includeSampleTakeSection.edtScanHere)
+                    viewModel.scanVoucher(binding.includeSampleTakeSection.edtScanVoucherHere.text.toString())
+                    hideKeyboard(activity, binding.includeSampleTakeSection.edtScanVoucherHere)
                     return true
                 }
                 return false
@@ -492,7 +467,7 @@ class GiveGoldFragment : Fragment() {
         binding.btnConfirm.setOnClickListener {
             if (
                 viewModel.selectedGSId.isNullOrEmpty() ||
-               viewModel.selectedGoldBoxId.isNullOrEmpty()
+                viewModel.selectedGoldBoxId.isNullOrEmpty()
             ) {
                 Toast.makeText(requireContext(), "select goldsmith and goldbox", Toast.LENGTH_LONG)
                     .show()
@@ -541,6 +516,63 @@ class GiveGoldFragment : Fragment() {
                 )
             }
         }
+    }
+
+    fun showItemsInVoucherDialog() {
+        val builder = MaterialAlertDialogBuilder(requireContext())
+        val inflater: LayoutInflater = LayoutInflater.from(builder.context)
+        dialogItemsInVoucherBinding = DialogItemsInVoucherBinding.inflate(
+            inflater, ConstraintLayout(builder.context), false
+        )
+        builder.setView(dialogItemsInVoucherBinding.root)
+        val alertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        dialogItemsInVoucherBinding.ivCross.setOnClickListener {
+            alertDialog.dismiss()
+        }
+        val inventoryItemsInVoucherRecyclerAdapter = SampleInVoucherRecyclerAdapter{sampleId, check ->
+            viewModel.selectSample(sampleId, check)
+        }
+        val outsideItemsInVoucherRecyclerAdapter = SampleInVoucherRecyclerAdapter{sampleId, check ->
+            viewModel.selectSample(sampleId, check)
+        }
+        viewModel.sampleLiveDataFromVoucher.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    dialogItemsInVoucherBinding.includeItemsInVoucher.rvInventory.adapter =
+                        inventoryItemsInVoucherRecyclerAdapter
+                    dialogItemsInVoucherBinding.includeItemsInVoucher.rvOutside.adapter =
+                        outsideItemsInVoucherRecyclerAdapter
+                    val inventoryList = it.data!!.filter { it.productCode != null  && it.id.isNullOrEmpty().not()}
+                    inventoryItemsInVoucherRecyclerAdapter.submitList(inventoryList)
+
+                    val outsideList = it.data!!.filter { it.productCode == null && it.id.isNullOrEmpty().not()}
+                    outsideItemsInVoucherRecyclerAdapter.submitList(outsideList)
+
+                    dialogItemsInVoucherBinding.includeItemsInVoucher.btnAttachSample.setOnClickListener {view->
+                        it.data!!.forEach {
+                            if (it.isChecked){
+                                viewModel.addSample(it)
+                            }
+                        }
+                        alertDialog.dismiss()
+                        viewModel.resetSampleLiveDataFromVoucher()
+                    }
+                    alertDialog.show()
+
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+
     }
 
     fun showServiceChargeDialogForGoldGive() {

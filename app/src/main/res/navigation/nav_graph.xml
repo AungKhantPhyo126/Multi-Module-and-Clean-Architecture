@@ -41,6 +41,9 @@
         <action
             android:id="@+id/action_confirmVoucherFragment_to_unConfirmVoucherFragment"
             app:destination="@id/unConfirmVoucherFragment" />
+        <action
+            android:id="@+id/action_confirmVoucherFragment_to_stockInVoucherFragment"
+            app:destination="@id/stockInVoucherFragment" />
     </fragment>
     <fragment
         android:id="@+id/unConfirmVoucherFragment"
@@ -325,4 +328,12 @@
     <action
         android:id="@+id/action_global_photoViewFragment"
         app:destination="@id/photoViewFragment" />
+    <fragment
+        android:id="@+id/stockInVoucherFragment"
+        android:name="com.critx.shwemiAdmin.screens.confirmVoucher.stockInVoucher.StockInVoucherFragment"
+        android:label="StockInVoucherFragment" >
+        <argument
+            android:name="stockCodeList"
+            app:argType="com.critx.shwemiAdmin.uiModel.StockInVoucherUiModel[]" />
+    </fragment>
 </navigation>

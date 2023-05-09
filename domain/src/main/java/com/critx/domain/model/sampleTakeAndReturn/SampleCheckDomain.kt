@@ -5,6 +5,7 @@ data class SampleCheckDomain(
     val productCode:String? = null,
     val thumbnail:String?,
     val specification:String?,
+    val name:String?,
     val weight_gm:String?,
     val box_code:String?
 

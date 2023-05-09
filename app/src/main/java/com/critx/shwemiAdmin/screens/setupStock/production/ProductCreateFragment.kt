@@ -258,6 +258,13 @@ class ProductCreateFragment : Fragment() {
             alertDialog.window?.attributes = mLayoutParams
 
             alertDialog.setCancelable(false)
+            viewModel.diamondInfo?.let { alertDialogBinding.edtDiamondWeightAndShape.setText(it) }
+            viewModel.diamondPriceFromGS?.let { alertDialogBinding.edtDiamondPrice.setText(it) }
+            viewModel.diamondValueFromGS?.let { alertDialogBinding.edtDiamondValue.setText(it) }
+            viewModel.diamondPriceForSale?.let { alertDialogBinding.edtDiamondActualPrice.setText(it) }
+            viewModel.gemValue?.let { alertDialogBinding.actDiamondActualSellValue.setText(it) }
+
+
             alertDialogBinding.btnCalculate.setOnClickListener {
                 if (alertDialogBinding.btnCalculate.text == "Calculate") {
                     calculate(alertDialogBinding)
@@ -271,6 +278,8 @@ class ProductCreateFragment : Fragment() {
                     viewModel.diamondPriceForSale =
                         alertDialogBinding.edtDiamondActualPrice.text.toString()
                     viewModel.gemValue =
+                        alertDialogBinding.actDiamondActualSellValue.text.toString()
+                    viewModel.diamondValueForSale =
                         alertDialogBinding.actDiamondActualSellValue.text.toString()
                     binding.edtGemValue.setText(viewModel.gemValue.orEmpty())
                     alertDialog.dismiss()

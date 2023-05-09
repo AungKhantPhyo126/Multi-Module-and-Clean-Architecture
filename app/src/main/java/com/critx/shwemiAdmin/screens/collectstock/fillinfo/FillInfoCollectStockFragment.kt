@@ -74,7 +74,6 @@ class FillInfoCollectStockFragment : Fragment() {
 
 
         binding.rvJewellerySize.adapter = adapter
-
         viewModel.goldSmithListLiveData.observe(viewLifecycleOwner){
 
             when(it){
@@ -88,6 +87,9 @@ class FillInfoCollectStockFragment : Fragment() {
                     val arrayAdapter = ArrayAdapter(requireContext(),R.layout.item_drop_down_text,list)
                     binding.edtChooseOneGoldSmith.setAdapter(arrayAdapter)
                     binding.edtChooseOneGoldSmith.setText(list[0],false)
+                    viewModel.selectedGoldSmith =it.data!!.find {
+                        it.name==list[0]
+                    }?.id
                     binding.edtChooseOneGoldSmith.addTextChangedListener {editable->
                         viewModel.selectedGoldSmith = it.data!!.find {
                             it.name==binding.edtChooseOneGoldSmith.text.toString()

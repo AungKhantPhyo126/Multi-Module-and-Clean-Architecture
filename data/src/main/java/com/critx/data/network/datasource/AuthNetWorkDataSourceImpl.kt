@@ -82,11 +82,12 @@ class AuthNetWorkDataSourceImpl @Inject constructor(
         return  if (response.isSuccessful){
             response.body()?:throw Exception("Response body Null")
         }else{
+            val errorJsonString = response.errorBody()?.string().orEmpty()
             val errorMessage =
-                response.errorBody()?.parseErrorWithDataClass<AuthError>()?.message
+                response.errorBody()?.parseErrorWithDataClass<AuthError>(errorJsonString)?.message
             if (errorMessage.isNullOrEmpty()){
                 val errorMessageWithMap =
-                    response.errorBody()?.parseError()
+                    response.errorBody()?.parseError(errorJsonString)
                 throw Exception(getErrorMessageFromHashMap(errorMessageWithMap!!))
             }else{
                 throw Exception(errorMessage)

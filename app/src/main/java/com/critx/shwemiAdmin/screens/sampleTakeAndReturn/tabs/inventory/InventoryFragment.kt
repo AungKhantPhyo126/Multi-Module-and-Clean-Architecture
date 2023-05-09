@@ -21,10 +21,7 @@ import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentInventoryBinding
 import com.critx.shwemiAdmin.hideKeyboard
-import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.GIVE_GOLD_STATE
-import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.ORDER_STOCK_STATE
-import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.SAMPLE_TAKE_STATE
-import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.SampleTakeAndReturnViewModel
+import com.critx.shwemiAdmin.screens.sampleTakeAndReturn.*
 import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
 import com.critx.shwemiAdmin.uiModel.collectStock.CollectStockBatchUIModel
 import com.critx.shwemiAdmin.uiModel.simpleTakeAndReturn.SampleItemUIModel
@@ -55,7 +52,9 @@ class InventoryFragment : Fragment() {
         loadingDialog = requireContext().getAlertDialog()
         val newSampleRecyclerAdapter = NewSampleRecyclerAdapter({
             viewModel.removeSample(it)
-        }, viewModel)
+        }, viewModel,{
+            findNavController().navigate(SampleTakeAndReturnDirections.actionGlobalPhotoViewFragment(it))
+        })
         val sampleReturnRecyclerAdapter = SampleReturnRecyclerAdapter {
             viewModel.removeSampleForReturn(it)
         }
@@ -205,6 +204,7 @@ class InventoryFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     viewModel.checkSampleUseCase(it.data!!.id)
+                    viewModel.scannedProductCode = it.data!!.id
                     viewModel.resetScanProductCodeLive()
                 }
                 is Resource.Error -> {
@@ -241,7 +241,7 @@ class InventoryFragment : Fragment() {
                 is Resource.Success -> {
                     loadingDialog.dismiss()
                     requireContext().showSuccessDialog(it.data!!) {
-
+                        viewModel.resetSample()
                     }
                     newSampleRecyclerAdapter.notifyDataSetChanged()
                     viewModel.resetsaveSampleLiveData()
