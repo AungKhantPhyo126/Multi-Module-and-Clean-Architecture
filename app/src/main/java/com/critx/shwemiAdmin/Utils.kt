@@ -14,6 +14,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import okhttp3.ResponseBody
 import org.json.JSONObject
+import kotlin.math.roundToInt
 
 fun <T> MutableLiveData<MutableList<T>>.notifyObserver() {
     this.value=this.value
@@ -84,6 +85,10 @@ fun getKPYFromYwae(ywae: Double):List<String>{
 fun getYwaeFromGram(gram:Double):String{
     val result =  gram / 16.6 * 128;
     return String.format("%.2f", result)
+}
+
+fun getGramFromYwae(ywae:Double):Double{
+    return (((ywae/128)*16.6)*100).roundToInt() / 100.0
 }
 
 

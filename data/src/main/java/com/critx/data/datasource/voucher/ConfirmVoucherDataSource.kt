@@ -3,6 +3,9 @@ package com.critx.data.datasource.voucher
 import com.critx.data.network.dto.DiscountVoucherScanDto
 import com.critx.data.network.dto.ScanVoucherToConfirmDto
 import com.critx.data.network.dto.ScanVoucherToConfirmResponse
+import com.critx.data.network.dto.SimpleResponseDto
+import com.critx.data.network.dto.StockInVoucherDto
+import com.critx.data.network.dto.UnConfirmVoucherDto
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -13,12 +16,12 @@ interface ConfirmVoucherDataSource {
     suspend fun getVouchers(
         token: String,
         type: String,
-    ): String
+    ): List<UnConfirmVoucherDto>
 
     suspend fun getStockInVoucher(
         token: String,
         voucherCode: String,
-    ): String
+    ): List<StockInVoucherDto>
 
     suspend fun confirmVoucher(
         token: String,
@@ -34,4 +37,10 @@ interface ConfirmVoucherDataSource {
         token: String,
         voucherCode: String,
     ): ScanVoucherToConfirmDto
+
+    suspend fun addDiscount(
+        token: String,
+        voucherCodes:List<String>,
+        amount:String,
+    ):SimpleResponseDto
 }

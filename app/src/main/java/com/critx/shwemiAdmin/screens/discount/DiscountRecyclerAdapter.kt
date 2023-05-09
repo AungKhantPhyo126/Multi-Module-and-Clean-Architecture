@@ -9,7 +9,7 @@ import com.critx.domain.model.DiscountVoucherScanDomain
 import com.critx.shwemiAdmin.databinding.ItemDiscountBinding
 import com.critx.shwemiAdmin.uiModel.collectStock.CollectStockBatchUIModel
 
-class DiscountRecyclerAdapter(private val onclick:()->Unit) : ListAdapter<DiscountVoucherScanDomain, DiscountViewHolder>(
+class DiscountRecyclerAdapter(private val onclick:(item:DiscountVoucherScanDomain)->Unit) : ListAdapter<DiscountVoucherScanDomain, DiscountViewHolder>(
     DiscountDiffUtil
 )  {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiscountViewHolder {
@@ -27,9 +27,13 @@ class DiscountRecyclerAdapter(private val onclick:()->Unit) : ListAdapter<Discou
 }
 
 class DiscountViewHolder(private val binding: ItemDiscountBinding,
-                          private val onclick: () -> Unit): RecyclerView.ViewHolder(binding.root){
+                          private val onclick: (item:DiscountVoucherScanDomain) -> Unit): RecyclerView.ViewHolder(binding.root){
     fun bind(data: DiscountVoucherScanDomain){
         binding.tvInvoiceCodeNumber.text = data.code
+        binding.ibCross.setOnClickListener {
+            onclick(data)
+        }
+
     }
 }
 

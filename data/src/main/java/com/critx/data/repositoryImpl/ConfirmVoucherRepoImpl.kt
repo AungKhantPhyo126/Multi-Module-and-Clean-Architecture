@@ -8,8 +8,10 @@ import com.critx.data.network.dto.asDomain
 import com.critx.domain.model.CustomerIdDomain
 import com.critx.domain.model.DiscountVoucherScanDomain
 import com.critx.domain.model.SimpleData
+import com.critx.domain.model.StockInVoucherDomain
 import com.critx.domain.model.flashSales.UserPointsDomain
 import com.critx.domain.model.voucher.ScanVoucherToConfirmDomain
+import com.critx.domain.model.voucher.UnConfirmVoucherDomain
 import com.critx.domain.repository.ConfirmVoucherRepository
 import com.critx.domain.repository.FlashSaleRepository
 import kotlinx.coroutines.flow.Flow
@@ -23,13 +25,47 @@ import javax.inject.Inject
 class ConfirmVoucherRepoImpl @Inject constructor(
     private val confirmVoucherDataSource: ConfirmVoucherDataSource
 ) : ConfirmVoucherRepository {
-    override fun getVouchers(token: String, type: String): Flow<Resource<String>> {
-        TODO("Not yet implemented")
-    }
+    override fun getVouchers(token: String, type: String): Flow<Resource<List<UnConfirmVoucherDomain>>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        confirmVoucherDataSource.getVouchers(
+                            token,
+                            type
+                        ).map { it.asDomain() }
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
 
-    override fun getStockInVoucher(token: String, voucherCode: String): Flow<Resource<String>> {
-        TODO("Not yet implemented")
-    }
+    override fun getStockInVoucher(token: String, voucherCode: String): Flow<Resource<List<StockInVoucherDomain>>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        confirmVoucherDataSource.getStockInVoucher(
+                            token,
+                            voucherCode
+                        ).map { it.asDomain() }
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
 
     override fun confirmVoucher(token: String, voucherCode: String): Flow<Resource<String>>  =
         flow {
@@ -88,6 +124,31 @@ class ConfirmVoucherRepoImpl @Inject constructor(
                         confirmVoucherDataSource.scanVoucherToConfirm(
                             token,
                             voucherCode
+                        ).asDomain()
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
+
+    override fun addDiscount(
+        token: String,
+        voucherCodes: List<String>,
+        amount: String
+    ): Flow<Resource<SimpleData>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        confirmVoucherDataSource.addDiscount(
+                            token,
+                            voucherCodes, amount
                         ).asDomain()
                     )
                 )

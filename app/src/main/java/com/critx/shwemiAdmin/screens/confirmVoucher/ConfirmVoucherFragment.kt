@@ -19,8 +19,13 @@ import com.critx.common.ui.showSuccessDialog
 import com.critx.commonkotlin.util.Resource
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.FragmentConfirmVoucherBinding
+import com.critx.shwemiAdmin.getGramFromYwae
+import com.critx.shwemiAdmin.getYwaeFromGram
 import com.critx.shwemiAdmin.hideKeyboard
 import com.critx.shwemiAdmin.screens.discount.DiscountViewModel
+import com.critx.shwemiAdmin.screens.setupStock.third.edit.CREATEED_GROUP_ID
+import com.critx.shwemiAdmin.uiModel.asUiModel
+import com.critx.shwemiAdmin.uiModel.setupStock.ChooseGroupUIModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -87,6 +92,16 @@ class ConfirmVoucherFragment:Fragment() {
         binding.btnConfirm.setOnClickListener {
             viewModel.confirmVoucher(voucherCode)
         }
+
+        //come from unconfirmed voucher
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
+            "selected-voucher-code"
+        )
+            ?.observe(viewLifecycleOwner) {voucherCode->
+                binding.edtScanHere.setText(voucherCode)
+                viewModel.scanStock(voucherCode)
+            }
+
         viewModel.scanVoucherLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Loading -> {
@@ -98,8 +113,11 @@ class ConfirmVoucherFragment:Fragment() {
                     binding.edtOldInvoice.setText(it.data?.old_voucher_paid_amount)
                     binding.edtDeposit.setText(it.data?.paid_amount)
                     binding.edtBalance.setText(it.data?.remaining_amount)
-                    binding.edtRebuyGold.setText(it.data?.total_cost)
+                    binding.edtRebuyGold.setText(getGramFromYwae(it.data?.gold_gem_weight_ywae.let {
+                        if (it.isNullOrEmpty()) 0.0 else it.toDouble()
+                    }).toString())
                     voucherCode = it.data?.code.orEmpty()
+                    viewModel.getStocksInVoucher(voucherCode)
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()
@@ -131,6 +149,32 @@ class ConfirmVoucherFragment:Fragment() {
                     snackBar = Snackbar.make(
                         binding.root,
                         it.message.orEmpty(),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackBar?.show()
+                }
+            }
+        }
+
+        viewModel.getStocksInVoucherLiveData.observe(viewLifecycleOwner) {result->
+            when (result) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    binding.btnStockInVoucher.setOnClickListener {
+                        findNavController().navigate(ConfirmVoucherFragmentDirections.actionConfirmVoucherFragmentToStockInVoucherFragment(
+                            result.data?.map { it.asUiModel() }.orEmpty().toTypedArray()
+                        ))
+                    }
+                }
+                is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    snackBar?.dismiss()
+                    snackBar = Snackbar.make(
+                        binding.root,
+                        result.message.orEmpty(),
                         Snackbar.LENGTH_LONG
                     )
                     snackBar?.show()

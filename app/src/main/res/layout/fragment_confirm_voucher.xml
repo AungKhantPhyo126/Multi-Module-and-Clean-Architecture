@@ -139,6 +139,10 @@
                     android:id="@+id/edt_scanned_invoice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    tools:text="7000"
+                    android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary_text_color"
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -167,6 +171,9 @@
                     android:id="@+id/edt_old_invoice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary_text_color"
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -195,6 +202,9 @@
                     android:id="@+id/edt_deposit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary_text_color"
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -223,6 +233,9 @@
                     android:id="@+id/edt_balance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary_text_color"
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -251,6 +264,9 @@
                     android:id="@+id/edt_rebuy_gold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.ShweMi.Body2"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary_text_color"
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 

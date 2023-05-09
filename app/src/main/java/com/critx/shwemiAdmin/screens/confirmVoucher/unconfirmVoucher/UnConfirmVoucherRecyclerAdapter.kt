@@ -5,19 +5,20 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.critx.domain.model.voucher.UnConfirmVoucherDomain
 import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.ItemUnconfirmedVoucherBinding
 import com.critx.shwemiAdmin.uiModel.UnConfirmVoucherUIModel
 import com.critx.shwemiAdmin.uiModel.sampleTakeAndReturn.VoucherUIModel
 
-class UnConfirmVoucherRecyclerAdapter : ListAdapter<UnConfirmVoucherUIModel, UnConfirmVoucherViewHolder>(
+class UnConfirmVoucherRecyclerAdapter (private val onclick:(voucherCode:String)->Unit): ListAdapter<UnConfirmVoucherDomain, UnConfirmVoucherViewHolder>(
     VoucherDiffUtil
 )  {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UnConfirmVoucherViewHolder {
         return UnConfirmVoucherViewHolder(
             ItemUnconfirmedVoucherBinding.inflate(
             LayoutInflater.from(parent.context),parent,false
-        ))
+        ),onclick)
     }
 
     override fun onBindViewHolder(holder: UnConfirmVoucherViewHolder, position: Int) {
@@ -27,11 +28,15 @@ class UnConfirmVoucherRecyclerAdapter : ListAdapter<UnConfirmVoucherUIModel, UnC
 
 }
 
-class UnConfirmVoucherViewHolder(private val binding: ItemUnconfirmedVoucherBinding): RecyclerView.ViewHolder(binding.root){
-    fun bind(data: UnConfirmVoucherUIModel){
-        binding.tvInvoiceCode.text = data.invoiceCode.toString()
-        binding.tvDeposit.text = data.deposit.toString()
-        binding.tvBalance.text = data.balance.toString()
+class UnConfirmVoucherViewHolder(private val binding: ItemUnconfirmedVoucherBinding,
+                                 private val onclick:(voucherCode:String)->Unit): RecyclerView.ViewHolder(binding.root){
+    fun bind(data: UnConfirmVoucherDomain){
+        binding.root.setOnClickListener {
+            onclick(data.code.orEmpty())
+        }
+        binding.tvInvoiceCode.text = data.code.toString()
+        binding.tvDeposit.text = data.paid_amount.toString()
+        binding.tvBalance.text = data.remaining_amount.toString()
         if (adapterPosition%2 ==0){
             binding.rootLayout.setBackgroundColor(binding.root.context.getColor(R.color.white))
             binding.apply {
@@ -47,12 +52,12 @@ class UnConfirmVoucherViewHolder(private val binding: ItemUnconfirmedVoucherBind
     }
 }
 
-object VoucherDiffUtil : DiffUtil.ItemCallback<UnConfirmVoucherUIModel>() {
-    override fun areItemsTheSame(oldItem: UnConfirmVoucherUIModel, newItem: UnConfirmVoucherUIModel): Boolean {
-        return oldItem.id == newItem.id
+object VoucherDiffUtil : DiffUtil.ItemCallback<UnConfirmVoucherDomain>() {
+    override fun areItemsTheSame(oldItem: UnConfirmVoucherDomain, newItem: UnConfirmVoucherDomain): Boolean {
+        return oldItem.code == newItem.code
     }
 
-    override fun areContentsTheSame(oldItem: UnConfirmVoucherUIModel, newItem: UnConfirmVoucherUIModel): Boolean {
+    override fun areContentsTheSame(oldItem: UnConfirmVoucherDomain, newItem: UnConfirmVoucherDomain): Boolean {
         return oldItem == newItem
     }
 

@@ -5,8 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.critx.commonkotlin.util.Resource
 import com.critx.data.localdatabase.LocalDatabase
 import com.critx.domain.model.DiscountVoucherScanDomain
+import com.critx.domain.model.StockInVoucherDomain
 import com.critx.domain.model.voucher.ScanVoucherToConfirmDomain
 import com.critx.domain.useCase.voucher.ConfirmVoucherUseCase
+import com.critx.domain.useCase.voucher.GetStockInVoucherUseCase
 import com.critx.domain.useCase.voucher.ScanVoucherToConfirmUseCase
 import com.critx.shwemiAdmin.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,8 +20,12 @@ import javax.inject.Inject
 class ConfirmVoucherViewModel @Inject constructor(
     private val scanVoucherToConfirmUseCase: ScanVoucherToConfirmUseCase,
     private val confirmVoucherUseCase: ConfirmVoucherUseCase,
+    private val getStockInVoucherUseCase: GetStockInVoucherUseCase,
     private val localDatabase: LocalDatabase
 ): ViewModel() {
+    private var _getStocksInVoucherLiveData = SingleLiveEvent<Resource<List<StockInVoucherDomain>>>()
+    val getStocksInVoucherLiveData: SingleLiveEvent<Resource<List<StockInVoucherDomain>>>
+        get() = _getStocksInVoucherLiveData
     private var _scanVoucherLiveData = SingleLiveEvent<Resource<ScanVoucherToConfirmDomain>>()
     val scanVoucherLiveData: SingleLiveEvent<Resource<ScanVoucherToConfirmDomain>>
         get() = _scanVoucherLiveData
@@ -60,6 +66,25 @@ class ConfirmVoucherViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         _confirmVoucherLiveData.value = Resource.Error(it.message)
+                    }
+                }
+            }
+        }
+    }
+
+    fun getStocksInVoucher(code: String) {
+        viewModelScope.launch {
+            getStockInVoucherUseCase(localDatabase.getToken().orEmpty(), code).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _getStocksInVoucherLiveData.value = Resource.Loading()
+                    }
+                    is Resource.Success -> {
+                        _getStocksInVoucherLiveData.value = Resource.Success(it.data)
+
+                    }
+                    is Resource.Error -> {
+                        _getStocksInVoucherLiveData.value = Resource.Error(it.message)
                     }
                 }
             }

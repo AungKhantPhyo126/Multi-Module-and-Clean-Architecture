@@ -200,6 +200,7 @@ class FlashSaleFragment : Fragment() {
 
         viewModel.scannedStockcodes.observe(viewLifecycleOwner) {
             binding.layoutBtnGroup.btnApprove.isEnabled = it.size > 0
+            binding.layoutDiscount.tvTotalScannedStockCount.text = it.size.toString()
             adapter.submitList(it)
             adapter.notifyDataSetChanged()
             binding.edtScanHere.text?.clear()
