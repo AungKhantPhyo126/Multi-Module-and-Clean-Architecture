@@ -19,7 +19,13 @@ class LocalDatabase @Inject constructor(@ApplicationContext context: Context) {
     }
 
     fun saveToken(token:String){
-        sharedPref.edit { putString(TOKEN,token) }
+        var result = ""
+        if (token.startsWith("Bearer")){
+            result = token.removePrefix("Bearer ")
+        }else{
+            result = token
+        }
+        sharedPref.edit{putString(TOKEN,result)}
     }
 
     fun updateToken(updatedToken: String){
@@ -29,7 +35,8 @@ class LocalDatabase @Inject constructor(@ApplicationContext context: Context) {
     }
 
     fun getToken(): String? {
-        return sharedPref.getString(TOKEN,"")
+        val token =  sharedPref.getString(TOKEN, "0")
+        return "Bearer $token"
     }
 
     fun deleteToken() {

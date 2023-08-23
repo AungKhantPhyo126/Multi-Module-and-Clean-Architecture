@@ -25,13 +25,11 @@ class TokenAuthenticator @Inject constructor(
         if (response.body?.contentLength() == 103L) {
             return null
         } else {
-            val refreshToken = getNewAccessToken()
-            when(refreshToken){
+            when(val refreshToken = getNewAccessToken()){
                 is Resource.Loading->{
-
+                    return null
                 }
                 is Resource.Success->{
-                    localDatabase.saveToken(refreshToken.data.orEmpty())
                     result = response.request.newBuilder()
                         .header("Authorization", localDatabase.getToken().orEmpty())
                         .build().also {

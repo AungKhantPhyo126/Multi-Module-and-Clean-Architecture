@@ -157,7 +157,7 @@ interface SetupStockNetWorkDatasource {
         gif:MultipartBody.Part?,
         gifId:MultipartBody.Part?,
         video: MultipartBody.Part?,
-    ): SimpleResponse
+    ): SimpleResponseDto
 
     suspend fun editProduct(
         token: String,

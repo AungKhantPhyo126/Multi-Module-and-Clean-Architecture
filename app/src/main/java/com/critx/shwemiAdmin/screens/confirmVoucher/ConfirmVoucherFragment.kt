@@ -37,6 +37,7 @@ class ConfirmVoucherFragment:Fragment() {
     private lateinit var loadingDialog: AlertDialog
     private var snackBar: Snackbar? = null
     private var voucherCode = ""
+    private var selectedType = "sale"
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -94,12 +95,13 @@ class ConfirmVoucherFragment:Fragment() {
         }
 
         //come from unconfirmed voucher
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Pair<String,String>>(
             "selected-voucher-code"
         )
-            ?.observe(viewLifecycleOwner) {voucherCode->
-                binding.edtScanHere.setText(voucherCode)
-                viewModel.scanStock(voucherCode)
+            ?.observe(viewLifecycleOwner) {codeAndType->
+                binding.edtScanHere.setText(codeAndType.first)
+                viewModel.scanStock(codeAndType.first)
+                selectedType = codeAndType.second
             }
 
         viewModel.scanVoucherLiveData.observe(viewLifecycleOwner) {
@@ -117,7 +119,13 @@ class ConfirmVoucherFragment:Fragment() {
                         if (it.isNullOrEmpty()) 0.0 else it.toDouble()
                     }).toString())
                     voucherCode = it.data?.code.orEmpty()
-                    viewModel.getStocksInVoucher(voucherCode)
+                    if (selectedType != "pawn" || it.data?.remaining_amount.isNullOrEmpty().not()){
+                        viewModel.getStocksInVoucher(voucherCode)
+                        binding.btnStockInVoucher.isVisible = true
+                    }else{
+                        binding.btnStockInVoucher.isVisible = false
+                    }
+
                 }
                 is Resource.Error -> {
                     loadingDialog.dismiss()

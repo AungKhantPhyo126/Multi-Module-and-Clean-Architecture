@@ -23,6 +23,7 @@ class UnConfirmVoucherFragment : Fragment() {
     private lateinit var binding: FragmentUnconfirmedVoucherBinding
     private lateinit var loadingDialog: AlertDialog
     private val viewModel by viewModels<UnConfirmVoucherViewModel>()
+    private var selectedType:String="sale"
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,8 +40,11 @@ class UnConfirmVoucherFragment : Fragment() {
         viewModel.getVouchers("sale")
         binding.radioGpVoucher.setOnCheckedChangeListener { radioGroup, checkedId ->
             if (checkedId == binding.radioBtnSaleVoucher.id){
+                selectedType="sale"
                 viewModel.getVouchers("sale")
             }else{
+                selectedType="pawn"
+
                 viewModel.getVouchers("pawn")
             }
         }
@@ -50,7 +54,7 @@ class UnConfirmVoucherFragment : Fragment() {
         val adapter = UnConfirmVoucherRecyclerAdapter{
             findNavController().previousBackStackEntry?.savedStateHandle?.set(
                 "selected-voucher-code",
-                    it
+                    Pair<String,String>(it,selectedType)
             )
             findNavController().popBackStack()
         }

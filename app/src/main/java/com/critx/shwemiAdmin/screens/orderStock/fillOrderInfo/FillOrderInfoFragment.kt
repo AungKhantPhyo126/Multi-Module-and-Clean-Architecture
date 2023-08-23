@@ -553,13 +553,14 @@ class FillOrderInfoFragment : Fragment() {
             }
             val equivalent_pure_gold_weight_kpy = MultipartBody.Part.createFormData(
                 "order[equivalent_pure_gold_weight_ywae]",
-                getOrderValue(
-                    binding.edtK.text.toString().toDouble(),
-                    binding.edtP.text.toString().toDouble(),
-                    binding.edtY.text.toString().toDouble(),
-                    binding.actGoldQuality.text.toString(),
-                    totalQty
-                )
+                ((binding.includeButton.tieOrderWeight.text?.toString()?:"0.0").toDouble() * 128).toString()
+//                getOrderValue(
+//                    binding.edtK.text.toString().toDouble(),
+//                    binding.edtP.text.toString().toDouble(),
+//                    binding.edtY.text.toString().toDouble(),
+//                    binding.actGoldQuality.text.toString(),
+//                    totalQty
+//                )
             )
             val order_qty = mutableListOf<MultipartBody.Part>()
             repeat(viewModel.orderQtyList.size) {

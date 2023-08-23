@@ -10,6 +10,7 @@ import com.critx.domain.model.collectStock.ProductIdWithTypeDomain
 import com.critx.domain.model.giveGold.GoldBoxDomain
 import com.critx.domain.model.repairStock.JobDoneDomain
 import com.critx.domain.model.sampleTakeAndReturn.VoucherScanDomain
+import com.critx.domain.useCase.GiveGoldPrintUseCase
 import com.critx.domain.useCase.collectStock.GetGoldSmithListUseCase
 import com.critx.domain.useCase.collectStock.ScanProductCodeUseCase
 import com.critx.domain.useCase.giveGold.GetGoldBoxIdUseCase
@@ -20,6 +21,7 @@ import com.critx.domain.useCase.sampleTakeAndReturn.CheckSampleUseCase
 import com.critx.domain.useCase.sampleTakeAndReturn.CheckSampleWithVoucherUseCase
 import com.critx.domain.useCase.sampleTakeAndReturn.SaveOutsideSampleUseCase
 import com.critx.domain.useCase.sampleTakeAndReturn.ScanInvoiceUseCase
+import com.critx.shwemiAdmin.SingleLiveEvent
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.SelectedImage
 import com.critx.shwemiAdmin.uiModel.collectStock.GoldSmithUiModel
 import com.critx.shwemiAdmin.uiModel.collectStock.asUiModel
@@ -45,13 +47,41 @@ class GiveGoldViewModel @Inject constructor(
     private val saveOutsideSampleUseCase: SaveOutsideSampleUseCase,
     private val scanInvoiceUseCase: ScanInvoiceUseCase,
     private val checkSampleWithVoucherUseCase: CheckSampleWithVoucherUseCase,
+    private val giveGoldPrintUseCase: GiveGoldPrintUseCase
 
-    ) : ViewModel() {
+) : ViewModel() {
     var selectedGSId: String? = null
     var selectedGoldBoxId: String? = null
 
-    private var _takenSampleListLiveData = MutableLiveData<List<SampleItemUIModel>>()
-    val takenSampleListLiveData: LiveData<List<SampleItemUIModel>>
+
+    private val _pdfDownloadLiveData = SingleLiveEvent<Resource<String>>()
+    val pdfDownloadLiveData: SingleLiveEvent<Resource<String>>
+        get() = _pdfDownloadLiveData
+
+    fun getPdf(voucherId: String) {
+        viewModelScope.launch {
+            giveGoldPrintUseCase(localDatabase.getToken().orEmpty(), voucherId).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        _pdfDownloadLiveData.value = Resource.Loading()
+                    }
+
+                    is Resource.Success -> {
+                        _pdfDownloadLiveData.value = Resource.Success(it.data!!)
+
+                    }
+
+                    is Resource.Error -> {
+                        _pdfDownloadLiveData.value = Resource.Error(it.message)
+                    }
+                }
+
+            }
+        }
+    }
+
+    private var _takenSampleListLiveData = SingleLiveEvent<List<SampleItemUIModel>>()
+    val takenSampleListLiveData: SingleLiveEvent<List<SampleItemUIModel>>
         get() = _takenSampleListLiveData
 
     val sampleList = mutableListOf<SampleItemUIModel>()
@@ -69,11 +99,10 @@ class GiveGoldViewModel @Inject constructor(
     fun resetTakenSamplelist() {
         sampleList.removeAll(sampleList)
         _takenSampleListLiveData.value = sampleList
-
     }
 
-    private var _serviceChargeLiveData = MutableLiveData<Resource<String>>()
-    val serviceChargeLiveData: LiveData<Resource<String>>
+    private var _serviceChargeLiveData = SingleLiveEvent<Resource<String>>()
+    val serviceChargeLiveData: SingleLiveEvent<Resource<String>>
         get() = _serviceChargeLiveData
 
     fun resetserviceChargeLiveData() {
@@ -88,8 +117,8 @@ class GiveGoldViewModel @Inject constructor(
         _giveGoldLiveData.value = null
     }
 
-    private var _scanProductCodeLive = MutableLiveData<Resource<ProductIdWithTypeDomain>>()
-    val scanProductCodeLive: LiveData<Resource<ProductIdWithTypeDomain>>
+    private var _scanProductCodeLive = SingleLiveEvent<Resource<ProductIdWithTypeDomain>>()
+    val scanProductCodeLive: SingleLiveEvent<Resource<ProductIdWithTypeDomain>>
         get() = _scanProductCodeLive
 
     private var _getGoldBoxLiveData = MutableLiveData<Resource<List<GoldBoxDomain>>>()
@@ -108,6 +137,7 @@ class GiveGoldViewModel @Inject constructor(
                     is Resource.Loading -> {
                         _serviceChargeLiveData.value = Resource.Loading()
                     }
+
                     is Resource.Success -> {
                         serviceChargeUseCase(
                             localDatabase.getToken().orEmpty(), chargeAmount, wastageGm,
@@ -118,11 +148,13 @@ class GiveGoldViewModel @Inject constructor(
                                     _serviceChargeLiveData.value = Resource.Loading()
 
                                 }
+
                                 is Resource.Success -> {
                                     _serviceChargeLiveData.value =
-                                        Resource.Success(it.data!!.message)
+                                        Resource.Success(it.data!!.id)
 
                                 }
+
                                 is Resource.Error -> {
                                     _serviceChargeLiveData.value = Resource.Error(it.message)
 
@@ -130,6 +162,7 @@ class GiveGoldViewModel @Inject constructor(
                             }
                         }
                     }
+
                     is Resource.Error -> {
                         _serviceChargeLiveData.value = Resource.Error(it.message)
                     }
@@ -143,8 +176,8 @@ class GiveGoldViewModel @Inject constructor(
         selectedImgUri.value = selectedImage
     }
 
-    private var _saveOutsideSampleLiveData = MutableLiveData<Resource<SampleItemUIModel>>()
-    val saveOutsideSampleLiveData: LiveData<Resource<SampleItemUIModel>>
+    private var _saveOutsideSampleLiveData = SingleLiveEvent<Resource<SampleItemUIModel>>()
+    val saveOutsideSampleLiveData: SingleLiveEvent<Resource<SampleItemUIModel>>
         get() = _saveOutsideSampleLiveData
 
     fun saveOutsideSample(
@@ -162,10 +195,12 @@ class GiveGoldViewModel @Inject constructor(
                     is Resource.Loading -> {
                         _saveOutsideSampleLiveData.value = Resource.Loading()
                     }
+
                     is Resource.Success -> {
                         _saveOutsideSampleLiveData.value = Resource.Success(it.data!!.asUIModel())
 
                     }
+
                     is Resource.Error -> {
                         _saveOutsideSampleLiveData.value = Resource.Error(it.message)
                     }
@@ -175,8 +210,8 @@ class GiveGoldViewModel @Inject constructor(
         }
     }
 
-    private val _checkSampleLiveData = MutableLiveData<Resource<SampleItemUIModel>>()
-    val checkSampleLiveData: LiveData<Resource<SampleItemUIModel>>
+    private val _checkSampleLiveData = SingleLiveEvent<Resource<SampleItemUIModel>>()
+    val checkSampleLiveData: SingleLiveEvent<Resource<SampleItemUIModel>>
         get() = _checkSampleLiveData
 
     fun checkSample(stockId: String) {
@@ -186,10 +221,12 @@ class GiveGoldViewModel @Inject constructor(
                     is Resource.Loading -> {
                         _checkSampleLiveData.value = Resource.Loading()
                     }
+
                     is Resource.Success -> {
                         _checkSampleLiveData.value =
                             Resource.Success(it.data!!.asUIModel())
                     }
+
                     is Resource.Error -> {
                         _checkSampleLiveData.value = Resource.Error(it.message)
                     }
@@ -205,10 +242,12 @@ class GiveGoldViewModel @Inject constructor(
                     is Resource.Loading -> {
                         _goldSmithListLiveData.value = Resource.Loading()
                     }
+
                     is Resource.Success -> {
                         _goldSmithListLiveData.value =
                             Resource.Success(it.data!!.map { it.asUiModel() } as MutableList<GoldSmithUiModel>)
                     }
+
                     is Resource.Error -> {
                         _goldSmithListLiveData.value = Resource.Error(it.message)
                     }
@@ -228,9 +267,11 @@ class GiveGoldViewModel @Inject constructor(
                     is Resource.Loading -> {
                         _getGoldBoxLiveData.value = Resource.Loading()
                     }
+
                     is Resource.Success -> {
                         _getGoldBoxLiveData.value = Resource.Success(it.data!!)
                     }
+
                     is Resource.Error -> {
                         _getGoldBoxLiveData.value = Resource.Error(it.message)
                     }
@@ -246,9 +287,11 @@ class GiveGoldViewModel @Inject constructor(
                     is Resource.Loading -> {
                         _scanProductCodeLive.value = Resource.Loading()
                     }
+
                     is Resource.Success -> {
                         _scanProductCodeLive.value = Resource.Success(it.data)
                     }
+
                     is Resource.Error -> {
                         _scanProductCodeLive.value = Resource.Error(it.message)
                     }
@@ -289,9 +332,11 @@ class GiveGoldViewModel @Inject constructor(
                     is Resource.Loading -> {
                         _giveGoldLiveData.value = Resource.Loading()
                     }
+
                     is Resource.Success -> {
-                        _giveGoldLiveData.value = Resource.Success(it.data!!.message)
+                        _giveGoldLiveData.value = Resource.Success(it.data!!)
                     }
+
                     is Resource.Error -> {
                         _giveGoldLiveData.value = Resource.Error(it.message)
                     }
@@ -300,8 +345,8 @@ class GiveGoldViewModel @Inject constructor(
         }
     }
 
-    private val _voucherScanLiveData = MutableLiveData<Resource<VoucherScanDomain>>()
-    val voucherScanLiveData: LiveData<Resource<VoucherScanDomain>>
+    private val _voucherScanLiveData = SingleLiveEvent<Resource<VoucherScanDomain>>()
+    val voucherScanLiveData: SingleLiveEvent<Resource<VoucherScanDomain>>
         get() = _voucherScanLiveData
 
     fun scanVoucher(invoiceCode: String) {
@@ -311,10 +356,12 @@ class GiveGoldViewModel @Inject constructor(
                     is Resource.Loading -> {
                         _voucherScanLiveData.value = Resource.Loading()
                     }
+
                     is Resource.Success -> {
                         _voucherScanLiveData.value = Resource.Success(it.data)
 //                        checkSampleUseCase(localDatabase.getToken().orEmpty(), it.data!!.id)
                     }
+
                     is Resource.Error -> {
                         _voucherScanLiveData.value = Resource.Error(it.message)
                     }
@@ -327,11 +374,11 @@ class GiveGoldViewModel @Inject constructor(
         _voucherScanLiveData.value = null
     }
 
-    private val _sampleLiveDataFromVoucher = MutableLiveData<Resource<List<SampleItemUIModel>>>()
-    val sampleLiveDataFromVoucher: LiveData<Resource<List<SampleItemUIModel>>>
+    private val _sampleLiveDataFromVoucher = SingleLiveEvent<Resource<List<SampleItemUIModel>>>()
+    val sampleLiveDataFromVoucher: SingleLiveEvent<Resource<List<SampleItemUIModel>>>
         get() = _sampleLiveDataFromVoucher
 
-    fun selectSample(sampleId: String,check:Boolean) {
+    fun selectSample(sampleId: String, check: Boolean) {
         _sampleLiveDataFromVoucher.value!!.data!!.filterNotNull().find {
             it.id == sampleId
         }?.isChecked = check
@@ -350,10 +397,12 @@ class GiveGoldViewModel @Inject constructor(
                     is Resource.Loading -> {
                         _sampleLiveDataFromVoucher.value = Resource.Loading()
                     }
+
                     is Resource.Success -> {
                         _sampleLiveDataFromVoucher.value =
                             Resource.Success(it.data!!.map { it.asUIModel() })
                     }
+
                     is Resource.Error -> {
                         _sampleLiveDataFromVoucher.value = Resource.Error(it.message)
                     }

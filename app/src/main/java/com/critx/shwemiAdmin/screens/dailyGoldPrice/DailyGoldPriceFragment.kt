@@ -67,6 +67,7 @@ class DailyGoldPriceFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
         loadingDialog = requireContext().getAlertDialog()
+        refreshData()
         binding.swipeRefreshLayout.setOnRefreshListener {
             refreshData()
         }

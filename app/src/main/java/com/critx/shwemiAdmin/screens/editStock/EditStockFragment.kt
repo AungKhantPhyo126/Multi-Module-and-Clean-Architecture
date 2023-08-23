@@ -33,6 +33,7 @@ import com.critx.shwemiAdmin.*
 import com.critx.shwemiAdmin.databinding.AddGemValueDialogBinding
 import com.critx.shwemiAdmin.databinding.FragmentEditStockBinding
 import com.critx.shwemiAdmin.hideKeyboard
+import com.critx.shwemiAdmin.printHelper.PrintTask
 import com.critx.shwemiAdmin.screens.setupStock.third.edit.getRealPathFromUri
 import com.critx.shwemiAdmin.screens.setupStock.third.edit.persistImage
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -408,6 +409,26 @@ class EditStockFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
+                    val gemWeightYwae = getYwaeFromKPY(
+                        generateNumberFromEditText(binding.edtK).toInt(),
+                        generateNumberFromEditText(binding.edtP).toInt(),
+                        generateNumberFromEditText(binding.edtY).toDouble(),
+                    ).toDouble()
+
+                    val goldGemWeightYwae = getYwaeFromGram(binding.edtGoldGemGm.text.toString().toDouble()).toDouble()
+                    val goldWeightYwae = goldGemWeightYwae - gemWeightYwae
+                    val weightKPY = getKPYFromYwae(goldWeightYwae)
+
+                    val weightKyat = weightKPY[0]
+                    val weightPae = weightKPY[1]
+                    val weightYwae= weightKPY[2]
+                    printItem(
+                        productCode = binding.edtScanHere.text.toString(),
+                        weightGm = binding.edtGoldGemGm.text.toString(),
+                        weightKyat = weightKyat.toString(),
+                        weightPae = weightPae.toString(),
+                        weightYwae = weightYwae.toString()
+                    )
                     requireContext().showSuccessDialog(it.data!!) {
                         viewModel.resetEditProductLiveData()
                         viewModel.resetDimaondData()
@@ -753,5 +774,28 @@ class EditStockFragment : Fragment() {
                 video
             )
         }
+    }
+
+    private fun printItem(productCode: String,weightKyat:String,weightPae:String,weightYwae:String,weightGm:String) {
+
+//NS-010623-001
+        val sample = " AA1V00240H0320" +
+                "%2H0309V002282D30,L,04,1,0DN0013,$productCode" +
+                "%2H0314V00122P02RH0,SATOSERIF.ttf,0,020,020,${productCode.substring(0, 2)}" +
+                "%2H0314V00102P02RH0,SATOSERIF.ttf,0,020,020,${productCode.substring(3, 9)}" +
+                "%2H0314V00082P02RH0,SATOSERIF.ttf,0,020,020,${productCode.substring(10, productCode.length)}" +
+                "%2H0315V00060P02RH0,SATOSERIF.ttf,1,020,023,$weightGm gm" +
+                "%2H0312V00028P02RH0,SATOSERIF.ttf,1,020,020,${weightKyat}  $weightPae  $weightYwae" +
+                "Q1" +
+                "Z"
+
+
+
+
+        PrintTask.isPortSet = false
+        PrintTask.variableMap = HashMap<String, String>()
+        PrintTask.variableMap.put("__command", sample)
+//        PrintTask.variableMap.put("__encoding", "base64")
+        PrintTask(requireActivity()).execute("dummy")
     }
 }

@@ -8,6 +8,7 @@ import com.critx.commonkotlin.util.Resource
 import com.critx.data.localdatabase.LocalDatabase
 import com.critx.domain.useCase.SetUpStock.CreateProductUseCase
 import com.critx.domain.useCase.SetUpStock.GetProductCodeUseCase
+import com.critx.shwemiAdmin.SingleLiveEvent
 import com.critx.shwemiAdmin.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +25,9 @@ class FinalStockSetupViewModel @Inject constructor(
     private val createProductUseCase: CreateProductUseCase,
     private val getProductCodeUseCase: GetProductCodeUseCase
 ) : ViewModel() {
+    private val _createProductLiveData = SingleLiveEvent<Resource<String>>()
+    val createProductLiveData: SingleLiveEvent<Resource<String>>
+        get() = _createProductLiveData
 
     var selectedImgUri1: File? = null
     var selectedImgUri2: File? = null
@@ -47,13 +51,9 @@ class FinalStockSetupViewModel @Inject constructor(
         diamondValueForSale = null
     }
 
-    private val _createProductLiveData = MutableLiveData<Resource<String>>()
-    val createProductLiveData: LiveData<Resource<String>>
-        get() = _createProductLiveData
 
-    fun resetCreateLiveData() {
-        _createProductLiveData.value = null
-    }
+
+
 
     private val _getProductLiveData = MutableLiveData<Resource<String>>()
     val getProductLiveData: LiveData<Resource<String>>

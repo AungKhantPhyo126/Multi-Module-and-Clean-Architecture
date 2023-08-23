@@ -479,7 +479,7 @@ class SetupStockRepositoryImpl @Inject constructor(
                             diamondPriceForSale,
                             diamondValueForSale,
                             image1, image1Id, image2, image2Id, image3, image3Id, gif, gifId, video
-                        ).response.asDomain()
+                        ).asDomain()
                     )
                 )
             } catch (e: HttpException) {

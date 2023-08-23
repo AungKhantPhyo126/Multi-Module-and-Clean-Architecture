@@ -31,14 +31,14 @@ class GiveGoldRepoImpl @Inject constructor(
         wastageY: String,
         dueDate: String?,
         sampleList: List<String>?
-    ): Flow<Resource<SimpleData>> =
+    ): Flow<Resource<String>> =
         flow {
             emit(Resource.Loading())
             try {
                 emit(
                     Resource.Success(
                         giveGoldDataSource.giveGold(token,goldSmithId, orderItem, orderQty, weightY,
-                            goldBoxId, goldWeight, gemWeight,goldAndGemWeight,wastageY, dueDate, sampleList).asDomain()
+                            goldBoxId, goldWeight, gemWeight,goldAndGemWeight,wastageY, dueDate, sampleList)
                     )
                 )
             } catch (e: HttpException) {
@@ -101,6 +101,24 @@ class GiveGoldRepoImpl @Inject constructor(
                 emit(
                     Resource.Success(
                         giveGoldDataSource.giveGoldScan(token,invoiceNumber).asDomain()
+                    )
+                )
+            } catch (e: HttpException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: IOException) {
+                emit(Resource.Error(GetErrorMessage.fromException(e)))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unhandled Error"))
+            }
+        }
+
+    override fun getPdfPrint(token: String, voucherID: String): Flow<Resource<String>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                emit(
+                    Resource.Success(
+                        giveGoldDataSource.getPdfPrint(token,voucherID)
                     )
                 )
             } catch (e: HttpException) {

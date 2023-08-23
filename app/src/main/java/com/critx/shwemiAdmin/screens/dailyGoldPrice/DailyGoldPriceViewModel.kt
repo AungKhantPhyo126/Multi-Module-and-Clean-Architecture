@@ -230,16 +230,15 @@ class DailyGoldPriceViewModel @Inject constructor(
     }
 
     init {
-        with(connectionObserver) {
-            register()
-            onConnected = {
-                getProfile()
-            }
-        }
+//        with(connectionObserver) {
+//            register()
+//            onConnected = {
+//                getProfile()
+//            }
+//        }
     }
 
     override fun onCleared() {
         super.onCleared()
-        connectionObserver.unregister()
     }
 }

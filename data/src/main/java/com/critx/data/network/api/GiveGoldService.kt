@@ -1,6 +1,7 @@
 package com.critx.data.network.api
 
 import com.critx.data.network.dto.SimpleResponse
+import com.critx.data.network.dto.SimpleResponseWithStringData
 import com.critx.data.network.dto.giveGold.GiveGoldScanResponse
 import com.critx.data.network.dto.giveGold.GoldBoxResponse
 import retrofit2.Response
@@ -24,7 +25,7 @@ interface GiveGoldService {
         @Field("unit_wastage_ywae") wastageY: String,
         @Field("due_date") dueDate: String?,
         @Field("samples[]") sampleList: List<String>?
-    ): Response<SimpleResponse>
+    ): Response<SimpleResponseWithStringData>
 
     @GET("api/gold_boxes/quicklist")
     suspend fun getGoldBoxId(
@@ -45,4 +46,10 @@ interface GiveGoldService {
         @Header("Authorization") token: String,
         @Path("invoice") invoice: String
         ):Response<GiveGoldScanResponse>
+
+    @GET("api/gold_givings/{voucherID}/voucher-download")
+    suspend fun getPdfPrint(
+        @Header("Authorization") token: String,
+        @Path("voucherID") voucherID: String
+        ):Response<SimpleResponseWithStringData>
 }

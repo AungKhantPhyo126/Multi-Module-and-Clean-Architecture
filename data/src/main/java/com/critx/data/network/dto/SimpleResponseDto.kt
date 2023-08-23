@@ -1,9 +1,12 @@
 package com.critx.data.network.dto
 
 import com.critx.domain.model.SimpleData
-
 data class SimpleResponse(
-    val response:SimpleResponseDto
+    val response: SimpleResponseDto
+)
+data class SimpleResponseWithStringData(
+    val response:SimpleResponseDto,
+    val data:String?
 )
 
 data class SimpleResponseDto(

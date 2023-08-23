@@ -29,19 +29,21 @@ fun getErrorMessageFromHashMap(errorMessage:Map<String,List<String>>):String{
     return value.toString()
 }
 
-inline fun ResponseBody.parseError(errorJsonString:String): Map<String,List<String>>?{
+inline fun ResponseBody.parseError(errorJsonString: String): Map<String, List<String>>? {
     val moshi = Moshi.Builder().build()
-    val type = Types.newParameterizedType(Map::class.java, String::class.java, List::class.javaObjectType)
+    val type =
+        Types.newParameterizedType(Map::class.java, String::class.java, List::class.javaObjectType)
     val adapter = moshi.adapter<Map<String, List<String>>>(type)
-    val jsonObject = JSONObject(errorJsonString)
+    var jsonObject = JSONObject(errorJsonString)
+
+
     try {
-        val messageList = jsonObject.getJSONObject("response").getJSONObject("message").toString()
-        return adapter.fromJson(messageList)
-    }catch (e: JsonDataException) {
+        return adapter.fromJson(
+            jsonObject.getJSONObject("response").getJSONObject("message").toString()
+        )
+    } catch (e: JsonDataException) {
         e.printStackTrace()
-
     }
-
     return null
 }
 

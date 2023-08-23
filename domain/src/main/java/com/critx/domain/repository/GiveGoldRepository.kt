@@ -20,7 +20,7 @@ interface GiveGoldRepository {
         wastageY: String,
         dueDate: String?,
         sampleList: List<String>?
-    ):Flow<Resource<SimpleData>>
+    ):Flow<Resource<String>>
 
      fun getGoldBoxId(
         token: String
@@ -37,4 +37,9 @@ interface GiveGoldRepository {
          token: String,
          invoiceNumber:String,
      ):Flow<Resource<GiveGoldScanDomain>>
+
+    fun getPdfPrint(
+        token: String,
+        voucherID: String
+    ): Flow<Resource<String>>
 }

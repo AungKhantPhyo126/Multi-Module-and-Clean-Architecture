@@ -35,8 +35,14 @@ class UnConfirmVoucherViewHolder(private val binding: ItemUnconfirmedVoucherBind
             onclick(data.code.orEmpty())
         }
         binding.tvInvoiceCode.text = data.code.toString()
-        binding.tvDeposit.text = data.paid_amount.toString()
-        binding.tvBalance.text = data.remaining_amount.toString()
+
+        if (data.type == "Pawn"){
+            binding.tvBalance.text = data.cost
+            binding.tvDeposit.text = "-"
+        }else{
+            binding.tvDeposit.text = data.paid_amount.toString()
+            binding.tvBalance.text = data.remaining_amount.toString()
+        }
         if (adapterPosition%2 ==0){
             binding.rootLayout.setBackgroundColor(binding.root.context.getColor(R.color.white))
             binding.apply {

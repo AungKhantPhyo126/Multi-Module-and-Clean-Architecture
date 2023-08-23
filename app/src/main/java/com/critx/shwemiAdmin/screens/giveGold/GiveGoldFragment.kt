@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -20,6 +21,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -28,6 +30,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.critx.common.databinding.ShwemiSuccessDialogBinding
@@ -42,15 +45,19 @@ import com.critx.shwemiAdmin.databinding.FragmentGiveGoldBinding
 import com.critx.shwemiAdmin.databinding.ServiceChargeDialogBinding
 import com.critx.shwemiAdmin.getYwaeFromKPY
 import com.critx.shwemiAdmin.hideKeyboard
+import com.critx.shwemiAdmin.printPdf
 import com.critx.shwemiAdmin.screens.orderStock.fillOrderInfo.SampleImageRecyclerAdapter
 import com.critx.shwemiAdmin.screens.repairStock.showServiceChargeOnlyDialog
 import com.critx.shwemiAdmin.screens.setupStock.SharedViewModel
 import com.critx.shwemiAdmin.screens.setupStock.fourth.edit.SelectedImage
 import com.critx.shwemiAdmin.screens.setupStock.third.edit.getRealPathFromUri
 import com.critx.shwemiAdmin.showDropdown
+import com.example.satoprintertest.AkpDownloader
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -74,6 +81,7 @@ class GiveGoldFragment : Fragment() {
     var photo: MultipartBody.Part? = null
     private lateinit var launchChooseImage: ActivityResultLauncher<Intent>
     private lateinit var readStoragePermissionlauncher: ActivityResultLauncher<String>
+    private val downloader by lazy { AkpDownloader(requireContext()) }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -136,6 +144,7 @@ class GiveGoldFragment : Fragment() {
         toolbarEndIcon.isVisible = false
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbarsetup()
@@ -186,8 +195,8 @@ class GiveGoldFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
-                    requireContext().showSuccessDialog(it.data!!) {
-                        viewModel.resetserviceChargeLiveData()
+                    requireContext().showSuccessDialog("Press Ok To Download And Print!") {
+                        viewModel.getPdf(it.data.orEmpty())
                     }
                 }
                 is Resource.Error -> {
@@ -300,12 +309,38 @@ class GiveGoldFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     loadingDialog.dismiss()
-                    requireContext().showSuccessDialog(it.data!!) {
+                    requireContext().showSuccessDialog("Press Ok To Download And Print!") {
+                        viewModel.getPdf(it.data.orEmpty())
                         viewModel.resetGiveGoldLiveData()
                         formReset()
                     }
                 }
                 is Resource.Error -> {
+                    loadingDialog.dismiss()
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+        viewModel.pdfDownloadLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    loadingDialog.show()
+                }
+
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    lifecycleScope.launchWhenCreated {
+                        withContext(Dispatchers.IO){
+                            printPdf(downloader.downloadFile(it.data.orEmpty()).orEmpty(), requireContext())
+                        }
+                    }
+                    requireContext().showSuccessDialog("Press Ok When Printing is finished!") {
+
+                    }
+                }
+
+                is Resource.Error -> {
+
                     loadingDialog.dismiss()
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                 }

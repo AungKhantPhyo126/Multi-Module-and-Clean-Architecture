@@ -34,7 +34,7 @@ import retrofit2.create
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
-const val BASE_URL = "http://13.214.194.201/"
+const val BASE_URL = "https://admin.shwemigoldshop.com/"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -259,11 +259,11 @@ class NetworkModule {
     @Singleton
     fun provideOkHttpClient(
         authenticator: TokenAuthenticator,
-        localDatabase: LocalDatabase,
         @ApplicationContext context: Context,
-        connectionObserver: ConnectionObserver
+//        unauthorizedInterceptor: UnauthorizedInterceptor
     ): OkHttpClient {
-        return UnsafeOkHttpClient.unsafeOkHttpClient.apply {
+        return OkHttpClient.Builder().apply {
+//            addInterceptor(unauthorizedInterceptor)
             connectTimeout(60*1000,TimeUnit.MILLISECONDS)
             readTimeout(60*1000,TimeUnit.MILLISECONDS)
             authenticator(authenticator)
@@ -274,7 +274,6 @@ class NetworkModule {
 //                        .header("Accept-Encoding", "identity")
                         .addHeader("content-type", "application/json")
                         .addHeader("Accept", "application/json")
-                        .addHeader("Authorization", "Bearer ${localDatabase.getToken()}")
                         .build()
                 chain.proceed(request)
             })
@@ -286,7 +285,6 @@ class NetworkModule {
                     .alwaysReadResponseBody(false)
                     .build()
             )
-            addInterceptor(InternetConnectionInterceptor(connectionObserver))
 
         }.build()
     }
@@ -297,6 +295,14 @@ class NetworkModule {
         localDatabase: LocalDatabase
     ): TokenAuthenticator {
         return TokenAuthenticator(authRepo, localDatabase)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUnauthorizedINterceptor(
+        tokenAuthenticator: TokenAuthenticator
+    ):UnauthorizedInterceptor{
+        return UnauthorizedInterceptor(tokenAuthenticator)
     }
 
 

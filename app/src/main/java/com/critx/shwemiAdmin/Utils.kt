@@ -1,19 +1,27 @@
 package com.critx.shwemiAdmin
 
 import android.content.Context
+import android.os.Environment
+import android.print.PrintAttributes
+import android.print.PrintManager
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.EditText
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import com.critx.commonkotlin.util.Resource
+import com.example.shwemisale.printerHelper.PdfDocumentAdapter
 import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import okhttp3.ResponseBody
 import org.json.JSONObject
+import java.io.File
+import java.lang.Exception
 import kotlin.math.roundToInt
 
 fun <T> MutableLiveData<MutableList<T>>.notifyObserver() {
@@ -89,6 +97,29 @@ fun getYwaeFromGram(gram:Double):String{
 
 fun getGramFromYwae(ywae:Double):Double{
     return (((ywae/128)*16.6)*100).roundToInt() / 100.0
+}
+
+fun printPdf(path: String,context: Context) {
+    val printManager = context.getSystemService(Context.PRINT_SERVICE) as PrintManager
+    try {
+        val printAdapter = PdfDocumentAdapter(context, path)
+        printManager.print(
+            "${context.getString(R.string.app_name)} Document", printAdapter,
+            PrintAttributes.Builder().build()
+        )
+        val file = File(Environment.DIRECTORY_DOWNLOADS,"akp.pdf")
+        if (file.exists()) file.delete()
+    } catch (e: Exception) {
+        Log.e("AkpDev", e.message.orEmpty())
+    }
+}
+
+fun generateNumberFromEditText(editText: EditText): String {
+    return if (editText.text.isNullOrEmpty()) {
+        "0"
+    } else {
+        editText.text.toString()
+    }
 }
 
 

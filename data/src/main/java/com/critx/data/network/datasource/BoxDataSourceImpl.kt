@@ -20,7 +20,10 @@ class BoxDataSourceImpl @Inject constructor(
         } else {
             throw Exception(
                 when (response.code()) {
-                    400 -> {
+                    500 -> {
+                        "Unhandled error occurred!!!"
+                    }
+                    else -> {
                         val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
                             response.errorBody()
@@ -36,13 +39,6 @@ class BoxDataSourceImpl @Inject constructor(
                             value.toString()
                         }
                     }
-
-                    401 -> "You are not Authorized"
-                    402 -> "Payment required!!!"
-                    403 -> "Forbidden"
-                    404 -> "You request not found"
-                    405 -> "Method is not allowed!!!"
-                    else -> "Unhandled error occurred!!!"
                 }
             )
         }
@@ -55,7 +51,10 @@ class BoxDataSourceImpl @Inject constructor(
         } else {
             throw Exception(
                 when (response.code()) {
-                    400 -> {
+                    500 -> {
+                        "Unhandled error occurred!!!"
+                    }
+                    else -> {
                         val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
                             response.errorBody()
@@ -71,13 +70,6 @@ class BoxDataSourceImpl @Inject constructor(
                             value.toString()
                         }
                     }
-
-                    401 -> "You are not Authorized"
-                    402 -> "Payment required!!!"
-                    403 -> "Forbidden"
-                    404 -> "You request not found"
-                    405 -> "Method is not allowed!!!"
-                    else -> "Unhandled error occurred!!!"
                 }
             )
         }
@@ -90,7 +82,10 @@ class BoxDataSourceImpl @Inject constructor(
         } else {
             throw Exception(
                 when (response.code()) {
-                    400 -> {
+                    500 -> {
+                        "Unhandled error occurred!!!"
+                    }
+                    else -> {
                         val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
                             response.errorBody()
@@ -106,13 +101,6 @@ class BoxDataSourceImpl @Inject constructor(
                             value.toString()
                         }
                     }
-
-                    401 -> "You are not Authorized"
-                    402 -> "Payment required!!!"
-                    403 -> "Forbidden"
-                    404 -> "You request not found"
-                    405 -> "Method is not allowed!!!"
-                    else -> "Unhandled error occurred!!!"
                 }
             )
         }

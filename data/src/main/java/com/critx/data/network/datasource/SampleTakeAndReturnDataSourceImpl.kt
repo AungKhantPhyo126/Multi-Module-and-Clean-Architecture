@@ -21,27 +21,25 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> {
-                            val errorJsonString = response.errorBody()?.string().orEmpty()
+                    500 -> {
+                        "Unhandled error occurred!!!"
+                    }
+                    else -> {
+                        val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
-                            response.errorBody()?.parseErrorWithDataClass<SimpleError>(errorJsonString)
+                            response.errorBody()
+                                ?.parseErrorWithDataClass<SimpleError>(errorJsonString)
                         if (singleError != null) {
                             singleError.response.message
                         } else {
                             val errorMessage =
-                               response.errorBody()?.parseError(errorJsonString)
+                                response.errorBody()?.parseError(errorJsonString)
                             val list: List<Map.Entry<String, Any>> =
                                 ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
                             val (key, value) = list[0]
                             value.toString()
                         }
                     }
-                    401 -> "You are not Authorized"
-                    402 -> "Payment required!!!"
-                    403 -> "Forbidden"
-                    404 -> "You request not found"
-                    405 -> "Method is not allowed!!!"
-                    else -> "Unhandled error occurred!!!"
                 }
             )
         }
@@ -54,27 +52,25 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> {
-                            val errorJsonString = response.errorBody()?.string().orEmpty()
+                    500 -> {
+                        "Unhandled error occurred!!!"
+                    }
+                    else -> {
+                        val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
-                            response.errorBody()?.parseErrorWithDataClass<SimpleError>(errorJsonString)
+                            response.errorBody()
+                                ?.parseErrorWithDataClass<SimpleError>(errorJsonString)
                         if (singleError != null) {
                             singleError.response.message
                         } else {
                             val errorMessage =
-                               response.errorBody()?.parseError(errorJsonString)
+                                response.errorBody()?.parseError(errorJsonString)
                             val list: List<Map.Entry<String, Any>> =
                                 ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
                             val (key, value) = list[0]
                             value.toString()
                         }
                     }
-                    401 -> "You are not Authorized"
-                    402 -> "Payment required!!!"
-                    403 -> "Forbidden"
-                    404 -> "You request not found"
-                    405 -> "Method is not allowed!!!"
-                    else -> "Unhandled error occurred!!!"
                 }
             )
         }
@@ -87,27 +83,25 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> {
-                            val errorJsonString = response.errorBody()?.string().orEmpty()
+                    500 -> {
+                        "Unhandled error occurred!!!"
+                    }
+                    else -> {
+                        val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
-                            response.errorBody()?.parseErrorWithDataClass<SimpleError>(errorJsonString)
+                            response.errorBody()
+                                ?.parseErrorWithDataClass<SimpleError>(errorJsonString)
                         if (singleError != null) {
                             singleError.response.message
                         } else {
                             val errorMessage =
-                               response.errorBody()?.parseError(errorJsonString)
+                                response.errorBody()?.parseError(errorJsonString)
                             val list: List<Map.Entry<String, Any>> =
                                 ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
                             val (key, value) = list[0]
                             value.toString()
                         }
                     }
-                    401 -> "You are not Authorized"
-                    402 -> "Payment required!!!"
-                    403 -> "Forbidden"
-                    404 -> "You request not found"
-                    405 -> "Method is not allowed!!!"
-                    else -> "Unhandled error occurred!!!"
                 }
             )
         }
@@ -120,27 +114,25 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> {
-                            val errorJsonString = response.errorBody()?.string().orEmpty()
+                    500 -> {
+                        "Unhandled error occurred!!!"
+                    }
+                    else -> {
+                        val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
-                            response.errorBody()?.parseErrorWithDataClass<SimpleError>(errorJsonString)
+                            response.errorBody()
+                                ?.parseErrorWithDataClass<SimpleError>(errorJsonString)
                         if (singleError != null) {
                             singleError.response.message
                         } else {
                             val errorMessage =
-                               response.errorBody()?.parseError(errorJsonString)
+                                response.errorBody()?.parseError(errorJsonString)
                             val list: List<Map.Entry<String, Any>> =
                                 ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
                             val (key, value) = list[0]
                             value.toString()
                         }
                     }
-                    401 -> "You are not Authorized"
-                    402 -> "Payment required!!!"
-                    403 -> "Forbidden"
-                    404 -> "You request not found"
-                    405 -> "Method is not allowed!!!"
-                    else -> "Unhandled error occurred!!!"
                 }
             )
         }    }
@@ -153,27 +145,25 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> {
-                            val errorJsonString = response.errorBody()?.string().orEmpty()
+                    500 -> {
+                        "Unhandled error occurred!!!"
+                    }
+                    else -> {
+                        val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
-                            response.errorBody()?.parseErrorWithDataClass<SimpleError>(errorJsonString)
+                            response.errorBody()
+                                ?.parseErrorWithDataClass<SimpleError>(errorJsonString)
                         if (singleError != null) {
                             singleError.response.message
                         } else {
                             val errorMessage =
-                               response.errorBody()?.parseError(errorJsonString)
+                                response.errorBody()?.parseError(errorJsonString)
                             val list: List<Map.Entry<String, Any>> =
                                 ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
                             val (key, value) = list[0]
                             value.toString()
                         }
                     }
-                    401 -> "You are not Authorized"
-                    402 -> "Payment required!!!"
-                    403 -> "Forbidden"
-                    404 -> "You request not found"
-                    405 -> "Method is not allowed!!!"
-                    else -> "Unhandled error occurred!!!"
                 }
             )
         }
@@ -186,10 +176,14 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> {
+                    500 -> {
+                        "Unhandled error occurred!!!"
+                    }
+                    else -> {
                         val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
-                            response.errorBody()?.parseErrorWithDataClass<SimpleError>(errorJsonString)
+                            response.errorBody()
+                                ?.parseErrorWithDataClass<SimpleError>(errorJsonString)
                         if (singleError != null) {
                             singleError.response.message
                         } else {
@@ -201,12 +195,6 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
                             value.toString()
                         }
                     }
-                    401 -> "You are not Authorized"
-                    402 -> "Payment required!!!"
-                    403 -> "Forbidden"
-                    404 -> "You request not found"
-                    405 -> "Method is not allowed!!!"
-                    else -> "Unhandled error occurred!!!"
                 }
             )
         }
@@ -222,28 +210,25 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> {
-                            val errorJsonString = response.errorBody()?.string().orEmpty()
+                    500 -> {
+                        "Unhandled error occurred!!!"
+                    }
+                    else -> {
+                        val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
-                            response.errorBody()?.parseErrorWithDataClass<SimpleError>(errorJsonString)
+                            response.errorBody()
+                                ?.parseErrorWithDataClass<SimpleError>(errorJsonString)
                         if (singleError != null) {
                             singleError.response.message
                         } else {
                             val errorMessage =
-                               response.errorBody()?.parseError(errorJsonString)
+                                response.errorBody()?.parseError(errorJsonString)
                             val list: List<Map.Entry<String, Any>> =
                                 ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
                             val (key, value) = list[0]
                             value.toString()
                         }
                     }
-                    401 -> "You are not Authorized"
-                    402 -> "Payment required!!!"
-                    403 -> "Forbidden"
-                    404 -> "You request not found"
-                    405 -> "Method is not allowed!!!"
-                    500 -> "Internal Server Error"
-                    else -> "Unhandled error occurred!!!"
                 }
             )
         }
@@ -256,27 +241,25 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> {
-                            val errorJsonString = response.errorBody()?.string().orEmpty()
+                    500 -> {
+                        "Unhandled error occurred!!!"
+                    }
+                    else -> {
+                        val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
-                            response.errorBody()?.parseErrorWithDataClass<SimpleError>(errorJsonString)
+                            response.errorBody()
+                                ?.parseErrorWithDataClass<SimpleError>(errorJsonString)
                         if (singleError != null) {
                             singleError.response.message
                         } else {
                             val errorMessage =
-                               response.errorBody()?.parseError(errorJsonString)
+                                response.errorBody()?.parseError(errorJsonString)
                             val list: List<Map.Entry<String, Any>> =
                                 ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
                             val (key, value) = list[0]
                             value.toString()
                         }
                     }
-                    401 -> "You are not Authorized"
-                    402 -> "Payment required!!!"
-                    403 -> "Forbidden"
-                    404 -> "You request not found"
-                    405 -> "Method is not allowed!!!"
-                    else -> "Unhandled error occurred!!!"
                 }
             )
         }
@@ -289,27 +272,25 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> {
-                            val errorJsonString = response.errorBody()?.string().orEmpty()
+                    500 -> {
+                        "Unhandled error occurred!!!"
+                    }
+                    else -> {
+                        val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
-                            response.errorBody()?.parseErrorWithDataClass<SimpleError>(errorJsonString)
+                            response.errorBody()
+                                ?.parseErrorWithDataClass<SimpleError>(errorJsonString)
                         if (singleError != null) {
                             singleError.response.message
                         } else {
                             val errorMessage =
-                               response.errorBody()?.parseError(errorJsonString)
+                                response.errorBody()?.parseError(errorJsonString)
                             val list: List<Map.Entry<String, Any>> =
                                 ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
                             val (key, value) = list[0]
                             value.toString()
                         }
                     }
-                    401 -> "You are not Authorized"
-                    402 -> "Payment required!!!"
-                    403 -> "Forbidden"
-                    404 -> "You request not found"
-                    405 -> "Method is not allowed!!!"
-                    else -> "Unhandled error occurred!!!"
                 }
             )
         }
@@ -325,27 +306,25 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> {
-                            val errorJsonString = response.errorBody()?.string().orEmpty()
+                    500 -> {
+                        "Unhandled error occurred!!!"
+                    }
+                    else -> {
+                        val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
-                            response.errorBody()?.parseErrorWithDataClass<SimpleError>(errorJsonString)
+                            response.errorBody()
+                                ?.parseErrorWithDataClass<SimpleError>(errorJsonString)
                         if (singleError != null) {
                             singleError.response.message
                         } else {
                             val errorMessage =
-                               response.errorBody()?.parseError(errorJsonString)
+                                response.errorBody()?.parseError(errorJsonString)
                             val list: List<Map.Entry<String, Any>> =
                                 ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
                             val (key, value) = list[0]
                             value.toString()
                         }
                     }
-                    401 -> "You are not Authorized"
-                    402 -> "Payment required!!!"
-                    403 -> "Forbidden"
-                    404 -> "You request not found"
-                    405 -> "Method is not allowed!!!"
-                    else -> "Unhandled error occurred!!!"
                 }
             )
         }
@@ -364,27 +343,25 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> {
-                            val errorJsonString = response.errorBody()?.string().orEmpty()
+                    500 -> {
+                        "Unhandled error occurred!!!"
+                    }
+                    else -> {
+                        val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
-                            response.errorBody()?.parseErrorWithDataClass<SimpleError>(errorJsonString)
+                            response.errorBody()
+                                ?.parseErrorWithDataClass<SimpleError>(errorJsonString)
                         if (singleError != null) {
                             singleError.response.message
                         } else {
                             val errorMessage =
-                               response.errorBody()?.parseError(errorJsonString)
+                                response.errorBody()?.parseError(errorJsonString)
                             val list: List<Map.Entry<String, Any>> =
                                 ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
                             val (key, value) = list[0]
                             value.toString()
                         }
                     }
-                    401 -> "You are not Authorized"
-                    402 -> "Payment required!!!"
-                    403 -> "Forbidden"
-                    404 -> "You request not found"
-                    405 -> "Method is not allowed!!!"
-                    else -> "Unhandled error occurred!!!"
                 }
             )
         }
@@ -397,27 +374,25 @@ class SampleTakeAndReturnDataSourceImpl @Inject constructor(
         } else {
             throw  Exception(
                 when (response.code()) {
-                    400 -> {
-                            val errorJsonString = response.errorBody()?.string().orEmpty()
+                    500 -> {
+                        "Unhandled error occurred!!!"
+                    }
+                    else -> {
+                        val errorJsonString = response.errorBody()?.string().orEmpty()
                         val singleError =
-                            response.errorBody()?.parseErrorWithDataClass<SimpleError>(errorJsonString)
+                            response.errorBody()
+                                ?.parseErrorWithDataClass<SimpleError>(errorJsonString)
                         if (singleError != null) {
                             singleError.response.message
                         } else {
                             val errorMessage =
-                               response.errorBody()?.parseError(errorJsonString)
+                                response.errorBody()?.parseError(errorJsonString)
                             val list: List<Map.Entry<String, Any>> =
                                 ArrayList<Map.Entry<String, Any>>(errorMessage!!.entries)
                             val (key, value) = list[0]
                             value.toString()
                         }
                     }
-                    401 -> "You are not Authorized"
-                    402 -> "Payment required!!!"
-                    403 -> "Forbidden"
-                    404 -> "You request not found"
-                    405 -> "Method is not allowed!!!"
-                    else -> "Unhandled error occurred!!!"
                 }
             )
         }
