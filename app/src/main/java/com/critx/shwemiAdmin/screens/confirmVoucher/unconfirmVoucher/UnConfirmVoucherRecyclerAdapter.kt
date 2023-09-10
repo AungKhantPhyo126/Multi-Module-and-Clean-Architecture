@@ -39,6 +39,9 @@ class UnConfirmVoucherViewHolder(private val binding: ItemUnconfirmedVoucherBind
         if (data.type == "Pawn"){
             binding.tvBalance.text = data.cost
             binding.tvDeposit.text = "-"
+        }else if (data.type == "PrepaidPawnPayment"){
+            binding.tvBalance.text = data.cost
+            binding.tvDeposit.text = "-"
         }else{
             binding.tvDeposit.text = data.paid_amount.toString()
             binding.tvBalance.text = data.remaining_amount.toString()

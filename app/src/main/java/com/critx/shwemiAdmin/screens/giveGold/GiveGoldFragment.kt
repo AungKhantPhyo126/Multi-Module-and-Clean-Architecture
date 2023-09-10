@@ -43,6 +43,7 @@ import com.critx.shwemiAdmin.R
 import com.critx.shwemiAdmin.databinding.DialogItemsInVoucherBinding
 import com.critx.shwemiAdmin.databinding.FragmentGiveGoldBinding
 import com.critx.shwemiAdmin.databinding.ServiceChargeDialogBinding
+import com.critx.shwemiAdmin.generateNumberFromEditText
 import com.critx.shwemiAdmin.getYwaeFromKPY
 import com.critx.shwemiAdmin.hideKeyboard
 import com.critx.shwemiAdmin.printPdf
@@ -512,9 +513,9 @@ class GiveGoldFragment : Fragment() {
                 val orderQty = binding.edtOrderQty.text.toString()
 
                 val ywae = getYwaeFromKPY(
-                    binding.edtK.text.toString().toInt(),
-                    binding.edtP.text.toString().toInt(),
-                    binding.edtY.text.toString().toDouble()
+                    generateNumberFromEditText(binding.edtK).toInt(),
+                    generateNumberFromEditText(binding.edtP).toInt(),
+                    generateNumberFromEditText(binding.edtY).toDouble()
                 )
                 val weightY = ywae.toString()
                 val goldGm = binding.edtGoldGm.text.toString()

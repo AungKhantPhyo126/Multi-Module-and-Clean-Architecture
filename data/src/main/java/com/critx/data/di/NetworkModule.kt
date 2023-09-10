@@ -34,7 +34,8 @@ import retrofit2.create
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
-const val BASE_URL = "https://admin.shwemigoldshop.com/"
+const val BASE_URL_LIVE = "https://admin.shwemigoldshop.com/"
+const val BASE_URL_STG = "https://stg_admin.shwemigoldshop.com/"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -43,7 +44,7 @@ class NetworkModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder().addConverterFactory(MoshiConverterFactory.create())
-            .baseUrl(BASE_URL)
+            .baseUrl(BASE_URL_LIVE)
             .client(okHttpClient)
             .build()
     }
@@ -262,7 +263,7 @@ class NetworkModule {
         @ApplicationContext context: Context,
 //        unauthorizedInterceptor: UnauthorizedInterceptor
     ): OkHttpClient {
-        return OkHttpClient.Builder().apply {
+        return UnsafeOkHttpClient.unsafeOkHttpClient.apply {
 //            addInterceptor(unauthorizedInterceptor)
             connectTimeout(60*1000,TimeUnit.MILLISECONDS)
             readTimeout(60*1000,TimeUnit.MILLISECONDS)
@@ -299,7 +300,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideUnauthorizedINterceptor(
+    fun provideUnauthorizedInnterceptor(
         tokenAuthenticator: TokenAuthenticator
     ):UnauthorizedInterceptor{
         return UnauthorizedInterceptor(tokenAuthenticator)

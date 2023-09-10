@@ -122,6 +122,12 @@
             android:layout_height="wrap_content"
             android:buttonTint="@color/primary_color"
             android:text="Pawn Voucher" />
+        <RadioButton
+            android:id="@+id/radio_btn_prepaid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/primary_color"
+            android:text="Prepaid" />
     </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

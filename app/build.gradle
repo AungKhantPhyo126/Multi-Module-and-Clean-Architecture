@@ -12,6 +12,20 @@ plugins {
 android {
     compileSdk 32
 
+//    signingConfigs {
+//        debug {
+//            keyAlias 'debug'
+//            keyPassword 'shweMiAdMin3'
+//            storeFile file('../keystore/shweMiAdmin.jks')
+//            storePassword 'shweMiAdMin3'
+//        }
+//        release {
+//            keyAlias 'debug'
+//            keyPassword 'shweMiAdMin3'
+//            storeFile file('../keystore/shweMiAdmin.jks')
+//            storePassword 'shweMiAdMin3'
+//        }
+//    }
     defaultConfig {
         applicationId "com.critx.shwemiAdmin"
         minSdk 21
@@ -32,6 +46,13 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            debuggable  true
+//            signingConfig signingConfigs.release
+
+        }
+        debug {
+            debuggable  true
+            signingConfig signingConfigs.debug
         }
 
     }
@@ -121,5 +142,11 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
     implementation "pl.droidsonroids.gif:android-gif-drawable:1.2.22"
+
+    // So, make sure you also include that repository in your project's build.gradle file.
+    implementation("com.google.android.play:app-update:2.1.0")
+
+    // For Kotlin users also import the Kotlin extensions library for Play In-App Update:
+    implementation("com.google.android.play:app-update-ktx:2.1.0")
 
 }

@@ -119,7 +119,7 @@ class ConfirmVoucherFragment:Fragment() {
                         if (it.isNullOrEmpty()) 0.0 else it.toDouble()
                     }).toString())
                     voucherCode = it.data?.code.orEmpty()
-                    if (selectedType != "pawn" || it.data?.remaining_amount.isNullOrEmpty().not()){
+                    if (selectedType == "sale"){
                         viewModel.getStocksInVoucher(voucherCode)
                         binding.btnStockInVoucher.isVisible = true
                     }else{

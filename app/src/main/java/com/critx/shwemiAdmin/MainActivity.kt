@@ -61,6 +61,9 @@ class MainActivity : AppCompatActivity() {
     private val imgUrl =
         "https://live-production.wcms.abc-cdn.net.au/ff1221fbfdb2fe163fdda15df5f77676?impolicy=wcms_crop_resize&cropH=394&cropW=700&xPos=0&yPos=37&width=862&height=485"
 
+
+    private lateinit var appUpdateManager: AppUpdateManager
+    private val updateType = AppUpdateType.IMMEDIATE
     override fun onCreate(savedInstanceState: Bundle?) {
         connectionObserver = ConnectionObserverImpl(applicationContext)
         super.onCreate(savedInstanceState)

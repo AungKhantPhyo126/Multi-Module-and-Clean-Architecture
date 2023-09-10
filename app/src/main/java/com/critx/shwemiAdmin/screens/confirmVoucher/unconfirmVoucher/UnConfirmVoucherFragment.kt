@@ -42,10 +42,14 @@ class UnConfirmVoucherFragment : Fragment() {
             if (checkedId == binding.radioBtnSaleVoucher.id){
                 selectedType="sale"
                 viewModel.getVouchers("sale")
-            }else{
+            }else if(checkedId == binding.radioBtnPawnVoucher.id){
                 selectedType="pawn"
 
                 viewModel.getVouchers("pawn")
+            }else{
+                selectedType="prepaid"
+
+                viewModel.getVouchers("prepaid")
             }
         }
         binding.ibBack.setOnClickListener {
